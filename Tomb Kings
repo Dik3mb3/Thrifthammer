@@ -1,0 +1,85 @@
+#Intialize the Bloodbowl API 
+import requests
+import json
+import xml.etree.ElementTree as ET
+import os 
+
+#Each team as an id assigned to it that is pulled by the API
+id = 51
+id_lineman = 2892 #Skeleton lineman
+
+#API with ID corresponding to team
+url_roster = f"https://fumbbl.com/api/roster/get/{id}/xml"
+url_pos = f"https://fumbbl.com/api/ruleset/get/{id}/xml"
+
+
+#Pulling API data
+response = requests.get(url_roster)
+response2 = requests.get(url_pos)
+
+
+#Helps figure out HTML tags
+print("First 5000 chars:\n", response.text[:5000])
+print(' ')
+print("Second 5000 chars:\n", response2.text[:5000])
+
+#Turns rosters tags into text 
+xml_text = response.text
+root = ET.fromstring(xml_text)
+
+#Turns position info into text 
+#xml_text_lineman = response2.text
+#root_line = ET.fromstring(xml_text_lineman)
+
+#Root of the API
+print('Root Tag:', root.tag)
+#print('Root Tag lineman:', root_line.tag)
+
+#isolates root(parent), child(inside root), and element tags into a list 
+for child in root:
+    print('Child Tag:', child.tag)
+    
+for element in root.iter():
+    print('Element Tag:', element.tag)
+
+#for child in root_line:
+    #print('Child Tag:', child.tag)
+
+#for element in root_line.iter():
+    #print('Element Tag:', element.tag)
+
+print(' ')
+
+#storing similar functions in a class
+class bbteam:
+    @staticmethod
+    #General Information about the roster
+    def roster_info():
+        for team in root.iter('roster'):
+            team_id = team.attrib.get('id')
+            team_name = team.find('name').text
+            rerolls = team.find('rerollCost').text
+            apoth = team.find('apothecary').text
+            print(f'ID: {team_id} \nTeam Name: {team_name}\nReroll Cost {rerolls}\nApothecary {apoth}\n' )
+    @staticmethod
+    def roster_pos(root):
+     for position in root.iter("position"):
+        print("Name:", position.attrib.get("name"))
+        print("Quantity:", position.attrib.get("quantity"))
+        print("Cost:", position.attrib.get("cost"))
+
+        stats = position.find("stats")
+        if stats is not None:
+            print("MA:", stats.attrib.get("MA"))
+            print("ST:", stats.attrib.get("ST"))
+            print("AG:", stats.attrib.get("AG"))
+            print("AV:", stats.attrib.get("AV"))
+
+bbteam.roster_info()
+bbteam.roster_pos(root)
+
+
+
+
+        
+
