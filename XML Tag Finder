@@ -1,0 +1,46 @@
+#Intialize the Bloodbowl API 
+import requests
+import json
+import xml.etree.ElementTree as ET
+import os 
+
+#Each team as an id assigned to it that is pulled by the API
+id = 51
+
+#API with ID corresponding to team
+url_roster = f"https://fumbbl.com/api/roster/get/{id}/xml"
+
+
+#Pulling API data
+response = requests.get(url_roster)
+
+
+#Helps figure out HTML tags
+print("First 5000 chars:\n", response.text[:5000])
+print(' ')
+
+
+#Turns rosters tags into text 
+xml_text = response.text
+root = ET.fromstring(xml_text)
+
+
+#Root of the API
+print('Root Tag:', root.tag)
+
+#isolates root(parent), child(inside root), and element tags into a list 
+for child in root:
+    print('Child Tag:', child.tag)
+    
+for element in root.iter():
+    print('Element Tag:', element.tag)
+
+print(' ')
+
+
+
+
+
+
+        
+

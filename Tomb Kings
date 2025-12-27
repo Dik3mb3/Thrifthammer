@@ -5,80 +5,111 @@ import xml.etree.ElementTree as ET
 import os 
 
 #Each team as an id assigned to it that is pulled by the API
-id = 51
-id_lineman = 2892 #Skeleton lineman
+ROSTER_ID = 51
 
 #API with ID corresponding to team
-url_roster = f"https://fumbbl.com/api/roster/get/{id}/xml"
-url_pos = f"https://fumbbl.com/api/ruleset/get/{id}/xml"
+url_roster = f"https://fumbbl.com/api/roster/get/{ROSTER_ID}/xml"
 
 
 #Pulling API data
 response = requests.get(url_roster)
-response2 = requests.get(url_pos)
+
+#check whether the data is XML or JSON
+status_code = response.status_code
+content_type = response.headers.get('Content-Type', "")
+print(f'Status Code: {status_code},\nContent type: {content_type}')
 
 
 #Helps figure out HTML tags
 print("First 5000 chars:\n", response.text[:5000])
-print(' ')
-print("Second 5000 chars:\n", response2.text[:5000])
 
-#Turns rosters tags into text 
-xml_text = response.text
-root = ET.fromstring(xml_text)
+def parse_API_response(response): 
 
-#Turns position info into text 
-#xml_text_lineman = response2.text
-#root_line = ET.fromstring(xml_text_lineman)
+    API_text = response.text.strip()
 
-#Root of the API
-print('Root Tag:', root.tag)
-#print('Root Tag lineman:', root_line.tag)
+    #Try JSON First 
+    try: 
+        if "json" in content_type or API_text.startswith('{') or API_text.startswith('['):
+            return "json", response.json()
+    except ValueError:
+        pass
 
-#isolates root(parent), child(inside root), and element tags into a list 
-for child in root:
-    print('Child Tag:', child.tag)
+    #Try XML
+    if API_text.startswith("<"):
+        try:
+            root = ET.fromstring(API_text)
+            return "xml", root 
+        except ET.ParseError as e: 
+            raise ValueError('Ivalid XML response') from e 
     
-for element in root.iter():
-    print('Element Tag:', element.tag)
+    #fallback
+    raise ValueError(f'Unknown response format:\n {API_text[:200]}')
 
-#for child in root_line:
-    #print('Child Tag:', child.tag)
+#Assinging output of parse to 2 variables 
+fmt, data = parse_API_response(response)
 
-#for element in root_line.iter():
-    #print('Element Tag:', element.tag)
+#debugging helpers
+print('\nDetected format:', fmt )
 
-print(' ')
+if fmt == 'xml':
+    print('Root Tag:', data.tag)
+    print('\nImmediate Childern:')
+    for child in data: 
+        print(f'-',child.tag )
+
+elif fmt == 'json':
+    print('Top Level JSON Keys:', data.keys())
 
 #storing similar functions in a class
 class bbteam:
     @staticmethod
     #General Information about the roster
-    def roster_info():
-        for team in root.iter('roster'):
-            team_id = team.attrib.get('id')
-            team_name = team.find('name').text
-            rerolls = team.find('rerollCost').text
-            apoth = team.find('apothecary').text
+    def roster_info(fmt, data):
+        print('\n====Roster Info====')
+        if fmt == 'xml':
+            team_id = data.attrib.get('id')
+            team_name = data.find('name').text
+            rerolls = data.find('rerollCost').text
+            apoth = data.find('apothecary').text
             print(f'ID: {team_id} \nTeam Name: {team_name}\nReroll Cost {rerolls}\nApothecary {apoth}\n' )
+        elif fmt == 'json':
+            roster = data.get('roster', {})
+            print('ID:', roster.get('id'))
+            print('Team Name:', roster.get('name'))
+            print('Reroll Cost:', roster.get('rerollCost'))
+            print('Apothecary: ', roster. get('apothecary'))
+
+            
     @staticmethod
-    def roster_pos(root):
-     for position in root.iter("position"):
-        print("Name:", position.attrib.get("name"))
-        print("Quantity:", position.attrib.get("quantity"))
-        print("Cost:", position.attrib.get("cost"))
+    def roster_pos(fmt,data):
+     print('\n====Positions====')
+     if fmt == 'xml':
+        for pos in data.findall('.//positions/position'):
+            print('Name: ', pos.findtext('title'))
+            print('Quanity: ', pos.findtext('quantity'))
+            print('Cost: ', pos.findtext('cost'))
+            stats = pos.find('stats')
+            if stats is not None:
+                print("MA:", stats.findtext("MA"))
+                print("ST:", stats.findtext("ST"))
+                print("AG:", stats.findtext("AG"))
+                print("AV:", stats.findtext("AV"))
+     elif fmt == 'json':
+            for position in data.get("positions", []):
+                print("\nName:", position.get("title"))
+                print("Quantity:", position.get("quantity"))
+                print("Cost:", position.get("cost"))
 
-        stats = position.find("stats")
-        if stats is not None:
-            print("MA:", stats.attrib.get("MA"))
-            print("ST:", stats.attrib.get("ST"))
-            print("AG:", stats.attrib.get("AG"))
-            print("AV:", stats.attrib.get("AV"))
-
-bbteam.roster_info()
-bbteam.roster_pos(root)
+                stats = position.get("stats", {})
+                print("MA:", stats.get("MA"))
+                print("ST:", stats.get("ST"))
+                print("AG:", stats.get("AG"))
+                print("AV:", stats.get("AV"))
 
 
+if __name__ == "__main__":
+    bbteam.roster_info(fmt, data)
+    bbteam.roster_pos(fmt, data)
 
 
         
