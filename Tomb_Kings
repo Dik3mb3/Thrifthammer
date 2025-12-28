@@ -2,7 +2,7 @@
 import requests
 import json
 import xml.etree.ElementTree as ET
-import os 
+import Tomb_Kings_Roster
 
 #Each team as an id assigned to it that is pulled by the API
 ROSTER_ID = 51
@@ -17,11 +17,11 @@ response = requests.get(url_roster)
 #check whether the data is XML or JSON
 status_code = response.status_code
 content_type = response.headers.get('Content-Type', "")
-print(f'Status Code: {status_code},\nContent type: {content_type}')
+#print(f'Status Code: {status_code},\nContent type: {content_type}')
 
 
 #Helps figure out HTML tags
-print("First 5000 chars:\n", response.text[:5000])
+#print("First 5000 chars:\n", response.text[:5000])
 
 def parse_API_response(response): 
 
@@ -48,19 +48,6 @@ def parse_API_response(response):
 #Assinging output of parse to 2 variables 
 fmt, data = parse_API_response(response)
 
-#debugging helpers
-print('\nDetected format:', fmt )
-
-if fmt == 'xml':
-    print('Root Tag:', data.tag)
-    print('\nImmediate Childern:')
-    for child in data: 
-        print(f'-',child.tag )
-
-elif fmt == 'json':
-    print('Top Level JSON Keys:', data.keys())
-
-#storing similar functions in a class
 class bbteam:
     @staticmethod
     #General Information about the roster
@@ -81,36 +68,30 @@ class bbteam:
 
             
     @staticmethod
-    def roster_pos(fmt,data):
-     print('\n====Positions====')
-     if fmt == 'xml':
-        for pos in data.findall('.//positions/position'):
-            print('Name: ', pos.findtext('title'))
-            print('Quanity: ', pos.findtext('quantity'))
-            print('Cost: ', pos.findtext('cost'))
-            stats = pos.find('stats')
-            if stats is not None:
-                print("MA:", stats.findtext("MA"))
-                print("ST:", stats.findtext("ST"))
-                print("AG:", stats.findtext("AG"))
-                print("AV:", stats.findtext("AV"))
-     elif fmt == 'json':
-            for position in data.get("positions", []):
-                print("\nName:", position.get("title"))
-                print("Quantity:", position.get("quantity"))
-                print("Cost:", position.get("cost"))
-
-                stats = position.get("stats", {})
-                print("MA:", stats.get("MA"))
-                print("ST:", stats.get("ST"))
-                print("AG:", stats.get("AG"))
-                print("AV:", stats.get("AV"))
+    def roster_pos(pos:str, name, cost, stats, skills, p_access, s_access):
+        print('Name: ', name[pos])
+        print('Cost: ', cost[pos])
+        print('===Stats===')
+        print('MA:', stats[pos]['MA'])
+        print('ST:', stats[pos]['ST'])
+        print('AG:', stats[pos]['AG'])
+        print('PA:' ,stats[pos]['PA'])
+        print('AV:', stats[pos]['AV'])
+        print('Skills: ', skills[pos])
+        print('Primary Access:', p_access[pos])
+        print('Secondary Access: ', s_access[pos])
+        
+                
 
 
 if __name__ == "__main__":
-    bbteam.roster_info(fmt, data)
-    bbteam.roster_pos(fmt, data)
-
-
-        
-
+    bbteam.roster_info(fmt,data)
+    print('\n====Positions====')
+    bbteam.roster_pos('Lineman',Tomb_Kings_Roster.Name, Tomb_Kings_Roster.Cost, Tomb_Kings_Roster.Stats, Tomb_Kings_Roster.Skills,Tomb_Kings_Roster.P_Access, Tomb_Kings_Roster.S_Access)
+    print('------------------------------------------------------------------------')
+    bbteam.roster_pos('Thrower',Tomb_Kings_Roster.Name, Tomb_Kings_Roster.Cost, Tomb_Kings_Roster.Stats, Tomb_Kings_Roster.Skills,Tomb_Kings_Roster.P_Access, Tomb_Kings_Roster.S_Access)
+    print('------------------------------------------------------------------------')
+    bbteam.roster_pos('Blitzer',Tomb_Kings_Roster.Name, Tomb_Kings_Roster.Cost, Tomb_Kings_Roster.Stats, Tomb_Kings_Roster.Skills,Tomb_Kings_Roster.P_Access, Tomb_Kings_Roster.S_Access)
+    print('------------------------------------------------------------------------')
+    bbteam.roster_pos('Big Guy',Tomb_Kings_Roster.Name, Tomb_Kings_Roster.Cost, Tomb_Kings_Roster.Stats, Tomb_Kings_Roster.Skills,Tomb_Kings_Roster.P_Access, Tomb_Kings_Roster.S_Access)
+    print('------------------------------------------------------------------------')
