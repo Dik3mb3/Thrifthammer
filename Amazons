@@ -68,8 +68,9 @@ class bbteam:
 
             
     @staticmethod
-    def roster_pos(pos:str, name, cost, stats, skills, p_access, s_access):
+    def roster_pos(pos:str, name, quantity, cost, stats, skills, p_access, s_access):
         print('Name: ', name[pos])
+        print('Quantity: ', '0 -',quantity[pos])
         print('Cost: ', cost[pos])
         print('===Stats===')
         print('MA:', stats[pos]['MA'])
@@ -87,11 +88,11 @@ class bbteam:
 if __name__ == "__main__":
     bbteam.roster_info(fmt,data)
     print('\n====Positions====')
-    bbteam.roster_pos('Lineman',Amazon_Roster.Name, Amazon_Roster.Cost, Amazon_Roster.Stats, Amazon_Roster.Skills,Amazon_Roster.P_Access, Amazon_Roster.S_Access)
+    bbteam.roster_pos('Lineman',Amazon_Roster.Name, Amazon_Roster.Quantity, Amazon_Roster.Cost, Amazon_Roster.Stats, Amazon_Roster.Skills,Amazon_Roster.P_Access, Amazon_Roster.S_Access)
     print('------------------------------------------------------------------------')
-    bbteam.roster_pos('Thrower',Amazon_Roster.Name, Amazon_Roster.Cost, Amazon_Roster.Stats, Amazon_Roster.Skills,Amazon_Roster.P_Access, Amazon_Roster.S_Access)
+    bbteam.roster_pos('Thrower',Amazon_Roster.Name, Amazon_Roster.Quantity, Amazon_Roster.Cost, Amazon_Roster.Stats, Amazon_Roster.Skills,Amazon_Roster.P_Access, Amazon_Roster.S_Access)
     print('------------------------------------------------------------------------')
-    bbteam.roster_pos('Blitzer',Amazon_Roster.Name, Amazon_Roster.Cost, Amazon_Roster.Stats, Amazon_Roster.Skills,Amazon_Roster.P_Access, Amazon_Roster.S_Access)
+    bbteam.roster_pos('Blitzer',Amazon_Roster.Name, Amazon_Roster.Quantity, Amazon_Roster.Cost, Amazon_Roster.Stats, Amazon_Roster.Skills,Amazon_Roster.P_Access, Amazon_Roster.S_Access)
     print('------------------------------------------------------------------------')
-    bbteam.roster_pos('Blocker',Amazon_Roster.Name, Amazon_Roster.Cost, Amazon_Roster.Stats, Amazon_Roster.Skills,Amazon_Roster.P_Access, Amazon_Roster.S_Access)
+    bbteam.roster_pos('Blocker',Amazon_Roster.Name, Amazon_Roster.Quantity, Amazon_Roster.Cost, Amazon_Roster.Stats, Amazon_Roster.Skills,Amazon_Roster.P_Access, Amazon_Roster.S_Access)
     print('------------------------------------------------------------------------')

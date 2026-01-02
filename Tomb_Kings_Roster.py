@@ -1,5 +1,6 @@
 #Local 2025 Roster Rules 
 Name = {'Lineman': 'Skeleton Lineman', 'Blitzer': 'Tomb Kings Blitzer', 'Thrower': 'Tomb Kings Thrower', 'Big Guy': 'Tomb Guardians'}
+Quantity = {'Lineman': 16, 'Blitzer': 2, 'Thrower': 2, 'Big Guy': 4}
 Cost = {'Lineman': 40000, 'Blitzer': 85000, 'Thrower': 65000, 'Big Guy': 115000}
 Stats = {'Lineman': {'MA': 5, 'ST': 3, 'AG': 4, 'PA': 6, 'AV': 8},
          'Thrower': {'MA': 6, 'ST': 3, 'AG': 4, 'PA':3, 'AV': 9},

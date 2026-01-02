@@ -2,10 +2,10 @@
 import requests
 import json
 import xml.etree.ElementTree as ET
-import Tomb_Kings_Roster
+import Chaos_Chosen_Roster
 
 #Each team as an id assigned to it that is pulled by the API
-ROSTER_ID = 51
+ROSTER_ID = 42
 
 #API with ID corresponding to team
 url_roster = f"https://fumbbl.com/api/roster/get/{ROSTER_ID}/xml"
@@ -68,9 +68,9 @@ class bbteam:
 
             
     @staticmethod
-    def roster_pos(pos:str, name, quanity, cost, stats, skills, p_access, s_access):
+    def roster_pos(pos:str, name, quantity, cost, stats, skills, p_access, s_access):
         print('Name: ', name[pos])
-        print('Quantity: ', '0 -',quanity[pos])
+        print('Quantity: ', '0 -',quantity[pos])
         print('Cost: ', cost[pos])
         print('===Stats===')
         print('MA:', stats[pos]['MA'])
@@ -81,18 +81,18 @@ class bbteam:
         print('Skills: ', skills[pos])
         print('Primary Access:', p_access[pos])
         print('Secondary Access: ', s_access[pos])
-        
                 
 
 
 if __name__ == "__main__":
     bbteam.roster_info(fmt,data)
     print('\n====Positions====')
-    bbteam.roster_pos('Lineman',Tomb_Kings_Roster.Name, Tomb_Kings_Roster.Quantity, Tomb_Kings_Roster.Cost, Tomb_Kings_Roster.Stats, Tomb_Kings_Roster.Skills,Tomb_Kings_Roster.P_Access, Tomb_Kings_Roster.S_Access)
+    bbteam.roster_pos('Lineman',Chaos_Chosen_Roster.Name, Chaos_Chosen_Roster.Quantity, Chaos_Chosen_Roster.Cost, Chaos_Chosen_Roster.Stats, Chaos_Chosen_Roster.Skills,Chaos_Chosen_Roster.P_Access, Chaos_Chosen_Roster.S_Access)
     print('------------------------------------------------------------------------')
-    bbteam.roster_pos('Thrower',Tomb_Kings_Roster.Name, Tomb_Kings_Roster.Quantity, Tomb_Kings_Roster.Cost, Tomb_Kings_Roster.Stats, Tomb_Kings_Roster.Skills,Tomb_Kings_Roster.P_Access, Tomb_Kings_Roster.S_Access)
+    bbteam.roster_pos('Blocker',Chaos_Chosen_Roster.Name, Chaos_Chosen_Roster.Quantity, Chaos_Chosen_Roster.Cost, Chaos_Chosen_Roster.Stats, Chaos_Chosen_Roster.Skills,Chaos_Chosen_Roster.P_Access, Chaos_Chosen_Roster.S_Access)
     print('------------------------------------------------------------------------')
-    bbteam.roster_pos('Blitzer',Tomb_Kings_Roster.Name, Tomb_Kings_Roster.Quantity, Tomb_Kings_Roster.Cost, Tomb_Kings_Roster.Stats, Tomb_Kings_Roster.Skills,Tomb_Kings_Roster.P_Access, Tomb_Kings_Roster.S_Access)
+    bbteam.roster_pos('Big Guy',Chaos_Chosen_Roster.Name, Chaos_Chosen_Roster.Quantity, Chaos_Chosen_Roster.Cost, Chaos_Chosen_Roster.Stats, Chaos_Chosen_Roster.Skills,Chaos_Chosen_Roster.P_Access, Chaos_Chosen_Roster.S_Access)
     print('------------------------------------------------------------------------')
-    bbteam.roster_pos('Big Guy',Tomb_Kings_Roster.Name, Tomb_Kings_Roster.Quantity, Tomb_Kings_Roster.Cost, Tomb_Kings_Roster.Stats, Tomb_Kings_Roster.Skills,Tomb_Kings_Roster.P_Access, Tomb_Kings_Roster.S_Access)
+    bbteam.roster_pos('Big Guy2',Chaos_Chosen_Roster.Name, Chaos_Chosen_Roster.Quantity, Chaos_Chosen_Roster.Cost, Chaos_Chosen_Roster.Stats, Chaos_Chosen_Roster.Skills,Chaos_Chosen_Roster.P_Access, Chaos_Chosen_Roster.S_Access)
     print('------------------------------------------------------------------------')
+    bbteam.roster_pos('Big Guy3',Chaos_Chosen_Roster.Name, Chaos_Chosen_Roster.Quantity, Chaos_Chosen_Roster.Cost, Chaos_Chosen_Roster.Stats, Chaos_Chosen_Roster.Skills,Chaos_Chosen_Roster.P_Access, Chaos_Chosen_Roster.S_Access)
