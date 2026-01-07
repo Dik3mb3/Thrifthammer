@@ -14,5 +14,5 @@ Skills = {'Lineman': ['Dodge', 'Right Stuff', 'Stunty'],
 
 }
 
-P_Access = {'Lineman': 'A', 'Blocker': 'A', 'Special': 'AP', 'Catcher': '-', 'Big Guy': 'S'}
-S_Access = {'Lineman': 'GSD', 'Blocker': 'GSD', 'Special': 'GD', 'Catcher': 'A', 'Big Guy': 'AGP'}
+P_Access = {'Lineman': 'A', 'Blocker': 'AP', 'Catcher': 'A', 'Big Guy': 'S'}
+S_Access = {'Lineman': 'GSD', 'Blocker': 'GSD', 'Catcher': 'GSD', 'Big Guy': 'AGP'}

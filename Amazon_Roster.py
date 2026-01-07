@@ -5,7 +5,7 @@ Quantity = {'Lineman': 16, 'Blitzer': 2, 'Thrower': 2, 'Blocker': 2}
 Stats = {'Lineman': {'MA': 6, 'ST': 3, 'AG': 3, 'PA': 4, 'AV': 8},
          'Thrower': {'MA': 6, 'ST': 3, 'AG': 3, 'PA':3, 'AV': 8},
          'Blitzer': {'MA': 7, 'ST': 3, 'AG': 3, 'PA': 4, 'AV': 8},
-         'Blocker': {'MA':4, 'ST': 5, 'AG': 5, 'PA': 6, 'AV': 9}
+         'Blocker': {'MA':6, 'ST': 4, 'AG': 3, 'PA': 4, 'AV': 9}
          }
 Skills = {'Lineman': ['Dodge'],
           'Thrower': ['Dodge', 'On The Ball', 'Pass', 'Safe Pass'],
