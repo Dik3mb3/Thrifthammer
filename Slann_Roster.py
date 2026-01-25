@@ -15,3 +15,15 @@ Skills = {'Lineman': ['Pogo Stick'],
 
 P_Access = {'Lineman': 'G', 'Blitzer': 'AGS', 'Catcher': 'AG', 'Big Guy': 'S'}
 S_Access = {'Lineman': 'AS', 'Blitzer': 'P', 'Catcher': 'PS', 'Big Guy': 'AG'}
+
+roster_name = 'Slann'
+
+rerolls = 50000
+
+Apothecary = True
+
+Tier = 2
+
+Special_rules =  ['None']
+
+Leagues = ['Lustrian Superleague']

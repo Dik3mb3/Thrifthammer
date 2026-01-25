@@ -17,3 +17,15 @@ Skills = {'Lineman': [],
 
 P_Access = {'Lineman': 'G', 'Thrower': 'AGP', 'Blitzer': 'AGS', 'Catcher': 'AG', 'Big Guy': 'S'}
 S_Access = {'Lineman': 'AS', 'Thrower': 'S', 'Blitzer': '-', 'Catcher': 'PS', 'Big Guy': 'AG'}
+
+roster_name = 'Vampire'
+
+rerolls = 60000
+
+Apothecary = True
+
+Tier = 2
+
+Special_rules =  ['Master of Undeath']
+
+Leagues = ['Slyvanian Spotlight']

@@ -16,3 +16,15 @@ Skills = {'Lineman': ['Decay', 'Plague Ridden'],
 
 P_Access = {'Lineman': 'GMD', 'Blocker': 'GMS', 'Catcher': 'GMS', 'Big Guy': 'S'}
 S_Access = {'Lineman': 'AS', 'Blocker': 'AD', 'Catcher': 'APD', 'Big Guy': 'GMD'}
+
+roster_name = 'Nurgle'
+
+rerolls = 60000
+
+Apothecary = False
+
+Tier = 3
+
+Special_rules =  ['Favored of Nurgle', 'Brawlin Brutes']
+
+Leagues = ['Chaos Clash']

@@ -15,3 +15,15 @@ Skills = {'Lineman': ['Frenzy'],
 
 P_Access = {'Lineman': 'GM', 'Big Guy': 'MS', 'Blitzer': 'GMS', 'Blocker': 'GMS'}
 S_Access = {'Lineman': 'ASD', 'Big Guy': 'AG', 'Blitzer': 'AGP', 'Blocker': 'AD'}
+
+roster_name = 'Khrone'
+
+rerolls = 60000
+
+Apothecary = True
+
+Tier = 3
+
+Special_rules =  ['Favoured of Khorne', 'Brawlin Brutes']
+
+Leagues = ['Chaos Clash']

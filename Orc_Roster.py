@@ -19,3 +19,15 @@ Skills = {'Lineman': ['Dodge', 'Right Stuff', 'Stunty'],
 
 P_Access = {'Lineman': 'AD', 'Lineman2': 'GS', 'Thrower': 'GP', 'Blitzer': 'GS', 'Blocker': 'GS', 'Big Guy': 'S'}
 S_Access = {'Lineman': 'GPS', 'Lineman2': 'AD', 'Thrower': 'ASD', 'Blitzer': 'AD', 'Blocker': 'AD', 'Big Guy': 'AGP'}
+
+roster_name = 'Orc'
+
+rerolls = 60000
+
+Apothecary = True
+
+Tier = 2
+
+Special_rules =  ['Brawlin Brutes', 'Team Captain']
+
+Leagues = ['Bandlands Brawl']

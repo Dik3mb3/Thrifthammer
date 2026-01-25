@@ -27,3 +27,15 @@ Skills = {'Lineman': ['Animosity (All)'],
 
 P_Access = {'Lineman': 'GMD', 'Lineman2': 'AMD', 'Lineman3': 'GMD', 'Lineman4': 'GMD', 'Lineman5': 'AGM', 'Thrower': 'GMPD', 'Big Guy': 'S', 'Big Guy2': 'S', 'Big Guy3': 'S','Big Guy4': 'S'}
 S_Access = {'Lineman': 'AS', 'Lineman2': 'GP', 'Lineman3': 'AS', 'Lineman4': 'AS', 'Lineman5': 'PS', 'Thrower': 'AS', 'Big Guy': 'AGMP', 'Big Guy2': 'AGM', 'Big Guy3': 'AGM','Big Guy4': 'AGM'}
+
+roster_name = 'Chaos Renegades'
+
+rerolls = 70000
+
+Apothecary = True
+
+Tier = 3
+
+Special_rules =  ['Favoured of Chaos Undivided', 'Favoured of Khorne', 'Favoured of Nurgle', 'Favoured of Tzeentch', 'Favoured of Slaanesh']
+
+Leagues = ['Chaos Clash']

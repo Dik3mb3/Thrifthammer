@@ -22,3 +22,15 @@ Skills = {'Lineman': ['Dodge', 'Insignificant', 'Right Stuff', 'Sidestep', 'Stun
 
 P_Access = {'Lineman': 'AMD', 'Lineman2': 'AMD','Lineman3': 'GMD', 'Thrower':'GMP', 'Catcher': 'AGMD', 'Blitzer': 'GMS', 'Big Guy': 'MS', 'Big Guy2': 'MS'}
 S_Access = {'Lineman': 'G', 'Lineman2': 'GPS','Lineman3': 'AS', 'Thrower': 'ASD', 'Catcher': 'S', 'Blitzer': 'P', 'Big Guy': 'AGP', 'Big Guy2': 'AG'}
+
+roster_name = 'Underworld Denizens'
+
+rerolls = 70000
+
+Apothecary = True
+
+Tier = 1
+
+Special_rules =  ['Bribery and Corruption']
+
+Leagues = ['Underworld Challenge']

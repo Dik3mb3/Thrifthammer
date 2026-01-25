@@ -17,3 +17,15 @@ Skills = {'Lineman': [],
 
 P_Access = {'Lineman': 'AG', 'Stabber': 'AD', 'Blitzer': 'AG', 'Blitzer2': 'AG', 'Thrower': 'AGP'}
 S_Access = {'Lineman': 'SD', 'Stabber': 'GS', 'Blitzer': 'PSD', 'Blitzer2': 'SD','Thrower': 'SD'}
+
+roster_name = 'Dark Elf'
+
+rerolls = 50000
+
+Apothecary = True
+
+Tier = 1
+
+Special_rules =  ['None']
+
+Leagues = ['Elven Kingdoms League']

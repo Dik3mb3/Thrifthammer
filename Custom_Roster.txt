@@ -1,0 +1,8 @@
+Apothecary: 50000
+Coaches: 3 x 10000 = 30000
+Cheerleaders: 3 x 10000 = 30000
+Lineman: 5
+Thrower: 2
+Blitzer: 2
+Catcher: 2
+Big Guy: 1

@@ -19,3 +19,15 @@ Skills = {'Lineman': [],
 
 P_Access = {'Lineman': 'D', 'Stabber': 'GD', 'Blitzer': 'GS', 'Blocker': 'GS', 'Blocker2': 'GS', 'Big Guy': 'MS'}
 S_Access = {'Lineman': 'AGS', 'Stabber': 'AS', 'Blitzer': 'AMD', 'Blocker': 'AMD','Blocker2': 'AMD', 'Big Guy': 'AG' }
+
+roster_name = 'Chaos Dwarves'
+
+rerolls = 70000
+
+Apothecary = True
+
+Tier = 1
+
+Special_rules =  ['Favored of Hashut']
+
+Leagues = ['Badlands Brawl', 'Chaos Clash']

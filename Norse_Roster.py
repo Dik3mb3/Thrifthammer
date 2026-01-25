@@ -20,3 +20,15 @@ Skills = {'Lineman': ['Block', 'Drunkard', 'Thick Skull', 'Unsteady'],
 
 P_Access = {'Lineman': 'G', 'Blitzer': 'GS', 'Blocker': 'GS', 'Catcher': 'AGP', 'Special': '-', 'Big Guy': 'S'}
 S_Access = {'Lineman': 'APS', 'Blitzer': 'AP', 'Blocker': 'A', 'Catcher': 'S', 'Special': 'A', 'Big Guy': 'AG'} 
+
+roster_name = 'Elven Union'
+
+rerolls = 60000
+
+Apothecary = True
+
+Tier = 1
+
+Special_rules =  ['None']
+
+Leagues = ['Old World Classic', 'Chaos Clash']

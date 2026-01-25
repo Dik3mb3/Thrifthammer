@@ -17,3 +17,15 @@ Skills = {'Lineman': ['Block', 'Defensive', 'Thick Skull'],
 
 P_Access = {'Lineman': 'GD', 'Weapon': 'SD', 'Blitzer': 'GS', 'Blitzer2': 'GS', 'Thrower': 'GP'}
 S_Access = {'Lineman': 'S', 'Weapon': 'G', 'Blitzer': 'P', 'Blitzer2': 'D','Thrower': 'S'}
+
+roster_name = 'Dwarf'
+
+rerolls = 60000
+
+Apothecary = True
+
+Tier = 1
+
+Special_rules =  ['Bribery and Corruption', 'Brawlin Brutes']
+
+Leagues = ['World Edge Superleague']

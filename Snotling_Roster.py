@@ -19,3 +19,15 @@ Skills = {'Lineman': ['Dodge', 'Insignificant', 'Right Stuff', 'Sidestep', 'Stun
 
 P_Access = {'Lineman': 'AD', 'Weapon1': 'APD','Catcher': 'AD', 'Catcher2': 'AD', 'Big Guy': 'SD', 'Big Guy2': 'S'}
 S_Access = {'Lineman': 'G', 'Weapon1': 'G', 'Catcher': 'G', 'Catcher2': 'G', 'Big Guy': 'AG', 'Big Guy2': 'AGP'}
+
+roster_name = 'Snotling'
+
+rerolls = 70000
+
+Apothecary = True
+
+Tier = 4
+
+Special_rules =  ['Bribery and Corruption', 'Low Cost Lineman', 'Swarming']
+
+Leagues = ['Underworld Challenge']

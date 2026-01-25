@@ -16,3 +16,15 @@ Skills = {'Lineman': ['Dodge', 'Right Stuff', 'Stunty'],
 
 P_Access = {'Lineman': 'A', 'Blocker': 'AP', 'Catcher': 'A', 'Big Guy': 'S'}
 S_Access = {'Lineman': 'GSD', 'Blocker': 'GSD', 'Catcher': 'GSD', 'Big Guy': 'AGP'}
+
+roster_name = 'Halfling'
+
+rerolls = 60000
+
+Apothecary = True
+
+Tier = 4
+
+Special_rules =  ['none']
+
+Leagues = ['Halfling Thimble Cup', 'Woodland League']

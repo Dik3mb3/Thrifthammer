@@ -17,3 +17,13 @@ Skills = {'Lineman': [],
 
 P_Access = {'Lineman': 'GD', 'Thrower': 'GP', 'Blitzer': 'GS', 'Catcher': 'AGD', 'Big Guy': 'S'}
 S_Access = {'Lineman': 'AMS', 'Thrower': 'AMSD', 'Blitzer': 'AMD', 'Catcher': 'MS', 'Big Guy': 'AGM'}
+
+roster_name = 'Skaven'
+
+rerolls = 50000
+
+Apothecary = True
+
+Tier = 2 
+
+Leagues = ['Underworld Challenge']

@@ -15,3 +15,15 @@ Skills = {'Lineman': ['Regeneration', 'Thick Skull'],
 
 P_Access = {'Lineman': 'G', 'Thrower': 'GP', 'Blitzer': 'GS', 'Big Guy': 'S'}
 S_Access = {'Lineman': 'ASD', 'Thrower': 'ASD', 'Blitzer': 'AD', 'Big Guy': 'AG'}
+
+roster_name = 'Tomb Kings'
+
+rerolls = 60000
+
+Apothecary = False
+
+Tier = 2
+
+Special_rules =  ['Master of Undeath']
+
+Leagues = ['Slyvanian Spotlight']

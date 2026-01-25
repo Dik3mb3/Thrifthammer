@@ -19,3 +19,15 @@ Skills = {'Lineman': [],
 
 P_Access = {'Lineman': 'G', 'Thrower': 'GP', 'Blitzer': 'GS', 'Special': 'A', 'Big Guy': 'S'}
 S_Access = {'Lineman': 'ASD', 'Thrower': 'ASD', 'Blitzer': 'AD', 'Special': 'GSD', 'Big Guy': 'AG'} 
+
+roster_name = 'Human'
+
+rerolls = 50000
+
+Apothecary = True
+
+Tier = 2
+
+Special_rules =  ['Team Captain']
+
+Leagues = ['Old World Classic']

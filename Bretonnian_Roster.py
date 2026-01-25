@@ -15,3 +15,15 @@ Skills = {'Lineman': ['Wrestle'],
 
 P_Access = {'Lineman': 'G', 'Thrower': 'GP', 'Blitzer': 'GS', 'Catcher': 'AG'}
 S_Access = {'Lineman': 'AS', 'Thrower': 'AS', 'Blitzer': 'A', 'Catcher': 'S'}
+
+roster_name = 'Bretonnian'
+
+rerolls = 60000
+
+Apothecary = True
+
+Tier = 2
+
+Special_rules =  ['none']
+
+Leagues = ['Old World Classic']

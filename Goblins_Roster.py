@@ -23,3 +23,15 @@ Skills = {'Lineman': ['Dodge', 'Right Stuff', 'Stunty'],
 
 P_Access = {'Lineman': 'AD', 'Weapon1': 'D', 'Weapon2': 'PD', 'Weapon3': 'SD', 'Catcher': 'A' , 'Special': 'A', 'Special2': 'AD','Big Guy': 'S'}
 S_Access = {'Lineman': 'GPS', 'Weapon1': 'AGS', 'Weapon2': 'AGS', 'Weapon3': 'AG', 'Catcher': 'GSD' , 'Special': 'GSD', 'Special2': 'GS','Big Guy': 'AGP'}
+
+roster_name = 'Goblin'
+
+rerolls = 60000
+
+Apothecary = True
+
+Tier = 4
+
+Special_rules =  ['Bribery and Corruption']
+
+Leagues = ['Badlands Brawl', 'Underworld Challenge']

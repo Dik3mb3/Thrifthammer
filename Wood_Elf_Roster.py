@@ -17,3 +17,15 @@ Skills = {'Lineman': [],
 
 P_Access = {'Lineman': 'AG', 'Thrower': 'AGP', 'Blitzer': 'AG', 'Catcher': 'AG', 'Big Guy': 'S'}
 S_Access = {'Lineman': 'S', 'Thrower': 'S', 'Blitzer': 'PS', 'Catcher': 'PS','Big Guy': 'AGP'}
+
+roster_name = 'Wood Elf'
+
+rerolls = 50000
+
+Apothecary = True
+
+Tier = 1
+
+Special_rules =  ['None']
+
+Leagues = ['Elven Kingdoms League', 'Woodland League']

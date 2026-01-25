@@ -17,3 +17,15 @@ Skills = {'Lineman': ['Horns', 'Thick Skull'],
 
 P_Access = {'Lineman': 'GM', 'Big Guy': 'MS', 'Big Guy2': 'MS', 'Big Guy3': 'MS','Blocker': 'GMS'}
 S_Access = {'Lineman': 'APSD', 'Big Guy': 'AGP', 'Big Guy2': 'AG', 'Big Guy3': 'AG', 'Blocker': 'AD'}
+
+roster_name = 'Chaos Chosen'
+
+rerolls = 50000
+
+Apothecary = True
+
+Tier = 3
+
+Special_rules =  ['Favored of']
+
+Leagues = ['Chaos Clash']

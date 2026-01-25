@@ -17,3 +17,15 @@ Skills = {'Lineman': ['Fend'],
 
 P_Access = {'Lineman': 'G', 'Thrower': 'GP', 'Blitzer': 'AG', 'Blocker': 'GS', 'Big Guy': 'S'}
 S_Access = {'Lineman': 'AS', 'Thrower': 'AS', 'Blitzer': 'PS', 'Blocker': 'A', 'Big Guy': 'AG'} 
+
+roster_name = 'Imperial Nobility'
+
+rerolls = 60000
+
+Apothecary = True
+
+Tier = 2
+
+Special_rules =  ['None']
+
+Leagues = ['Old World Classic']

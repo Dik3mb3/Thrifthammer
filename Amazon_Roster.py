@@ -15,3 +15,15 @@ Skills = {'Lineman': ['Dodge'],
 
 P_Access = {'Lineman': 'G', 'Thrower': 'GP', 'Blitzer': 'AG', 'Blocker': 'GS'}
 S_Access = {'Lineman': 'AS', 'Thrower': 'AS', 'Blitzer': 'S', 'Blocker': 'A'}
+
+roster_name = 'Amazon'
+
+rerolls = 60000
+
+Apothecary = True
+
+Tier = 1
+
+Special_rules =  ['none']
+
+Leagues = ['Lustrian Superleague']

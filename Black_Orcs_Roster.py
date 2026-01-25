@@ -13,3 +13,15 @@ Skills = {'Lineman': ['Dodge', 'Right Stuff', 'Stunty', 'Thick Skull'],
 
 P_Access = {'Lineman': 'AD', 'Big Guy': 'S', 'Blocker': 'GS'}
 S_Access = {'Lineman': 'AS', 'Big Guy': 'AGP', 'Blocker': 'AD'}
+
+roster_name = 'Black Orcs'
+
+rerolls = 60000
+
+Apothecary = True
+
+Tier = 3
+
+Special_rules =  ['Bribery and Corruption', 'Brawlin Brutes']
+
+Leagues = ['Badlands Brawl']

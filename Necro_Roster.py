@@ -17,3 +17,15 @@ Skills = {'Lineman': ['Eye Gouge', 'Regeneration', 'Unsteady'],
 
 P_Access = {'Lineman': 'GD', 'Blitzer': 'GS', 'Blocker': 'GS', 'Catcher': 'AG', 'Catcher2': 'AG'}
 S_Access = {'Lineman': 'AS', 'Blitzer': 'AD', 'Blocker': 'AD', 'Catcher': 'PSD', 'Catcher2': 'PSD'} 
+
+roster_name = 'Necromantic Horror'
+
+rerolls = 70000
+
+Apothecary = False
+
+Tier = 2
+
+Special_rules =  ['Masters of Undeath']
+
+Leagues = ['Slyvanian Spotlight']

@@ -13,3 +13,15 @@ Skills = {'Lineman': ['Dodge', 'Right Stuff', 'Sidestep', 'Stunty', 'Thick Skull
 
 P_Access = {'Lineman': 'GMD', 'Blocker': 'GMS', 'Catcher': 'GMS', 'Big Guy': 'S'}
 S_Access = {'Lineman': 'AS', 'Blocker': 'AD', 'Catcher': 'APD', 'Big Guy': 'GMD'}
+
+roster_name = 'Ogre'
+
+rerolls = 70000
+
+Apothecary = True
+
+Tier = 4
+
+Special_rules =  ['Low Cost Lineman', 'Brawlin Brutes']
+
+Leagues = ['Badlands Brawl', 'Worlds Edge Superleague']

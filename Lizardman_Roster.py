@@ -16,3 +16,15 @@ Skills = {'Lineman': ['Dodge', 'Stunty'],
 
 P_Access = {'Lineman': 'A', 'Big Guy': 'S', 'Special': 'AP', 'Blocker': 'GS'}
 S_Access = {'Lineman': 'GPSD', 'Big Guy': 'AG', 'Special': 'GSD', 'Blocker': 'A'}
+
+roster_name = 'Lizardman'
+
+rerolls = 70000
+
+Apothecary = True
+
+Tier = 1
+
+Special_rules =  ['None']
+
+Leagues = ['Lustrian Superleague']

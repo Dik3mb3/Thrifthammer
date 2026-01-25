@@ -29,3 +29,15 @@ Skills = {'Lineman': ['Dodge', 'Right Stuff', 'Stunty'],
 
 P_Access = {'Lineman': 'A', 'Lineman2': 'G','Lineman3': 'GD','Catcher': 'AG', 'Thrower': 'GP' , 'Thrower2': 'GP', 'Blitzer': 'GS', 'Blitzer2': 'GS', 'Blitzer3': 'GS', 'Big Guy': 'S', 'Big Guy2': 'S'}
 S_Access = {'Lineman': 'GS', 'Lineman2': 'AS','Lineman3': 'S','Catcher': 'PS', 'Thrower': 'AS' , 'Thrower2': 'AS', 'Blitzer': 'A', 'Blitzer2': 'A', 'Blitzer3': 'P', 'Big Guy': 'AGP', 'Big Guy2': 'AG'}
+
+roster_name = 'Old World Alliance'
+
+rerolls = 70000
+
+Apothecary = True
+
+Tier = 1
+
+Special_rules =  ['None']
+
+Leagues = ['Old World Classic']

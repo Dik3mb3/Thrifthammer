@@ -17,3 +17,15 @@ Skills = {'Lineman': ['Jump Up', 'Right Stuff', 'Stunty', 'Wrestle'],
 
 P_Access = {'Lineman': 'A', 'Blocker': 'A', 'Special': 'AP', 'Catcher': '-', 'Big Guy': 'S'}
 S_Access = {'Lineman': 'GSD', 'Blocker': 'GSD', 'Special': 'GD', 'Catcher': 'A', 'Big Guy': 'AGP'}
+
+roster_name = 'Gnome'
+
+rerolls = 50000
+
+Apothecary = True
+
+Tier = 4
+
+Special_rules =  ['None']
+
+Leagues = ['Halfling Thimble Cup', 'Woodland League']
