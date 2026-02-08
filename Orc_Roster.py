@@ -1,7 +1,7 @@
 #Local 2025 Roster Rules 
 Name = {'Lineman': 'Goblin', 'Lineman2': 'Orc Lineman', 'Thrower': 'Orc Thrower', 'Blitzer': 'Orc Blitzer', 'Blocker': 'Big Un Blocker', 'Big Guy': 'Troll'}
 Cost = {'Lineman': 40000, 'Lineman2': 50000, 'Blitzer': 85000, 'Thrower': 75000, 'Blocker': 95000, 'Troll': 115000}
-Quantity = {'Lineman': 16, 'Blitzer': 2, 'Thrower': 2, 'Blocker': 2}
+Quantity = {'Lineman': 16, 'Lineman2': 16, 'Blitzer': 2, 'Thrower': 2, 'Blocker': 2}
 Stats = {'Lineman': {'MA': 6, 'ST': 2, 'AG': 3, 'PA': 3, 'AV': 8},
          'Lineman2': {'MA': 5, 'ST': 3, 'AG': 3, 'PA': 4, 'AV': 10},
          'Thrower': {'MA': 6, 'ST': 3, 'AG': 3, 'PA': 3, 'AV': 9},
