@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"C:\\\\Users\\\\khleu\\\\ThriftHammer\\\\Thrifthammer\\\\venv\\\\Scripts\\\\python.exe\" \"C:\\\\Users\\\\khleu\\\\ThriftHammer\\\\Thrifthammer\\\\manage.py\" makemigrations:*)",
+      "Bash(\"C:\\\\Users\\\\khleu\\\\ThriftHammer\\\\Thrifthammer\\\\venv\\\\Scripts\\\\python.exe\" \"C:\\\\Users\\\\khleu\\\\ThriftHammer\\\\Thrifthammer\\\\manage.py\":*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git add:*)",
+      "Bash(git rm:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)"
+    ]
+  }
+}

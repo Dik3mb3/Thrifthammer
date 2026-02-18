@@ -106,6 +106,46 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/accounts/login/'
 
+# ---------------------------------------------------------------------------
+# Caching
+# ---------------------------------------------------------------------------
+# DatabaseCache requires no extra services — works out of the box with SQLite
+# and PostgreSQL. Run `python manage.py createcachetable` once after setup.
+# In production, swap to Redis by setting CACHE_BACKEND and CACHE_LOCATION
+# environment variables.
+CACHES = {
+    'default': {
+        'BACKEND': os.environ.get(
+            'CACHE_BACKEND',
+            'django.core.cache.backends.db.DatabaseCache',
+        ),
+        'LOCATION': os.environ.get('CACHE_LOCATION', 'django_cache'),
+    }
+}
+
+# ---------------------------------------------------------------------------
+# Database query logging (development only)
+# ---------------------------------------------------------------------------
+# Logs every SQL query to the console when DEBUG=True.
+# Helps catch N+1 queries without needing django-debug-toolbar.
+if DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {'class': 'logging.StreamHandler'},
+        },
+        'loggers': {
+            'django.db.backends': {
+                'handlers': ['console'],
+                # Set to WARNING in dev to silence query noise; change to DEBUG
+                # when actively investigating query counts.
+                'level': 'WARNING',
+                'propagate': False,
+            },
+        },
+    }
+
 # Scraper settings
 SCRAPER_USER_AGENT = os.environ.get(
     'SCRAPER_USER_AGENT',

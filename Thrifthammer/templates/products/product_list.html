@@ -2,42 +2,195 @@
 
 {% block title %}Browse Products{% endblock %}
 
+{% block extra_head %}
+<style>
+  /* Autocomplete dropdown */
+  .search-wrapper { position: relative; flex: 1; min-width: 200px; }
+  #autocomplete-results {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
+    background: #1e1e1e; border: 1px solid #444; border-radius: 0 0 4px 4px;
+    max-height: 280px; overflow-y: auto; display: none;
+  }
+  #autocomplete-results a {
+    display: flex; justify-content: space-between;
+    padding: 0.5rem 0.75rem; color: #e0e0e0; border-bottom: 1px solid #333;
+    font-size: 0.9rem;
+  }
+  #autocomplete-results a:last-child { border-bottom: none; }
+  #autocomplete-results a:hover { background: #2a2a2a; text-decoration: none; }
+  #autocomplete-results .ac-price { color: #03dac6; font-weight: 600; }
+  /* Pagination */
+  .pagination { display: flex; gap: 0.5rem; margin: 1.5rem 0; flex-wrap: wrap; align-items: center; }
+  .pagination a, .pagination span {
+    padding: 0.35rem 0.75rem; border-radius: 4px; border: 1px solid #333; font-size: 0.9rem;
+  }
+  .pagination a { color: #bb86fc; }
+  .pagination a:hover { background: #1e1e1e; text-decoration: none; }
+  .pagination .current { background: #bb86fc; color: #121212; border-color: #bb86fc; font-weight: 600; }
+  .pagination .disabled { color: #555; cursor: not-allowed; }
+  .result-info { color: #888; font-size: 0.9rem; margin-bottom: 0.75rem; }
+  .card .best-price { font-size: 1.1rem; font-weight: 700; color: #03dac6; margin-top: 0.5rem; }
+  .card .savings-badge { font-size: 0.8rem; color: #a5d6a7; }
+</style>
+{% endblock %}
+
 {% block content %}
 <h1>Browse Warhammer Products</h1>
 
-<form method="get" class="search-form">
-    <input type="text" name="q" value="{{ query }}" placeholder="Search by name or SKU...">
-    <select name="category">
-        <option value="">All Categories</option>
-        {% for cat in categories %}
-        <option value="{{ cat.slug }}" {% if selected_category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
-        {% endfor %}
-    </select>
-    <select name="faction">
-        <option value="">All Factions</option>
-        {% for f in factions %}
-        <option value="{{ f.slug }}" {% if selected_faction == f.slug %}selected{% endif %}>{{ f.name }}</option>
-        {% endfor %}
-    </select>
-    <button type="submit" class="btn btn-primary">Search</button>
+<form method="get" class="search-form" id="search-form" role="search">
+  <div class="search-wrapper">
+    <input
+      type="text"
+      name="q"
+      id="search-input"
+      value="{{ query }}"
+      placeholder="Search by name or SKU…"
+      autocomplete="off"
+      aria-label="Search products"
+    >
+    <div id="autocomplete-results" role="listbox" aria-label="Suggestions"></div>
+  </div>
+
+  <select name="category" aria-label="Filter by category">
+    <option value="">All Categories</option>
+    {% for cat in categories %}
+    <option value="{{ cat.slug }}"{% if selected_category == cat.slug %} selected{% endif %}>{{ cat.name }}</option>
+    {% endfor %}
+  </select>
+
+  <select name="faction" aria-label="Filter by faction">
+    <option value="">All Factions</option>
+    {% for f in factions %}
+    <option value="{{ f.slug }}"{% if selected_faction == f.slug %} selected{% endif %}>{{ f.name }}</option>
+    {% endfor %}
+  </select>
+
+  <select name="sort" aria-label="Sort by">
+    {% for value, label in sort_options %}
+    <option value="{{ value }}"{% if sort == value %} selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+
+  <button type="submit" class="btn btn-primary">Search</button>
+  {% if query or selected_category or selected_faction %}
+  <a href="{% url 'products:list' %}" class="btn btn-secondary">Clear</a>
+  {% endif %}
 </form>
 
+<p class="result-info">
+  {% if query or selected_category or selected_faction %}
+    {{ total_count }} product{{ total_count|pluralize }} found
+  {% else %}
+    {{ total_count }} product{{ total_count|pluralize }} in catalogue
+  {% endif %}
+</p>
+
 <div class="card-grid">
-    {% for product in products %}
-    <a href="{% url 'products:detail' product.slug %}" class="card product-card">
-        <h3>{{ product.name }}</h3>
-        {% if product.category %}
-        <span class="badge">{{ product.category.name }}</span>
-        {% endif %}
-        {% if product.faction %}
-        <span class="badge">{{ product.faction.name }}</span>
-        {% endif %}
-        {% if product.msrp %}
-        <p class="msrp">MSRP: ${{ product.msrp }}</p>
-        {% endif %}
-    </a>
-    {% empty %}
-    <p>No products found. {% if query %}Try a different search.{% endif %}</p>
-    {% endfor %}
+  {% for product in products %}
+  <a href="{% url 'products:detail' product.slug %}" class="card product-card">
+    {% if product.image_url %}
+    <img
+      src="{{ product.image_url }}"
+      alt="{{ product.name }}"
+      loading="lazy"
+      style="width:100%;height:140px;object-fit:contain;margin-bottom:0.5rem;"
+    >
+    {% endif %}
+    <h3>{{ product.name }}</h3>
+    {% if product.category %}<span class="badge">{{ product.category.name }}</span>{% endif %}
+    {% if product.faction %}<span class="badge">{{ product.faction.name }}</span>{% endif %}
+    {% if product.msrp %}<p class="msrp">RRP: £{{ product.msrp }}</p>{% endif %}
+    {% with savings=product.get_savings_vs_retail %}
+    {% if savings %}
+    <p class="best-price">From £{{ savings.amount|floatformat:"-2" }}</p>
+    <span class="savings-badge">Save {{ savings.percent }}% vs RRP</span>
+    {% endif %}
+    {% endwith %}
+  </a>
+  {% empty %}
+  <p style="grid-column:1/-1;color:#888;">
+    No products found.{% if query %} Try a different search term.{% endif %}
+    {% if selected_category or selected_faction %}<a href="{% url 'products:list' %}{% if query %}?q={{ query }}{% endif %}">Clear filters</a>{% endif %}
+  </p>
+  {% endfor %}
 </div>
+
+{% if paginator.num_pages > 1 %}
+{% with base_qs=""%}
+<nav class="pagination" aria-label="Page navigation">
+  {% if page_obj.has_previous %}
+  <a href="?q={{ query }}&category={{ selected_category }}&faction={{ selected_faction }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}">&laquo; Prev</a>
+  {% else %}
+  <span class="disabled">&laquo; Prev</span>
+  {% endif %}
+
+  {% for num in paginator.page_range %}
+    {% if num == page_obj.number %}
+    <span class="current" aria-current="page">{{ num }}</span>
+    {% elif num >= page_obj.number|add:"-3" and num <= page_obj.number|add:"3" %}
+    <a href="?q={{ query }}&category={{ selected_category }}&faction={{ selected_faction }}&sort={{ sort }}&page={{ num }}">{{ num }}</a>
+    {% endif %}
+  {% endfor %}
+
+  {% if page_obj.has_next %}
+  <a href="?q={{ query }}&category={{ selected_category }}&faction={{ selected_faction }}&sort={{ sort }}&page={{ page_obj.next_page_number }}">Next &raquo;</a>
+  {% else %}
+  <span class="disabled">Next &raquo;</span>
+  {% endif %}
+</nav>
+{% endwith %}
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  "use strict";
+  var input = document.getElementById("search-input");
+  var dropdown = document.getElementById("autocomplete-results");
+  var timer;
+
+  input.addEventListener("input", function () {
+    clearTimeout(timer);
+    var q = input.value.trim();
+    if (q.length < 2) { dropdown.style.display = "none"; return; }
+    timer = setTimeout(function () {
+      fetch("{% url 'products:search_autocomplete' %}?q=" + encodeURIComponent(q))
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          dropdown.innerHTML = "";
+          if (!data.results.length) { dropdown.style.display = "none"; return; }
+          data.results.forEach(function (r) {
+            var a = document.createElement("a");
+            a.href = "/products/" + r.slug + "/";
+            var name = document.createElement("span");
+            name.textContent = r.name;
+            a.appendChild(name);
+            if (r.msrp) {
+              var price = document.createElement("span");
+              price.className = "ac-price";
+              price.textContent = "£" + parseFloat(r.msrp).toFixed(2);
+              a.appendChild(price);
+            }
+            dropdown.appendChild(a);
+          });
+          dropdown.style.display = "block";
+        })
+        .catch(function () { dropdown.style.display = "none"; });
+    }, 200);
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".search-wrapper")) { dropdown.style.display = "none"; }
+  });
+
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { dropdown.style.display = "none"; }
+    if (e.key === "ArrowDown") {
+      var first = dropdown.querySelector("a");
+      if (first) { e.preventDefault(); first.focus(); }
+    }
+  });
+})();
+</script>
 {% endblock %}
