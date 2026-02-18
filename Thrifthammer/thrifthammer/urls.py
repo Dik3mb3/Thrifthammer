@@ -10,4 +10,6 @@ urlpatterns = [
     path('products/', include('products.urls')),
     path('prices/', include('prices.urls')),
     path('collection/', include('collections_app.urls')),
+    path('army-calculator/', include('calculators.urls')),
 ]
+

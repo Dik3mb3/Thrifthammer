@@ -14,8 +14,10 @@
             <a href="{% url 'home' %}" class="navbar-brand">Thrifthammer</a>
             <div class="navbar-links">
                 <a href="{% url 'products:list' %}">Browse</a>
+                <a href="{% url 'calculators:space_marines' %}">Army Calculator</a>
                 {% if user.is_authenticated %}
                     <a href="{% url 'collections:my_collection' %}">My Collection</a>
+                    <a href="{% url 'calculators:my_armies' %}">My Armies</a>
                     <a href="{% url 'accounts:profile' %}">{{ user.username }}</a>
                     <a href="{% url 'accounts:logout' %}">Logout</a>
                 {% else %}

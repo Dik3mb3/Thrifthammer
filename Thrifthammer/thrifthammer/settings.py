@@ -25,6 +25,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 INSTALLED_APPS = [
+    'debug_toolbar',  # For development debugging; auto-disabled in production
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -37,9 +38,11 @@ INSTALLED_APPS = [
     'prices',
     'scrapers',
     'collections_app',
+    'calculators',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',  # For development; auto-disabled in production
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -49,6 +52,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+Internal_IPS = ['127.0.0.1']  # Required for django-debug-toolbar to work
 
 ROOT_URLCONF = 'thrifthammer.urls'
 

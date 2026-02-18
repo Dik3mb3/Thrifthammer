@@ -19,7 +19,7 @@ class CurrentPrice(models.Model):
         ordering = ['price']
 
     def __str__(self):
-        return f"{self.product.name} @ {self.retailer.name}: ${self.price}"
+        return f"{self.product.name} @ {self.retailer.name}: ${self.price:.2f}"
 
     @property
     def discount_pct(self):
@@ -47,4 +47,4 @@ class PriceHistory(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.product.name} @ {self.retailer.name}: ${self.price} ({self.recorded_at:%Y-%m-%d})"
+        return f"{self.product.name} @ {self.retailer.name}: ${self.price:.2f} ({self.recorded_at:%Y-%m-%d})"

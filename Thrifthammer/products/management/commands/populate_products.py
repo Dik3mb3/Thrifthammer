@@ -136,17 +136,7 @@ class Command(BaseCommand):
             {
                 'name': 'Games Workshop',
                 'website': 'https://www.games-workshop.com',
-                'country': 'UK',
-            },
-            {
-                'name': 'Element Games',
-                'website': 'https://www.elementgames.co.uk',
-                'country': 'UK',
-            },
-            {
-                'name': 'Wayland Games',
-                'website': 'https://www.waylandgames.co.uk',
-                'country': 'UK',
+                'country': 'US',
             },
             {
                 'name': 'Miniature Market',
@@ -154,9 +144,19 @@ class Command(BaseCommand):
                 'country': 'US',
             },
             {
-                'name': 'Amazon UK',
-                'website': 'https://www.amazon.co.uk',
-                'country': 'UK',
+                'name': 'Noble Knight Games',
+                'website': 'https://www.nobleknight.com',
+                'country': 'US',
+            },
+            {
+                'name': 'Tower of Games',
+                'website': 'https://www.towerofgames.com',
+                'country': 'US',
+            },
+            {
+                'name': 'Amazon',
+                'website': 'https://www.amazon.com',
+                'country': 'US',
             },
         ]
         retailers = {}
@@ -567,12 +567,12 @@ class Command(BaseCommand):
                     'msrp': msrp,
                     'is_active': True,
                     # Placeholder image — update with real images later
-                    'image_url': f'https://via.placeholder.com/400x300/1e1e1e/bb86fc?text={slugify(name)[:30]}',
+                    'image_url': f'https://placehold.co/400x300/1e1e1e/bb86fc?text={slugify(name)[:30]}',
                 },
             )
             products.append(product)
             status = 'created' if created else 'updated'
-            self.stdout.write(f'  [{status}] {name} — £{msrp}')
+            self.stdout.write(f'  [{status}] {name} — ${msrp}')
 
         return products
 
@@ -586,17 +586,18 @@ class Command(BaseCommand):
 
         Rules:
         - Games Workshop always charges the full MSRP
-        - Other UK retailers discount 10–20%
-        - Miniature Market (US) discounts 15–25%
+        - Miniature Market discounts 15–25% (best US deals)
+        - Noble Knight Games discounts 10–18%
+        - Tower of Games discounts 10–20%
         - Amazon may be cheaper or more expensive (small random variance)
         - Some products are out of stock at random retailers
         """
         self.stdout.write('Creating prices…')
         gw = retailers.get('Games Workshop')
-        element = retailers.get('Element Games')
-        wayland = retailers.get('Wayland Games')
         mm = retailers.get('Miniature Market')
-        amazon = retailers.get('Amazon UK')
+        nk = retailers.get('Noble Knight Games')
+        tower = retailers.get('Tower of Games')
+        amazon = retailers.get('Amazon')
 
         price_count = 0
 
@@ -612,44 +613,15 @@ class Command(BaseCommand):
                 retailer=gw,
                 price=msrp,
                 in_stock=True,
-                url=f'https://www.games-workshop.com/en-GB/search?query={product.gw_sku}',
+                url=f'https://www.games-workshop.com/en-US/search?query={product.gw_sku}',
             )
             price_count += 1
 
-            # Element Games: 10–20% off, usually in stock
-            if element:
-                discount = decimal.Decimal(str(round(random.uniform(0.10, 0.20), 2)))
-                el_price = self._apply_discount(msrp, discount)
-                in_stock = random.random() > 0.1  # 90% in stock
-                self._upsert_price(
-                    product=product,
-                    retailer=element,
-                    price=el_price,
-                    in_stock=in_stock,
-                    url=f'https://www.elementgames.co.uk/search?q={product.gw_sku}',
-                )
-                price_count += 1
-
-            # Wayland Games: 10–18% off, usually in stock
-            if wayland:
-                discount = decimal.Decimal(str(round(random.uniform(0.10, 0.18), 2)))
-                wy_price = self._apply_discount(msrp, discount)
-                in_stock = random.random() > 0.15
-                self._upsert_price(
-                    product=product,
-                    retailer=wayland,
-                    price=wy_price,
-                    in_stock=in_stock,
-                    url=f'https://www.waylandgames.co.uk/search?q={product.gw_sku}',
-                )
-                price_count += 1
-
-            # Miniature Market (US): 15–25% off — best deals but USD pricing
+            # Miniature Market: 15–25% off — strong US discount retailer
             if mm and msrp >= 10:
-                # Only stock "international" products (not some paint singles)
                 discount = decimal.Decimal(str(round(random.uniform(0.15, 0.25), 2)))
                 mm_price = self._apply_discount(msrp, discount)
-                in_stock = random.random() > 0.2
+                in_stock = random.random() > 0.1  # 90% in stock
                 self._upsert_price(
                     product=product,
                     retailer=mm,
@@ -659,7 +631,35 @@ class Command(BaseCommand):
                 )
                 price_count += 1
 
-            # Amazon UK: 5–15% off but less reliable stock
+            # Noble Knight Games: 10–18% off, usually in stock
+            if nk:
+                discount = decimal.Decimal(str(round(random.uniform(0.10, 0.18), 2)))
+                nk_price = self._apply_discount(msrp, discount)
+                in_stock = random.random() > 0.15
+                self._upsert_price(
+                    product=product,
+                    retailer=nk,
+                    price=nk_price,
+                    in_stock=in_stock,
+                    url=f'https://www.nobleknight.com/Products/Warhammer?q={product.gw_sku}',
+                )
+                price_count += 1
+
+            # Tower of Games: 10–20% off, good stock
+            if tower:
+                discount = decimal.Decimal(str(round(random.uniform(0.10, 0.20), 2)))
+                tower_price = self._apply_discount(msrp, discount)
+                in_stock = random.random() > 0.2
+                self._upsert_price(
+                    product=product,
+                    retailer=tower,
+                    price=tower_price,
+                    in_stock=in_stock,
+                    url=f'https://www.towerofgames.com/search?q={product.name}',
+                )
+                price_count += 1
+
+            # Amazon: 5–15% off but less reliable stock
             if amazon and msrp >= 20:
                 discount = decimal.Decimal(str(round(random.uniform(0.05, 0.15), 2)))
                 az_price = self._apply_discount(msrp, discount)
@@ -669,7 +669,7 @@ class Command(BaseCommand):
                     retailer=amazon,
                     price=az_price,
                     in_stock=in_stock,
-                    url=f'https://www.amazon.co.uk/s?k={product.name}+warhammer',
+                    url=f'https://www.amazon.com/s?k={product.name}+warhammer',
                 )
                 price_count += 1
 

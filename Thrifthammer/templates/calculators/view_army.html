@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}{{ army.name }}{% endblock %}
+
+{% block extra_head %}
+<style>
+  .army-header { margin-bottom: 1.5rem; }
+  .army-meta { color: #888; font-size: 0.9rem; margin-bottom: 0.75rem; }
+  .army-stats {
+    display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+  }
+  .stat-card {
+    background: #1e1e1e; border: 1px solid #333; border-radius: 6px;
+    padding: 0.75rem 1.25rem; text-align: center;
+  }
+  .stat-card .stat-value { font-size: 1.4rem; font-weight: 700; color: #03dac6; }
+  .stat-card .stat-value.points { color: #bb86fc; }
+  .stat-card .stat-value.savings { color: #a5d6a7; }
+  .stat-card .stat-label { font-size: 0.8rem; color: #888; margin-top: 0.2rem; }
+
+  .units-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+  .units-table th {
+    text-align: left; padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #333; color: #888; font-size: 0.85rem;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .units-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #222; }
+  .units-table tr:last-child td { border-bottom: none; }
+  .units-table .price-col { color: #03dac6; }
+  .units-table .pts-col { color: #bb86fc; }
+  .units-table .cat-badge {
+    background: #2a2a2a; border-radius: 3px; padding: 0.1rem 0.4rem;
+    font-size: 0.75rem; color: #888;
+  }
+
+  .share-section { margin-top: 1.5rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="army-header">
+  <h1>{{ army.name }}</h1>
+  <p class="army-meta">
+    By <strong>{{ army.user.username }}</strong>
+    {% if army.faction %} · {{ army.faction.name }}{% endif %}
+    · Saved {{ army.created_at|date:"d M Y" }}
+    {% if army.is_public %}
+    <span class="badge badge-green" style="margin-left:0.5rem;">Public</span>
+    {% else %}
+    <span class="badge" style="margin-left:0.5rem;background:#333;">Private</span>
+    {% endif %}
+  </p>
+</div>
+
+<!-- Stats -->
+<div class="army-stats">
+  <div class="stat-card">
+    <div class="stat-value points">{{ army.points_total }}</div>
+    <div class="stat-label">Points</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">${{ army.total_cost }}</div>
+    <div class="stat-label">Best Price</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">${{ army.total_retail }}</div>
+    <div class="stat-label">GW MSRP</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value savings">${{ army.total_savings }}</div>
+    <div class="stat-label">Total Savings</div>
+  </div>
+</div>
+
+<!-- Unit list -->
+<h2>Units</h2>
+{% if army.units_data %}
+<table class="units-table">
+  <thead>
+    <tr>
+      <th>Unit</th>
+      <th>Role</th>
+      <th>Qty</th>
+      <th>Pts (total)</th>
+      <th>Price × Qty</th>
+      <th>MSRP × Qty</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for unit in army.units_data %}
+    <tr>
+      <td>{{ unit.name }}</td>
+      <td><span class="cat-badge">{{ unit.category }}</span></td>
+      <td>{{ unit.quantity }}</td>
+      <td class="pts-col">
+        {% if unit.points %}
+          {% widthratio unit.points 1 unit.quantity as total_pts %}
+          {{ total_pts }}
+        {% else %}—{% endif %}
+      </td>
+      <td class="price-col">
+        {% if unit.price %}
+          ${{ unit.price }} × {{ unit.quantity }}
+        {% else %}—{% endif %}
+      </td>
+      <td>
+        {% if unit.msrp %}
+          ${{ unit.msrp }} × {{ unit.quantity }}
+        {% else %}—{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p style="color:#888;">No units in this army.</p>
+{% endif %}
+
+<!-- Actions -->
+<div class="share-section">
+  {% if army.is_public %}
+  <button type="button" class="btn btn-secondary" id="copy-link-btn">
+    Copy Share Link
+  </button>
+  {% endif %}
+  <a href="{% url 'calculators:space_marines' %}" class="btn btn-primary">
+    Build a New List
+  </a>
+  {% if user == army.user %}
+  <a href="{% url 'calculators:my_armies' %}" class="btn btn-secondary">
+    My Saved Lists
+  </a>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if army.is_public %}
+<script>
+document.getElementById('copy-link-btn').addEventListener('click', function () {
+  var url = window.location.href;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function () {
+      alert('Link copied to clipboard!');
+    });
+  } else {
+    window.prompt('Copy this link:', url);
+  }
+});
+</script>
+{% endif %}
+{% endblock %}

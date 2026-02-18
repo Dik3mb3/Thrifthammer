@@ -124,7 +124,7 @@ class ProductAdmin(admin.ModelAdmin):
         if best:
             return format_html(
                 '<strong>{}</strong> @ {}',
-                f'£{best.price}',
+                f'${best.price}',
                 best.retailer.name,
             )
         # Fall back to out-of-stock prices if no in-stock option exists
@@ -138,7 +138,7 @@ class ProductAdmin(admin.ModelAdmin):
         if best_oos:
             return format_html(
                 '<span style="color:#888">{} @ {} (OOS)</span>',
-                f'£{best_oos.price}',
+                f'${best_oos.price}',
                 best_oos.retailer.name,
             )
         return '—'

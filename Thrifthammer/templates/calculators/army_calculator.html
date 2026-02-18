@@ -1,0 +1,514 @@
+{% extends "base.html" %}
+
+{% block title %}Space Marine Army Cost Calculator{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ---- Layout ---- */
+  .calc-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .calc-layout { grid-template-columns: 1fr; }
+  }
+
+  /* ---- Category sections ---- */
+  .unit-category { margin-bottom: 1.5rem; }
+  .unit-category h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #bb86fc;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.25rem;
+  }
+
+  /* ---- Unit rows ---- */
+  .unit-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 0.25rem;
+    background: #1e1e1e;
+    border: 1px solid transparent;
+    transition: border-color 0.15s;
+  }
+  .unit-row:hover { border-color: #333; }
+  .unit-row.selected { border-color: #bb86fc; background: #201a2d; }
+  .unit-row .unit-name { flex: 1; font-size: 0.95rem; }
+  .unit-row .unit-pts { color: #888; font-size: 0.85rem; min-width: 60px; text-align: right; }
+  .unit-row .unit-price { color: #03dac6; font-size: 0.9rem; min-width: 70px; text-align: right; }
+  .unit-row .unit-qty {
+    display: flex; align-items: center; gap: 0.25rem;
+  }
+  .unit-row .unit-qty button {
+    width: 24px; height: 24px; padding: 0; font-size: 1rem;
+    background: #333; color: #e0e0e0; border: none; border-radius: 3px; cursor: pointer;
+    line-height: 24px; text-align: center;
+  }
+  .unit-row .unit-qty button:hover { background: #444; }
+  .unit-row .unit-qty .qty-display {
+    min-width: 24px; text-align: center; font-size: 0.9rem;
+  }
+  .unit-row .unit-qty button.remove-unit { background: #5a1a1a; }
+  .unit-row .unit-qty button.remove-unit:hover { background: #7a2a2a; }
+
+  /* ---- Sidebar totals ---- */
+  .calc-sidebar {
+    position: sticky;
+    top: 1rem;
+  }
+  .totals-card {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .totals-card h3 { margin-bottom: 1rem; font-size: 1rem; }
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+  .total-row .label { color: #888; }
+  .total-row .value { font-weight: 700; }
+  .total-row.savings .value { color: #a5d6a7; }
+  .total-row.cost .value { color: #03dac6; font-size: 1.1rem; }
+  .total-row.points .value { color: #bb86fc; }
+  .totals-divider { border: none; border-top: 1px solid #333; margin: 0.75rem 0; }
+
+  .army-name-input {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0.75rem;
+  }
+  .save-actions { display: flex; flex-direction: column; gap: 0.5rem; }
+  .save-actions label { font-size: 0.85rem; color: #888; }
+
+  /* ---- Prebuilt armies ---- */
+  .prebuilt-section { margin-bottom: 1rem; }
+  .prebuilt-section h4 { font-size: 0.85rem; color: #888; margin-bottom: 0.5rem; }
+  .prebuilt-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 0.4rem 0.75rem;
+    margin-bottom: 0.4rem;
+    color: #bb86fc;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.15s;
+  }
+  .prebuilt-btn:hover { background: #222; text-decoration: none; }
+
+  /* ---- Saved armies panel ---- */
+  .saved-armies-section h4 { font-size: 0.85rem; color: #888; margin-bottom: 0.5rem; }
+  .saved-army-link { font-size: 0.8rem; display: block; margin-bottom: 0.25rem; color: #e0e0e0; }
+
+  /* ---- Unit list in sidebar ---- */
+  .selected-units { margin-top: 0.75rem; }
+  .selected-units h4 { font-size: 0.85rem; color: #888; margin-bottom: 0.5rem; }
+  .selected-unit-line { font-size: 0.82rem; color: #ccc; margin-bottom: 0.2rem; }
+  .no-units-msg { font-size: 0.85rem; color: #555; font-style: italic; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Space Marine Army Cost Calculator</h1>
+<p style="color:#888;margin-bottom:1.5rem;">
+  Build your army list and see the real cost across US retailers — updated live.
+</p>
+
+<div class="calc-layout">
+
+  <!-- ===== Unit picker ===== -->
+  <div class="unit-picker">
+    {% for cat_key, cat in ordered_categories %}
+    <div class="unit-category" data-category="{{ cat_key }}">
+      <h3>{{ cat.label }}</h3>
+      {% for unit in cat.units %}
+      <div class="unit-row" id="unit-row-{{ unit.pk }}" data-unit-id="{{ unit.pk }}"
+           data-name="{{ unit.name|escapejs }}"
+           data-points="{{ unit.points_cost|default:0 }}"
+           data-typical-qty="{{ unit.typical_quantity }}"
+           data-price="{% if unit.product %}{{ unit.product.get_cheapest_price.price|default:'' }}{% endif %}"
+           data-msrp="{% if unit.product %}{{ unit.product.msrp|default:'' }}{% endif %}">
+        <span class="unit-name">{{ unit.name }}</span>
+        <span class="unit-pts">{{ unit.points_cost }}pts × {{ unit.typical_quantity }}</span>
+        <span class="unit-price">
+          {% if unit.product %}
+            {% with best=unit.product.get_cheapest_price %}
+              {% if best %}${{ best.price }}{% else %}<span style="color:#555">—</span>{% endif %}
+            {% endwith %}
+          {% else %}
+            <span style="color:#555" title="No product linked">—</span>
+          {% endif %}
+        </span>
+        <div class="unit-qty" style="display:none;">
+          <button type="button" class="decrease-qty" title="Decrease">−</button>
+          <span class="qty-display">1</span>
+          <button type="button" class="increase-qty" title="Increase">+</button>
+          <button type="button" class="remove-unit" title="Remove from list">✕</button>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm add-unit-btn"
+                style="min-width:56px;">Add</button>
+      </div>
+      {% endfor %}
+    </div>
+    {% empty %}
+    <p style="color:#888;">No units found. Run <code>python manage.py populate_units</code> to add units.</p>
+    {% endfor %}
+  </div>
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="calc-sidebar">
+
+    <!-- Totals card -->
+    <div class="totals-card">
+      <h3>Army Totals</h3>
+      <div class="total-row points">
+        <span class="label">Points</span>
+        <span class="value" id="total-points">0</span>
+      </div>
+      <hr class="totals-divider">
+      <div class="total-row cost">
+        <span class="label">Best Price</span>
+        <span class="value" id="total-cost">$0.00</span>
+      </div>
+      <div class="total-row">
+        <span class="label">GW MSRP</span>
+        <span class="value" id="total-retail">$0.00</span>
+      </div>
+      <div class="total-row savings">
+        <span class="label">You Save</span>
+        <span class="value" id="total-savings">$0.00</span>
+      </div>
+
+      <!-- Selected units list -->
+      <div class="selected-units">
+        <h4>Selected Units</h4>
+        <div id="selected-units-list">
+          <p class="no-units-msg">No units added yet.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save army card (logged-in users only) -->
+    {% if user.is_authenticated %}
+    <div class="totals-card">
+      <h3>Save List</h3>
+      <input type="text" id="army-name-input" class="army-name-input"
+             placeholder="Army name…" maxlength="200">
+      <div class="save-actions">
+        <label>
+          <input type="checkbox" id="army-public-toggle"> Make shareable (anyone with link)
+        </label>
+        <button type="button" id="save-army-btn" class="btn btn-primary">Save Army List</button>
+        <p id="save-status" style="font-size:0.8rem;color:#888;display:none;"></p>
+      </div>
+    </div>
+    {% else %}
+    <div class="totals-card" style="text-align:center;">
+      <p style="color:#888;font-size:0.9rem;margin-bottom:0.75rem;">
+        <a href="{% url 'accounts:login' %}">Log in</a> to save and share your army lists.
+      </p>
+    </div>
+    {% endif %}
+
+    <!-- Prebuilt armies -->
+    {% if prebuilt_armies %}
+    <div class="totals-card prebuilt-section">
+      <h4>Quick Start</h4>
+      {% for army in prebuilt_armies %}
+      <button type="button" class="prebuilt-btn"
+              data-units="{{ army.units_data|safe }}"
+              title="{{ army.description }}">
+        {{ army.name }}
+      </button>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- User's saved armies -->
+    {% if saved_armies %}
+    <div class="totals-card saved-armies-section">
+      <h4>My Saved Lists</h4>
+      {% for army in saved_armies %}
+      <a class="saved-army-link" href="{{ army.get_absolute_url }}">
+        {{ army.name }} — {{ army.points_total }}pts
+      </a>
+      {% endfor %}
+      <a href="{% url 'calculators:my_armies' %}" style="font-size:0.8rem;color:#bb86fc;display:block;margin-top:0.5rem;">
+        View all →
+      </a>
+    </div>
+    {% endif %}
+
+  </aside>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+/* army-calculator.js — vanilla JS army list manager */
+(function () {
+  "use strict";
+
+  /* ---- State ---- */
+  var selectedUnits = {};  // {unitId: {id, name, quantity, points, typicalQty, price, msrp}}
+
+  /* ---- DOM helpers ---- */
+  function qs(sel) { return document.querySelector(sel); }
+  function qsa(sel) { return Array.from(document.querySelectorAll(sel)); }
+  function fmt(num) { return "$" + parseFloat(num || 0).toFixed(2); }
+
+  /* ---- Update the totals sidebar ---- */
+  function updateDisplay() {
+    var points = 0;
+    var cost = 0;
+    var retail = 0;
+    var lines = [];
+
+    Object.values(selectedUnits).forEach(function (u) {
+      var unitPts = u.points * u.typicalQty * u.quantity;
+      var unitCost = parseFloat(u.price || 0) * u.quantity;
+      var unitRetail = parseFloat(u.msrp || 0) * u.quantity;
+      points += unitPts;
+      cost += unitCost;
+      retail += unitRetail;
+      lines.push(
+        '<p class="selected-unit-line">' +
+        escHtml(u.name) + ' ×' + u.quantity +
+        ' <span style="color:#03dac6">' + fmt(unitCost) + '</span>' +
+        ' <span style="color:#888">(' + unitPts + 'pts)</span></p>'
+      );
+    });
+
+    qs('#total-points').textContent = points;
+    qs('#total-cost').textContent = fmt(cost);
+    qs('#total-retail').textContent = fmt(retail);
+    qs('#total-savings').textContent = fmt(retail - cost);
+
+    var listEl = qs('#selected-units-list');
+    if (lines.length) {
+      listEl.innerHTML = lines.join('');
+    } else {
+      listEl.innerHTML = '<p class="no-units-msg">No units added yet.</p>';
+    }
+  }
+
+  /* ---- Add a unit to the list ---- */
+  function addUnit(unitId) {
+    var row = qs('#unit-row-' + unitId);
+    if (!row) { return; }
+
+    if (!selectedUnits[unitId]) {
+      selectedUnits[unitId] = {
+        id: unitId,
+        name: row.dataset.name,
+        quantity: 1,
+        points: parseInt(row.dataset.points, 10) || 0,
+        typicalQty: parseInt(row.dataset.typicalQty, 10) || 1,
+        price: row.dataset.price || '0',
+        msrp: row.dataset.msrp || '0',
+      };
+    } else {
+      selectedUnits[unitId].quantity = Math.min(20, selectedUnits[unitId].quantity + 1);
+    }
+    syncRowUI(unitId);
+    updateDisplay();
+  }
+
+  /* ---- Remove a unit entirely ---- */
+  function removeUnit(unitId) {
+    delete selectedUnits[unitId];
+    syncRowUI(unitId);
+    updateDisplay();
+  }
+
+  /* ---- Sync the row's Add/Qty buttons with state ---- */
+  function syncRowUI(unitId) {
+    var row = qs('#unit-row-' + unitId);
+    if (!row) { return; }
+    var addBtn = row.querySelector('.add-unit-btn');
+    var qtyBlock = row.querySelector('.unit-qty');
+    var qtyDisplay = row.querySelector('.qty-display');
+
+    if (selectedUnits[unitId]) {
+      addBtn.style.display = 'none';
+      qtyBlock.style.display = 'flex';
+      qtyDisplay.textContent = selectedUnits[unitId].quantity;
+      row.classList.add('selected');
+    } else {
+      addBtn.style.display = '';
+      qtyBlock.style.display = 'none';
+      row.classList.remove('selected');
+    }
+  }
+
+  /* ---- Load a prebuilt army from JSON ---- */
+  function loadPrebuiltArmy(unitsJson) {
+    try {
+      var units = (typeof unitsJson === 'string') ? JSON.parse(unitsJson) : unitsJson;
+    } catch (e) {
+      return;
+    }
+    // Clear current
+    Object.keys(selectedUnits).forEach(function (id) {
+      delete selectedUnits[id];
+      syncRowUI(id);
+    });
+    // Load prebuilt
+    units.forEach(function (u) {
+      var id = u.unit_type_id;
+      var row = qs('#unit-row-' + id);
+      if (!row) { return; }
+      selectedUnits[id] = {
+        id: id,
+        name: row.dataset.name || u.name,
+        quantity: u.quantity || 1,
+        points: parseInt(row.dataset.points, 10) || 0,
+        typicalQty: parseInt(row.dataset.typicalQty, 10) || 1,
+        price: row.dataset.price || '0',
+        msrp: row.dataset.msrp || '0',
+      };
+      syncRowUI(id);
+    });
+    updateDisplay();
+  }
+
+  /* ---- Save army via AJAX ---- */
+  function saveArmy() {
+    var name = (qs('#army-name-input') || {}).value || '';
+    var isPublic = (qs('#army-public-toggle') || {}).checked || false;
+    var statusEl = qs('#save-status');
+
+    if (!name.trim()) {
+      if (statusEl) { statusEl.style.display = 'block'; statusEl.textContent = 'Please enter an army name.'; }
+      return;
+    }
+
+    var unitList = Object.values(selectedUnits).map(function (u) {
+      return { id: u.id, quantity: u.quantity };
+    });
+
+    if (!unitList.length) {
+      if (statusEl) { statusEl.style.display = 'block'; statusEl.textContent = 'Add some units first!'; }
+      return;
+    }
+
+    if (statusEl) { statusEl.style.display = 'block'; statusEl.textContent = 'Saving…'; }
+
+    var csrfToken = getCookie('csrftoken');
+    fetch("{% url 'calculators:save_army' %}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken,
+      },
+      body: JSON.stringify({ name: name, units: unitList, is_public: isPublic }),
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      if (data.success) {
+        if (statusEl) {
+          statusEl.textContent = 'Saved! ';
+          var link = document.createElement('a');
+          link.href = data.url;
+          link.textContent = 'View list →';
+          statusEl.appendChild(link);
+        }
+      } else {
+        if (statusEl) { statusEl.textContent = data.error || 'Save failed.'; }
+      }
+    })
+    .catch(function () {
+      if (statusEl) { statusEl.textContent = 'Network error — please try again.'; }
+    });
+  }
+
+  /* ---- Share button helper ---- */
+  function shareArmy(url) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function () {
+        alert('Link copied to clipboard!');
+      });
+    } else {
+      window.prompt('Copy this link:', url);
+    }
+  }
+
+  /* ---- CSRF cookie helper ---- */
+  function getCookie(name) {
+    var value = '; ' + document.cookie;
+    var parts = value.split('; ' + name + '=');
+    if (parts.length === 2) { return parts.pop().split(';').shift(); }
+    return '';
+  }
+
+  /* ---- XSS-safe text escaping ---- */
+  function escHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  /* ---- Event delegation on unit list ---- */
+  document.addEventListener('click', function (e) {
+    var row = e.target.closest('.unit-row');
+    if (!row) { return; }
+    var unitId = row.dataset.unitId;
+
+    if (e.target.classList.contains('add-unit-btn')) {
+      addUnit(unitId);
+    } else if (e.target.classList.contains('increase-qty')) {
+      if (selectedUnits[unitId]) {
+        selectedUnits[unitId].quantity = Math.min(20, selectedUnits[unitId].quantity + 1);
+        syncRowUI(unitId);
+        updateDisplay();
+      }
+    } else if (e.target.classList.contains('decrease-qty')) {
+      if (selectedUnits[unitId]) {
+        selectedUnits[unitId].quantity -= 1;
+        if (selectedUnits[unitId].quantity <= 0) {
+          removeUnit(unitId);
+        } else {
+          syncRowUI(unitId);
+          updateDisplay();
+        }
+      }
+    } else if (e.target.classList.contains('remove-unit')) {
+      removeUnit(unitId);
+    }
+  });
+
+  /* ---- Prebuilt army buttons ---- */
+  qsa('.prebuilt-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      loadPrebuiltArmy(btn.dataset.units);
+    });
+  });
+
+  /* ---- Save button ---- */
+  var saveBtn = qs('#save-army-btn');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', saveArmy);
+  }
+
+  /* ---- Initial render ---- */
+  updateDisplay();
+
+})();
+</script>
+{% endblock %}

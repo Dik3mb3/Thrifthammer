@@ -30,7 +30,7 @@ class CurrentPriceAdmin(admin.ModelAdmin):
     @admin.display(description='Price')
     def formatted_price(self, obj):
         """Highlight the price in the theme teal colour for quick scanning."""
-        return format_html('<strong style="color:#03dac6">£{}</strong>', obj.price)
+        return format_html('<strong style="color:#03dac6">${}</strong>', obj.price)
 
     @admin.display(description='Discount')
     def discount_badge(self, obj):

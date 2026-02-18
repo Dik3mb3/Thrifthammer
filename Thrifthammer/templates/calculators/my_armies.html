@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}My Army Lists{% endblock %}
+
+{% block extra_head %}
+<style>
+  .army-card {
+    background: #1e1e1e; border: 1px solid #333; border-radius: 6px;
+    padding: 1rem 1.25rem; margin-bottom: 0.75rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 0.5rem;
+  }
+  .army-info h3 { margin: 0 0 0.25rem; font-size: 1rem; }
+  .army-info .meta { color: #888; font-size: 0.85rem; }
+  .army-actions { display: flex; gap: 0.5rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>My Army Lists</h1>
+<p style="margin-bottom:1.5rem;">
+  <a href="{% url 'calculators:space_marines' %}" class="btn btn-primary">Build New List</a>
+</p>
+
+{% for army in armies %}
+<div class="army-card">
+  <div class="army-info">
+    <h3>
+      <a href="{{ army.get_absolute_url }}">{{ army.name }}</a>
+      {% if army.is_public %}
+      <span class="badge badge-green" style="font-size:0.7rem;margin-left:0.4rem;">Public</span>
+      {% endif %}
+    </h3>
+    <p class="meta">
+      {{ army.points_total }} pts
+      · Best price: ${{ army.total_cost }}
+      · Saves ${{ army.total_savings }} vs MSRP
+      · Saved {{ army.created_at|date:"d M Y" }}
+    </p>
+  </div>
+  <div class="army-actions">
+    <a href="{{ army.get_absolute_url }}" class="btn btn-secondary btn-sm">View</a>
+  </div>
+</div>
+{% empty %}
+<p style="color:#888;">
+  You haven't saved any army lists yet.
+  <a href="{% url 'calculators:space_marines' %}">Build your first list →</a>
+</p>
+{% endfor %}
+
+{% if is_paginated %}
+<nav class="pagination" aria-label="Page navigation">
+  {% if page_obj.has_previous %}
+  <a href="?page={{ page_obj.previous_page_number }}">&laquo; Prev</a>
+  {% endif %}
+  <span class="current">Page {{ page_obj.number }} of {{ paginator.num_pages }}</span>
+  {% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>
+  {% endif %}
+</nav>
+{% endif %}
+{% endblock %}

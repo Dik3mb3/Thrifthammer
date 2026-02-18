@@ -43,13 +43,13 @@
   {% endif %}
 
   {% if product.msrp %}
-  <p class="msrp">GW RRP: <strong>£{{ product.msrp }}</strong></p>
+  <p class="msrp">GW RRP: <strong>${{ product.msrp }}</strong></p>
   {% endif %}
 
   {# Savings callout — only shown when we have a cheaper price #}
   {% if savings and savings.percent > 0 %}
   <div class="savings-hero">
-    <p class="save-amount">Save £{{ savings.amount|floatformat:"2" }}</p>
+    <p class="save-amount">Save ${{ savings.amount|floatformat:"2" }}</p>
     <p class="save-pct">{{ savings.percent }}% cheaper than GW RRP at {{ savings.retailer.name }}</p>
   </div>
   {% endif %}
@@ -94,7 +94,7 @@
       <tr{% if forloop.first and cp.in_stock %} class="cheapest"{% endif %}>
         <td>{{ cp.retailer.name }}</td>
         <td class="price">
-          £{{ cp.price }}
+          ${{ cp.price }}
           {% if forloop.first and cp.in_stock %}
           <span class="badge badge-green" style="font-size:0.7rem;margin-left:4px;">Best</span>
           {% endif %}
@@ -140,7 +140,7 @@
            style="width:100%;height:100px;object-fit:contain;margin-bottom:0.5rem;">
       {% endif %}
       <h3>{{ rp.name }}</h3>
-      {% if rp.msrp %}<p class="msrp">RRP: £{{ rp.msrp }}</p>{% endif %}
+      {% if rp.msrp %}<p class="msrp">RRP: ${{ rp.msrp }}</p>{% endif %}
     </a>
     {% endfor %}
   </div>

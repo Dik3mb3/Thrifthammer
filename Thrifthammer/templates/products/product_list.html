@@ -92,13 +92,13 @@
     <h3>{{ product.name }}</h3>
     {% if product.category %}<span class="badge">{{ product.category.name }}</span>{% endif %}
     {% if product.faction %}<span class="badge">{{ product.faction.name }}</span>{% endif %}
-    {% if product.msrp %}<p class="msrp">RRP: £{{ product.msrp }}</p>{% endif %}
+    {% if product.msrp %}<p class="msrp">RRP: ${{ product.msrp }}</p>{% endif %}
 
     {# min_price is a DB annotation added in the view — zero extra queries per card #}
     {% if product.min_price %}
-    <p class="best-price">From £{{ product.min_price|floatformat:"2" }}</p>
+    <p class="best-price">From ${{ product.min_price|floatformat:"2" }}</p>
     {% if product.msrp and product.min_price < product.msrp %}
-    <span class="savings-badge">Save £{{ product.msrp|add:"-"|add:product.min_price|floatformat:"2" }} vs RRP</span>
+    <span class="savings-badge">Save ${{ product.msrp|add:"-"|add:product.min_price|floatformat:"2" }} vs RRP</span>
     {% endif %}
     {% endif %}
   </a>
@@ -164,7 +164,7 @@
             if (r.msrp) {
               var price = document.createElement("span");
               price.className = "ac-price";
-              price.textContent = "£" + parseFloat(r.msrp).toFixed(2);
+              price.textContent = "$" + parseFloat(r.msrp).toFixed(2);
               a.appendChild(price);
             }
             dropdown.appendChild(a);
