@@ -9,6 +9,11 @@ from django.core.cache import cache
 from django.db import models
 from django.utils.text import slugify
 
+# Sentinel object used by get_cheapest_price() to distinguish a cached None
+# (product has no prices) from a cache miss. Using `is not None` would cause
+# products with no prices to skip the cache and re-query on every request.
+_CACHE_MISS = object()
+
 
 class Category(models.Model):
     """
@@ -182,15 +187,19 @@ class Product(models.Model):
         Return the cheapest in-stock CurrentPrice, cached for 1 hour.
 
         Falls back to cheapest out-of-stock price if nothing is in stock.
-        Results are cached to avoid repeated DB hits on list/detail pages.
+        Results are cached to avoid repeated DB hits on detail pages.
+
+        Cache sentinel: we use a dedicated _MISSING sentinel object rather
+        than checking `if cached is not None`, because a product with no
+        prices would cache None and then always re-query on every request.
         """
         cache_key = f'cheapest_price_{self.pk}'
-        cached = cache.get(cache_key)
-        if cached is not None:
+        cached = cache.get(cache_key, _CACHE_MISS)
+        if cached is not _CACHE_MISS:
             return cached
 
         # Prefer in-stock, fall back to cheapest overall
-        from prices.models import CurrentPrice  # avoid circular import
+        from prices.models import CurrentPrice  # avoid circular import at module level
         result = (
             CurrentPrice.objects
             .filter(product=self, in_stock=True)
@@ -205,7 +214,7 @@ class Product(models.Model):
             .first()
         )
 
-        # Cache for 1 hour (prices are updated by scrapers, not real-time)
+        # Cache for 1 hour — None is a valid result (no prices yet)
         cache.set(cache_key, result, timeout=3600)
         return result
 

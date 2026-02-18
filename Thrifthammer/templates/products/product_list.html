@@ -4,7 +4,6 @@
 
 {% block extra_head %}
 <style>
-  /* Autocomplete dropdown */
   .search-wrapper { position: relative; flex: 1; min-width: 200px; }
   #autocomplete-results {
     position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
@@ -13,13 +12,11 @@
   }
   #autocomplete-results a {
     display: flex; justify-content: space-between;
-    padding: 0.5rem 0.75rem; color: #e0e0e0; border-bottom: 1px solid #333;
-    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem; color: #e0e0e0; border-bottom: 1px solid #333; font-size: 0.9rem;
   }
   #autocomplete-results a:last-child { border-bottom: none; }
   #autocomplete-results a:hover { background: #2a2a2a; text-decoration: none; }
   #autocomplete-results .ac-price { color: #03dac6; font-weight: 600; }
-  /* Pagination */
   .pagination { display: flex; gap: 0.5rem; margin: 1.5rem 0; flex-wrap: wrap; align-items: center; }
   .pagination a, .pagination span {
     padding: 0.35rem 0.75rem; border-radius: 4px; border: 1px solid #333; font-size: 0.9rem;
@@ -40,12 +37,8 @@
 <form method="get" class="search-form" id="search-form" role="search">
   <div class="search-wrapper">
     <input
-      type="text"
-      name="q"
-      id="search-input"
-      value="{{ query }}"
-      placeholder="Search by name or SKU…"
-      autocomplete="off"
+      type="text" name="q" id="search-input" value="{{ query }}"
+      placeholder="Search by name or SKU…" autocomplete="off"
       aria-label="Search products"
     >
     <div id="autocomplete-results" role="listbox" aria-label="Suggestions"></div>
@@ -100,23 +93,26 @@
     {% if product.category %}<span class="badge">{{ product.category.name }}</span>{% endif %}
     {% if product.faction %}<span class="badge">{{ product.faction.name }}</span>{% endif %}
     {% if product.msrp %}<p class="msrp">RRP: £{{ product.msrp }}</p>{% endif %}
-    {% with savings=product.get_savings_vs_retail %}
-    {% if savings %}
-    <p class="best-price">From £{{ savings.amount|floatformat:"-2" }}</p>
-    <span class="savings-badge">Save {{ savings.percent }}% vs RRP</span>
+
+    {# min_price is a DB annotation added in the view — zero extra queries per card #}
+    {% if product.min_price %}
+    <p class="best-price">From £{{ product.min_price|floatformat:"2" }}</p>
+    {% if product.msrp and product.min_price < product.msrp %}
+    <span class="savings-badge">Save £{{ product.msrp|add:"-"|add:product.min_price|floatformat:"2" }} vs RRP</span>
     {% endif %}
-    {% endwith %}
+    {% endif %}
   </a>
   {% empty %}
   <p style="grid-column:1/-1;color:#888;">
     No products found.{% if query %} Try a different search term.{% endif %}
-    {% if selected_category or selected_faction %}<a href="{% url 'products:list' %}{% if query %}?q={{ query }}{% endif %}">Clear filters</a>{% endif %}
+    {% if selected_category or selected_faction %}
+    <a href="{% url 'products:list' %}{% if query %}?q={{ query }}{% endif %}">Clear filters</a>
+    {% endif %}
   </p>
   {% endfor %}
 </div>
 
 {% if paginator.num_pages > 1 %}
-{% with base_qs=""%}
 <nav class="pagination" aria-label="Page navigation">
   {% if page_obj.has_previous %}
   <a href="?q={{ query }}&category={{ selected_category }}&faction={{ selected_faction }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}">&laquo; Prev</a>
@@ -138,7 +134,6 @@
   <span class="disabled">Next &raquo;</span>
   {% endif %}
 </nav>
-{% endwith %}
 {% endif %}
 {% endblock %}
 
