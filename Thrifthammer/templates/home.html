@@ -2,42 +2,319 @@
 
 {% block title %}Home{% endblock %}
 
-{% block content %}
-<section class="hero">
-    <h1>Thrifthammer</h1>
-    <p>Track prices on Warhammer kits across multiple retailers. Never overpay again.</p>
-    <a href="{% url 'products:list' %}" class="btn btn-primary">Browse Products</a>
-</section>
+{% block extra_head %}
+<style>
+  /* Hero search autocomplete inherits global .hero-search-results styles */
+  #hero-search-results { display: none; }
+</style>
+{% endblock %}
 
-<section class="categories-section">
-    <h2>Categories</h2>
-    <div class="card-grid">
-        {% for category in categories %}
-        <a href="{% url 'products:list' %}?category={{ category.slug }}" class="card">
-            <h3>{{ category.name }}</h3>
-            <p>{{ category.description|truncatewords:15 }}</p>
-        </a>
-        {% empty %}
-        <p>No categories yet. Add some in the admin panel.</p>
-        {% endfor %}
+{% block content %}
+
+{# ─── HERO ──────────────────────────────────────────────────────────────── #}
+<section class="hero" aria-labelledby="hero-heading">
+    <div class="container" style="position:relative;z-index:1;">
+
+        <h1 id="hero-heading">
+            Find the Cheapest<br>
+            <span style="color:var(--accent-gold-lt);">Warhammer Kits</span> Online
+        </h1>
+        <div class="hero-rule"></div>
+        <p>
+            We track prices across US retailers so you always know
+            where to get the best deal. No more overpaying for plastic.
+        </p>
+
+        {# Hero search bar #}
+        <div class="hero-search" role="search">
+            <span class="hero-search-icon" aria-hidden="true">🔍</span>
+            <input
+                type="text"
+                id="hero-search-input"
+                placeholder="Search kits, factions, SKUs…"
+                autocomplete="off"
+                aria-label="Search Warhammer products"
+            >
+            <div id="hero-search-results" class="hero-search-results" role="listbox" aria-label="Search suggestions"></div>
+        </div>
+
+        <div style="display:flex;gap:var(--sp-3);justify-content:center;flex-wrap:wrap;">
+            <a href="{% url 'products:list' %}" class="btn btn-primary btn-lg">Browse All Products</a>
+            <a href="{% url 'calculators:space_marines' %}" class="btn btn-secondary btn-lg">⚔ Army Calculator</a>
+        </div>
+
+        {# Hero stats bar #}
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-value">49+</span>
+                <span class="hero-stat-label">Kits tracked</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-value">4</span>
+                <span class="hero-stat-label">US Retailers</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-value">Free</span>
+                <span class="hero-stat-label">Always</span>
+            </div>
+        </div>
+
     </div>
 </section>
 
+{# ─── FEATURED DEALS ──────────────────────────────────────────────────── #}
 {% if recent_drops %}
-<section class="recent-section">
-    <h2>Recent Price Updates</h2>
-    <div class="card-grid">
-        {% for cp in recent_drops %}
-        <a href="{% url 'products:detail' cp.product.slug %}" class="card">
-            <h3>{{ cp.product.name }}</h3>
-            <p class="price">${{ cp.price }}</p>
-            <p class="retailer">{{ cp.retailer.name }}</p>
-            {% if cp.discount_pct %}
-            <span class="badge badge-green">{{ cp.discount_pct }}% off MSRP</span>
-            {% endif %}
-        </a>
-        {% endfor %}
+<section class="section" aria-labelledby="deals-heading">
+    <div class="container">
+        <div class="section-header" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-4);">
+            <div>
+                <h2 id="deals-heading">🔥 Best Prices Right Now</h2>
+                <p>Latest prices pulled from across US retailers</p>
+            </div>
+            <a href="{% url 'products:list' %}?sort=price_asc" class="btn btn-ghost">View all deals →</a>
+        </div>
+
+        <div class="card-grid">
+            {% for cp in recent_drops %}
+            <a href="{% url 'products:detail' cp.product.slug %}" class="product-card">
+
+                {% if cp.product.image_url %}
+                <img
+                    src="{{ cp.product.image_url }}"
+                    alt="{{ cp.product.name }}"
+                    class="product-card-img"
+                    loading="lazy"
+                >
+                {% else %}
+                <div class="product-card-img-placeholder" aria-hidden="true">🗡️</div>
+                {% endif %}
+
+                <div class="product-card-body">
+                    <div class="product-card-name">{{ cp.product.name }}</div>
+
+                    <div class="product-card-badges">
+                        {% if cp.product.category %}
+                        <span class="badge badge-default">{{ cp.product.category.name }}</span>
+                        {% endif %}
+                        {% if cp.product.faction %}
+                        <span class="badge badge-purple">{{ cp.product.faction.name }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="product-card-pricing">
+                        <div class="product-card-price-label">Best price at {{ cp.retailer.name }}</div>
+                        <div class="product-card-price">${{ cp.price|floatformat:"2" }}</div>
+                        {% if cp.product.msrp %}
+                        <div style="display:flex;align-items:center;gap:var(--sp-2);flex-wrap:wrap;margin-top:var(--sp-1);">
+                            <span class="product-card-msrp">RRP ${{ cp.product.msrp }}</span>
+                            {% if cp.discount_pct and cp.discount_pct > 0 %}
+                            <span class="badge badge-green">{{ cp.discount_pct }}% off</span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </a>
+            {% endfor %}
+        </div>
     </div>
 </section>
 {% endif %}
+
+{# ─── ARMY CALCULATOR CTA ─────────────────────────────────────────────── #}
+<section class="section section-alt" aria-labelledby="calc-heading">
+    <div class="container">
+        <div class="calc-cta-grid">
+
+            {# Left: copy #}
+            <div>
+                <span class="badge badge-gold" style="margin-bottom:var(--sp-4);">New Feature</span>
+                <h2 id="calc-heading" style="font-size:clamp(1.5rem,4vw,2rem);margin-bottom:var(--sp-4);">
+                    Plan Your Army.<br>
+                    <span style="color:var(--accent-green);">See the Real Cost.</span>
+                </h2>
+                <p style="font-size:1rem;line-height:1.7;margin-bottom:var(--sp-6);color:var(--text-secondary);">
+                    Build your Space Marine roster unit by unit, and instantly see
+                    the cheapest way to assemble your army across all tracked retailers.
+                    Save big before you buy.
+                </p>
+                <div style="display:flex;gap:var(--sp-3);flex-wrap:wrap;">
+                    <a href="{% url 'calculators:space_marines' %}" class="btn btn-primary btn-lg">Build My Army</a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'calculators:my_armies' %}" class="btn btn-secondary">View Saved Armies</a>
+                    {% else %}
+                    <a href="{% url 'accounts:register' %}" class="btn btn-secondary">Sign Up Free</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {# Right: preview widget #}
+            <div class="calc-cta-preview" aria-hidden="true">
+                <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:var(--sp-4);">
+                    Example: 2,000pt Space Marine List
+                </div>
+                <div class="calc-preview-row">
+                    <span class="calc-preview-label">Intercessor Squad (x2)</span>
+                    <span class="calc-preview-price">$72.00</span>
+                </div>
+                <div class="calc-preview-row">
+                    <span class="calc-preview-label">Bladeguard Veterans</span>
+                    <span class="calc-preview-price">$45.00</span>
+                </div>
+                <div class="calc-preview-row">
+                    <span class="calc-preview-label">Repulsor Executioner</span>
+                    <span class="calc-preview-price">$110.00</span>
+                </div>
+                <div class="calc-preview-row">
+                    <span class="calc-preview-label">Captain in Phobos Armour</span>
+                    <span class="calc-preview-price">$38.00</span>
+                </div>
+                <div class="calc-preview-total">
+                    <span class="calc-preview-total-label">Total (best prices)</span>
+                    <span class="calc-preview-total-price">$265.00</span>
+                </div>
+                <p style="font-size:0.72rem;color:var(--text-muted);margin-top:var(--sp-3);text-align:center;">
+                    vs. $310+ at GW retail — save ~$45
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{# ─── HOW IT WORKS ────────────────────────────────────────────────────── #}
+<section class="section" aria-labelledby="how-heading">
+    <div class="container">
+        <div class="section-header" style="text-align:center;">
+            <h2 id="how-heading">How Thrifthammer Works</h2>
+            <p>Three steps to always getting the best price on your hobby</p>
+        </div>
+
+        <div class="steps-grid">
+
+            <div class="step-card">
+                <span class="step-icon" aria-hidden="true">🔍</span>
+                <div class="step-number" aria-hidden="true">1</div>
+                <h3>Search Your Kit</h3>
+                <p>
+                    Find any Space Marines, Age of Sigmar, Kill Team, or
+                    paints kit from our catalogue of tracked products.
+                </p>
+            </div>
+
+            <div class="step-card">
+                <span class="step-icon" aria-hidden="true">💰</span>
+                <div class="step-number" aria-hidden="true">2</div>
+                <h3>Compare Prices</h3>
+                <p>
+                    See live prices from Miniature Market, Noble Knight,
+                    Tower of Games, Amazon, and more — side by side.
+                </p>
+            </div>
+
+            <div class="step-card">
+                <span class="step-icon" aria-hidden="true">🎯</span>
+                <div class="step-number" aria-hidden="true">3</div>
+                <h3>Watch & Save</h3>
+                <p>
+                    Add products to your watchlist with a target price.
+                    We'll flag it when the price drops below your threshold.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{# Categories moved to sidebar on the browse page #}
+
+{# ─── TRUST BAR ───────────────────────────────────────────────────────── #}
+<section class="section" aria-label="Site statistics">
+    <div class="container">
+        <div class="trust-bar">
+            <div class="trust-item">
+                <span class="trust-value">49+</span>
+                <span class="trust-label">Products tracked</span>
+            </div>
+            <div class="trust-item">
+                <span class="trust-value">4</span>
+                <span class="trust-label">US retailers</span>
+            </div>
+            <div class="trust-item">
+                <span class="trust-value">236+</span>
+                <span class="trust-label">Price points</span>
+            </div>
+            <div class="trust-item">
+                <span class="trust-value">Free</span>
+                <span class="trust-label">No account needed to browse</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    "use strict";
+    var input    = document.getElementById("hero-search-input");
+    var dropdown = document.getElementById("hero-search-results");
+    if (!input || !dropdown) return;
+
+    var timer;
+
+    input.addEventListener("input", function () {
+        clearTimeout(timer);
+        var q = input.value.trim();
+        if (q.length < 2) { dropdown.style.display = "none"; return; }
+        timer = setTimeout(function () {
+            fetch("{% url 'products:search_autocomplete' %}?q=" + encodeURIComponent(q))
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    dropdown.innerHTML = "";
+                    if (!data.results || !data.results.length) {
+                        dropdown.style.display = "none";
+                        return;
+                    }
+                    data.results.forEach(function (r) {
+                        var a = document.createElement("a");
+                        a.href = "/products/" + r.slug + "/";
+                        var name = document.createElement("span");
+                        name.textContent = r.name;
+                        a.appendChild(name);
+                        if (r.msrp) {
+                            var price = document.createElement("span");
+                            price.className = "ac-price";
+                            price.textContent = "$" + parseFloat(r.msrp).toFixed(2);
+                            a.appendChild(price);
+                        }
+                        dropdown.appendChild(a);
+                    });
+                    dropdown.style.display = "block";
+                })
+                .catch(function () { dropdown.style.display = "none"; });
+        }, 200);
+    });
+
+    document.addEventListener("click", function (e) {
+        if (!e.target.closest(".hero-search")) {
+            dropdown.style.display = "none";
+        }
+    });
+
+    input.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") { dropdown.style.display = "none"; }
+        if (e.key === "ArrowDown") {
+            var first = dropdown.querySelector("a");
+            if (first) { e.preventDefault(); first.focus(); }
+        }
+        if (e.key === "Enter") {
+            e.preventDefault();
+            window.location.href = "{% url 'products:list' %}?q=" + encodeURIComponent(input.value.trim());
+        }
+    });
+})();
+</script>
 {% endblock %}

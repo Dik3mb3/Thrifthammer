@@ -2,119 +2,98 @@
 
 {% block title %}My Watchlist{% endblock %}
 
-{% block extra_head %}
-<style>
-  .watchlist-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem;
-  }
-  .watchlist-card {
-    background: #1e1e1e;
-    border: 1px solid #333;
-    border-radius: 8px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 0.75rem;
-    display: grid;
-    grid-template-columns: 80px 1fr auto;
-    gap: 1rem;
-    align-items: center;
-  }
-  @media (max-width: 600px) {
-    .watchlist-card { grid-template-columns: 1fr; }
-  }
-  .watchlist-card.price-dropped {
-    border-color: #2d6a2d;
-    background: #0d1f0d;
-  }
-  .watchlist-img {
-    width: 80px; height: 80px; object-fit: contain;
-    border-radius: 4px; border: 1px solid #333;
-    background: #121212;
-  }
-  .watchlist-img-placeholder {
-    width: 80px; height: 80px; background: #2a2a2a;
-    border-radius: 4px; border: 1px solid #333;
-    display: flex; align-items: center; justify-content: center;
-    color: #555; font-size: 1.5rem;
-  }
-  .watchlist-info h3 { margin: 0 0 0.25rem; font-size: 1rem; }
-  .watchlist-info h3 a { color: #e0e0e0; }
-  .watchlist-info h3 a:hover { color: #bb86fc; }
-  .watchlist-meta { color: #888; font-size: 0.85rem; margin-bottom: 0.25rem; }
-  .watchlist-prices { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-top: 0.4rem; }
-  .current-price { font-size: 1.1rem; font-weight: 700; color: #03dac6; }
-  .target-price { font-size: 0.85rem; color: #888; }
-  .price-drop-alert {
-    display: inline-flex; align-items: center; gap: 0.3rem;
-    background: #1b3a1b; border: 1px solid #2d6a2d;
-    border-radius: 4px; padding: 0.2rem 0.6rem;
-    color: #a5d6a7; font-size: 0.8rem; font-weight: 600;
-  }
-  .watchlist-actions { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; }
-  .empty-state {
-    text-align: center; padding: 3rem 1rem; color: #888;
-  }
-  .empty-state p { margin-bottom: 1rem; font-size: 1rem; }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="watchlist-header">
-  <h1>My Watchlist {% if total %}<span style="color:#888;font-size:1rem;font-weight:400;">({{ total }})</span>{% endif %}</h1>
-  <a href="{% url 'products:list' %}" class="btn btn-primary">Browse Products</a>
-</div>
+<div class="page-content">
 
-{% if enriched %}
-  {% for row in enriched %}
-  <div class="watchlist-card {% if row.price_dropped %}price-dropped{% endif %}">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-4);margin-bottom:var(--sp-2);">
+    <div>
+      <h1 class="section-title">
+        My Watchlist
+        {% if total %}<span style="color:var(--text-muted);font-size:0.9rem;font-weight:400;font-family:'Inter',sans-serif;">({{ total }})</span>{% endif %}
+      </h1>
+      <div class="gold-rule"></div>
+    </div>
+    <a href="{% url 'products:list' %}" class="btn btn-secondary">Browse Products</a>
+  </div>
 
-    <!-- Product image -->
-    {% if row.item.product.image_url %}
-    <img src="{{ row.item.product.image_url }}" alt="{{ row.item.product.name }}" class="watchlist-img">
-    {% else %}
-    <div class="watchlist-img-placeholder">🎲</div>
-    {% endif %}
+  {% if enriched %}
+  <div style="display:flex;flex-direction:column;gap:var(--sp-3);">
+    {% for row in enriched %}
+    <div class="card{% if row.price_dropped %} price-drop-card{% endif %}"
+         style="padding:var(--sp-4) var(--sp-5);">
 
-    <!-- Product info -->
-    <div class="watchlist-info">
-      <h3><a href="{% url 'products:detail' row.item.product.slug %}">{{ row.item.product.name }}</a></h3>
-      <p class="watchlist-meta">
-        {% if row.item.product.category %}{{ row.item.product.category.name }}{% endif %}
-        {% if row.item.product.faction %} · {{ row.item.product.faction.name }}{% endif %}
-        · Added {{ row.item.created_at|date:"d M Y" }}
-      </p>
-      <div class="watchlist-prices">
-        {% if row.best %}
-          <span class="current-price">${{ row.best.price }} <span style="font-size:0.75rem;font-weight:400;color:#888;">at {{ row.best.retailer.name }}</span></span>
+      {# Price drop top banner #}
+      {% if row.price_dropped %}
+      <div style="background:rgb(45 122 79 / 0.15);border:1px solid rgb(45 122 79 / 0.4);border-radius:var(--rounded);padding:var(--sp-2) var(--sp-4);margin-bottom:var(--sp-4);display:flex;align-items:center;gap:var(--sp-2);">
+        <span style="color:var(--accent-green-lt);font-family:'Oswald',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">
+          ⬇ Price Below Target!
+        </span>
+      </div>
+      {% endif %}
+
+      <div style="display:grid;grid-template-columns:80px 1fr auto;gap:var(--sp-4);align-items:center;">
+
+        {# Image #}
+        {% if row.item.product.image_url %}
+        <img src="{{ row.item.product.image_url }}" alt="{{ row.item.product.name }}"
+             style="width:80px;height:80px;object-fit:contain;background:var(--bg-elevated);border-radius:var(--rounded);border:1px solid var(--border-subtle);">
         {% else %}
-          <span style="color:#555;font-size:0.9rem;">No price data</span>
+        <div style="width:80px;height:80px;background:var(--bg-elevated);border-radius:var(--rounded);border:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:1.75rem;" aria-hidden="true">⚔</div>
         {% endif %}
-        {% if row.item.target_price %}
-          <span class="target-price">Target: ${{ row.item.target_price }}</span>
-        {% endif %}
-        {% if row.price_dropped %}
-          <span class="price-drop-alert">⬇ Price dropped below target!</span>
-        {% endif %}
+
+        {# Info #}
+        <div>
+          <h3 style="font-size:1rem;font-weight:600;margin-bottom:var(--sp-1);">
+            <a href="{% url 'products:detail' row.item.product.slug %}" style="color:var(--text-primary);">
+              {{ row.item.product.name }}
+            </a>
+          </h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:var(--sp-3);">
+            {% if row.item.product.category %}{{ row.item.product.category.name }}{% endif %}
+            {% if row.item.product.faction %} · {{ row.item.product.faction.name }}{% endif %}
+            · Added {{ row.item.created_at|date:"d M Y" }}
+          </p>
+          <div style="display:flex;gap:var(--sp-4);flex-wrap:wrap;align-items:center;">
+            {% if row.best %}
+            <span style="font-size:1.1rem;font-weight:700;color:var(--accent-green-lt);">
+              ${{ row.best.price }}
+              <span style="font-size:0.75rem;font-weight:400;color:var(--text-muted);">at {{ row.best.retailer.name }}</span>
+            </span>
+            {% else %}
+            <span style="color:var(--text-muted);font-size:0.9rem;">No price data</span>
+            {% endif %}
+            {% if row.item.target_price %}
+            <span style="font-size:0.85rem;color:var(--text-muted);">
+              Target: <strong style="color:var(--accent-gold-lt);">${{ row.item.target_price }}</strong>
+            </span>
+            {% endif %}
+          </div>
+        </div>
+
+        {# Actions #}
+        <div style="display:flex;flex-direction:column;gap:var(--sp-2);align-items:flex-end;">
+          <a href="{% url 'products:detail' row.item.product.slug %}" class="btn btn-primary btn-sm">View</a>
+          <form method="post" action="{% url 'products:toggle_watchlist' row.item.product.slug %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary btn-sm">Remove</button>
+          </form>
+        </div>
+
       </div>
     </div>
-
-    <!-- Actions -->
-    <div class="watchlist-actions">
-      <a href="{% url 'products:detail' row.item.product.slug %}" class="btn btn-primary btn-sm">View</a>
-      <form method="post" action="{% url 'products:toggle_watchlist' row.item.product.slug %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-secondary btn-sm">Remove</button>
-      </form>
-    </div>
-
+    {% endfor %}
   </div>
-  {% endfor %}
 
-{% else %}
-  <div class="empty-state">
-    <p>Your watchlist is empty.</p>
-    <p style="font-size:0.9rem;">Browse products and click <strong>"Add to Watchlist"</strong> to track prices.</p>
+  {% else %}
+  <div style="text-align:center;padding:var(--sp-16) 0;color:var(--text-muted);">
+    <div style="font-size:3rem;margin-bottom:var(--sp-4);" aria-hidden="true">👁</div>
+    <p style="font-size:1rem;margin-bottom:var(--sp-2);">Your watchlist is empty.</p>
+    <p style="font-size:0.875rem;margin-bottom:var(--sp-6);">
+      Browse products and click <strong style="color:var(--text-primary);">"Add to Watchlist"</strong> to track prices.
+    </p>
     <a href="{% url 'products:list' %}" class="btn btn-primary">Browse Products</a>
   </div>
-{% endif %}
+  {% endif %}
+
+</div>
 {% endblock %}

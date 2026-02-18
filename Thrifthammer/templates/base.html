@@ -5,20 +5,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Thrifthammer{% endblock %} — Warhammer Price Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar">
+
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
         <div class="container navbar-inner">
-            <a href="{% url 'home' %}" class="navbar-brand">Thrifthammer</a>
+
+            {# Brand / Logo #}
+            <a href="{% url 'home' %}" class="navbar-brand" aria-label="THRIFTHAMMER home">
+                <span class="brand-name">THRIFTHAMMER</span>
+            </a>
+
+            {# Center search bar — hidden on mobile (shown in hero) #}
+            <div class="navbar-search" role="search">
+                <span class="navbar-search-icon" aria-hidden="true">🔍</span>
+                <input
+                    type="text"
+                    id="navbar-search-input"
+                    placeholder="Search…"
+                    autocomplete="off"
+                    aria-label="Search products"
+                >
+                <div id="navbar-search-results" class="hero-search-results" role="listbox" aria-label="Search suggestions"></div>
+            </div>
+
+            {# Right-side links #}
             <div class="navbar-links">
                 <a href="{% url 'products:list' %}">Browse</a>
-                <a href="{% url 'calculators:space_marines' %}">Army Calculator</a>
+                <a href="{% url 'calculators:space_marines' %}" class="nav-cta">⚔ Army Calculator</a>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'collections:my_collection' %}">My Collection</a>
+                    <a href="{% url 'collections:my_collection' %}">Collection</a>
                     <a href="{% url 'calculators:my_armies' %}">My Armies</a>
-                    <a href="{% url 'accounts:watchlist' %}">Watchlist{% with count=request.user.watchlist_items.count %}{% if count %} ({{ count }}){% endif %}{% endwith %}</a>
+                    <a href="{% url 'accounts:watchlist' %}" class="watchlist-badge">
+                        👁 Watchlist{% with count=request.user.watchlist_items.count %}{% if count %} <strong>({{ count }})</strong>{% endif %}{% endwith %}
+                    </a>
                     <a href="{% url 'accounts:profile' %}">{{ user.username }}</a>
                     <a href="{% url 'accounts:logout' %}">Logout</a>
                 {% else %}
@@ -26,27 +51,129 @@
                     <a href="{% url 'accounts:register' %}">Register</a>
                 {% endif %}
             </div>
+
         </div>
     </nav>
 
+    {# Flash messages #}
     {% if messages %}
-    <div class="container">
+    <div class="container" role="alert" aria-live="polite">
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }}">{{ message }}</div>
         {% endfor %}
     </div>
     {% endif %}
 
-    <main class="container">
+    <main id="main-content">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="footer">
+    <footer class="footer" role="contentinfo">
         <div class="container">
-            <p>Thrifthammer — Find the best prices on Warhammer kits.</p>
+            <div class="footer-grid">
+
+                {# About column #}
+                <div class="footer-brand">
+                    <div class="brand-name">THRIFTHAMMER</div>
+                    <p>
+                        Track prices on Warhammer kits across US retailers.
+                        Find the best deal and never overpay for plastic soldiers again.
+                    </p>
+                </div>
+
+                {# Quick links #}
+                <div class="footer-col">
+                    <h4>Browse</h4>
+                    <a href="{% url 'products:list' %}">All Products</a>
+                    <a href="{% url 'products:list' %}?sort=price_asc">Cheapest First</a>
+                    <a href="{% url 'calculators:space_marines' %}">Army Calculator</a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'accounts:watchlist' %}">My Watchlist</a>
+                    <a href="{% url 'collections:my_collection' %}">My Collection</a>
+                    {% endif %}
+                </div>
+
+                {# Legal / info #}
+                <div class="footer-col">
+                    <h4>Info</h4>
+                    <a href="{% url 'accounts:login' %}">Sign In</a>
+                    <a href="{% url 'accounts:register' %}">Create Account</a>
+                    <span style="color:var(--text-muted);font-size:0.8rem;">Prices updated regularly</span>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <span>&copy; {% now "Y" %} Thrifthammer. Not affiliated with Games Workshop.</span>
+                <span>Prices from US retailers. Always verify before purchasing.</span>
+            </div>
         </div>
     </footer>
 
     {% block extra_js %}{% endblock %}
+
+    {# Navbar search autocomplete — shared across all pages #}
+    <script>
+    (function () {
+        "use strict";
+        var input    = document.getElementById("navbar-search-input");
+        var dropdown = document.getElementById("navbar-search-results");
+        if (!input || !dropdown) return;
+
+        var timer;
+
+        input.addEventListener("input", function () {
+            clearTimeout(timer);
+            var q = input.value.trim();
+            if (q.length < 2) { dropdown.style.display = "none"; return; }
+            timer = setTimeout(function () {
+                fetch("{% url 'products:search_autocomplete' %}?q=" + encodeURIComponent(q))
+                    .then(function (r) { return r.json(); })
+                    .then(function (data) {
+                        dropdown.innerHTML = "";
+                        if (!data.results || !data.results.length) {
+                            dropdown.style.display = "none";
+                            return;
+                        }
+                        data.results.forEach(function (r) {
+                            var a = document.createElement("a");
+                            a.href = "/products/" + r.slug + "/";
+                            var name = document.createElement("span");
+                            name.textContent = r.name;
+                            a.appendChild(name);
+                            if (r.msrp) {
+                                var price = document.createElement("span");
+                                price.className = "ac-price";
+                                price.textContent = "$" + parseFloat(r.msrp).toFixed(2);
+                                a.appendChild(price);
+                            }
+                            dropdown.appendChild(a);
+                        });
+                        dropdown.style.display = "block";
+                    })
+                    .catch(function () { dropdown.style.display = "none"; });
+            }, 250);
+        });
+
+        document.addEventListener("click", function (e) {
+            if (!e.target.closest(".navbar-search")) {
+                dropdown.style.display = "none";
+            }
+        });
+
+        input.addEventListener("keydown", function (e) {
+            if (e.key === "Escape") { dropdown.style.display = "none"; }
+            if (e.key === "ArrowDown") {
+                var first = dropdown.querySelector("a");
+                if (first) { e.preventDefault(); first.focus(); }
+            }
+            if (e.key === "Enter") {
+                e.preventDefault();
+                window.location.href = "{% url 'products:list' %}?q=" + encodeURIComponent(input.value.trim());
+            }
+        });
+    })();
+    </script>
+
 </body>
 </html>

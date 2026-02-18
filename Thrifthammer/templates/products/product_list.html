@@ -2,149 +2,273 @@
 
 {% block title %}Browse Products{% endblock %}
 
-{% block extra_head %}
-<style>
-  .search-wrapper { position: relative; flex: 1; min-width: 200px; }
-  #autocomplete-results {
-    position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
-    background: #1e1e1e; border: 1px solid #444; border-radius: 0 0 4px 4px;
-    max-height: 280px; overflow-y: auto; display: none;
-  }
-  #autocomplete-results a {
-    display: flex; justify-content: space-between;
-    padding: 0.5rem 0.75rem; color: #e0e0e0; border-bottom: 1px solid #333; font-size: 0.9rem;
-  }
-  #autocomplete-results a:last-child { border-bottom: none; }
-  #autocomplete-results a:hover { background: #2a2a2a; text-decoration: none; }
-  #autocomplete-results .ac-price { color: #03dac6; font-weight: 600; }
-  .pagination { display: flex; gap: 0.5rem; margin: 1.5rem 0; flex-wrap: wrap; align-items: center; }
-  .pagination a, .pagination span {
-    padding: 0.35rem 0.75rem; border-radius: 4px; border: 1px solid #333; font-size: 0.9rem;
-  }
-  .pagination a { color: #bb86fc; }
-  .pagination a:hover { background: #1e1e1e; text-decoration: none; }
-  .pagination .current { background: #bb86fc; color: #121212; border-color: #bb86fc; font-weight: 600; }
-  .pagination .disabled { color: #555; cursor: not-allowed; }
-  .result-info { color: #888; font-size: 0.9rem; margin-bottom: 0.75rem; }
-  .card .best-price { font-size: 1.1rem; font-weight: 700; color: #03dac6; margin-top: 0.5rem; }
-  .card .savings-badge { font-size: 0.8rem; color: #a5d6a7; }
-</style>
-{% endblock %}
-
 {% block content %}
-<h1>Browse Warhammer Products</h1>
+<div class="page-content">
 
-<form method="get" class="search-form" id="search-form" role="search">
-  <div class="search-wrapper">
-    <input
-      type="text" name="q" id="search-input" value="{{ query }}"
-      placeholder="Search by name or SKU…" autocomplete="off"
-      aria-label="Search products"
-    >
-    <div id="autocomplete-results" role="listbox" aria-label="Suggestions"></div>
+  {# ── Page header ── #}
+  <div style="margin-bottom:var(--sp-5);">
+    <h1 class="section-title">Browse Products</h1>
+    <div class="gold-rule"></div>
   </div>
 
-  <select name="category" aria-label="Filter by category">
-    <option value="">All Categories</option>
-    {% for cat in categories %}
-    <option value="{{ cat.slug }}"{% if selected_category == cat.slug %} selected{% endif %}>{{ cat.name }}</option>
-    {% endfor %}
-  </select>
+  {# ── Mobile hamburger trigger (hidden on desktop) ── #}
+  <button class="sidebar-hamburger" id="sidebar-toggle-btn" aria-expanded="false" aria-controls="browse-sidebar">
+    <div class="hamburger-lines" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+    Filters &amp; Categories
+  </button>
 
-  <select name="faction" aria-label="Filter by faction">
-    <option value="">All Factions</option>
-    {% for f in factions %}
-    <option value="{{ f.slug }}"{% if selected_faction == f.slug %} selected{% endif %}>{{ f.name }}</option>
-    {% endfor %}
-  </select>
+  {# ── Main browse layout ── #}
+  <div class="browse-layout">
 
-  <select name="sort" aria-label="Sort by">
-    {% for value, label in sort_options %}
-    <option value="{{ value }}"{% if sort == value %} selected{% endif %}>{{ label }}</option>
-    {% endfor %}
-  </select>
+    {# ─── LEFT SIDEBAR ─────────────────────────────────────────── #}
+    <aside class="browse-sidebar" id="browse-sidebar" role="complementary" aria-label="Filters">
 
-  <button type="submit" class="btn btn-primary">Search</button>
-  {% if query or selected_category or selected_faction %}
-  <a href="{% url 'products:list' %}" class="btn btn-secondary">Clear</a>
-  {% endif %}
-</form>
+      {# Search #}
+      <div class="sidebar-section">
+        <button class="sidebar-toggle open" data-target="search-body" aria-expanded="true">
+          🔍 Search
+          <span class="toggle-icon" aria-hidden="true">▾</span>
+        </button>
+        <div class="sidebar-body" id="search-body">
+          <form method="get" id="search-form" role="search">
+            {# Carry forward active category/faction/sort when searching #}
+            {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+            {% if selected_faction %}<input type="hidden" name="faction" value="{{ selected_faction }}">{% endif %}
+            {% if sort %}<input type="hidden" name="sort" value="{{ sort }}">{% endif %}
+            <div style="position:relative;">
+              <input
+                type="text" name="q" id="search-input"
+                value="{{ query }}"
+                placeholder="Search…"
+                autocomplete="off"
+                aria-label="Search products"
+                style="width:100%;padding:0.5rem 2.2rem 0.5rem 0.75rem;border:1px solid var(--border-subtle);border-radius:var(--rounded);background:var(--bg-input);color:var(--text-primary);font-size:0.85rem;font-family:inherit;"
+              >
+              <button type="submit" aria-label="Submit search"
+                style="position:absolute;right:0.4rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--accent-gold);cursor:pointer;font-size:0.9rem;padding:0;">
+                ⚔
+              </button>
+            </div>
+            <div id="autocomplete-results" class="hero-search-results" role="listbox" aria-label="Suggestions" style="top:calc(100% + 2px);"></div>
+            {% if query %}
+            <a href="{% url 'products:list' %}{% if selected_category %}?category={{ selected_category }}{% endif %}"
+               style="font-size:0.75rem;color:var(--text-muted);display:block;margin-top:var(--sp-2);">
+              ✕ Clear search
+            </a>
+            {% endif %}
+          </form>
+        </div>
+      </div>
 
-<p class="result-info">
-  {% if query or selected_category or selected_faction %}
-    {{ total_count }} product{{ total_count|pluralize }} found
-  {% else %}
-    {{ total_count }} product{{ total_count|pluralize }} in catalogue
-  {% endif %}
-</p>
+      {# Sort #}
+      <div class="sidebar-section">
+        <button class="sidebar-toggle open" data-target="sort-body" aria-expanded="true">
+          ⇅ Sort By
+          <span class="toggle-icon" aria-hidden="true">▾</span>
+        </button>
+        <div class="sidebar-body" id="sort-body">
+          <form method="get" id="sort-form">
+            {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+            {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+            {% if selected_faction %}<input type="hidden" name="faction" value="{{ selected_faction }}">{% endif %}
+            <select name="sort" class="sidebar-select" onchange="document.getElementById('sort-form').submit();"
+                    aria-label="Sort products">
+              {% for value, label in sort_options %}
+              <option value="{{ value }}"{% if sort == value %} selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </form>
+        </div>
+      </div>
 
-<div class="card-grid">
-  {% for product in products %}
-  <a href="{% url 'products:detail' product.slug %}" class="card product-card">
-    {% if product.image_url %}
-    <img
-      src="{{ product.image_url }}"
-      alt="{{ product.name }}"
-      loading="lazy"
-      style="width:100%;height:140px;object-fit:contain;margin-bottom:0.5rem;"
-    >
-    {% endif %}
-    <h3>{{ product.name }}</h3>
-    {% if product.category %}<span class="badge">{{ product.category.name }}</span>{% endif %}
-    {% if product.faction %}<span class="badge">{{ product.faction.name }}</span>{% endif %}
-    {% if product.msrp %}<p class="msrp">RRP: ${{ product.msrp }}</p>{% endif %}
+      {# Categories #}
+      {% if categories %}
+      <div class="sidebar-section">
+        <button class="sidebar-toggle open" data-target="cats-body" aria-expanded="true">
+          ☰ Categories
+          <span class="toggle-icon" aria-hidden="true">▾</span>
+        </button>
+        <div class="sidebar-body" id="cats-body">
+          <a href="{% url 'products:list' %}{% if query %}?q={{ query }}{% endif %}{% if sort and sort != 'name' %}{% if query %}&{% else %}?{% endif %}sort={{ sort }}{% endif %}"
+             class="sidebar-link{% if not selected_category %} active{% endif %}">
+            All Categories
+          </a>
+          {% for cat in categories %}
+          <a href="?{% if query %}q={{ query }}&{% endif %}category={{ cat.slug }}{% if sort and sort != 'name' %}&sort={{ sort }}{% endif %}"
+             class="sidebar-link{% if selected_category == cat.slug %} active{% endif %}">
+            {{ cat.name }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
 
-    {# min_price is a DB annotation added in the view — zero extra queries per card #}
-    {% if product.min_price %}
-    <p class="best-price">From ${{ product.min_price|floatformat:"2" }}</p>
-    {% if product.msrp and product.min_price < product.msrp %}
-    <span class="savings-badge">Save ${{ product.msrp|add:"-"|add:product.min_price|floatformat:"2" }} vs RRP</span>
-    {% endif %}
-    {% endif %}
-  </a>
-  {% empty %}
-  <p style="grid-column:1/-1;color:#888;">
-    No products found.{% if query %} Try a different search term.{% endif %}
-    {% if selected_category or selected_faction %}
-    <a href="{% url 'products:list' %}{% if query %}?q={{ query }}{% endif %}">Clear filters</a>
-    {% endif %}
-  </p>
-  {% endfor %}
+      {# Factions #}
+      {% if factions %}
+      <div class="sidebar-section">
+        <button class="sidebar-toggle open" data-target="facs-body" aria-expanded="true">
+          ⚔ Factions
+          <span class="toggle-icon" aria-hidden="true">▾</span>
+        </button>
+        <div class="sidebar-body" id="facs-body">
+          <a href="{% url 'products:list' %}{% if query %}?q={{ query }}{% endif %}{% if selected_category %}{% if query %}&{% else %}?{% endif %}category={{ selected_category }}{% endif %}{% if sort and sort != 'name' %}&sort={{ sort }}{% endif %}"
+             class="sidebar-link{% if not selected_faction %} active{% endif %}">
+            All Factions
+          </a>
+          {% for f in factions %}
+          <a href="?{% if query %}q={{ query }}&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}faction={{ f.slug }}{% if sort and sort != 'name' %}&sort={{ sort }}{% endif %}"
+             class="sidebar-link{% if selected_faction == f.slug %} active{% endif %}">
+            {{ f.name }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {# Clear all filters #}
+      {% if query or selected_category or selected_faction %}
+      <a href="{% url 'products:list' %}" class="btn btn-secondary btn-full" style="margin-top:var(--sp-2);">
+        ✕ Clear All Filters
+      </a>
+      {% endif %}
+
+    </aside>
+
+    {# ─── MAIN CONTENT ─────────────────────────────────────────── #}
+    <main>
+
+      {# Result count + active filter summary #}
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-2);margin-bottom:var(--sp-4);">
+        <p style="font-size:0.85rem;color:var(--text-muted);">
+          <strong style="color:var(--text-primary);">{{ total_count }}</strong>
+          product{{ total_count|pluralize }}
+          {% if query %} matching "<em style="color:var(--accent-gold-lt);">{{ query }}</em>"{% endif %}
+          {% if selected_category %} in <em style="color:var(--accent-gold-lt);">{{ selected_category }}</em>{% endif %}
+          {% if selected_faction %} · <em style="color:var(--accent-gold-lt);">{{ selected_faction }}</em>{% endif %}
+        </p>
+      </div>
+
+      {# Product grid #}
+      <div class="card-grid">
+        {% for product in products %}
+        <a href="{% url 'products:detail' product.slug %}" class="product-card">
+
+          {% if product.image_url %}
+          <img
+            src="{{ product.image_url }}"
+            alt="{{ product.name }}"
+            class="product-card-img"
+            loading="lazy"
+          >
+          {% else %}
+          <div class="product-card-img-placeholder" aria-hidden="true">⚔</div>
+          {% endif %}
+
+          <div class="product-card-body">
+            <div class="product-card-name">{{ product.name }}</div>
+
+            <div class="product-card-badges">
+              {% if product.category %}<span class="badge badge-default">{{ product.category.name }}</span>{% endif %}
+              {% if product.faction %}<span class="badge badge-purple">{{ product.faction.name }}</span>{% endif %}
+            </div>
+
+            <div class="product-card-pricing">
+              {% if product.min_price %}
+              <div class="product-card-price-label">Best Price</div>
+              <div class="product-card-price">${{ product.min_price|floatformat:"2" }}</div>
+              {% if product.msrp and product.min_price < product.msrp %}
+              <div style="display:flex;align-items:center;gap:var(--sp-1);flex-wrap:wrap;margin-top:var(--sp-1);">
+                <span class="product-card-msrp">RRP ${{ product.msrp }}</span>
+                <span class="badge badge-green">Save</span>
+              </div>
+              {% endif %}
+              {% elif product.msrp %}
+              <div class="product-card-price-label">MSRP</div>
+              <div style="font-size:1rem;font-weight:600;color:var(--text-secondary);">${{ product.msrp }}</div>
+              {% else %}
+              <div class="product-card-price-label" style="padding-top:var(--sp-2);color:var(--text-muted);">No price yet</div>
+              {% endif %}
+            </div>
+          </div>
+
+        </a>
+        {% empty %}
+        <div style="grid-column:1/-1;text-align:center;padding:var(--sp-16) 0;">
+          <div style="font-size:2.5rem;margin-bottom:var(--sp-4);" aria-hidden="true">⚔</div>
+          <p style="font-size:1rem;margin-bottom:var(--sp-4);color:var(--text-muted);">
+            No products found{% if query %} for "{{ query }}"{% endif %}.
+          </p>
+          <a href="{% url 'products:list' %}" class="btn btn-secondary">Clear All Filters</a>
+        </div>
+        {% endfor %}
+      </div>
+
+      {# Pagination #}
+      {% if paginator.num_pages > 1 %}
+      <nav class="pagination" aria-label="Page navigation">
+        {% if page_obj.has_previous %}
+        <a href="?q={{ query }}&category={{ selected_category }}&faction={{ selected_faction }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}" aria-label="Previous page">&laquo; Prev</a>
+        {% else %}
+        <span class="disabled" aria-disabled="true">&laquo; Prev</span>
+        {% endif %}
+
+        {% for num in paginator.page_range %}
+          {% if num == page_obj.number %}
+          <span class="current" aria-current="page">{{ num }}</span>
+          {% elif num >= page_obj.number|add:"-3" and num <= page_obj.number|add:"3" %}
+          <a href="?q={{ query }}&category={{ selected_category }}&faction={{ selected_faction }}&sort={{ sort }}&page={{ num }}">{{ num }}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <a href="?q={{ query }}&category={{ selected_category }}&faction={{ selected_faction }}&sort={{ sort }}&page={{ page_obj.next_page_number }}" aria-label="Next page">Next &raquo;</a>
+        {% else %}
+        <span class="disabled" aria-disabled="true">Next &raquo;</span>
+        {% endif %}
+      </nav>
+      {% endif %}
+
+    </main>
+  </div>{# end browse-layout #}
+
 </div>
-
-{% if paginator.num_pages > 1 %}
-<nav class="pagination" aria-label="Page navigation">
-  {% if page_obj.has_previous %}
-  <a href="?q={{ query }}&category={{ selected_category }}&faction={{ selected_faction }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}">&laquo; Prev</a>
-  {% else %}
-  <span class="disabled">&laquo; Prev</span>
-  {% endif %}
-
-  {% for num in paginator.page_range %}
-    {% if num == page_obj.number %}
-    <span class="current" aria-current="page">{{ num }}</span>
-    {% elif num >= page_obj.number|add:"-3" and num <= page_obj.number|add:"3" %}
-    <a href="?q={{ query }}&category={{ selected_category }}&faction={{ selected_faction }}&sort={{ sort }}&page={{ num }}">{{ num }}</a>
-    {% endif %}
-  {% endfor %}
-
-  {% if page_obj.has_next %}
-  <a href="?q={{ query }}&category={{ selected_category }}&faction={{ selected_faction }}&sort={{ sort }}&page={{ page_obj.next_page_number }}">Next &raquo;</a>
-  {% else %}
-  <span class="disabled">Next &raquo;</span>
-  {% endif %}
-</nav>
-{% endif %}
 {% endblock %}
 
 {% block extra_js %}
 <script>
 (function () {
   "use strict";
-  var input = document.getElementById("search-input");
-  var dropdown = document.getElementById("autocomplete-results");
-  var timer;
 
+  /* ── Sidebar collapsible sections ── */
+  document.querySelectorAll('.sidebar-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var targetId = btn.dataset.target;
+      var body = document.getElementById(targetId);
+      if (!body) return;
+      var collapsed = body.classList.toggle('collapsed');
+      btn.classList.toggle('open', !collapsed);
+      btn.setAttribute('aria-expanded', !collapsed);
+    });
+  });
+
+  /* ── Mobile sidebar hamburger ── */
+  var hamburger = document.getElementById('sidebar-toggle-btn');
+  var sidebar   = document.getElementById('browse-sidebar');
+  if (hamburger && sidebar) {
+    hamburger.addEventListener('click', function () {
+      var open = sidebar.classList.toggle('mobile-open');
+      hamburger.setAttribute('aria-expanded', open);
+    });
+  }
+
+  /* ── Search autocomplete ── */
+  var input    = document.getElementById("search-input");
+  var dropdown = document.getElementById("autocomplete-results");
+  if (!input || !dropdown) return;
+
+  var timer;
   input.addEventListener("input", function () {
     clearTimeout(timer);
     var q = input.value.trim();
@@ -154,7 +278,7 @@
         .then(function (r) { return r.json(); })
         .then(function (data) {
           dropdown.innerHTML = "";
-          if (!data.results.length) { dropdown.style.display = "none"; return; }
+          if (!data.results || !data.results.length) { dropdown.style.display = "none"; return; }
           data.results.forEach(function (r) {
             var a = document.createElement("a");
             a.href = "/products/" + r.slug + "/";
@@ -176,11 +300,11 @@
   });
 
   document.addEventListener("click", function (e) {
-    if (!e.target.closest(".search-wrapper")) { dropdown.style.display = "none"; }
+    if (!e.target.closest("#search-form")) dropdown.style.display = "none";
   });
 
   input.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") { dropdown.style.display = "none"; }
+    if (e.key === "Escape") dropdown.style.display = "none";
     if (e.key === "ArrowDown") {
       var first = dropdown.querySelector("a");
       if (first) { e.preventDefault(); first.focus(); }

@@ -2,150 +2,201 @@
 
 {% block title %}{{ product.name }}{% endblock %}
 
-{% block extra_head %}
-<style>
-  .product-image {
-    max-width: 300px; max-height: 300px; object-fit: contain;
-    border-radius: 6px; border: 1px solid #333; margin-bottom: 1rem;
-  }
-  .savings-hero {
-    background: #1b3a1b; border: 1px solid #2d6a2d; border-radius: 6px;
-    padding: 1rem 1.25rem; margin: 1rem 0; display: inline-block;
-  }
-  .savings-hero .save-amount { font-size: 1.5rem; font-weight: 700; color: #a5d6a7; }
-  .savings-hero .save-pct { font-size: 0.9rem; color: #81c784; }
-  .price-table tr.cheapest { background: #0d2a0d; }
-  .price-table tr.cheapest .price { color: #a5d6a7; }
-  .related-section { margin-top: 2.5rem; }
-  .related-section h2 { margin-bottom: 1rem; }
-</style>
-{% endblock %}
-
 {% block content %}
 <div class="product-detail">
 
-  <div class="product-header">
-    <h1>{{ product.name }}</h1>
-    <div style="margin-bottom:0.5rem;">
-      {% if product.category %}<span class="badge">{{ product.category.name }}</span>{% endif %}
-      {% if product.faction %}<span class="badge">{{ product.faction.name }}</span>{% endif %}
-      {% if product.gw_sku %}<span class="badge badge-muted">SKU: {{ product.gw_sku }}</span>{% endif %}
+  {# ── Breadcrumbs ── #}
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="{% url 'home' %}">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="{% url 'products:list' %}">Products</a>
+    {% if product.category %}
+    <span aria-hidden="true">›</span>
+    <a href="{% url 'products:list' %}?category={{ product.category.slug }}">{{ product.category.name }}</a>
+    {% endif %}
+    <span aria-hidden="true">›</span>
+    <span style="color:var(--text-secondary);">{{ product.name|truncatechars:40 }}</span>
+  </nav>
+
+  {# ── Two-column layout ── #}
+  <div class="product-layout">
+
+    {# ─── Left: image ─── #}
+    <div>
+      <div class="product-image-wrap">
+        {% if product.image_url %}
+        <img
+          src="{{ product.image_url }}"
+          alt="{{ product.name }}"
+          loading="eager"
+        >
+        {% else %}
+        <div class="product-image-placeholder" aria-hidden="true">⚔</div>
+        {% endif %}
+      </div>
+    </div>
+
+    {# ─── Right: info ─── #}
+    <div>
+
+      {# Heading + badges #}
+      <div class="product-info-header">
+        <h1>{{ product.name }}</h1>
+        <div class="product-meta">
+          {% if product.category %}
+          <span class="badge badge-default">{{ product.category.name }}</span>
+          {% endif %}
+          {% if product.faction %}
+          <span class="badge badge-purple">{{ product.faction.name }}</span>
+          {% endif %}
+          {% if product.gw_sku %}
+          <span class="badge badge-muted">SKU: {{ product.gw_sku }}</span>
+          {% endif %}
+        </div>
+      </div>
+
+      {# Best price card #}
+      {% if current_prices %}
+      {% with best=current_prices.0 %}
+      <div class="best-price-card">
+        <div class="best-price-label">Best Price Available</div>
+        <div class="best-price-amount">${{ best.price|floatformat:"2" }}</div>
+        <div class="best-price-retailer">at {{ best.retailer.name }}
+          {% if best.in_stock %}
+          <span class="badge badge-green" style="margin-left:var(--sp-2);">In Stock</span>
+          {% else %}
+          <span class="badge badge-red" style="margin-left:var(--sp-2);">Out of Stock</span>
+          {% endif %}
+        </div>
+        {% if savings and savings.percent > 0 %}
+        <div class="best-price-savings">
+          ⬇ Save ${{ savings.amount|floatformat:"2" }} ({{ savings.percent }}% off GW RRP)
+        </div>
+        {% endif %}
+        {% if product.msrp %}
+        <p style="font-size:0.8rem;color:var(--text-muted);">GW RRP: ${{ product.msrp }}</p>
+        {% endif %}
+      </div>
+      {% endwith %}
+      {% elif product.msrp %}
+      <div class="best-price-card">
+        <div class="best-price-label">GW MSRP</div>
+        <div class="best-price-amount">${{ product.msrp }}</div>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-top:var(--sp-2);">No retailer prices tracked yet.</p>
+      </div>
+      {% endif %}
+
+      {# Actions #}
+      <div class="product-actions">
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'products:toggle_watchlist' product.slug %}">
+          {% csrf_token %}
+          <button type="submit" class="btn {% if on_watchlist %}btn-secondary{% else %}btn-primary{% endif %}">
+            {% if on_watchlist %}👁 Remove from Watchlist{% else %}👁 Add to Watchlist{% endif %}
+          </button>
+        </form>
+        <a href="{% url 'collections:add' product.slug %}" class="btn btn-secondary">+ Add to Collection</a>
+        {% else %}
+        <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn btn-secondary">Log in to Track Prices</a>
+        {% endif %}
+        {% if product.gw_url %}
+        <a href="{{ product.gw_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+          View on GW ↗
+        </a>
+        {% endif %}
+      </div>
+
+      {# Description #}
+      {% if product.description %}
+      <div class="product-description">
+        <h3>About This Kit</h3>
+        <p>{{ product.description }}</p>
+      </div>
+      {% endif %}
+
+      {# Price comparison table #}
+      <h2 style="font-size:1.1rem;margin-bottom:var(--sp-4);">Price Comparison</h2>
+      {% if current_prices %}
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Retailer</th>
+            <th>Price</th>
+            <th>Discount</th>
+            <th>Stock</th>
+            <th>Buy</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cp in current_prices %}
+          <tr{% if forloop.first and cp.in_stock %} class="cheapest"{% endif %}>
+            <td style="font-weight:600;color:var(--text-primary);">{{ cp.retailer.name }}</td>
+            <td class="price">
+              ${{ cp.price|floatformat:"2" }}
+              {% if forloop.first and cp.in_stock %}
+              <span class="badge badge-green" style="margin-left:4px;">Best</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if cp.discount_pct and cp.discount_pct > 0 %}
+              <span class="badge badge-green">{{ cp.discount_pct }}% off</span>
+              {% else %}
+              <span style="color:var(--text-muted);">—</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if cp.in_stock %}
+              <span class="badge badge-green">In Stock</span>
+              {% else %}
+              <span class="badge badge-red">Out of Stock</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{{ cp.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">Buy ↗</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p style="font-size:0.72rem;color:var(--text-muted);margin-top:-1rem;">
+        Prices last updated: {{ current_prices.0.last_seen|date:"d M Y H:i" }}
+      </p>
+      {% else %}
+      <p style="color:var(--text-muted);font-size:0.9rem;">
+        No price data yet — check back after the next scrape.
+      </p>
+      {% endif %}
+
+    </div>
+  </div>{# end product-layout #}
+
+  {# ── Related products ── #}
+  {% if related_products %}
+  <div style="margin-top:var(--sp-12);">
+    <h2 style="font-size:1.1rem;margin-bottom:var(--sp-2);">Related Products</h2>
+    <div class="gold-rule"></div>
+    <div class="card-grid">
+      {% for rp in related_products %}
+      <a href="{% url 'products:detail' rp.slug %}" class="product-card">
+        {% if rp.image_url %}
+        <img src="{{ rp.image_url }}" alt="{{ rp.name }}" class="product-card-img" loading="lazy">
+        {% else %}
+        <div class="product-card-img-placeholder" aria-hidden="true">⚔</div>
+        {% endif %}
+        <div class="product-card-body">
+          <div class="product-card-name">{{ rp.name }}</div>
+          {% if rp.msrp %}
+          <div class="product-card-pricing">
+            <div class="product-card-price-label">MSRP</div>
+            <div style="color:var(--text-secondary);font-weight:600;">${{ rp.msrp }}</div>
+          </div>
+          {% endif %}
+        </div>
+      </a>
+      {% endfor %}
     </div>
   </div>
-
-  {% if product.image_url %}
-  <img
-    src="{{ product.image_url }}"
-    alt="{{ product.name }}"
-    class="product-image"
-    loading="lazy"
-  >
-  {% endif %}
-
-  {% if product.msrp %}
-  <p class="msrp">GW RRP: <strong>${{ product.msrp }}</strong></p>
-  {% endif %}
-
-  {# Savings callout — only shown when we have a cheaper price #}
-  {% if savings and savings.percent > 0 %}
-  <div class="savings-hero">
-    <p class="save-amount">Save ${{ savings.amount|floatformat:"2" }}</p>
-    <p class="save-pct">{{ savings.percent }}% cheaper than GW RRP at {{ savings.retailer.name }}</p>
-  </div>
-  {% endif %}
-
-  {% if product.description %}
-  <p style="margin:1rem 0;color:#ccc;">{{ product.description }}</p>
-  {% endif %}
-
-  <div class="product-actions">
-    {% if user.is_authenticated %}
-    <form method="post" action="{% url 'products:toggle_watchlist' product.slug %}">
-      {% csrf_token %}
-      <button type="submit" class="btn {% if on_watchlist %}btn-secondary{% else %}btn-primary{% endif %}">
-        {% if on_watchlist %}Remove from Watchlist{% else %}Add to Watchlist{% endif %}
-      </button>
-    </form>
-    <a href="{% url 'collections:add' product.slug %}" class="btn btn-secondary">Add to Collection</a>
-    {% else %}
-    <a href="{% url 'accounts:login' %}" class="btn btn-secondary">Log in to track prices</a>
-    {% endif %}
-    {% if product.gw_url %}
-    <a href="{{ product.gw_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-      View on GW
-    </a>
-    {% endif %}
-  </div>
-
-  <h2 style="margin-top:2rem;">Price Comparison</h2>
-  {% if current_prices %}
-  <table class="price-table">
-    <thead>
-      <tr>
-        <th>Retailer</th>
-        <th>Price</th>
-        <th>Discount</th>
-        <th>Stock</th>
-        <th>Link</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for cp in current_prices %}
-      <tr{% if forloop.first and cp.in_stock %} class="cheapest"{% endif %}>
-        <td>{{ cp.retailer.name }}</td>
-        <td class="price">
-          ${{ cp.price }}
-          {% if forloop.first and cp.in_stock %}
-          <span class="badge badge-green" style="font-size:0.7rem;margin-left:4px;">Best</span>
-          {% endif %}
-        </td>
-        <td>
-          {% if cp.discount_pct and cp.discount_pct > 0 %}
-          <span class="badge badge-green">{{ cp.discount_pct }}% off</span>
-          {% else %}—{% endif %}
-        </td>
-        <td>
-          {% if cp.in_stock %}
-          <span class="badge badge-green">In Stock</span>
-          {% else %}
-          <span class="badge badge-red">Out of Stock</span>
-          {% endif %}
-        </td>
-        <td>
-          <a href="{{ cp.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
-            Buy
-          </a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <p style="font-size:0.8rem;color:#666;margin-top:0.5rem;">
-    Prices last updated: {{ current_prices.0.last_seen|date:"d M Y H:i" }}
-  </p>
-  {% else %}
-  <p style="color:#888;">No price data yet — check back after the next scrape.</p>
   {% endif %}
 
 </div>
-
-{% if related_products %}
-<div class="related-section">
-  <h2>Related Products</h2>
-  <div class="card-grid">
-    {% for rp in related_products %}
-    <a href="{% url 'products:detail' rp.slug %}" class="card product-card">
-      {% if rp.image_url %}
-      <img src="{{ rp.image_url }}" alt="{{ rp.name }}" loading="lazy"
-           style="width:100%;height:100px;object-fit:contain;margin-bottom:0.5rem;">
-      {% endif %}
-      <h3>{{ rp.name }}</h3>
-      {% if rp.msrp %}<p class="msrp">RRP: ${{ rp.msrp }}</p>{% endif %}
-    </a>
-    {% endfor %}
-  </div>
-</div>
-{% endif %}
-
-<div id="price-chart"></div>
 {% endblock %}

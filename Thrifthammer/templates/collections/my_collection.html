@@ -3,80 +3,112 @@
 {% block title %}My Collection{% endblock %}
 
 {% block content %}
-<h1>My Collection</h1>
+<div class="page-content">
 
-<div class="collection-stats">
-    <div class="stat-card">
-        <h3>{{ total_items }}</h3>
-        <p>Total Items</p>
-    </div>
-    <div class="stat-card">
-        <h3>${{ total_spent|floatformat:2 }}</h3>
-        <p>Total Spent</p>
-    </div>
-    <div class="stat-card">
-        <h3>${{ total_msrp|floatformat:2 }}</h3>
-        <p>Total MSRP</p>
-    </div>
-    <div class="stat-card">
-        <h3>${{ total_saved|floatformat:2 }}</h3>
-        <p>Total Saved</p>
-    </div>
-</div>
+  <div style="margin-bottom:var(--sp-2);">
+    <h1 class="section-title">My Collection</h1>
+    <div class="gold-rule"></div>
+  </div>
 
-{% if painted %}
-<h2>Painted</h2>
-<div class="card-grid">
+  {# ── Stats row ── #}
+  <div class="stats-grid" style="margin-bottom:var(--sp-8);">
+    <div class="stat-card">
+      <h3>{{ total_items }}</h3>
+      <p>Total Items</p>
+    </div>
+    <div class="stat-card">
+      <h3>${{ total_spent|floatformat:2 }}</h3>
+      <p>Total Spent</p>
+    </div>
+    <div class="stat-card">
+      <h3>${{ total_msrp|floatformat:2 }}</h3>
+      <p>Total MSRP</p>
+    </div>
+    <div class="stat-card">
+      <h3>${{ total_saved|floatformat:2 }}</h3>
+      <p>Total Saved</p>
+    </div>
+  </div>
+
+  {% if not owned and not building and not painted and not wishlist %}
+  <div style="text-align:center;padding:var(--sp-16) 0;color:var(--text-muted);">
+    <div style="font-size:3rem;margin-bottom:var(--sp-4);" aria-hidden="true">📦</div>
+    <p style="font-size:1rem;margin-bottom:var(--sp-6);">
+      Your collection is empty.
+    </p>
+    <a href="{% url 'products:list' %}" class="btn btn-primary">Browse Products</a>
+  </div>
+  {% endif %}
+
+  {% if painted %}
+  <h2 style="font-size:1rem;margin-bottom:var(--sp-2);">Painted</h2>
+  <div class="gold-rule"></div>
+  <div class="card-grid" style="margin-bottom:var(--sp-8);">
     {% for item in painted %}
-    <div class="card">
-        <h3><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></h3>
-        <p>Qty: {{ item.quantity }}{% if item.price_paid %} — Paid: ${{ item.price_paid }}{% endif %}</p>
-        {% if item.notes %}<p class="notes">{{ item.notes }}</p>{% endif %}
-        <a href="{% url 'collections:remove' item.product.slug %}" class="btn-sm btn-danger">Remove</a>
+    <div class="card" style="padding:var(--sp-4);">
+      <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:var(--sp-2);">
+        <a href="{% url 'products:detail' item.product.slug %}" style="color:var(--text-primary);">{{ item.product.name }}</a>
+      </h3>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:var(--sp-3);">
+        Qty: {{ item.quantity }}{% if item.price_paid %} · Paid: <span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>{% endif %}
+      </p>
+      {% if item.notes %}<p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:var(--sp-3);">{{ item.notes }}</p>{% endif %}
+      <a href="{% url 'collections:remove' item.product.slug %}" class="btn btn-danger btn-sm">Remove</a>
     </div>
     {% endfor %}
-</div>
-{% endif %}
+  </div>
+  {% endif %}
 
-{% if building %}
-<h2>Building</h2>
-<div class="card-grid">
+  {% if building %}
+  <h2 style="font-size:1rem;margin-bottom:var(--sp-2);">Building</h2>
+  <div class="gold-rule"></div>
+  <div class="card-grid" style="margin-bottom:var(--sp-8);">
     {% for item in building %}
-    <div class="card">
-        <h3><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></h3>
-        <p>Qty: {{ item.quantity }}{% if item.price_paid %} — Paid: ${{ item.price_paid }}{% endif %}</p>
-        <a href="{% url 'collections:remove' item.product.slug %}" class="btn-sm btn-danger">Remove</a>
+    <div class="card" style="padding:var(--sp-4);">
+      <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:var(--sp-2);">
+        <a href="{% url 'products:detail' item.product.slug %}" style="color:var(--text-primary);">{{ item.product.name }}</a>
+      </h3>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:var(--sp-3);">
+        Qty: {{ item.quantity }}{% if item.price_paid %} · Paid: <span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>{% endif %}
+      </p>
+      <a href="{% url 'collections:remove' item.product.slug %}" class="btn btn-danger btn-sm">Remove</a>
     </div>
     {% endfor %}
-</div>
-{% endif %}
+  </div>
+  {% endif %}
 
-{% if owned %}
-<h2>Owned</h2>
-<div class="card-grid">
+  {% if owned %}
+  <h2 style="font-size:1rem;margin-bottom:var(--sp-2);">Owned</h2>
+  <div class="gold-rule"></div>
+  <div class="card-grid" style="margin-bottom:var(--sp-8);">
     {% for item in owned %}
-    <div class="card">
-        <h3><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></h3>
-        <p>Qty: {{ item.quantity }}{% if item.price_paid %} — Paid: ${{ item.price_paid }}{% endif %}</p>
-        <a href="{% url 'collections:remove' item.product.slug %}" class="btn-sm btn-danger">Remove</a>
+    <div class="card" style="padding:var(--sp-4);">
+      <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:var(--sp-2);">
+        <a href="{% url 'products:detail' item.product.slug %}" style="color:var(--text-primary);">{{ item.product.name }}</a>
+      </h3>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:var(--sp-3);">
+        Qty: {{ item.quantity }}{% if item.price_paid %} · Paid: <span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>{% endif %}
+      </p>
+      <a href="{% url 'collections:remove' item.product.slug %}" class="btn btn-danger btn-sm">Remove</a>
     </div>
     {% endfor %}
-</div>
-{% endif %}
+  </div>
+  {% endif %}
 
-{% if wishlist %}
-<h2>Wishlist</h2>
-<div class="card-grid">
+  {% if wishlist %}
+  <h2 style="font-size:1rem;margin-bottom:var(--sp-2);">Wishlist</h2>
+  <div class="gold-rule"></div>
+  <div class="card-grid" style="margin-bottom:var(--sp-8);">
     {% for item in wishlist %}
-    <div class="card">
-        <h3><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></h3>
-        <a href="{% url 'collections:remove' item.product.slug %}" class="btn-sm btn-danger">Remove</a>
+    <div class="card" style="padding:var(--sp-4);">
+      <h3 style="font-size:0.9rem;font-weight:600;margin-bottom:var(--sp-3);">
+        <a href="{% url 'products:detail' item.product.slug %}" style="color:var(--text-primary);">{{ item.product.name }}</a>
+      </h3>
+      <a href="{% url 'collections:remove' item.product.slug %}" class="btn btn-danger btn-sm">Remove</a>
     </div>
     {% endfor %}
-</div>
-{% endif %}
+  </div>
+  {% endif %}
 
-{% if not owned and not building and not painted and not wishlist %}
-<p>Your collection is empty. <a href="{% url 'products:list' %}">Browse products</a> to start adding kits!</p>
-{% endif %}
+</div>
 {% endblock %}
