@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="product-detail">
+    <div class="product-header">
+        <h1>{{ product.name }}</h1>
+        {% if product.category %}<span class="badge">{{ product.category.name }}</span>{% endif %}
+        {% if product.faction %}<span class="badge">{{ product.faction.name }}</span>{% endif %}
+        {% if product.gw_sku %}<span class="badge badge-muted">SKU: {{ product.gw_sku }}</span>{% endif %}
+    </div>
+
+    {% if product.msrp %}
+    <p class="msrp">GW MSRP: <strong>${{ product.msrp }}</strong></p>
+    {% endif %}
+
+    {% if product.description %}
+    <p>{{ product.description }}</p>
+    {% endif %}
+
+    <div class="product-actions">
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'products:toggle_watchlist' product.slug %}">
+            {% csrf_token %}
+            <button type="submit" class="btn {% if on_watchlist %}btn-secondary{% else %}btn-primary{% endif %}">
+                {% if on_watchlist %}Remove from Watchlist{% else %}Add to Watchlist{% endif %}
+            </button>
+        </form>
+        <a href="{% url 'collections:add' product.slug %}" class="btn btn-secondary">Add to Collection</a>
+        {% else %}
+        <a href="{% url 'accounts:login' %}" class="btn btn-secondary">Log in to track prices</a>
+        {% endif %}
+    </div>
+
+    <h2>Current Prices</h2>
+    {% if current_prices %}
+    <table class="price-table">
+        <thead>
+            <tr>
+                <th>Retailer</th>
+                <th>Price</th>
+                <th>Discount</th>
+                <th>Stock</th>
+                <th>Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cp in current_prices %}
+            <tr>
+                <td>{{ cp.retailer.name }}</td>
+                <td class="price">${{ cp.price }}</td>
+                <td>{% if cp.discount_pct %}<span class="badge badge-green">{{ cp.discount_pct }}% off</span>{% else %}—{% endif %}</td>
+                <td>{% if cp.in_stock %}<span class="badge badge-green">In Stock</span>{% else %}<span class="badge badge-red">Out of Stock</span>{% endif %}</td>
+                <td><a href="{{ cp.url }}" target="_blank" rel="noopener">Buy</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No price data yet. Check back soon!</p>
+    {% endif %}
+
+    {% if product.gw_url %}
+    <p><a href="{{ product.gw_url }}" target="_blank" rel="noopener">View on Games Workshop</a></p>
+    {% endif %}
+</div>
+
+<div id="price-chart"></div>
+{% endblock %}

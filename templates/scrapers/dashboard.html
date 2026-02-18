@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Scraper Dashboard{% endblock %}
+
+{% block content %}
+<h1>Scraper Dashboard</h1>
+<p>Staff-only view of recent scrape jobs.</p>
+
+<table class="price-table">
+    <thead>
+        <tr>
+            <th>Retailer</th>
+            <th>Status</th>
+            <th>Found</th>
+            <th>Updated</th>
+            <th>Started</th>
+            <th>Finished</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for job in jobs %}
+        <tr>
+            <td>{{ job.retailer.name }}</td>
+            <td>
+                {% if job.status == 'success' %}<span class="badge badge-green">{{ job.status }}</span>
+                {% elif job.status == 'failed' %}<span class="badge badge-red">{{ job.status }}</span>
+                {% else %}<span class="badge">{{ job.status }}</span>{% endif %}
+            </td>
+            <td>{{ job.products_found }}</td>
+            <td>{{ job.prices_updated }}</td>
+            <td>{{ job.started_at|default:"—" }}</td>
+            <td>{{ job.finished_at|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No scrape jobs yet. Run <code>python manage.py run_scrapers</code>.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

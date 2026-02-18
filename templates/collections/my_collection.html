@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}My Collection{% endblock %}
+
+{% block content %}
+<h1>My Collection</h1>
+
+<div class="collection-stats">
+    <div class="stat-card">
+        <h3>{{ total_items }}</h3>
+        <p>Total Items</p>
+    </div>
+    <div class="stat-card">
+        <h3>${{ total_spent|floatformat:2 }}</h3>
+        <p>Total Spent</p>
+    </div>
+    <div class="stat-card">
+        <h3>${{ total_msrp|floatformat:2 }}</h3>
+        <p>Total MSRP</p>
+    </div>
+    <div class="stat-card">
+        <h3>${{ total_saved|floatformat:2 }}</h3>
+        <p>Total Saved</p>
+    </div>
+</div>
+
+{% if painted %}
+<h2>Painted</h2>
+<div class="card-grid">
+    {% for item in painted %}
+    <div class="card">
+        <h3><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></h3>
+        <p>Qty: {{ item.quantity }}{% if item.price_paid %} — Paid: ${{ item.price_paid }}{% endif %}</p>
+        {% if item.notes %}<p class="notes">{{ item.notes }}</p>{% endif %}
+        <a href="{% url 'collections:remove' item.product.slug %}" class="btn-sm btn-danger">Remove</a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if building %}
+<h2>Building</h2>
+<div class="card-grid">
+    {% for item in building %}
+    <div class="card">
+        <h3><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></h3>
+        <p>Qty: {{ item.quantity }}{% if item.price_paid %} — Paid: ${{ item.price_paid }}{% endif %}</p>
+        <a href="{% url 'collections:remove' item.product.slug %}" class="btn-sm btn-danger">Remove</a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if owned %}
+<h2>Owned</h2>
+<div class="card-grid">
+    {% for item in owned %}
+    <div class="card">
+        <h3><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></h3>
+        <p>Qty: {{ item.quantity }}{% if item.price_paid %} — Paid: ${{ item.price_paid }}{% endif %}</p>
+        <a href="{% url 'collections:remove' item.product.slug %}" class="btn-sm btn-danger">Remove</a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if wishlist %}
+<h2>Wishlist</h2>
+<div class="card-grid">
+    {% for item in wishlist %}
+    <div class="card">
+        <h3><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></h3>
+        <a href="{% url 'collections:remove' item.product.slug %}" class="btn-sm btn-danger">Remove</a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if not owned and not building and not painted and not wishlist %}
+<p>Your collection is empty. <a href="{% url 'products:list' %}">Browse products</a> to start adding kits!</p>
+{% endif %}
+{% endblock %}
