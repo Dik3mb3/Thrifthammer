@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Products{% endblock %}
+
+{% block content %}
+<h1>Browse Warhammer Products</h1>
+
+<form method="get" class="search-form">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search by name or SKU...">
+    <select name="category">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+        <option value="{{ cat.slug }}" {% if selected_category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+        {% endfor %}
+    </select>
+    <select name="faction">
+        <option value="">All Factions</option>
+        {% for f in factions %}
+        <option value="{{ f.slug }}" {% if selected_faction == f.slug %}selected{% endif %}>{{ f.name }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<div class="card-grid">
+    {% for product in products %}
+    <a href="{% url 'products:detail' product.slug %}" class="card product-card">
+        <h3>{{ product.name }}</h3>
+        {% if product.category %}
+        <span class="badge">{{ product.category.name }}</span>
+        {% endif %}
+        {% if product.faction %}
+        <span class="badge">{{ product.faction.name }}</span>
+        {% endif %}
+        {% if product.msrp %}
+        <p class="msrp">MSRP: ${{ product.msrp }}</p>
+        {% endif %}
+    </a>
+    {% empty %}
+    <p>No products found. {% if query %}Try a different search.{% endif %}</p>
+    {% endfor %}
+</div>
+{% endblock %}

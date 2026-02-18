@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<h1>{{ user.username }}'s Profile</h1>
+
+<h2>Watchlist</h2>
+{% if watchlist %}
+<div class="card-grid">
+    {% for item in watchlist %}
+    <a href="{% url 'products:detail' item.product.slug %}" class="card">
+        <h3>{{ item.product.name }}</h3>
+        {% if item.target_price %}
+        <p>Target: ${{ item.target_price }}</p>
+        {% endif %}
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<p>Your watchlist is empty. <a href="{% url 'products:list' %}">Browse products</a> and add some!</p>
+{% endif %}
+
+<h2>Account</h2>
+<p><a href="{% url 'accounts:password_change' %}">Change password</a></p>
+{% endblock %}
