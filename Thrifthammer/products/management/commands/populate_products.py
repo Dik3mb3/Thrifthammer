@@ -76,7 +76,7 @@ class Command(BaseCommand):
             ('Age of Sigmar', 'Fantasy realm-hopping battles in the Mortal Realms.'),
             ('Horus Heresy', 'The galaxy-spanning civil war of the 31st Millennium.'),
             ('Paint & Supplies', 'Citadel paints, brushes, and modelling supplies.'),
-            ('Boxed Games', 'Two-player and starter box sets with everything to play.'),
+            ('Kill Team', 'Skirmish-scale combat in the 41st Millennium and Mortal Realms.'),
         ]
         categories = {}
         for name, description in category_data:
@@ -182,8 +182,8 @@ class Command(BaseCommand):
                 'country': 'US',
             },
             {
-                'name': 'Tower of Games',
-                'website': 'https://www.towerofgames.com',
+                'name': 'eBay',
+                'website': 'https://www.ebay.com',
                 'country': 'US',
             },
             {
@@ -518,64 +518,68 @@ class Command(BaseCommand):
                 'A thick Texture paint that creates stone and rubble basing '
                 'effects quickly without modelling materials.',
             ),
-            # ---- Boxed Games ----
+            # ---- Starter Sets (40K) ----
             (
                 'Leviathan (10th Edition Starter Set)',
-                'Boxed Games', None,
+                'Warhammer 40,000', None,
                 '40-02', decimal.Decimal('145.00'),
                 'The huge 10th Edition launch box. Contains Space Marine '
                 'and Tyranid forces, a 376-page hardback rulebook, dice, '
-                'and terrain. Superb value.',
+                'and terrain. Superb value.,'
             ),
             (
                 'Warhammer 40,000 Starter Set',
-                'Boxed Games', None,
+                'Warhammer 40,000', None,
                 '40-03', decimal.Decimal('50.00'),
                 'A compact starter with push-fit Space Marines and Tyranids, '
-                'a small rulebook, and all you need to play your first game.',
+                'a small rulebook, and all you need to play your first game.,'
             ),
             (
                 'Combat Patrol: Space Marines',
-                'Boxed Games', 'Space Marines',
+                'Warhammer 40,000', 'Space Marines',
                 '71-02', decimal.Decimal('105.00'),
                 'A ready-to-play Combat Patrol force of Space Marines: '
-                'Captain, Redemptor Dreadnought, Intercessors, and Outriders.',
+                'Captain, Redemptor Dreadnought, Intercessors, and Outriders.,'
             ),
+            # ---- Starter Sets (AoS) ----
             (
                 'Age of Sigmar Warrior Starter Set',
-                'Boxed Games', None,
+                'Age of Sigmar', None,
                 '80-15', decimal.Decimal('35.00'),
                 'The perfect introduction to Age of Sigmar: Stormcast Eternals '
-                'vs Kruleboyz Orks, with a Getting Started guide.',
+                'vs Kruleboyz Orks, with a Getting Started guide.,'
             ),
+            # ---- Horus Heresy Starter ----
             (
                 'Horus Heresy: Age of Darkness',
-                'Boxed Games', None,
+                'Horus Heresy', None,
                 'HH-001', decimal.Decimal('180.00'),
                 'The massive Horus Heresy launch box. 54 plastic Mk VI Space '
-                'Marines, vehicles, and the complete rulebook.',
+                'Marines, vehicles, and the complete rulebook.,'
             ),
-            (
-                'Warcry: Red Harvest',
-                'Boxed Games', None,
-                'WC-001', decimal.Decimal('105.00'),
-                'A two-player Warcry skirmish set with two rival warbands, '
-                'modular terrain, and complete rules.',
-            ),
-            (
-                'Necromunda: Hive War',
-                'Boxed Games', None,
-                'NM-001', decimal.Decimal('80.00'),
-                'The Necromunda two-player gang warfare set with Escher and '
-                'Delaque gangs, plus terrain and rules.',
-            ),
+            # ---- Kill Team ----
             (
                 'Kill Team: Nightmare',
-                'Boxed Games', None,
+                'Kill Team', None,
                 'KT-001', decimal.Decimal('130.00'),
                 'A Kill Team box with Chaos Legionaries vs Wyrmblade Genestealer '
-                'Cult operatives, terrain, and full Kill Team rules.',
+                'Cult operatives, terrain, and full Kill Team rules.,'
             ),
+            (
+                'Kill Team: Into the Dark',
+                'Kill Team', None,
+                'KT-002', decimal.Decimal('130.00'),
+                'A Kill Team box set featuring Veteran Guardsmen vs Intercession '
+                'Squad operatives with a space hulk terrain board.,'
+            ),
+            (
+                'Kill Team: Starter Set',
+                'Kill Team', None,
+                'KT-003', decimal.Decimal('65.00'),
+                'The essential Kill Team starter box with two warbands, terrain, '
+                'tokens, dice, and the complete condensed rules.,'
+            ),
+
         ]
 
         # Map faction name (or None) to faction object
@@ -1388,23 +1392,23 @@ class Command(BaseCommand):
             # ================================================================
             # KILL TEAM — boxed sets
             # ================================================================
-            ('Kill Team Starter Set', 'Boxed Games', None,
+            ('Kill Team Starter Set', 'Kill Team', None,
              'KT-100', decimal.Decimal('35.00'),
              'Everything needed to play Kill Team: skirmish rules, two kill '
              'teams, and a double-sided game board with terrain.'),
-            ('Kill Team: Into the Dark', 'Boxed Games', None,
+            ('Kill Team: Into the Dark', 'Kill Team', None,
              'KT-101', decimal.Decimal('130.00'),
              'A space hulk Kill Team set pitting Adeptus Mechanicus Hearthkyn '
              'Salvagers against Imperial Navy Breachers on modular terrain.'),
-            ('Kill Team: Salvation', 'Boxed Games', None,
+            ('Kill Team: Salvation', 'Kill Team', None,
              'KT-102', decimal.Decimal('130.00'),
              'Sisters of Battle Novitiates face off against the nefarious '
              'Hand of the Archon Drukhari in this two-team Kill Team box.'),
-            ('Kill Team: Ashes of Faith', 'Boxed Games', None,
+            ('Kill Team: Ashes of Faith', 'Kill Team', None,
              'KT-103', decimal.Decimal('130.00'),
              'Agents of the Inquisition square off against the Chaos Cult of '
              'the Blooded in sprawling hive city terrain.'),
-            ('Kill Team: Bheta-Decima', 'Boxed Games', None,
+            ('Kill Team: Bheta-Decima', 'Kill Team', None,
              'KT-104', decimal.Decimal('130.00'),
              'T\'au Empire Pathfinder kill teams battle against Leagues of Votann '
              'Hearthkyn Salvagers over a fallen starship\'s wreckage.'),
@@ -1412,19 +1416,19 @@ class Command(BaseCommand):
             # ================================================================
             # NECROMUNDA
             # ================================================================
-            ('Necromunda Escher Gang', 'Boxed Games', None,
+            ('Necromunda Escher Gang', 'Warhammer 40,000', None,
              'NM-010', decimal.Decimal('45.00'),
              'Ten deadly House Escher gangers — nimble female fighters armed '
              'with lasguns, plasma guns, and vicious chain sabres.'),
-            ('Necromunda Goliath Gang', 'Boxed Games', None,
+            ('Necromunda Goliath Gang', 'Warhammer 40,000', None,
              'NM-011', decimal.Decimal('45.00'),
              'Ten massive House Goliath fighters armed with boltguns, renderizers, '
              'and fighting with pure muscle power.'),
-            ('Necromunda Van Saar Gang', 'Boxed Games', None,
+            ('Necromunda Van Saar Gang', 'Warhammer 40,000', None,
              'NM-012', decimal.Decimal('45.00'),
              'Ten technologically advanced Van Saar gangers with lasrifles, '
              'meltaguns, and cutting-edge equipment.'),
-            ('Necromunda Underhive Terrain Set', 'Boxed Games', None,
+            ('Necromunda Underhive Terrain Set', 'Warhammer 40,000', None,
              'NM-020', decimal.Decimal('65.00'),
              'A set of modular underhive terrain pieces for Necromunda — '
              'bulkheads, barricades, and walkways.'),
@@ -1432,15 +1436,15 @@ class Command(BaseCommand):
             # ================================================================
             # WARCRY — boxed sets
             # ================================================================
-            ('Warcry Starter Set', 'Boxed Games', None,
+            ('Warcry Starter Set', 'Age of Sigmar', None,
              'WC-100', decimal.Decimal('55.00'),
              'Complete Warcry introduction: two warbands, modular ruins terrain, '
              'dice, cards, and the full Warcry rules.'),
-            ('Warcry: Heart of Ghur', 'Boxed Games', None,
+            ('Warcry: Heart of Ghur', 'Age of Sigmar', None,
              'WC-101', decimal.Decimal('130.00'),
              'A Warcry two-player set pitting Rotmire Creed against Horns of '
              'Hashut warbands amid living jungle terrain.'),
-            ('Warcry: Hunter and Hunted', 'Boxed Games', None,
+            ('Warcry: Hunter and Hunted', 'Age of Sigmar', None,
              'WC-102', decimal.Decimal('105.00'),
              'Wildercorps Hunters stalk Gorger Mawpack prey in this Warcry '
              'two-player box with open terrain.'),
@@ -1540,30 +1544,333 @@ class Command(BaseCommand):
             # ================================================================
             # WARHAMMER 40,000 CORE BOOKS & ACCESSORIES
             # ================================================================
-            ('Warhammer 40,000 Core Rules', 'Boxed Games', None,
+            ('Warhammer 40,000 Core Rules', 'Warhammer 40,000', None,
              '40-01', decimal.Decimal('65.00'),
              'The complete Warhammer 40,000 10th Edition hardback rulebook with '
              'full matched play, narrative, and open play rules.'),
-            ('Warhammer 40,000 Chapter Approved: Leviathan', 'Boxed Games', None,
+            ('Warhammer 40,000 Chapter Approved: Leviathan', 'Warhammer 40,000', None,
              '40-10', decimal.Decimal('35.00'),
              'The essential matched play companion with updated points, missions, '
              'and secondary objectives for 10th Edition.'),
-            ('Warhammer 40,000 Dice Set', 'Boxed Games', None,
+            ('Warhammer 40,000 Dice Set', 'Warhammer 40,000', None,
              '40-20', decimal.Decimal('15.00'),
              'Twenty Warhammer 40,000 dice with the Aquila on the six face, '
              'in classic bone-white with black ink.'),
-            ('Warhammer 40,000 Measuring Tape', 'Boxed Games', None,
+            ('Warhammer 40,000 Measuring Tape', 'Paint & Supplies', None,
              '40-21', decimal.Decimal('12.00'),
              'A 10-foot retractable Warhammer 40,000 measuring tape with '
              'inch and centimetre markings.'),
-            ('Age of Sigmar Core Rules', 'Boxed Games', None,
+            ('Age of Sigmar Core Rules', 'Age of Sigmar', None,
              '80-01', decimal.Decimal('65.00'),
              'The complete Age of Sigmar 3rd Edition hardback core rules with '
              'matched play, Path to Glory, and open play.'),
-            ('Age of Sigmar Dice Set', 'Boxed Games', None,
+            ('Age of Sigmar Dice Set', 'Age of Sigmar', None,
              '80-20', decimal.Decimal('15.00'),
              'Twenty Age of Sigmar dice in celestial blue with a hammer symbol '
              'on the six face.'),
+            # === KILL TEAM ===
+            ('Kill Team: Operatives Datacard Pack 2024', 'Kill Team', None,
+             'KT-101', decimal.Decimal('25.00'),
+             'Reference datacards for all Kill Team operatives, covering stats, '
+             'abilities, and equipment in a handy card format.'),
+            ('Kill Team: Void-Dancer Troupe', 'Kill Team', None,
+             'KT-102', decimal.Decimal('40.00'),
+             'Harlequin operatives bringing acrobatic lethality to the Kill Team '
+             'game – a unique and deadly faction.'),
+            ('Kill Team: Veteran Guardsmen', 'Kill Team', None,
+             'KT-103', decimal.Decimal('40.00'),
+             'Battle-hardened Astra Militarum veterans with a wealth of special '
+             'weapons and veteran skills for Kill Team.'),
+            ('Kill Team: Chaos Legionaries', 'Kill Team', None,
+             'KT-104', decimal.Decimal('40.00'),
+             'Corrupted Chaos Space Marine operatives armed with dark weapons '
+             'and driven by the powers of Chaos.'),
+            ('Kill Team: Intercession Squad', 'Kill Team', None,
+             'KT-105', decimal.Decimal('40.00'),
+             'Elite Primaris Space Marine operatives including specialists with '
+             'unique equipment and abilities.'),
+            ('Kill Team: Hunter Clade', 'Kill Team', None,
+             'KT-106', decimal.Decimal('45.00'),
+             'Skitarii Ranger and Vanguard operatives of the Adeptus Mechanicus '
+             'hunting heresy with precise, lethal efficiency.'),
+            ('Kill Team: Exaction Squad', 'Kill Team', None,
+             'KT-107', decimal.Decimal('40.00'),
+             'Adeptus Arbites enforcers maintaining the Emperor’s law in the '
+             'underhives and void stations of the Imperium.'),
+            ('Kill Team: Salvation', 'Kill Team', None,
+             'KT-108', decimal.Decimal('130.00'),
+             'A Kill Team boxed set pitting Adeptus Arbites against Genestealer '
+             'Cult Neophytes in an underhive setting with terrain.'),
+            ('Kill Team: Terrain – Killzone Essentials', 'Kill Team', None,
+             'KT-109', decimal.Decimal('55.00'),
+             'A set of modular terrain pieces for creating Kill Team battlefield '
+             'environments, compatible with all killzones.'),
+            ('Kill Team: Compendium', 'Kill Team', None,
+             'KT-110', decimal.Decimal('40.00'),
+             'The essential reference guide containing rules for all Kill Team '
+             'factions in one comprehensive volume.'),
+            # === ADDITIONAL SPACE MARINES ===
+            ('Space Marine Marneus Calgar', 'Warhammer 40,000', 'Ultramarines',
+             '55-12', decimal.Decimal('45.00'),
+             'Chapter Master of the Ultramarines and Lord Macragge, armed with '
+             'the Gauntlets of Ultramar and accompanied by his Honour Guard.'),
+            ('Space Marine Roboute Guilliman', 'Warhammer 40,000', 'Ultramarines',
+             '55-02', decimal.Decimal('60.00'),
+             'The Primarch of the Ultramarines, returned to lead the Imperium. '
+             'An iconic centrepiece model armed with the Emperor’s Sword.'),
+            ('Space Marine Judiciar', 'Warhammer 40,000', 'Space Marines',
+             '48-36', decimal.Decimal('30.00'),
+             'A warrior of justice armed with an executioner relic blade, '
+             'whose ominous presence slows the enemy’s reactions.'),
+            ('Space Marine Primaris Lieutenant', 'Warhammer 40,000', 'Space Marines',
+             '48-61', decimal.Decimal('27.50'),
+             'A Primaris Lieutenant providing tactical command, armed with a '
+             'master-crafted auto bolt rifle and power sword.'),
+            ('Space Marine Company Heroes', 'Warhammer 40,000', 'Space Marines',
+             '48-37', decimal.Decimal('45.00'),
+             'A set of Company Heroes including an Ancient, Company Champion, '
+             'and two Bladeguard Veterans supporting the Chapter Master.'),
+            ('Space Marine Bladeguard Veterans', 'Warhammer 40,000', 'Space Marines',
+             '48-38', decimal.Decimal('45.00'),
+             'Three elite Bladeguard Veterans armed with master-crafted power '
+             'swords and storm shields – the finest duelists of the Chapter.'),
+            ('Space Marine Hammerfall Bunker', 'Warhammer 40,000', 'Space Marines',
+             '48-27', decimal.Decimal('52.50'),
+             'A deployable fortification dropped from orbit, armed with a '
+             'hammerfall missile launcher to provide firebase support.'),
+            ('Space Marine Firestrike Servo-Turrets', 'Warhammer 40,000', 'Space Marines',
+             '48-28', decimal.Decimal('45.00'),
+             'Two twin-linked lascannon or accelerator autocannon turrets '
+             'providing automated long-range fire support.'),
+            ('Space Marine Eradicators', 'Warhammer 40,000', 'Space Marines',
+             '48-39', decimal.Decimal('42.50'),
+             'Three Primaris Eradicators carrying melta rifles capable of '
+             'reducing even the heaviest vehicles to molten slag.'),
+            ('Space Marine Vanguard Veteran Squad', 'Warhammer 40,000', 'Space Marines',
+             '48-08', decimal.Decimal('40.00'),
+             'Five veterans bearing jump packs and a plethora of melee weapons '
+             'including lightning claws and thunder hammers.'),
+            # === ADDITIONAL NECRONS ===
+            ('Necron Flayed Ones', 'Warhammer 40,000', 'Necrons',
+             '49-17', decimal.Decimal('35.00'),
+             'Five Necron Flayed Ones, cursed warriors who wear the flesh of '
+             'their victims and strike from ambush.'),
+            ('Necron Lychguard', 'Warhammer 40,000', 'Necrons',
+             '49-11', decimal.Decimal('40.00'),
+             'Five Necron Lychguard in ornate ceremonial warplate, serving '
+             'as the personal bodyguard of Necron Overlords.'),
+            ('Necron Canoptek Spyder', 'Warhammer 40,000', 'Necrons',
+             '49-14', decimal.Decimal('30.00'),
+             'A single Canoptek Spyder repairing and reanimating nearby Necron '
+             'warriors in the heat of battle.'),
+            ('Necron Doom Scythe', 'Warhammer 40,000', 'Necrons',
+             '49-13', decimal.Decimal('42.50'),
+             'A fast attack flyer armed with a death ray and twin tesla '
+             'destructors, devastating enemy formations from the air.'),
+            ('Necron Doomsday Ark', 'Warhammer 40,000', 'Necrons',
+             '49-12', decimal.Decimal('52.50'),
+             'A massive Necron artillery vehicle armed with a doomsday cannon '
+             'capable of vaporising entire squads in a single shot.'),
+            ('Necron C’tan Shard of the Void Dragon', 'Warhammer 40,000', 'Necrons',
+             '49-20', decimal.Decimal('55.00'),
+             'A fragment of the god of machines, imprisoned by the Necron '
+             'nobles and unleashed upon the battlefield as a weapon.'),
+            ('Necron Psychomancer', 'Warhammer 40,000', 'Necrons',
+             '49-21', decimal.Decimal('25.00'),
+             'A Cryptek specialist who weaponises fear and illusion, driving '
+             'enemy minds to madness on the battlefield.'),
+            ('Necron Royal Warden', 'Warhammer 40,000', 'Necrons',
+             '49-22', decimal.Decimal('22.50'),
+             'An enforcer of the Necron Overlord’s will, armed with a relic '
+             'gauss blaster and bearing authority to execute deserters.'),
+            # === ADDITIONAL ORKS ===
+            ('Ork Nobz', 'Warhammer 40,000', 'Orks',
+             '50-09', decimal.Decimal('35.00'),
+             'Five Ork Nobz, the biggest and meanest Boyz in a mob, armed '
+             'with power klaws, big choppas, and kombi-weapons.'),
+            ('Ork Meganobz', 'Warhammer 40,000', 'Orks',
+             '50-12', decimal.Decimal('47.50'),
+             'Three Meganobz in mega armour, nigh-unstoppable Ork elites '
+             'carrying power klaws and kombi-shootas.'),
+            ('Ork Deff Dread', 'Warhammer 40,000', 'Orks',
+             '50-16', decimal.Decimal('35.00'),
+             'A ramshackle Ork walker piloted by a crazed Ork, armed with '
+             'klaws, drills, saws, and sluggas in all configurations.'),
+            ('Ork Killa Kans', 'Warhammer 40,000', 'Orks',
+             '50-15', decimal.Decimal('42.50'),
+             'Three Killa Kans – small walkers piloted by crazed Gretchin '
+             'with a variety of scavenged weapons.'),
+            ('Ork Battlewagon', 'Warhammer 40,000', 'Orks',
+             '50-22', decimal.Decimal('67.50'),
+             'A massive Ork troop carrier and heavy transport armed with '
+             'a deff rolla, big shootas, and extensive upgrades.'),
+            ('Ork Trukk', 'Warhammer 40,000', 'Orks',
+             '50-11', decimal.Decimal('30.00'),
+             'An Ork troop transport built from scrap, capable of delivering '
+             'a mob of Boyz into combat with reckless speed.'),
+            ('Ork Warboss in Mega Armour', 'Warhammer 40,000', 'Orks',
+             '50-02', decimal.Decimal('35.00'),
+             'The biggest Ork wearing the biggest armour – a warlord in '
+             'mega armour with a klaw and shootier weapons.'),
+            ('Ork Flash Gitz', 'Warhammer 40,000', 'Orks',
+             '50-20', decimal.Decimal('40.00'),
+             'Five flashily armoured Ork pirates with snazzguns – the '
+             'wealthiest and vainest Orks in any Waaagh!'),
+            ('Ork Combat Patrol', 'Warhammer 40,000', 'Orks',
+             '71-18', decimal.Decimal('105.00'),
+             'Start your Waaagh! with a Warboss, Boyz, Deff Koptas, '
+             'and a Deff Dread in this ready-to-play Combat Patrol.'),
+            # === ADDITIONAL AGE OF SIGMAR ===
+            ('Nighthaunt Chainrasps', 'Age of Sigmar', 'Nighthaunt',
+             '91-28', decimal.Decimal('35.00'),
+             'Twenty spectral Chainrasp Hordes – the mournful spirits who '
+             'form the core of any Nighthaunt force.'),
+            ('Nighthaunt Knight of Shrouds', 'Age of Sigmar', 'Nighthaunt',
+             '91-15', decimal.Decimal('22.50'),
+             'A single Knight of Shrouds on ethereal steed, a powerful '
+             'Nighthaunt commander capable of emboldening nearby spirits.'),
+            ('Nighthaunt Hexwraiths', 'Age of Sigmar', 'Nighthaunt',
+             '91-06', decimal.Decimal('35.00'),
+             'Five spectral horsemen who drain the life from mortals they '
+             'ride through, impossible to stop with mortal weapons.'),
+            ('Ossiarch Bonereapers Mortek Guard', 'Age of Sigmar', 'Ossiarch Bonereapers',
+             '94-10', decimal.Decimal('42.50'),
+             'Twenty Mortek Guard – the unyielding infantry of the Ossiarch '
+             'legions, armed with nadirite blades and shields.'),
+            ('Ossiarch Bonereapers Gothizzar Harvester', 'Age of Sigmar', 'Ossiarch Bonereapers',
+             '94-12', decimal.Decimal('52.50'),
+             'A bone-harvesting construct that collects the remains of the '
+             'slain to repair and reinforce nearby Mortek Guard.'),
+            ('Flesh-Eater Courts Crypt Ghouls', 'Age of Sigmar', 'Flesh-Eater Courts',
+             '91-35', decimal.Decimal('35.00'),
+             'Twenty Crypt Ghouls – the delusional flesh-eating servants of '
+             'the Abhorrant Archregent, believing themselves noble warriors.'),
+            ('Flesh-Eater Courts Terrorgheist', 'Age of Sigmar', 'Flesh-Eater Courts',
+             '91-32', decimal.Decimal('55.00'),
+             'A massive undead bat-dragon that serves as the centrepiece of '
+             'any Flesh-Eater Courts army.'),
+            ('Gloomspite Gitz Squig Hoppers', 'Age of Sigmar', 'Gloomspite Gitz',
+             '89-11', decimal.Decimal('35.00'),
+             'Five Squig Hoppers bounding unpredictably across the battlefield '
+             'on their mouth-on-legs squig mounts.'),
+            ('Gloomspite Gitz Fanatics', 'Age of Sigmar', 'Gloomspite Gitz',
+             '89-06', decimal.Decimal('30.00'),
+             'Five Fanatics swinging enormous balls and chains in manic frenzy '
+             'hidden inside Moonclan Grots until the moment of attack.'),
+            ('Orruk Warclans Ardboys', 'Age of Sigmar', 'Orruk Warclans',
+             '89-30', decimal.Decimal('35.00'),
+             'Ten heavily armoured Orruk Ardboys carrying choppas, shields, '
+             'and bows – reliable infantry for any Ironjawz or Bonesplitterz list.'),
+            ('Daughters of Khaine Sisters of Slaughter', 'Age of Sigmar', 'Daughters of Khaine',
+             '85-17', decimal.Decimal('40.00'),
+             'Ten fanatic warriors of Khaine armed with blade bucklers and '
+             'sacrificial knives, frenzied in battle.'),
+            ('Lumineth Realm-lords Vanari Auralan Wardens', 'Age of Sigmar', 'Lumineth Realm-lords',
+             '87-10', decimal.Decimal('42.50'),
+             'Ten Vanari Auralan Wardens wielding long sun spears – the '
+             'disciplined pinnacle of Lumineth defensive warfare.'),
+            ('Cities of Sigmar Freeguild Fusiliers', 'Age of Sigmar', 'Cities of Sigmar',
+             '86-15', decimal.Decimal('42.50'),
+             'Ten Freeguild Fusiliers armed with handguns and pistols, '
+             'the black-powder ranged core of any Cities force.'),
+            ('Slaves to Darkness Chaos Warriors', 'Age of Sigmar', 'Slaves to Darkness',
+             '83-18', decimal.Decimal('42.50'),
+             'Ten Chaos Warriors clad in ensorcelled plate armour, wielding '
+             'hand weapons and shields in service of the dark gods.'),
+            ('Blades of Khorne Bloodletters', 'Age of Sigmar', 'Blades of Khorne',
+             '97-08', decimal.Decimal('35.00'),
+             'Ten Bloodletters – the foot soldiers of Khorne, armed with '
+             'hellblades and driven by boundless fury.'),
+            ('Maggotkin of Nurgle Plaguebearers', 'Age of Sigmar', 'Maggotkin of Nurgle',
+             '97-09', decimal.Decimal('35.00'),
+             'Ten Plaguebearers of Nurgle, putrid daemons carrying plagueswords '
+             'and spreading corruption across the Mortal Realms.'),
+            ('Disciples of Tzeentch Pink Horrors', 'Age of Sigmar', 'Disciples of Tzeentch',
+             '97-11', decimal.Decimal('35.00'),
+             'Ten Pink Horrors of Tzeentch, magical daemons who split into '
+             'Blue Horrors when slain. A core unit of any Tzeentch force.'),
+            ('Stormcast Eternals Praetors', 'Age of Sigmar', 'Stormcast Eternals',
+             '96-55', decimal.Decimal('42.50'),
+             'Three Praetors – the elite bodyguard of the Lord-Commander, '
+             'armed with halberd-length stormstrike glaives.'),
+            ('Stormcast Eternals Vindictors', 'Age of Sigmar', 'Stormcast Eternals',
+             '96-50', decimal.Decimal('42.50'),
+             'Five Vindictors in heavy plate armour with stormspears and '
+             'shields – the dependable core infantry of any Stormhost.'),
+            ('Skaven Plague Monks', 'Age of Sigmar', 'Skaven',
+             '90-12', decimal.Decimal('30.00'),
+             'Twenty fanatical Plague Monks of Clan Pestilens, spreading '
+             'disease and decay with foetid blades.'),
+            # === HORUS HERESY — more units ===
+            ('Legiones Astartes MKIII Infantry Squad', 'Horus Heresy', None,
+             'HA-010', decimal.Decimal('45.00'),
+             'Ten Space Marine legionaries in Mark III Iron Armour – the '
+             'original heresy-era close-assault armour variant.'),
+            ('Legiones Astartes Cataphractii Terminators', 'Horus Heresy', None,
+             'HA-011', decimal.Decimal('55.00'),
+             'Five Terminators in the ancient Cataphractii pattern plate, '
+             'the heaviest armour available to the Legiones Astartes.'),
+            ('Legiones Astartes Predator', 'Horus Heresy', None,
+             'HA-012', decimal.Decimal('57.50'),
+             'The classic Predator tank in Heresy-era configuration, armed '
+             'with a predator cannon or twin lascannons.'),
+            ('Legiones Astartes Spartan Assault Tank', 'Horus Heresy', None,
+             'HA-013', decimal.Decimal('105.00'),
+             'A massive super-heavy assault tank capable of transporting '
+             'twenty Terminators into the heart of the enemy.'),
+            ('Solar Auxilia Lasrifle Section', 'Horus Heresy', None,
+             'HA-020', decimal.Decimal('45.00'),
+             'Ten elite Solar Auxilia infantry armed with volkite chargers '
+             'and las-rifles, the best conventional troops of the Heresy era.'),
+            # === CITADEL PAINTS ===
+            ('Citadel Layer Paint', 'Paint & Supplies', None,
+             'LP-001', decimal.Decimal('4.55'),
+             'A single Citadel Layer paint (12ml), formulated for highlighting '
+             'over base coats to add depth and detail.'),
+            ('Citadel Dry Paint', 'Paint & Supplies', None,
+             'DP-001', decimal.Decimal('4.55'),
+             'A single Citadel Dry paint (12ml) for drybrushing effects, '
+             'with a thick consistency that picks out raised details.'),
+            ('Citadel Technical Paint (Nihilakh Oxide)', 'Paint & Supplies', None,
+             'TE-001', decimal.Decimal('5.50'),
+             'A weathering paint that creates verdigris and corrosion effects '
+             'in the recesses of aged brass and bronze models.'),
+            ('Citadel Air Paint', 'Paint & Supplies', None,
+             'AP-001', decimal.Decimal('6.30'),
+             'A single pre-thinned Citadel Air paint (24ml) ready for use '
+             'with an airbrush without further thinning needed.'),
+            ('Citadel Spray: Chaos Black', 'Paint & Supplies', None,
+             'SP-010', decimal.Decimal('15.00'),
+             'A 400ml aerosol spray primer in Chaos Black, providing an '
+             'excellent base coat for dark colour schemes.'),
+            ('Citadel Spray: Wraithbone', 'Paint & Supplies', None,
+             'SP-011', decimal.Decimal('15.00'),
+             'A 400ml aerosol spray primer in Wraithbone, the ideal base '
+             'for contrast and bright colour schemes.'),
+            ('Citadel Spray: Grey Seer', 'Paint & Supplies', None,
+             'SP-012', decimal.Decimal('15.00'),
+             'A 400ml aerosol spray primer in Grey Seer – the best base '
+             'colour for Contrast paints on a neutral mid-grey.'),
+            ('Citadel Munitorum Varnish', 'Paint & Supplies', None,
+             'SP-020', decimal.Decimal('15.00'),
+             'A 400ml aerosol matt varnish that protects painted models '
+             'from chipping and wear without affecting colour.'),
+            ('Citadel Brush: Medium Base', 'Paint & Supplies', None,
+             'BR-001', decimal.Decimal('6.30'),
+             'A medium-sized Citadel Base brush, ideal for basecoating '
+             'infantry models and vehicles quickly and evenly.'),
+            ('Citadel Brush: Medium Layer', 'Paint & Supplies', None,
+             'BR-002', decimal.Decimal('6.30'),
+             'A medium Citadel Layer brush for painting details, layering '
+             'highlights, and applying Contrast paints with precision.'),
+            ('Citadel Hobby Knife', 'Paint & Supplies', None,
+             'HK-001', decimal.Decimal('12.00'),
+             'A precision hobby knife with a replaceable blade for cutting '
+             'plastic sprues, trimming mould lines, and fine conversion work.'),
+            ('Citadel Plastic Glue', 'Paint & Supplies', None,
+             'PG-001', decimal.Decimal('6.00'),
+             'A 25ml tube of Citadel plastic glue that bonds plastic '
+             'components with a strong, invisible join.'),
         ]
 
         # Re-use the faction lookup built in _create_products
@@ -1574,7 +1881,13 @@ class Command(BaseCommand):
             cat = Category.objects.filter(name=cat_name).first()
             faction = faction_lookup.get(faction_name) if faction_name else None
 
-            slug = slugify(name)
+            base_slug = slugify(name)
+            # Ensure slug is unique — append gw_sku suffix if a different
+            # product already occupies the base slug.
+            slug = base_slug
+            existing = Product.objects.filter(slug=base_slug).exclude(gw_sku=gw_sku).first()
+            if existing:
+                slug = f"{base_slug}-{slugify(gw_sku)}"
             product, created = Product.objects.update_or_create(
                 gw_sku=gw_sku,
                 defaults={
@@ -1613,7 +1926,7 @@ class Command(BaseCommand):
         - Games Workshop always charges the full MSRP
         - Miniature Market discounts 15–25% (best US deals)
         - Noble Knight Games discounts 10–18%
-        - Tower of Games discounts 10–20%
+        - eBay: variable 5–25% off
         - Amazon may be cheaper or more expensive (small random variance)
         - Some products are out of stock at random retailers
         """
@@ -1621,7 +1934,7 @@ class Command(BaseCommand):
         gw = retailers.get('Games Workshop')
         mm = retailers.get('Miniature Market')
         nk = retailers.get('Noble Knight Games')
-        tower = retailers.get('Tower of Games')
+        ebay = retailers.get('eBay')
         amazon = retailers.get('Amazon')
 
         price_count = 0
@@ -1670,17 +1983,19 @@ class Command(BaseCommand):
                 )
                 price_count += 1
 
-            # Tower of Games: 10–20% off, good stock
-            if tower:
-                discount = decimal.Decimal(str(round(random.uniform(0.10, 0.20), 2)))
-                tower_price = self._apply_discount(msrp, discount)
-                in_stock = random.random() > 0.2
+            # eBay: variable pricing – can be 5–25% off but sometimes higher
+            if ebay and msrp >= 15:
+                import urllib.parse
+                discount = decimal.Decimal(str(round(random.uniform(0.05, 0.25), 2)))
+                ebay_price = self._apply_discount(msrp, discount)
+                in_stock = random.random() > 0.25
+                search_term = urllib.parse.quote_plus(f'{product.name} warhammer games workshop')
                 self._upsert_price(
                     product=product,
-                    retailer=tower,
-                    price=tower_price,
+                    retailer=ebay,
+                    price=ebay_price,
                     in_stock=in_stock,
-                    url=f'https://www.towerofgames.com/search?q={product.name}',
+                    url=f'https://www.ebay.com/sch/i.html?_nkw={search_term}&LH_BIN=1&_sop=15',
                 )
                 price_count += 1
 

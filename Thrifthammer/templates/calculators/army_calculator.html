@@ -1,18 +1,34 @@
 {% extends "base.html" %}
 
-{% block title %}Space Marine Army Cost Calculator{% endblock %}
+{% block title %}40K Army Cost Calculator{% endblock %}
 
 {% block content %}
 <div class="page-content">
 
   {# ── Header ── #}
-  <div style="margin-bottom:var(--sp-6);">
-    <h1 class="section-title">Army Cost Calculator</h1>
+  <div style="margin-bottom:var(--sp-5);">
+    <h1 class="section-title">40K Army Cost Calculator</h1>
     <div class="gold-rule"></div>
-    <p style="color:var(--text-muted);font-size:0.9rem;max-width:560px;">
-      Build your Space Marine roster unit by unit — see the real cost across US retailers in real time.
+    <p style="color:var(--text-muted);font-size:0.9rem;max-width:600px;">
+      Select your faction, build your roster unit by unit, and see the real cost across all tracked US retailers in real time.
     </p>
   </div>
+
+  {# ── Faction filter bar ── #}
+  {% if available_factions %}
+  <div class="calc-faction-bar" role="navigation" aria-label="Select faction">
+    <a href="{% url 'calculators:space_marines' %}"
+       class="calc-faction-btn{% if not selected_faction %} active{% endif %}">
+      All Factions
+    </a>
+    {% for faction in available_factions %}
+    <a href="?faction={{ faction.slug }}"
+       class="calc-faction-btn{% if selected_faction.slug == faction.slug %} active{% endif %}">
+      {{ faction.name }}
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
 
   <div class="calc-layout">
 
@@ -50,10 +66,20 @@
         {% endfor %}
       </div>
       {% empty %}
-      <div class="card" style="text-align:center;">
-        <p style="color:var(--text-muted);">
-          No units found. Run <code>python manage.py populate_units</code> to seed unit data.
+      <div class="card" style="text-align:center;padding:var(--sp-8);">
+        <p style="color:var(--text-muted);margin-bottom:var(--sp-3);">
+          {% if selected_faction %}
+            No units found for <strong>{{ selected_faction.name }}</strong> yet.
+            Units are added as product SKUs are tagged in the admin.
+          {% else %}
+            No units found. Select a faction above or add units via the admin.
+          {% endif %}
         </p>
+        {% if not selected_faction %}
+        <a href="{% url 'products:list' %}?category=warhammer-40000" class="btn btn-secondary">
+          Browse 40K Products
+        </a>
+        {% endif %}
       </div>
       {% endfor %}
     </div>

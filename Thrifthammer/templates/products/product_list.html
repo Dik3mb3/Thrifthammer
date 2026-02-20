@@ -28,7 +28,7 @@
       {# Search #}
       <div class="sidebar-section">
         <button class="sidebar-toggle open" data-target="search-body" aria-expanded="true">
-          🔍 Search
+          Search
           <span class="toggle-icon" aria-hidden="true">▾</span>
         </button>
         <div class="sidebar-body" id="search-body">
@@ -47,8 +47,7 @@
                 style="width:100%;padding:0.5rem 2.2rem 0.5rem 0.75rem;border:1px solid var(--border-subtle);border-radius:var(--rounded);background:var(--bg-input);color:var(--text-primary);font-size:0.85rem;font-family:inherit;"
               >
               <button type="submit" aria-label="Submit search"
-                style="position:absolute;right:0.4rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--accent-gold);cursor:pointer;font-size:0.9rem;padding:0;">
-                ⚔
+                style="position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);background:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 stroke=%22%23c8921a%22 stroke-width=%222%22 viewBox=%220 0 24 24%22%3E%3Ccircle cx=%2211%22 cy=%2211%22 r=%227%22/%3E%3Cline x1=%2216.5%22 y1=%2216.5%22 x2=%2222%22 y2=%2222%22/%3E%3C/svg%3E') no-repeat center/contain;border:none;cursor:pointer;padding:0;width:14px;height:14px;">
               </button>
             </div>
             <div id="autocomplete-results" class="hero-search-results" role="listbox" aria-label="Suggestions" style="top:calc(100% + 2px);"></div>
@@ -65,7 +64,7 @@
       {# Sort #}
       <div class="sidebar-section">
         <button class="sidebar-toggle open" data-target="sort-body" aria-expanded="true">
-          ⇅ Sort By
+          Sort By
           <span class="toggle-icon" aria-hidden="true">▾</span>
         </button>
         <div class="sidebar-body" id="sort-body">
@@ -87,7 +86,7 @@
       {% if categories %}
       <div class="sidebar-section">
         <button class="sidebar-toggle open" data-target="cats-body" aria-expanded="true">
-          ☰ Categories
+          Categories
           <span class="toggle-icon" aria-hidden="true">▾</span>
         </button>
         <div class="sidebar-body" id="cats-body">
@@ -105,24 +104,34 @@
       </div>
       {% endif %}
 
-      {# Factions #}
-      {% if factions %}
+      {# Factions — only shown when a category is selected (hierarchical filter) #}
+      {% if selected_category %}
       <div class="sidebar-section">
         <button class="sidebar-toggle open" data-target="facs-body" aria-expanded="true">
-          ⚔ Factions
+          Factions
           <span class="toggle-icon" aria-hidden="true">▾</span>
         </button>
         <div class="sidebar-body" id="facs-body">
-          <a href="{% url 'products:list' %}{% if query %}?q={{ query }}{% endif %}{% if selected_category %}{% if query %}&{% else %}?{% endif %}category={{ selected_category }}{% endif %}{% if sort and sort != 'name' %}&sort={{ sort }}{% endif %}"
+          {% if factions %}
+          <a href="?{% if query %}q={{ query }}&{% endif %}category={{ selected_category }}{% if sort and sort != 'name' %}&sort={{ sort }}{% endif %}"
              class="sidebar-link{% if not selected_faction %} active{% endif %}">
             All Factions
           </a>
           {% for f in factions %}
-          <a href="?{% if query %}q={{ query }}&{% endif %}{% if selected_category %}category={{ selected_category }}&{% endif %}faction={{ f.slug }}{% if sort and sort != 'name' %}&sort={{ sort }}{% endif %}"
+          <a href="?{% if query %}q={{ query }}&{% endif %}category={{ selected_category }}&faction={{ f.slug }}{% if sort and sort != 'name' %}&sort={{ sort }}{% endif %}"
              class="sidebar-link{% if selected_faction == f.slug %} active{% endif %}">
             {{ f.name }}
           </a>
           {% endfor %}
+          {% else %}
+          <p style="font-size:0.78rem;color:var(--text-muted);padding:var(--sp-2) 0;">No factions in this category.</p>
+          {% endif %}
+        </div>
+      </div>
+      {% else %}
+      <div class="sidebar-section">
+        <div style="padding:var(--sp-2) 0;">
+          <p style="font-size:0.78rem;color:var(--text-muted);">Select a category to filter by faction.</p>
         </div>
       </div>
       {% endif %}
@@ -163,7 +172,7 @@
             loading="lazy"
           >
           {% else %}
-          <div class="product-card-img-placeholder" aria-hidden="true">⚔</div>
+          <div class="product-card-img-placeholder" aria-hidden="true"></div>
           {% endif %}
 
           <div class="product-card-body">
@@ -196,7 +205,7 @@
         </a>
         {% empty %}
         <div style="grid-column:1/-1;text-align:center;padding:var(--sp-16) 0;">
-          <div style="font-size:2.5rem;margin-bottom:var(--sp-4);" aria-hidden="true">⚔</div>
+          <div style="font-size:2.5rem;margin-bottom:var(--sp-4);font-weight:900;color:var(--accent-gold);" aria-hidden="true">—</div>
           <p style="font-size:1rem;margin-bottom:var(--sp-4);color:var(--text-muted);">
             No products found{% if query %} for "{{ query }}"{% endif %}.
           </p>

@@ -13,5 +13,6 @@ urlpatterns = [
     path('prices/', include('prices.urls')),
     path('collection/', include('collections_app.urls')),
     path('army-calculator/', include('calculators.urls')),
+    path('blog/', include('blog.urls')),
 ]
 

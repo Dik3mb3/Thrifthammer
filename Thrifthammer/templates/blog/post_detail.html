@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.effective_meta_title }}{% endblock %}
+
+{% block extra_head %}
+{% if post.effective_meta_description %}
+<meta name="description" content="{{ post.effective_meta_description }}">
+{% endif %}
+{% if post.featured_image_url %}
+<meta property="og:image" content="{{ post.featured_image_url }}">
+{% endif %}
+<meta property="og:title" content="{{ post.effective_meta_title }}">
+<meta property="og:type" content="article">
+{% if post.published_at %}
+<meta property="article:published_time" content="{{ post.published_at|date:'c' }}">
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+  <div class="blog-detail-layout">
+
+    {# ── Main article ── #}
+    <article class="blog-article" itemscope itemtype="https://schema.org/Article">
+
+      {# Featured image #}
+      {% if post.featured_image_url %}
+      <div class="blog-article-img-wrap">
+        <img
+          src="{{ post.featured_image_url }}"
+          alt="{{ post.featured_image_alt|default:post.title }}"
+          class="blog-article-img"
+          loading="eager"
+          itemprop="image"
+        >
+      </div>
+      {% endif %}
+
+      {# Header #}
+      <header class="blog-article-header">
+        {% if post.tags.all %}
+        <div class="blog-card-tags" style="margin-bottom:var(--sp-3);">
+          {% for tag in post.tags.all %}
+          <a href="{% url 'blog:post_list' %}?tag={{ tag.slug }}" class="badge badge-default">{{ tag.name }}</a>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <h1 class="blog-article-title" itemprop="headline">{{ post.title }}</h1>
+
+        <div class="blog-article-meta">
+          <time datetime="{{ post.published_at|date:'Y-m-d' }}" itemprop="datePublished">
+            {{ post.published_at|date:"j F Y" }}
+          </time>
+        </div>
+      </header>
+
+      {# Body #}
+      <div class="blog-article-body prose" itemprop="articleBody">
+        {{ post.body|safe }}
+      </div>
+
+      {# Back link #}
+      <div class="blog-article-footer">
+        <a href="{% url 'blog:post_list' %}" class="btn btn-secondary">&larr; All Posts</a>
+      </div>
+
+    </article>
+
+    {# ── Sidebar ── #}
+    <aside class="blog-sidebar">
+
+      {# Recent posts #}
+      {% if recent_posts %}
+      <div class="blog-sidebar-card">
+        <h3>Recent Posts</h3>
+        {% for rp in recent_posts %}
+        <a href="{{ rp.get_absolute_url }}" class="blog-sidebar-link">
+          <span class="blog-sidebar-link-title">{{ rp.title }}</span>
+          <span class="blog-sidebar-link-date">{{ rp.published_at|date:"j M Y" }}</span>
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {# CTA: browse products #}
+      <div class="blog-sidebar-card blog-sidebar-cta">
+        <h3>Find the Best Prices</h3>
+        <p>Compare prices across US retailers on 307+ Warhammer kits.</p>
+        <a href="{% url 'products:list' %}" class="btn btn-primary btn-full">Browse Products</a>
+        <a href="{% url 'calculators:space_marines' %}" class="btn btn-secondary btn-full" style="margin-top:var(--sp-2);">
+          Army Calculator
+        </a>
+      </div>
+
+    </aside>
+
+  </div>
+</div>
+{% endblock %}

@@ -27,6 +27,68 @@ from prices.models import CurrentPrice
 
 from .models import Category, Faction, Product
 
+
+# ---------------------------------------------------------------------------
+# Hot Deals selection strategy
+# ---------------------------------------------------------------------------
+# Isolated function — change SPOTLIGHT_COUNT or the scoring formula here to
+# adjust which deals appear on the home page without touching the view.
+
+SPOTLIGHT_COUNT = 8  # Number of deals to show in the Hot Deals section
+
+
+def _get_spotlight_deals(count=SPOTLIGHT_COUNT):
+    """
+    Return the best-value CurrentPrice entries for the Hot Deals section.
+
+    Selection strategy:
+    - Only products that have both a current price and an MSRP set.
+    - Deduplicated by product — only the single best (lowest) price per product.
+    - Scored by (absolute_saving × discount_pct) so higher-priced kits with
+      large percentage discounts rank above cheap kits with small savings.
+    - Returns at most `count` results, sorted best score first.
+
+    Returns:
+        list[CurrentPrice]: Evaluated list with .product and .retailer
+        pre-fetched and a .discount_pct attribute attached.
+    """
+    # Fetch all active priced entries that have an MSRP to compare against
+    candidates = list(
+        CurrentPrice.objects
+        .select_related('product', 'retailer')
+        .filter(
+            product__is_active=True,
+            product__msrp__isnull=False,
+            product__msrp__gt=0,
+        )
+        .order_by('product_id', 'price')  # cheapest first per product
+    )
+
+    # Deduplicate: keep only the best (lowest) price per product
+    seen_products: set = set()
+    unique = []
+    for cp in candidates:
+        if cp.product_id not in seen_products:
+            seen_products.add(cp.product_id)
+            unique.append(cp)
+
+    # Score each deal; discount_pct is already a @property on CurrentPrice,
+    # so we read it directly rather than trying to assign to it.
+    scored = []
+    for cp in unique:
+        pct = cp.discount_pct  # uses the existing @property
+        if pct is None or pct <= 0:
+            continue
+        abs_saving = float(cp.product.msrp) - float(cp.price)
+        # Combined score weights both absolute dollar saving and percentage
+        cp._score = abs_saving * float(pct)
+        scored.append(cp)
+
+    # Return top N deals sorted by score (highest first)
+    scored.sort(key=lambda x: x._score, reverse=True)
+    return scored[:count]
+
+
 # Products shown per page on the list view
 PRODUCTS_PER_PAGE = 30
 
@@ -54,20 +116,17 @@ def about(request):
 
 def home(request):
     """
-    Landing page — category grid and recent price drops.
+    Landing page — Hot Deals section and hero content.
 
     Cached for 15 minutes because the data only changes when scrapers run.
+    The hot deals are selected by _get_spotlight_deals() — edit that
+    function to change the selection strategy without touching this view.
     """
-    cache_key = 'home_page_data'
+    cache_key = 'home_page_data_v2'
     ctx = cache.get(cache_key)
     if ctx is None:
         categories = list(Category.objects.all())
-        recent_drops = list(
-            CurrentPrice.objects
-            .select_related('product', 'retailer')
-            .filter(product__is_active=True)
-            .order_by('-last_seen')[:12]
-        )
+        recent_drops = _get_spotlight_deals()
         ctx = {'categories': categories, 'recent_drops': recent_drops}
         cache.set(cache_key, ctx, timeout=900)  # 15 minutes
 
@@ -128,9 +187,17 @@ def product_list(request):
 
     products = products.order_by(SORT_OPTIONS[sort])
 
-    # Sidebar dropdowns — small tables, fetched once
+    # Sidebar dropdowns — small tables, fetched once.
+    # When a category is active, show only its factions (hierarchical filter).
     categories = list(Category.objects.all())
-    factions   = list(Faction.objects.select_related('category').all())
+    if category_slug:
+        factions = list(
+            Faction.objects
+            .filter(category__slug=category_slug)
+            .select_related('category')
+        )
+    else:
+        factions = []  # Only show factions once a category is chosen
 
     # Paginate — evaluate to a plain list so the context is cache-safe
     paginator = Paginator(products, PRODUCTS_PER_PAGE)
@@ -156,7 +223,7 @@ def product_list(request):
         'sort_options': [
             ('name',       'Name (A–Z)'),
             ('name_desc',  'Name (Z–A)'),
-            ('price_asc',  'Price (low to high)'),
+            ('price_asc',  'Best Value First'),
             ('price_desc', 'Price (high to low)'),
             ('newest',     'Newest first'),
         ],

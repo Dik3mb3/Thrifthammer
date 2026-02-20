@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'scrapers',
     'collections_app',
     'calculators',
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -110,6 +111,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/accounts/login/'
+
+# Allow login with username OR email address
+AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailOrUsernameBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # ---------------------------------------------------------------------------
 # Caching

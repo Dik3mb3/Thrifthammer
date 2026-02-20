@@ -1,8 +1,11 @@
 """
-Models for the Space Marine Army Cost Calculator.
+Models for the Warhammer 40,000 Army Cost Calculator.
 
 Provides UnitType (linking Warhammer units to real product prices),
 SavedArmy (user-saved army lists), and PrebuiltArmy (staff-curated sample lists).
+
+Unit categories follow the 10th Edition / New Recruit battlefield role system:
+  Epic Hero, Character, Battleline, Infantry, Mounted, Vehicle, Transport, Fortification
 """
 
 import json
@@ -15,32 +18,35 @@ from django.utils.text import slugify
 
 class UnitType(models.Model):
     """
-    A type of Space Marine unit that can be added to an army list.
+    A Warhammer 40,000 unit that can be added to an army list.
 
     Links a real GW unit to a Product so the calculator can display
     live retail prices alongside points costs.
+
+    The `category` field uses 10th Edition / New Recruit battlefield roles.
     """
 
     CATEGORY_CHOICES = [
-        ('hq', 'HQ'),
-        ('troops', 'Troops'),
-        ('elites', 'Elites'),
-        ('fast_attack', 'Fast Attack'),
-        ('heavy_support', 'Heavy Support'),
-        ('dedicated_transport', 'Dedicated Transport'),
-        ('lord_of_war', 'Lord of War'),
+        ('epic_hero',     'Epic Hero'),
+        ('character',     'Character'),
+        ('battleline',    'Battleline'),
+        ('infantry',      'Infantry'),
+        ('mounted',       'Mounted'),
+        ('vehicle',       'Vehicle'),
+        ('transport',     'Transport'),
+        ('fortification', 'Fortification'),
     ]
 
     name = models.CharField(max_length=200, help_text='Unit name as it appears in the army rules.')
     category = models.CharField(
-        max_length=30, choices=CATEGORY_CHOICES, default='troops', db_index=True,
+        max_length=30, choices=CATEGORY_CHOICES, default='infantry', db_index=True,
     )
     faction = models.ForeignKey(
         'products.Faction',
         on_delete=models.SET_NULL,
         null=True, blank=True,
         related_name='unit_types',
-        help_text='Faction this unit belongs to (e.g. Space Marines, Ultramarines).',
+        help_text='40K faction this unit belongs to (e.g. Space Marines, Necrons, T\'au).',
     )
     product = models.ForeignKey(
         'products.Product',
@@ -69,9 +75,10 @@ class UnitType(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['category', 'name']
+        ordering = ['faction__name', 'category', 'name']
         indexes = [
             models.Index(fields=['is_active', 'category']),
+            models.Index(fields=['faction', 'is_active']),
         ]
 
     def __str__(self):

@@ -31,7 +31,7 @@
           loading="eager"
         >
         {% else %}
-        <div class="product-image-placeholder" aria-hidden="true">⚔</div>
+        <div class="product-image-placeholder" aria-hidden="true"></div>
         {% endif %}
       </div>
     </div>
@@ -187,7 +187,7 @@
         {% if rp.image_url %}
         <img src="{{ rp.image_url }}" alt="{{ rp.name }}" class="product-card-img" loading="lazy">
         {% else %}
-        <div class="product-card-img-placeholder" aria-hidden="true">⚔</div>
+        <div class="product-card-img-placeholder" aria-hidden="true"></div>
         {% endif %}
         <div class="product-card-body">
           <div class="product-card-name">{{ rp.name }}</div>

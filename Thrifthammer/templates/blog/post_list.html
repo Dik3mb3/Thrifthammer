@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Warhammer Savings Blog{% endblock %}
+
+{% block extra_head %}
+<meta name="description" content="Tips, guides and Top 10 lists to help you save money on Warhammer 40,000. New posts weekly from ThriftHammer.">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+
+  {# ── Page header ── #}
+  <div style="margin-bottom:var(--sp-6);">
+    <h1 class="section-title">The ThriftHammer Blog</h1>
+    <div class="gold-rule"></div>
+    <p style="color:var(--text-muted);font-size:0.9rem;max-width:600px;">
+      Guides, Top 10 lists, and savings tips to help you build more and spend less on Warhammer 40,000.
+    </p>
+  </div>
+
+  {# ── Tag filter bar ── #}
+  {% if all_tags %}
+  <div class="calc-faction-bar" style="margin-bottom:var(--sp-6);" role="navigation" aria-label="Filter by tag">
+    <a href="{% url 'blog:post_list' %}"
+       class="calc-faction-btn{% if not active_tag %} active{% endif %}">
+      All Posts
+    </a>
+    {% for tag in all_tags %}
+    <a href="?tag={{ tag.slug }}"
+       class="calc-faction-btn{% if active_tag.slug == tag.slug %} active{% endif %}">
+      {{ tag.name }}
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {# ── Post grid ── #}
+  {% if posts %}
+  <div class="blog-grid">
+    {% for post in posts %}
+    <a href="{{ post.get_absolute_url }}" class="blog-card">
+
+      {% if post.featured_image_url %}
+      <div class="blog-card-img-wrap">
+        <img src="{{ post.featured_image_url }}" alt="{{ post.featured_image_alt|default:post.title }}"
+             class="blog-card-img" loading="lazy">
+      </div>
+      {% else %}
+      <div class="blog-card-img-placeholder" aria-hidden="true"></div>
+      {% endif %}
+
+      <div class="blog-card-body">
+        {% if post.tags.all %}
+        <div class="blog-card-tags">
+          {% for tag in post.tags.all %}
+          <span class="badge badge-default">{{ tag.name }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <h2 class="blog-card-title">{{ post.title }}</h2>
+
+        {% if post.excerpt %}
+        <p class="blog-card-excerpt">{{ post.excerpt }}</p>
+        {% endif %}
+
+        <div class="blog-card-meta">
+          <time datetime="{{ post.published_at|date:'Y-m-d' }}">
+            {{ post.published_at|date:"j F Y" }}
+          </time>
+          <span class="blog-read-more">Read more &rarr;</span>
+        </div>
+      </div>
+
+    </a>
+    {% endfor %}
+  </div>
+
+  {# ── Pagination ── #}
+  {% if is_paginated %}
+  <nav class="pagination" style="margin-top:var(--sp-8);" aria-label="Blog page navigation">
+    {% if page_obj.has_previous %}
+    <a href="?{% if active_tag %}tag={{ active_tag.slug }}&{% endif %}page={{ page_obj.previous_page_number }}"
+       aria-label="Previous page">&laquo; Prev</a>
+    {% else %}
+    <span class="disabled" aria-disabled="true">&laquo; Prev</span>
+    {% endif %}
+
+    {% for num in paginator.page_range %}
+      {% if num == page_obj.number %}
+      <span class="current" aria-current="page">{{ num }}</span>
+      {% elif num >= page_obj.number|add:"-3" and num <= page_obj.number|add:"3" %}
+      <a href="?{% if active_tag %}tag={{ active_tag.slug }}&{% endif %}page={{ num }}">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <a href="?{% if active_tag %}tag={{ active_tag.slug }}&{% endif %}page={{ page_obj.next_page_number }}"
+       aria-label="Next page">Next &raquo;</a>
+    {% else %}
+    <span class="disabled" aria-disabled="true">Next &raquo;</span>
+    {% endif %}
+  </nav>
+  {% endif %}
+
+  {% else %}
+  {# Empty state #}
+  <div style="text-align:center;padding:var(--sp-16) 0;">
+    <p style="color:var(--text-muted);font-size:1rem;margin-bottom:var(--sp-4);">
+      No posts published yet{% if active_tag %} for the tag <strong>{{ active_tag.name }}</strong>{% endif %}.
+      Check back soon — new posts every week.
+    </p>
+    <a href="{% url 'products:list' %}" class="btn btn-secondary">Browse Products</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

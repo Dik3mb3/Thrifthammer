@@ -1,8 +1,8 @@
 """
-Views for the Space Marine Army Cost Calculator.
+Views for the Warhammer 40,000 Army Cost Calculator.
 
 Provides:
-- ArmyCalculatorView: main calculator page with live price lookups
+- ArmyCalculatorView: main calculator page with faction filter + live price lookups
 - SaveArmyView: AJAX endpoint to persist a named army list
 - ViewSavedArmyView: public/private shareable army detail page
 - UserArmiesListView: dashboard listing the user's saved armies
@@ -24,36 +24,69 @@ from products.models import Faction
 
 from .models import PrebuiltArmy, SavedArmy, UnitType
 
+# 10th Edition / New Recruit battlefield role display order
+CATEGORY_ORDER = [
+    'epic_hero',
+    'character',
+    'battleline',
+    'infantry',
+    'mounted',
+    'vehicle',
+    'transport',
+    'fortification',
+]
+
 
 class ArmyCalculatorView(TemplateView):
     """
-    Main Space Marine Army Cost Calculator page.
+    Warhammer 40,000 Army Cost Calculator page.
 
-    Loads all active Space Marine unit types grouped by battlefield role,
-    along with any prebuilt sample armies for quick-start selection.
+    Supports filtering by faction via the ?faction=<slug> query parameter.
+    When no faction is selected, all active units across all factions are shown.
+    Units are grouped by 10th Edition battlefield role (Epic Hero → Fortification).
     """
 
     template_name = 'calculators/army_calculator.html'
 
     def get_context_data(self, **kwargs):
-        """Build the context with units grouped by category and prebuilt armies."""
+        """Build context with faction selector, units grouped by role, and prebuilt armies."""
         context = super().get_context_data(**kwargs)
 
-        # Fetch all active Space Marine units with related product/prices
-        units = (
+        # Determine selected faction from query parameter
+        faction_slug = self.request.GET.get('faction', '').strip()
+        selected_faction = None
+        if faction_slug:
+            selected_faction = Faction.objects.filter(
+                slug=faction_slug,
+                category__slug='warhammer-40000',
+            ).first()
+
+        # All 40K factions that have at least one active unit
+        available_factions = list(
+            Faction.objects
+            .filter(
+                category__slug='warhammer-40000',
+                unit_types__is_active=True,
+            )
+            .distinct()
+            .order_by('name')
+        )
+
+        # Fetch units — filtered by faction if one is selected
+        unit_qs = (
             UnitType.objects
             .filter(is_active=True)
             .select_related('product', 'faction')
             .prefetch_related('product__current_prices__retailer')
             .order_by('category', 'name')
         )
+        if selected_faction:
+            unit_qs = unit_qs.filter(faction=selected_faction)
 
-        # Group units by their display category
-        categories = {}
-        category_order = [
-            'hq', 'troops', 'elites', 'fast_attack',
-            'heavy_support', 'dedicated_transport', 'lord_of_war',
-        ]
+        units = list(unit_qs)
+
+        # Group units by their 10th Edition battlefield role
+        categories: dict = {}
         for unit in units:
             cat_key = unit.category
             if cat_key not in categories:
@@ -63,25 +96,28 @@ class ArmyCalculatorView(TemplateView):
                 }
             categories[cat_key]['units'].append(unit)
 
-        # Preserve logical category ordering
+        # Preserve 10th Edition role ordering
         ordered_categories = [
             (key, categories[key])
-            for key in category_order
+            for key in CATEGORY_ORDER
             if key in categories
         ]
 
-        # Prebuilt armies for the quick-start panel
-        prebuilt_armies = (
+        # Prebuilt armies — filter to selected faction if applicable
+        prebuilt_qs = (
             PrebuiltArmy.objects
             .filter(is_active=True)
             .select_related('faction')
             .order_by('display_order', 'name')
         )
+        if selected_faction:
+            prebuilt_qs = prebuilt_qs.filter(faction=selected_faction)
+        prebuilt_armies = list(prebuilt_qs)
 
-        # User's saved armies (if logged in) for the load-list panel
+        # User's saved armies for the load-list panel
         saved_armies = []
         if self.request.user.is_authenticated:
-            saved_armies = (
+            saved_armies = list(
                 SavedArmy.objects
                 .filter(user=self.request.user)
                 .order_by('-created_at')[:10]
@@ -91,6 +127,8 @@ class ArmyCalculatorView(TemplateView):
             'ordered_categories': ordered_categories,
             'prebuilt_armies': prebuilt_armies,
             'saved_armies': saved_armies,
+            'available_factions': available_factions,
+            'selected_faction': selected_faction,
         })
         return context
 
