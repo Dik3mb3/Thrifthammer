@@ -2,10 +2,9 @@
 
 {% block title %}{{ post.effective_meta_title }}{% endblock %}
 
+{% block meta_description %}{% if post.effective_meta_description %}<meta name="description" content="{{ post.effective_meta_description }}">{% endif %}{% endblock %}
+
 {% block extra_head %}
-{% if post.effective_meta_description %}
-<meta name="description" content="{{ post.effective_meta_description }}">
-{% endif %}
 {% if post.featured_image_url %}
 <meta property="og:image" content="{{ post.featured_image_url }}">
 {% endif %}

@@ -37,7 +37,7 @@ def my_collection(request):
         'total_items': total_items,
         'total_spent': total_spent,
         'total_msrp': total_msrp,
-        'total_saved': total_msrp - float(total_spent) if total_msrp else 0,
+        'total_saved': total_msrp - total_spent if total_msrp else 0,
     })
 
 

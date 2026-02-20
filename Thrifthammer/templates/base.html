@@ -13,6 +13,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ThriftHammer{% endblock %} — Warhammer Price Tracker</title>
+    {% block meta_description %}<meta name="description" content="ThriftHammer tracks Warhammer 40,000 prices across US retailers. Compare prices on every kit and find the best deal before you buy.">{% endblock %}
+    <meta name="robots" content="index, follow">
+    <meta property="og:site_name" content="ThriftHammer">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
@@ -118,41 +121,30 @@
                     <a href="{% url 'accounts:register' %}">Create Account</a>
                     <h4 style="margin-top:var(--sp-4);">Legal</h4>
                     <a href="{% url 'privacy_policy' %}">Privacy Policy</a>
-                    <a href="{% url 'privacy_policy' %}#affiliate">Affiliate Disclosure</a>
                 </div>
 
-                {# Col 4 — Affiliate disclosures #}
+                {# Col 4 — General links notice #}
                 <div class="footer-col footer-disclosures">
-                    <h4>Affiliate Disclosures</h4>
+                    <h4>Retailer Links</h4>
                     <p class="disclosure-text">
-                        <strong>Amazon:</strong> As an Amazon Associate ThriftHammer earns
-                        from qualifying purchases. <em>(#ad)</em>
+                        ThriftHammer links directly to retailers for your convenience.
+                        Some outbound links may become affiliate links in the future —
+                        any such arrangement will be clearly disclosed.
                     </p>
                     <p class="disclosure-text">
-                        <strong>eBay:</strong> ThriftHammer is a member of the eBay Partner
-                        Network. We may earn commission on qualifying purchases.
-                        <em>(#CommissionsEarned)</em>
-                    </p>
-                    <p class="disclosure-text">
-                        <strong>Miniature Market:</strong> ThriftHammer participates in the
-                        Miniature Market affiliate program via Impact.
-                    </p>
-                    <p class="disclosure-text">
-                        Commissions do not affect price rankings. We always show
-                        the lowest price first.
+                        Retailer ranking is based solely on price. We always show
+                        the lowest price first, regardless of retailer.
                     </p>
                 </div>
 
             </div>
 
-            {# Full-width affiliate disclosure bar — FTC / EPN require it to be conspicuous #}
+            {# Full-width links notice #}
             <div class="footer-affiliate-bar">
                 <span>
-                    <strong>#ad</strong> — Outbound retailer links on this site may be
-                    affiliate links. ThriftHammer participates in the Amazon Associates,
-                    eBay Partner Network, and Miniature Market affiliate programs and
-                    may earn commissions on qualifying purchases at no cost to you.
-                    <a href="{% url 'privacy_policy' %}#affiliate">Full disclosure →</a>
+                    Outbound links on this site go directly to retailers for your convenience.
+                    Prices shown are for reference only — always verify on the retailer's site before purchasing.
+                    <a href="{% url 'privacy_policy' %}">Privacy Policy →</a>
                 </span>
             </div>
 

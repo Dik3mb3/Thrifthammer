@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}About ThriftHammer{% endblock %}
+{% block title %}About ThriftHammer — Warhammer Price Tracker{% endblock %}
+
+{% block meta_description %}<meta name="description" content="ThriftHammer is a Warhammer price comparison tool built by a hobbyist, for hobbyists. Learn about the mission to help 40K players find the best deals across US retailers.">{% endblock %}
+
+{% block extra_head %}
+<meta property="og:title" content="About ThriftHammer — Warhammer Price Tracker">
+<meta property="og:description" content="Built by a Warhammer hobbyist to help fellow players find the best prices on Games Workshop products across US retailers.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://www.thrifthammer.com/about/">
+{% endblock %}
 
 {% block content %}
 
@@ -173,7 +182,7 @@
         </p>
         <p>
             I'm currently married and just recently had a beautiful baby boy who I hope to share
-            this hobby with as he gets older — maybe he'll be rolling dice across from me one day.
+            this hobby with as he gets older — maybe he'll be joining me on my Waagh one day.
         </p>
         <p>
             ThriftHammer was born out of my own early struggles navigating what is an amazing but

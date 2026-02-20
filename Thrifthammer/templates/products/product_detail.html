@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}{{ product.name }}{% endblock %}
+{% block title %}{{ product.name }} — Best Price | ThriftHammer{% endblock %}
+
+{% block meta_description %}<meta name="description" content="Compare prices on {{ product.name }}{% if product.faction %} ({{ product.faction.name }}){% endif %}. Find the cheapest deal across US Warhammer retailers.{% if product.msrp %} MSRP ${{ product.msrp }}.{% endif %}">{% endblock %}
+
+{% block extra_head %}
+<meta property="og:title" content="{{ product.name }} — Best Price | ThriftHammer">
+<meta property="og:description" content="Find the cheapest price on {{ product.name }} from US Warhammer retailers. Compare Games Workshop, Miniature Market, Noble Knight and more.">
+<meta property="og:type" content="product">
+{% if product.image_url %}<meta property="og:image" content="{{ product.image_url }}">{% endif %}
+<link rel="canonical" href="https://www.thrifthammer.com/products/{{ product.slug }}/">
+{% endblock %}
 
 {% block content %}
 <div class="product-detail">
