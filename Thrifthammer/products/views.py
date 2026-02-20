@@ -42,6 +42,16 @@ SORT_OPTIONS = {
 }
 
 
+def privacy_policy(request):
+    """Static privacy policy page — required for affiliate program applications."""
+    return render(request, 'privacy_policy.html')
+
+
+def about(request):
+    """About page — who built ThriftHammer and what it does."""
+    return render(request, 'about.html')
+
+
 def home(request):
     """
     Landing page — category grid and recent price drops.

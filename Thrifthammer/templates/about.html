@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About ThriftHammer{% endblock %}
+
+{% block content %}
+
+{# ── Page hero ── #}
+<section class="about-hero">
+    <div class="container">
+        <h1 class="section-title">About <span style="color:var(--accent-gold-lt);">ThriftHammer</span></h1>
+        <div class="gold-rule"></div>
+        <p class="about-subtitle">
+            Built by hobbyists, for hobbyists — because plastic shouldn't cost a fortune.
+        </p>
+    </div>
+</section>
+
+{# ── Mission ── #}
+<section class="section">
+    <div class="container about-container">
+
+        <div class="about-mission-card">
+            <div class="about-mission-icon" aria-hidden="true">⚔</div>
+            <div>
+                <h2 class="about-section-heading">Our Mission</h2>
+                <p class="about-lead">
+                    <strong>Stop overpaying for plastic.</strong>
+                </p>
+                <p>
+                    ThriftHammer is dedicated to helping the Warhammer community find the best
+                    deals on the hobby games and models they love. Every penny saved on a kit
+                    is a penny that can go toward the next one — whether that's more infantry,
+                    a centrepiece model, or that paint set you've been eyeing for months.
+                </p>
+                <p>
+                    We believe the hobby should be as accessible as possible. The models are
+                    already expensive — you shouldn't have to pay more than you need to. Our goal
+                    is simple: give every hobbyist, whether they're building their first Combat
+                    Patrol or their fifth army, the information they need to stretch their budget
+                    as far as it'll go.
+                </p>
+                <p>
+                    We track prices across US retailers so you always know exactly where to buy,
+                    when to buy, and how much you'll save — without having to open twenty browser
+                    tabs yourself.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{# ── What we do ── #}
+<section class="section section-alt">
+    <div class="container">
+        <h2 class="about-section-heading" style="text-align:center;margin-bottom:var(--sp-2);">What ThriftHammer Does</h2>
+        <div class="gold-rule" style="margin:0 auto var(--sp-8);"></div>
+
+        <div class="about-features-grid">
+
+            <div class="about-feature-card">
+                <span class="about-feature-icon" aria-hidden="true">📊</span>
+                <h3>Price Tracking</h3>
+                <p>
+                    We monitor prices from Miniature Market, Noble Knight Games, Tower of Games,
+                    Amazon, and Games Workshop itself. Every product page shows you a live side-by-side
+                    comparison so the best deal is always obvious at a glance.
+                </p>
+            </div>
+
+            <div class="about-feature-card">
+                <span class="about-feature-icon" aria-hidden="true">👁</span>
+                <h3>Watchlist Alerts</h3>
+                <p>
+                    Add any kit to your personal watchlist. When the price drops, you'll know.
+                    No more manually checking retailer sites every week hoping something has gone
+                    on sale — we do the watching so you can focus on painting.
+                </p>
+            </div>
+
+            <div class="about-feature-card">
+                <span class="about-feature-icon" aria-hidden="true">⚔</span>
+                <h3>Army Cost Calculator</h3>
+                <p>
+                    Planning a new army? Use our Army Calculator to build your roster unit by unit
+                    and see exactly what it'll cost across all tracked retailers before you spend
+                    a single dollar. Know the real price of your hobby before you commit.
+                </p>
+            </div>
+
+            <div class="about-feature-card">
+                <span class="about-feature-icon" aria-hidden="true">📦</span>
+                <h3>Collection Tracker</h3>
+                <p>
+                    Log what you own, what you've spent, and what you've saved versus GW retail.
+                    Your collection dashboard gives you a running total of everything in your hobby
+                    room — assembled, painted, or still waiting in the pile of shame.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{# ── Roadmap ── #}
+<section class="section">
+    <div class="container about-container">
+        <h2 class="about-section-heading">What's Coming Next</h2>
+        <div class="gold-rule" style="margin-bottom:var(--sp-6);"></div>
+        <p style="color:var(--text-secondary);margin-bottom:var(--sp-6);">
+            ThriftHammer is actively being developed. Here's what's on the roadmap
+            for the coming months:
+        </p>
+
+        <div class="roadmap-list">
+
+            <div class="roadmap-item roadmap-soon">
+                <div class="roadmap-badge">Coming Soon</div>
+                <div class="roadmap-content">
+                    <h3>Real-Time Price Alerts</h3>
+                    <p>Email notifications when a watchlisted product drops below your target price at any tracked retailer.</p>
+                </div>
+            </div>
+
+            <div class="roadmap-item roadmap-soon">
+                <div class="roadmap-badge">Coming Soon</div>
+                <div class="roadmap-content">
+                    <h3>Price History Charts</h3>
+                    <p>Interactive graphs showing how a kit's price has moved over time across retailers — so you know whether now is a good time to buy.</p>
+                </div>
+            </div>
+
+            <div class="roadmap-item roadmap-planned">
+                <div class="roadmap-badge roadmap-badge-planned">Planned</div>
+                <div class="roadmap-content">
+                    <h3>More Retailers</h3>
+                    <p>We're working on adding more US hobby retailers including eBay listings, Miniature Market deals, and independent game stores with online storefronts.</p>
+                </div>
+            </div>
+
+            <div class="roadmap-item roadmap-planned">
+                <div class="roadmap-badge roadmap-badge-planned">Planned</div>
+                <div class="roadmap-content">
+                    <h3>Best-Time-to-Buy Indicator</h3>
+                    <p>A simple signal on each product page telling you whether the current price is historically high, average, or at a genuine deal — no maths required.</p>
+                </div>
+            </div>
+
+            <div class="roadmap-item roadmap-planned">
+                <div class="roadmap-badge roadmap-badge-planned">Planned</div>
+                <div class="roadmap-content">
+                    <h3>Age of Sigmar Army Calculator</h3>
+                    <p>Expanding the Army Calculator beyond Space Marines to cover Age of Sigmar, Horus Heresy, and other game systems.</p>
+                </div>
+            </div>
+
+            <div class="roadmap-item roadmap-exploring">
+                <div class="roadmap-badge roadmap-badge-exploring">Exploring</div>
+                <div class="roadmap-content">
+                    <h3>Community Deal Submissions</h3>
+                    <p>Let the community flag flash sales, coupon codes, and local game store deals — turning ThriftHammer into a community-powered savings hub.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{# ── Who built this ── #}
+<section class="section section-alt">
+    <div class="container about-container">
+        <h2 class="about-section-heading">Who Built This</h2>
+        <div class="gold-rule" style="margin-bottom:var(--sp-6);"></div>
+        <p>
+            ThriftHammer was built by a Warhammer hobbyist who got tired of paying full GW retail
+            when better prices were out there — they just took too long to find. After one too many
+            trips down a rabbit hole of browser tabs, spreadsheets, and Reddit threads, the decision
+            was made to just build the tool that should already exist.
+        </p>
+        <p>
+            This is an independent project with no affiliation to Games Workshop, Citadel Miniatures,
+            or any of the retailers we track. It's free to use and always will be. If affiliate
+            commissions are earned when you click through to a retailer, that money goes directly
+            back into keeping the site running.
+        </p>
+        <p>
+            We're a community project at heart. If you have feedback, feature requests, or spot a
+            price that looks wrong, reach out — we want to hear from you.
+        </p>
+    </div>
+</section>
+
+{# ── CTA ── #}
+<section class="section">
+    <div class="container" style="text-align:center;">
+        <h2 style="font-family:'Cinzel',serif;font-size:clamp(1.4rem,3vw,1.9rem);margin-bottom:var(--sp-3);">
+            Ready to Stop Overpaying?
+        </h2>
+        <p style="color:var(--text-secondary);max-width:500px;margin:0 auto var(--sp-6);">
+            Browse 340+ tracked products, build your army list, or create a free account
+            to start saving on every kit you buy.
+        </p>
+        <div style="display:flex;gap:var(--sp-3);justify-content:center;flex-wrap:wrap;">
+            <a href="{% url 'products:list' %}" class="btn btn-primary btn-lg">Browse Products</a>
+            <a href="{% url 'accounts:register' %}" class="btn btn-secondary btn-lg">Create Free Account</a>
+        </div>
+    </div>
+</section>
+
+{# ── Contact ── #}
+<section class="section section-alt">
+    <div class="container about-container" style="text-align:center;">
+        <h2 class="about-section-heading">Get in Touch</h2>
+        <div class="gold-rule" style="margin:0 auto var(--sp-4);"></div>
+        <p style="color:var(--text-secondary);margin-bottom:var(--sp-3);">
+            Questions, feedback, bug reports, or just want to say hello?
+        </p>
+        <a href="mailto:thrifthammer.com@gmail.com" class="about-contact-email">
+            thrifthammer.com@gmail.com
+        </a>
+        <p class="about-contact-note">
+            We aim to respond within 48 hours. For affiliate program or partnership
+            enquiries, please use the same address.
+        </p>
+    </div>
+</section>
+
+{% endblock %}

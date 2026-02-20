@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Thrifthammer{% endblock %} — Warhammer Price Tracker</title>
+    <title>{% block title %}ThriftHammer{% endblock %} — Warhammer Price Tracker</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
@@ -17,8 +17,8 @@
         <div class="container navbar-inner">
 
             {# Brand / Logo #}
-            <a href="{% url 'home' %}" class="navbar-brand" aria-label="THRIFTHAMMER home">
-                <span class="brand-name">THRIFTHAMMER</span>
+            <a href="{% url 'home' %}" class="navbar-brand" aria-label="ThriftHammer home">
+                <img src="{% static 'images/logo.svg' %}" alt="ThriftHammer" class="brand-logo" width="200" height="43">
             </a>
 
             {# Center search bar — hidden on mobile (shown in hero) #}
@@ -37,6 +37,7 @@
             {# Right-side links #}
             <div class="navbar-links">
                 <a href="{% url 'products:list' %}">Browse</a>
+                <a href="{% url 'about' %}">About</a>
                 <a href="{% url 'calculators:space_marines' %}" class="nav-cta">⚔ Army Calculator</a>
                 {% if user.is_authenticated %}
                     <a href="{% url 'collections:my_collection' %}">Collection</a>
@@ -72,16 +73,16 @@
         <div class="container">
             <div class="footer-grid">
 
-                {# About column #}
+                {# Col 1 — Brand + about #}
                 <div class="footer-brand">
-                    <div class="brand-name">THRIFTHAMMER</div>
+                    <img src="{% static 'images/logo.svg' %}" alt="ThriftHammer" class="footer-logo" width="180" height="39">
                     <p>
                         Track prices on Warhammer kits across US retailers.
                         Find the best deal and never overpay for plastic soldiers again.
                     </p>
                 </div>
 
-                {# Quick links #}
+                {# Col 2 — Browse links #}
                 <div class="footer-col">
                     <h4>Browse</h4>
                     <a href="{% url 'products:list' %}">All Products</a>
@@ -93,18 +94,56 @@
                     {% endif %}
                 </div>
 
-                {# Legal / info #}
+                {# Col 3 — Account + legal #}
                 <div class="footer-col">
-                    <h4>Info</h4>
+                    <h4>Company</h4>
+                    <a href="{% url 'about' %}">About ThriftHammer</a>
+                    <a href="mailto:thrifthammer.com@gmail.com">Contact Us</a>
+                    <h4 style="margin-top:var(--sp-4);">Account</h4>
                     <a href="{% url 'accounts:login' %}">Sign In</a>
                     <a href="{% url 'accounts:register' %}">Create Account</a>
-                    <span style="color:var(--text-muted);font-size:0.8rem;">Prices updated regularly</span>
+                    <h4 style="margin-top:var(--sp-4);">Legal</h4>
+                    <a href="{% url 'privacy_policy' %}">Privacy Policy</a>
+                    <a href="{% url 'privacy_policy' %}#affiliate">Affiliate Disclosure</a>
+                </div>
+
+                {# Col 4 — Affiliate disclosures #}
+                <div class="footer-col footer-disclosures">
+                    <h4>Affiliate Disclosures</h4>
+                    <p class="disclosure-text">
+                        <strong>Amazon:</strong> As an Amazon Associate ThriftHammer earns
+                        from qualifying purchases. <em>(#ad)</em>
+                    </p>
+                    <p class="disclosure-text">
+                        <strong>eBay:</strong> ThriftHammer is a member of the eBay Partner
+                        Network. We may earn commission on qualifying purchases.
+                        <em>(#CommissionsEarned)</em>
+                    </p>
+                    <p class="disclosure-text">
+                        <strong>Miniature Market:</strong> ThriftHammer participates in the
+                        Miniature Market affiliate program via Impact.
+                    </p>
+                    <p class="disclosure-text">
+                        Commissions do not affect price rankings. We always show
+                        the cheapest price first.
+                    </p>
                 </div>
 
             </div>
 
+            {# Full-width affiliate disclosure bar — FTC / EPN require it to be conspicuous #}
+            <div class="footer-affiliate-bar">
+                <span>
+                    <strong>#ad</strong> — Outbound retailer links on this site may be
+                    affiliate links. ThriftHammer participates in the Amazon Associates,
+                    eBay Partner Network, and Miniature Market affiliate programs and
+                    may earn commissions on qualifying purchases at no cost to you.
+                    <a href="{% url 'privacy_policy' %}#affiliate">Full disclosure →</a>
+                </span>
+            </div>
+
             <div class="footer-bottom">
-                <span>&copy; {% now "Y" %} Thrifthammer. Not affiliated with Games Workshop.</span>
+                <span>&copy; {% now "Y" %} ThriftHammer. Not affiliated with or endorsed by Games Workshop Ltd.</span>
                 <span>Prices from US retailers. Always verify before purchasing.</span>
             </div>
         </div>

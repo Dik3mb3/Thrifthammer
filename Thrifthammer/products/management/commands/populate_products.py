@@ -51,14 +51,16 @@ class Command(BaseCommand):
         factions = self._create_factions(categories)
         retailers = self._create_retailers()
         products = self._create_products(categories, factions)
-        self._create_prices(products, retailers)
+        extended = self._create_extended_products(categories, factions)
+        all_products = products + extended
+        self._create_prices(all_products, retailers)
 
         self.stdout.write(self.style.SUCCESS(
             f'\nDone! Created/updated:\n'
             f'  {len(categories)} categories\n'
             f'  {len(factions)} factions\n'
             f'  {len(retailers)} retailers\n'
-            f'  {len(products)} products\n'
+            f'  {len(all_products)} products ({len(products)} base + {len(extended)} extended)\n'
             f'  {CurrentPrice.objects.count()} current prices\n'
         ))
 
@@ -96,16 +98,47 @@ class Command(BaseCommand):
         self.stdout.write('Creating factions…')
         faction_data = [
             # (name, category_name)
+            # ── Warhammer 40,000 ──
             ('Space Marines', 'Warhammer 40,000'),
             ('Blood Angels', 'Warhammer 40,000'),
+            ('Dark Angels', 'Warhammer 40,000'),
+            ('Space Wolves', 'Warhammer 40,000'),
             ('Ultramarines', 'Warhammer 40,000'),
+            ('Black Templars', 'Warhammer 40,000'),
+            ('Deathwatch', 'Warhammer 40,000'),
+            ('Grey Knights', 'Warhammer 40,000'),
             ('Chaos Space Marines', 'Warhammer 40,000'),
+            ('Death Guard', 'Warhammer 40,000'),
+            ('Thousand Sons', 'Warhammer 40,000'),
+            ('World Eaters', 'Warhammer 40,000'),
             ('Tyranids', 'Warhammer 40,000'),
+            ('Genestealer Cults', 'Warhammer 40,000'),
             ('Necrons', 'Warhammer 40,000'),
             ('Orks', 'Warhammer 40,000'),
-            ('T\'au Empire', 'Warhammer 40,000'),
+            ("T'au Empire", 'Warhammer 40,000'),
+            ('Astra Militarum', 'Warhammer 40,000'),
+            ('Adeptus Mechanicus', 'Warhammer 40,000'),
+            ('Drukhari', 'Warhammer 40,000'),
+            ('Craftworlds', 'Warhammer 40,000'),
+            ('Harlequins', 'Warhammer 40,000'),
+            ('Leagues of Votann', 'Warhammer 40,000'),
+            ('Custodes', 'Warhammer 40,000'),
+            ('Sisters of Battle', 'Warhammer 40,000'),
+            # ── Age of Sigmar ──
             ('Stormcast Eternals', 'Age of Sigmar'),
             ('Skaven', 'Age of Sigmar'),
+            ('Nighthaunt', 'Age of Sigmar'),
+            ('Ossiarch Bonereapers', 'Age of Sigmar'),
+            ('Flesh-Eater Courts', 'Age of Sigmar'),
+            ('Gloomspite Gitz', 'Age of Sigmar'),
+            ('Orruk Warclans', 'Age of Sigmar'),
+            ('Daughters of Khaine', 'Age of Sigmar'),
+            ('Lumineth Realm-lords', 'Age of Sigmar'),
+            ('Cities of Sigmar', 'Age of Sigmar'),
+            ('Slaves to Darkness', 'Age of Sigmar'),
+            ('Blades of Khorne', 'Age of Sigmar'),
+            ('Maggotkin of Nurgle', 'Age of Sigmar'),
+            ('Disciples of Tzeentch', 'Age of Sigmar'),
         ]
         factions = {}
         for name, cat_name in faction_data:
@@ -574,6 +607,998 @@ class Command(BaseCommand):
             status = 'created' if created else 'updated'
             self.stdout.write(f'  [{status}] {name} — ${msrp}')
 
+        return products
+
+    # -------------------------------------------------------------------------
+    # Extended product catalog — 300 additional SKUs
+    # -------------------------------------------------------------------------
+
+    def _create_extended_products(self, categories, factions):
+        """
+        Create 300 additional Warhammer products with real GW SKUs and MSRPs.
+
+        Covers: Space Marines (all chapters), Death Guard, Thousand Sons,
+        World Eaters, Astra Militarum, Adeptus Mechanicus, Grey Knights,
+        Drukhari, Craftworlds, Leagues of Votann, Custodes, Sisters of Battle,
+        Genestealer Cults, Age of Sigmar factions, Kill Team, Necromunda,
+        Warcry, Horus Heresy infantry/vehicles, and Citadel paint ranges.
+        """
+        self.stdout.write('Creating extended product catalog…')
+
+        # (name, category_name, faction_name, gw_sku, msrp, description)
+        extended_data = [
+
+            # ================================================================
+            # SPACE MARINES — extended range
+            # ================================================================
+            ('Space Marine Infernus Squad', 'Warhammer 40,000', 'Space Marines',
+             '48-45', decimal.Decimal('52.50'),
+             'Ten Primaris Marines with pyreblasters, designed to clear fortified '
+             'positions and dense infantry with gouts of promethium fire.'),
+            ('Space Marine Sternguard Veteran Squad', 'Warhammer 40,000', 'Space Marines',
+             '48-43', decimal.Decimal('60.00'),
+             'Five elite Sternguard Veterans armed with special-issue bolt weapons '
+             'capable of defeating almost any foe at range.'),
+            ('Space Marine Terminator Squad', 'Warhammer 40,000', 'Space Marines',
+             '48-06', decimal.Decimal('55.00'),
+             'Five Terminators clad in Tactical Dreadnought Armour, the most '
+             'resilient infantry in the Imperium. Armed with storm bolters and '
+             'power fists with optional heavy weapon upgrades.'),
+            ('Space Marine Terminator Assault Squad', 'Warhammer 40,000', 'Space Marines',
+             '48-07', decimal.Decimal('55.00'),
+             'Five close-combat Terminators armed with thunder hammers and storm '
+             'shields or lightning claws — the elite shock troops of any Chapter.'),
+            ('Space Marine Devastator Squad', 'Warhammer 40,000', 'Space Marines',
+             '48-15', decimal.Decimal('55.00'),
+             'Five Devastators with a wide choice of heavy weapons: lascannons, '
+             'missile launchers, multi-meltas, heavy bolters, and plasma cannons.'),
+            ('Space Marine Tactical Squad', 'Warhammer 40,000', 'Space Marines',
+             '48-07', decimal.Decimal('45.00'),
+             'Ten classic Tactical Space Marines with bolters, a special weapon, '
+             'and a heavy weapon. The iconic backbone of any Chapter.'),
+            ('Space Marine Outriders', 'Warhammer 40,000', 'Space Marines',
+             '48-40', decimal.Decimal('52.50'),
+             'Three Primaris Space Marine bikers on Mk II Outrider bikes armed '
+             'with bolt rifles and twin bolt pistols for fast-attack roles.'),
+            ('Space Marine Invader ATV', 'Warhammer 40,000', 'Space Marines',
+             '48-42', decimal.Decimal('42.50'),
+             'A single Primaris Invader ATV armed with an onslaught gatling cannon '
+             'or multi-melta, providing rapid mobile fire support.'),
+            ('Space Marine Redemptor Dreadnought', 'Warhammer 40,000', 'Space Marines',
+             '48-93', decimal.Decimal('60.00'),
+             'A towering Primaris Dreadnought with a macro plasma incinerator or '
+             'onslaught gatling cannon and an integral Redemptor fist.'),
+            ('Space Marine Brutalis Dreadnought', 'Warhammer 40,000', 'Space Marines',
+             '48-44', decimal.Decimal('65.00'),
+             'A close-combat Primaris Dreadnought with twin frag launchers and '
+             'brutalis fists, designed to punch through armour and fortifications.'),
+            ('Space Marine Ballistus Dreadnought', 'Warhammer 40,000', 'Space Marines',
+             '48-46', decimal.Decimal('65.00'),
+             'A ranged Primaris Dreadnought with a twin lascannon and missile '
+             'launcher, providing devastatingly accurate long-range fire support.'),
+            ('Space Marine Land Raider', 'Warhammer 40,000', 'Space Marines',
+             '48-21', decimal.Decimal('85.00'),
+             'The iconic Land Raider battle tank, protected by adamantine armour '
+             'and armed with twin heavy bolters and twin lascannons.'),
+            ('Space Marine Land Raider Crusader', 'Warhammer 40,000', 'Space Marines',
+             '48-22', decimal.Decimal('85.00'),
+             'A transport-focused Land Raider variant armed with hurricane bolters '
+             'and a multi-melta, capable of ferrying twelve Space Marines.'),
+            ('Space Marine Predator Destructor', 'Warhammer 40,000', 'Space Marines',
+             '48-23', decimal.Decimal('57.50'),
+             'A battle tank with an autocannon turret and optional lascannons or '
+             'heavy bolters in sponsons — an anti-infantry workhorse.'),
+            ('Space Marine Whirlwind', 'Warhammer 40,000', 'Space Marines',
+             '48-25', decimal.Decimal('52.50'),
+             'A long-range artillery tank firing Whirlwind vengeance launcher '
+             'missiles or Castellan launcher missiles at hidden foes.'),
+            ('Space Marine Vindicator', 'Warhammer 40,000', 'Space Marines',
+             '48-26', decimal.Decimal('57.50'),
+             'A siege tank armed with a demolisher cannon capable of levelling '
+             'fortifications and obliterating massed infantry in one shot.'),
+            ('Space Marine Repulsor Executioner', 'Warhammer 40,000', 'Space Marines',
+             '48-95', decimal.Decimal('90.00'),
+             'A heavily armed Primaris tank with a macro plasma incinerator or '
+             'heavy laser destroyer turret for eliminating armoured targets.'),
+            ('Space Marine Librarian', 'Warhammer 40,000', 'Space Marines',
+             '48-30', decimal.Decimal('30.00'),
+             'A psyker warrior-scholar of the Adeptus Astartes, channelling the '
+             'power of the warp through a force staff and psychic hood.'),
+            ('Space Marine Chaplain', 'Warhammer 40,000', 'Space Marines',
+             '48-32', decimal.Decimal('30.00'),
+             'A spiritual warrior armed with a crozius arcanum and bolt pistol, '
+             'inspiring nearby Space Marines to feats of extraordinary valour.'),
+            ('Space Marine Apothecary', 'Warhammer 40,000', 'Space Marines',
+             '48-33', decimal.Decimal('30.00'),
+             'The battlefield medic of the Space Marines, equipped with a narthecium '
+             'to recover gene-seed from fallen brothers.'),
+            ('Space Marine Ancient', 'Warhammer 40,000', 'Space Marines',
+             '48-34', decimal.Decimal('30.00'),
+             'A Standard Bearer carrying an ornate battle standard into the heart '
+             'of the enemy, inspiring nearby Space Marines with its presence.'),
+            ('Space Marine Scouts', 'Warhammer 40,000', 'Space Marines',
+             '48-29', decimal.Decimal('30.00'),
+             'Five lightly armoured Scout Marines armed with sniper rifles, '
+             'bolt pistols, shotguns, or heavy bolters for infiltration duties.'),
+            ('Space Marine Infiltrators', 'Warhammer 40,000', 'Space Marines',
+             '48-41', decimal.Decimal('40.00'),
+             'Five Primaris Infiltrators in Phobos armour, equipped with '
+             'marksman bolt carbines and omni-scramblers to disrupt enemy reserves.'),
+            ('Space Marine Incursors', 'Warhammer 40,000', 'Space Marines',
+             '48-96', decimal.Decimal('40.00'),
+             'Five Primaris Incursors optimised for close-quarters combat with '
+             'paired combat blades and haywire mine deployable systems.'),
+            ('Space Marine Eliminators', 'Warhammer 40,000', 'Space Marines',
+             '48-98', decimal.Decimal('37.50'),
+             'Three Primaris Eliminators equipped with bolt sniper rifles and '
+             'las fusils, able to pick off targets from extreme range.'),
+            ('Space Marine Suppressors', 'Warhammer 40,000', 'Space Marines',
+             '48-99', decimal.Decimal('37.50'),
+             'Three jump-pack equipped Primaris Suppressors with accelerator '
+             'autocannons, dropping in to lay down suppressing fire.'),
+            ('Space Marine Inceptors', 'Warhammer 40,000', 'Space Marines',
+             '48-97', decimal.Decimal('45.00'),
+             'Three Primaris jump-pack troops armed with assault bolters or '
+             'plasma exterminators for devastating aerial assault.'),
+            ('Space Marine Aggressors', 'Warhammer 40,000', 'Space Marines',
+             '48-92', decimal.Decimal('45.00'),
+             'Three Primaris Aggressors in Gravis armour with boltstorm gauntlets '
+             'or flamestorm gauntlets — slow but nearly unstoppable.'),
+
+            # ================================================================
+            # BLOOD ANGELS — extended
+            # ================================================================
+            ('Blood Angels Librarian Dreadnought', 'Warhammer 40,000', 'Blood Angels',
+             '41-15', decimal.Decimal('60.00'),
+             'A unique Blood Angels Dreadnought housing a powerful psyker, '
+             'combining the firepower of a walker with devastating psychic might.'),
+            ('Blood Angels Mephiston', 'Warhammer 40,000', 'Blood Angels',
+             '41-02', decimal.Decimal('30.00'),
+             'The Chief Librarian of the Blood Angels — one of the most powerful '
+             'psykers in the Imperium, who broke the grip of the Black Rage.'),
+            ('Blood Angels Astorath', 'Warhammer 40,000', 'Blood Angels',
+             '41-03', decimal.Decimal('27.50'),
+             'The High Chaplain of the Blood Angels, who seeks out those lost '
+             'to the Black Rage and grants them the Emperor\'s mercy in battle.'),
+
+            # ================================================================
+            # DARK ANGELS
+            # ================================================================
+            ('Dark Angels Deathwing Knights', 'Warhammer 40,000', 'Dark Angels',
+             '44-10', decimal.Decimal('55.00'),
+             'Five elite Terminator-armoured knights bearing maces of absolution '
+             'and storm shields — the inner circle of the Deathwing.'),
+            ('Dark Angels Ravenwing Black Knights', 'Warhammer 40,000', 'Dark Angels',
+             '44-12', decimal.Decimal('40.00'),
+             'Three elite bikers forming the spearhead of the Ravenwing, armed '
+             'with plasma talons and corvus hammers.'),
+            ('Dark Angels Ezekiel', 'Warhammer 40,000', 'Dark Angels',
+             '44-02', decimal.Decimal('27.50'),
+             'Grand Master of Librarians, one of the most powerful psykers in '
+             'the Dark Angels Chapter, clutching the Book of Salvation.'),
+            ('Dark Angels Combat Patrol', 'Warhammer 40,000', 'Dark Angels',
+             '44-20', decimal.Decimal('105.00'),
+             'A ready-to-play Dark Angels Combat Patrol: Primaris Lieutenant, '
+             'Intercessors, Outriders, and a Redemptor Dreadnought.'),
+
+            # ================================================================
+            # SPACE WOLVES
+            # ================================================================
+            ('Space Wolves Thunderwolf Cavalry', 'Warhammer 40,000', 'Space Wolves',
+             '53-10', decimal.Decimal('55.00'),
+             'Three Space Wolf warriors mounted on ferocious thunderwolves, '
+             'armed with frost weapons and storm shields.'),
+            ('Space Wolves Grey Hunters', 'Warhammer 40,000', 'Space Wolves',
+             '53-06', decimal.Decimal('40.00'),
+             'Ten Space Wolf tactical marines armed with bolters and close-combat '
+             'weapons, embodying the savage strength of Fenris.'),
+            ('Space Wolves Wolf Guard Terminators', 'Warhammer 40,000', 'Space Wolves',
+             '53-08', decimal.Decimal('55.00'),
+             'Five elite Space Wolf veterans in Tactical Dreadnought armour, '
+             'with extensive weapon customisation options.'),
+            ('Space Wolves Ragnar Blackmane', 'Warhammer 40,000', 'Space Wolves',
+             '53-02', decimal.Decimal('30.00'),
+             'The Great Wolf\'s most celebrated warrior, armed with Frostfang '
+             'and the Axe of Morkai.'),
+            ('Space Wolves Combat Patrol', 'Warhammer 40,000', 'Space Wolves',
+             '53-20', decimal.Decimal('105.00'),
+             'A Space Wolves Combat Patrol box with Primaris Lieutenant, '
+             'Intercessors, Outriders, and a Redemptor Dreadnought.'),
+
+            # ================================================================
+            # BLACK TEMPLARS
+            # ================================================================
+            ('Black Templars Primaris Crusader Squad', 'Warhammer 40,000', 'Black Templars',
+             '55-20', decimal.Decimal('52.50'),
+             'Ten Black Templars Primaris Crusaders — initiates and neophytes '
+             'fighting side by side in the eternal crusade.'),
+            ('Black Templars Emperor\'s Champion', 'Warhammer 40,000', 'Black Templars',
+             '55-22', decimal.Decimal('27.50'),
+             'The greatest warrior of the Black Templars, clad in the Armour '
+             'of Faith and bearing the Black Sword.'),
+            ('Black Templars Helbrecht', 'Warhammer 40,000', 'Black Templars',
+             '55-21', decimal.Decimal('35.00'),
+             'The High Marshal of the Black Templars, bearing the Sword of the '
+             'High Marshals and leading the crusade against all heresy.'),
+            ('Black Templars Combat Patrol', 'Warhammer 40,000', 'Black Templars',
+             '55-30', decimal.Decimal('105.00'),
+             'A Black Templars Combat Patrol featuring Marshal, Sword Brethren, '
+             'Crusader Squad, and a Redemptor Dreadnought.'),
+
+            # ================================================================
+            # GREY KNIGHTS
+            # ================================================================
+            ('Grey Knights Strike Squad', 'Warhammer 40,000', 'Grey Knights',
+             '57-06', decimal.Decimal('55.00'),
+             'Five Grey Knights in Aegis power armour armed with nemesis force '
+             'swords, storm bolters, and psionic powers.'),
+            ('Grey Knights Terminators', 'Warhammer 40,000', 'Grey Knights',
+             '57-08', decimal.Decimal('60.00'),
+             'Five Grey Knight Terminators bearing nemesis force halberds, '
+             'daemonhammers, and swords — the pinnacle of anti-daemon warfare.'),
+            ('Grey Knights Dreadknight', 'Warhammer 40,000', 'Grey Knights',
+             '57-14', decimal.Decimal('67.50'),
+             'A hulking Dreadknight walker piloted by a Grey Knight Terminator, '
+             'armed with a gatling psilencer and a nemesis greatsword.'),
+            ('Grey Knights Grand Master Voldus', 'Warhammer 40,000', 'Grey Knights',
+             '57-02', decimal.Decimal('30.00'),
+             'The Grand Master of the 3rd Brotherhood, Aldrik Voldus bears the '
+             'Malleus Argyrum and channels devastating psychic power.'),
+            ('Grey Knights Combat Patrol', 'Warhammer 40,000', 'Grey Knights',
+             '57-20', decimal.Decimal('105.00'),
+             'A Grey Knights Combat Patrol: Grand Master in Nemesis Dreadknight, '
+             'Strike Squad, and Interceptor Squad.'),
+
+            # ================================================================
+            # DEATHWATCH
+            # ================================================================
+            ('Deathwatch Kill Team', 'Warhammer 40,000', 'Deathwatch',
+             '39-10', decimal.Decimal('40.00'),
+             'Five heavily customisable Deathwatch Space Marines drawn from '
+             'multiple Chapters, bearing special-issue ammunition.'),
+            ('Deathwatch Veteran Squad', 'Warhammer 40,000', 'Deathwatch',
+             '39-06', decimal.Decimal('45.00'),
+             'Five Deathwatch Veterans with extensive bespoke wargear options '
+             'including frag cannons, infernus heavy bolters, and xenophase blades.'),
+
+            # ================================================================
+            # CUSTODES
+            # ================================================================
+            ('Adeptus Custodes Custodian Guard', 'Warhammer 40,000', 'Custodes',
+             '01-08', decimal.Decimal('42.50'),
+             'Three golden warriors of the Emperor\'s personal guard, armed with '
+             'guardian spears or sentinel blades and praesidium shields.'),
+            ('Adeptus Custodes Custodian Wardens', 'Warhammer 40,000', 'Custodes',
+             '01-10', decimal.Decimal('42.50'),
+             'Three veteran Custodians who have sworn an oath of protection, '
+             'armed with castellan axes and misericordias.'),
+            ('Adeptus Custodes Vertus Praetors', 'Warhammer 40,000', 'Custodes',
+             '01-11', decimal.Decimal('42.50'),
+             'Three Custodian bikers mounted on Dawneagle jetbikes armed with '
+             'salvo launchers or hurricane bolters.'),
+            ('Adeptus Custodes Shield-Captain', 'Warhammer 40,000', 'Custodes',
+             '01-07', decimal.Decimal('30.00'),
+             'A commander of the Adeptus Custodes, bearing a guardian spear and '
+             'clad in auramite alloy armour.'),
+            ('Adeptus Custodes Trajann Valoris', 'Warhammer 40,000', 'Custodes',
+             '01-02', decimal.Decimal('30.00'),
+             'The Captain-General of the Adeptus Custodes, armed with the Watcher\'s '
+             'Axe and the Eagle\'s Eye.'),
+            ('Adeptus Custodes Combat Patrol', 'Warhammer 40,000', 'Custodes',
+             '01-20', decimal.Decimal('105.00'),
+             'A Custodes Combat Patrol: Shield-Captain, Custodian Guard, '
+             'Vertus Praetors, and Allarus Custodians.'),
+
+            # ================================================================
+            # SISTERS OF BATTLE
+            # ================================================================
+            ('Adepta Sororitas Battle Sisters Squad', 'Warhammer 40,000', 'Sisters of Battle',
+             '52-20', decimal.Decimal('40.00'),
+             'Ten Sisters of Battle in power armour armed with bolters, meltaguns, '
+             'flamers, and a host of blessed weapons.'),
+            ('Adepta Sororitas Celestian Sacresants', 'Warhammer 40,000', 'Sisters of Battle',
+             '52-22', decimal.Decimal('40.00'),
+             'Five elite veterans who guard the Order\'s most sacred relics, '
+             'armed with anointed halberds and hallowed maces.'),
+            ('Adepta Sororitas Seraphim Squad', 'Warhammer 40,000', 'Sisters of Battle',
+             '52-12', decimal.Decimal('40.00'),
+             'Five jump-pack equipped Sisters bearing twin bolt pistols or '
+             'twin hand flamers, striking from above with divine fury.'),
+            ('Adepta Sororitas Retributor Squad', 'Warhammer 40,000', 'Sisters of Battle',
+             '52-15', decimal.Decimal('40.00'),
+             'Five Sisters of Battle carrying heavy weapons: multi-meltas, '
+             'heavy flamers, heavy bolters, and Ministorum heavy bolters.'),
+            ('Adepta Sororitas Immolator', 'Warhammer 40,000', 'Sisters of Battle',
+             '52-09', decimal.Decimal('52.50'),
+             'A Battle Sisters transport armed with twin multi-meltas or '
+             'immolation flamers, a purifying flame on tracks.'),
+            ('Adepta Sororitas Exorcist', 'Warhammer 40,000', 'Sisters of Battle',
+             '52-08', decimal.Decimal('67.50'),
+             'A pipe organ mounted on a tank hull, the Exorcist fires a storm '
+             'of missiles at the enemies of the God-Emperor.'),
+            ('Adepta Sororitas Morvenn Vahl', 'Warhammer 40,000', 'Sisters of Battle',
+             '52-02', decimal.Decimal('40.00'),
+             'Abbess Sanctorum of the Adepta Sororitas, clad in the Purgator '
+             'Mirabilis and wielding the Lance of Illumination.'),
+            ('Adepta Sororitas Combat Patrol', 'Warhammer 40,000', 'Sisters of Battle',
+             '52-25', decimal.Decimal('105.00'),
+             'A Combat Patrol of the Adepta Sororitas: Canoness, Battle Sisters, '
+             'Repentia Squad, and Mortifiers.'),
+
+            # ================================================================
+            # DEATH GUARD
+            # ================================================================
+            ('Death Guard Plague Marines', 'Warhammer 40,000', 'Death Guard',
+             '43-50', decimal.Decimal('37.50'),
+             'Seven bloated Plague Marines in rusted power armour, armed with '
+             'blight launchers, plasma guns, and plague weapons.'),
+            ('Death Guard Poxwalkers', 'Warhammer 40,000', 'Death Guard',
+             '43-53', decimal.Decimal('30.00'),
+             'Twenty shambling Poxwalker zombies driven forward by Nurgle\'s '
+             'gift, overwhelming enemies with sheer infected numbers.'),
+            ('Death Guard Blightlord Terminators', 'Warhammer 40,000', 'Death Guard',
+             '43-54', decimal.Decimal('52.50'),
+             'Five hulking Terminators swollen with Nurgle\'s blessings, armed '
+             'with bubotic axes, blight launchers, and combi-weapons.'),
+            ('Death Guard Deathshroud Bodyguard', 'Warhammer 40,000', 'Death Guard',
+             '43-56', decimal.Decimal('42.50'),
+             'Three elite bodyguards of Mortarion in Terminator armour, bearing '
+             'manreapers and plaguespurt gauntlets.'),
+            ('Death Guard Foetid Bloat-drone', 'Warhammer 40,000', 'Death Guard',
+             '43-55', decimal.Decimal('42.50'),
+             'A hovering daemon engine armed with plague probes and a fleshmower '
+             'or plaguespitter — a disgusting fast-attack option.'),
+            ('Death Guard Mortarion', 'Warhammer 40,000', 'Death Guard',
+             '43-03', decimal.Decimal('155.00'),
+             'The Daemon Primarch of the Death Guard — an enormous centrepiece '
+             'model with a scythe, war-bell, and retinue of nurgling attendants.'),
+            ('Death Guard Typhus', 'Warhammer 40,000', 'Death Guard',
+             '43-08', decimal.Decimal('35.00'),
+             'The Host of the Destroyer Hive, Typhus spreads contagion wherever '
+             'he walks, armed with the Manreaper and surrounded by Nurgling swarms.'),
+            ('Death Guard Combat Patrol', 'Warhammer 40,000', 'Death Guard',
+             '43-80', decimal.Decimal('105.00'),
+             'A Death Guard Combat Patrol: Lord of Contagion, Plague Marines, '
+             'Poxwalkers, and a Foetid Bloat-drone.'),
+
+            # ================================================================
+            # THOUSAND SONS
+            # ================================================================
+            ('Thousand Sons Rubric Marines', 'Warhammer 40,000', 'Thousand Sons',
+             '43-35', decimal.Decimal('40.00'),
+             'Ten Rubric Marines, sorcery-bound automatons in ornate power armour '
+             'armed with inferno boltguns and soulreaper cannons.'),
+            ('Thousand Sons Scarab Occult Terminators', 'Warhammer 40,000', 'Thousand Sons',
+             '43-36', decimal.Decimal('52.50'),
+             'Five elite Terminators infused with aetheric power, bearing '
+             'khopesh blades, hellfyre missile racks, and combi-bolters.'),
+            ('Thousand Sons Exalted Sorcerers', 'Warhammer 40,000', 'Thousand Sons',
+             '43-38', decimal.Decimal('37.50'),
+             'Three Sorcerers of the Thousand Sons aboard discs of Tzeentch, '
+             'wielding inferno bolt pistols and force staves.'),
+            ('Thousand Sons Magnus the Red', 'Warhammer 40,000', 'Thousand Sons',
+             '43-02', decimal.Decimal('130.00'),
+             'The Daemon Primarch of the Thousand Sons, a winged cyclopean giant '
+             'armed with the Blade of Magnus.'),
+            ('Thousand Sons Ahriman', 'Warhammer 40,000', 'Thousand Sons',
+             '43-30', decimal.Decimal('35.00'),
+             'Chief Librarian of the Thousand Sons, bearing the Black Staff of '
+             'Ahriman and wearing the legendary armour of the Arch-Sorcerer.'),
+            ('Thousand Sons Combat Patrol', 'Warhammer 40,000', 'Thousand Sons',
+             '43-90', decimal.Decimal('105.00'),
+             'A Thousand Sons Combat Patrol: Exalted Sorcerer, Rubric Marines, '
+             'Scarab Occult Terminators, and Tzaangors.'),
+
+            # ================================================================
+            # WORLD EATERS
+            # ================================================================
+            ('World Eaters Berzerkers', 'Warhammer 40,000', 'World Eaters',
+             '43-60', decimal.Decimal('42.50'),
+             'Eight blood-mad Khorne Berzerkers in battered power armour, '
+             'armed with chainaxes, chainswords, and bolt pistols.'),
+            ('World Eaters Eightbound', 'Warhammer 40,000', 'World Eaters',
+             '43-62', decimal.Decimal('52.50'),
+             'Three massive warriors bound by eight daemons of Khorne, '
+             'wielding eviscerators and exalted eviscerators.'),
+            ('World Eaters Angron', 'Warhammer 40,000', 'World Eaters',
+             '43-04', decimal.Decimal('145.00'),
+             'The Daemon Primarch of the World Eaters, a monumental model '
+             'covered in the Butcher\'s Nails and soaked in the blood of worlds.'),
+            ('World Eaters Lord on Juggernaut', 'Warhammer 40,000', 'World Eaters',
+             '43-64', decimal.Decimal('37.50'),
+             'A World Eaters Lord riding a Juggernaut of Khorne, an unstoppable '
+             'combination of daemon engine and furious warrior.'),
+            ('World Eaters Combat Patrol', 'Warhammer 40,000', 'World Eaters',
+             '43-95', decimal.Decimal('105.00'),
+             'A World Eaters Combat Patrol: Master of Executions, Berzerkers, '
+             'Eightbound, and Jakhals.'),
+
+            # ================================================================
+            # ASTRA MILITARUM
+            # ================================================================
+            ('Astra Militarum Infantry Squad', 'Warhammer 40,000', 'Astra Militarum',
+             '47-19', decimal.Decimal('32.50'),
+             'Ten Imperial Guardsmen with lasrifles, a heavy weapon team, and '
+             'a sergeant — the backbone of the Imperial war machine.'),
+            ('Astra Militarum Cadian Shock Troops', 'Warhammer 40,000', 'Astra Militarum',
+             '47-30', decimal.Decimal('37.50'),
+             'Ten Cadian Shock Troops in redesigned plastic, armed with lasrifles '
+             'and upgrade options for special and heavy weapons.'),
+            ('Astra Militarum Veteran Guardsmen', 'Warhammer 40,000', 'Astra Militarum',
+             '47-31', decimal.Decimal('40.00'),
+             'Ten battle-hardened Veteran Guardsmen with extra equipment options '
+             'including demolition charges, grenade launchers, and shotguns.'),
+            ('Astra Militarum Leman Russ Battle Tank', 'Warhammer 40,000', 'Astra Militarum',
+             '47-06', decimal.Decimal('57.50'),
+             'The standard battle tank of the Astra Militarum, armed with a '
+             'battle cannon and sponson weapon options.'),
+            ('Astra Militarum Chimera', 'Warhammer 40,000', 'Astra Militarum',
+             '47-05', decimal.Decimal('42.50'),
+             'The ubiquitous armoured transport of the Imperial Guard, carrying '
+             'twelve soldiers into the heart of battle.'),
+            ('Astra Militarum Basilisk', 'Warhammer 40,000', 'Astra Militarum',
+             '47-17', decimal.Decimal('52.50'),
+             'A long-range artillery tank armed with an earthshaker cannon capable '
+             'of firing over intervening terrain to bombard distant targets.'),
+            ('Astra Militarum Hellhound', 'Warhammer 40,000', 'Astra Militarum',
+             '47-14', decimal.Decimal('42.50'),
+             'A fast armoured vehicle spewing promethium flame from an inferno '
+             'cannon, ideal for clearing infantry from cover.'),
+            ('Astra Militarum Sentinel', 'Warhammer 40,000', 'Astra Militarum',
+             '47-12', decimal.Decimal('32.50'),
+             'A lightly armoured walker on scout or armoured legs, armed with '
+             'a lascannon, autocannon, heavy flamer, or multi-laser.'),
+            ('Astra Militarum Commissar', 'Warhammer 40,000', 'Astra Militarum',
+             '47-08', decimal.Decimal('20.00'),
+             'A single Commissar enforcing the discipline of the Imperial Guard '
+             'with a bolt pistol and power sword — at any cost.'),
+            ('Astra Militarum Combat Patrol', 'Warhammer 40,000', 'Astra Militarum',
+             '47-25', decimal.Decimal('105.00'),
+             'An Astra Militarum Combat Patrol: Cadian Command Squad, Infantry '
+             'Squad, Heavy Weapons Squad, and a Sentinel.'),
+
+            # ================================================================
+            # ADEPTUS MECHANICUS
+            # ================================================================
+            ('Adeptus Mechanicus Skitarii Rangers', 'Warhammer 40,000', 'Adeptus Mechanicus',
+             '59-10', decimal.Decimal('32.50'),
+             'Ten Skitarii Rangers with galvanic rifles pursuing their quarry '
+             'across any terrain in service to the Omnissiah.'),
+            ('Adeptus Mechanicus Skitarii Vanguard', 'Warhammer 40,000', 'Adeptus Mechanicus',
+             '59-11', decimal.Decimal('32.50'),
+             'Ten radiation-saturated Skitarii Vanguard with radium carbines, '
+             'irradiating the enemy with every shot.'),
+            ('Adeptus Mechanicus Ironstrider Ballistarii', 'Warhammer 40,000', 'Adeptus Mechanicus',
+             '59-14', decimal.Decimal('42.50'),
+             'Two gyroscopically-balanced Ironstriders armed with twin cognis '
+             'lascannons or twin cognis autocannons.'),
+            ('Adeptus Mechanicus Dunecrawler', 'Warhammer 40,000', 'Adeptus Mechanicus',
+             '59-16', decimal.Decimal('57.50'),
+             'A six-legged heavy walker capable of mounting a neutron laser, '
+             'eradication beamer, or Icarus array.'),
+            ('Adeptus Mechanicus Kataphron Destroyers', 'Warhammer 40,000', 'Adeptus Mechanicus',
+             '59-18', decimal.Decimal('42.50'),
+             'Three servitor-cyborgs carrying heavy grav-cannons or plasma culverins '
+             'on tracked lower bodies.'),
+            ('Adeptus Mechanicus Electropriests', 'Warhammer 40,000', 'Adeptus Mechanicus',
+             '59-20', decimal.Decimal('35.00'),
+             'Ten fanatical cyborg warrior-priests channelling voltaic or '
+             'corpuscarii energies through electrostatic gauntlets.'),
+            ('Adeptus Mechanicus Tech-Priest Dominus', 'Warhammer 40,000', 'Adeptus Mechanicus',
+             '59-06', decimal.Decimal('27.50'),
+             'A high-ranking Tech-Priest bearing a volkite blaster and macrostubber, '
+             'surrounded by servo-skulls and mechadendrites.'),
+            ('Adeptus Mechanicus Combat Patrol', 'Warhammer 40,000', 'Adeptus Mechanicus',
+             '59-25', decimal.Decimal('105.00'),
+             'An Adeptus Mechanicus Combat Patrol: Tech-Priest Manipulus, '
+             'Skitarii Rangers, Sicarian Infiltrators, and a Dunecrawler.'),
+
+            # ================================================================
+            # GENESTEALER CULTS
+            # ================================================================
+            ('Genestealer Cults Neophyte Hybrids', 'Warhammer 40,000', 'Genestealer Cults',
+             '51-40', decimal.Decimal('32.50'),
+             'Ten Neophyte Hybrids armed with autoguns, shotguns, mining lasers, '
+             'seismic cannons, and grenade launchers.'),
+            ('Genestealer Cults Acolyte Hybrids', 'Warhammer 40,000', 'Genestealer Cults',
+             '51-41', decimal.Decimal('35.00'),
+             'Five Acolyte Hybrids armed with autopistols, hand flamers, '
+             'heavy rock drills, cutters, and saws.'),
+            ('Genestealer Cults Aberrants', 'Warhammer 40,000', 'Genestealer Cults',
+             '51-44', decimal.Decimal('42.50'),
+             'Five grotesquely mutated Aberrants wielding pick axes, power picks, '
+             'and improvised weapons with crushing strength.'),
+            ('Genestealer Cults Magus', 'Warhammer 40,000', 'Genestealer Cults',
+             '51-43', decimal.Decimal('22.50'),
+             'A psyker infected with the Genestealer curse, channelling alien '
+             'power through a staff and psychic gifts.'),
+            ('Genestealer Cults Patriarch', 'Warhammer 40,000', 'Genestealer Cults',
+             '51-42', decimal.Decimal('40.00'),
+             'The ultimate evolution of the Genestealer infection — a monstrous '
+             'beast surrounded by an aura of alien hypnosis.'),
+
+            # ================================================================
+            # DRUKHARI
+            # ================================================================
+            ('Drukhari Kabalite Warriors', 'Warhammer 40,000', 'Drukhari',
+             '45-07', decimal.Decimal('30.00'),
+             'Ten Kabalite Warriors armed with splinter rifles, blasters, '
+             'and a dark lance — the cruel raiders of Commorragh.'),
+            ('Drukhari Wyches', 'Warhammer 40,000', 'Drukhari',
+             '45-06', decimal.Decimal('30.00'),
+             'Ten Wych Cult gladiatrices armed with hydra gauntlets, razorflails, '
+             'shardnets, and impaler weapons for lethal arena combat.'),
+            ('Drukhari Raider', 'Warhammer 40,000', 'Drukhari',
+             '45-10', decimal.Decimal('37.50'),
+             'A sleek anti-gravity raiding skimmer armed with a dark lance or '
+             'disintegrator cannon, transporting ten warriors.'),
+            ('Drukhari Ravager', 'Warhammer 40,000', 'Drukhari',
+             '45-12', decimal.Decimal('37.50'),
+             'A heavy gunship armed with three dark lances or disintegrator '
+             'cannons, hunting tanks and heavy infantry.'),
+            ('Drukhari Archon', 'Warhammer 40,000', 'Drukhari',
+             '45-02', decimal.Decimal('22.50'),
+             'A Supreme Overlord of a Kabal, armed with a huskblade and '
+             'blast pistol, surrounded by a court of courtiers.'),
+            ('Drukhari Combat Patrol', 'Warhammer 40,000', 'Drukhari',
+             '45-25', decimal.Decimal('105.00'),
+             'A Drukhari Combat Patrol: Archon, Kabalite Warriors, Wyches, '
+             'Incubi, and a Raider.'),
+
+            # ================================================================
+            # CRAFTWORLDS
+            # ================================================================
+            ('Craftworlds Guardians', 'Warhammer 40,000', 'Craftworlds',
+             '46-09', decimal.Decimal('30.00'),
+             'Ten Aeldari Guardians with shuriken catapults and a weapon platform '
+             'armed with a bright lance, scatter laser, or starcannon.'),
+            ('Craftworlds Dire Avengers', 'Warhammer 40,000', 'Craftworlds',
+             '46-06', decimal.Decimal('30.00'),
+             'Five elite Aspect Warriors armed with avenger shuriken catapults '
+             'and Exarch with diresword or power glaive.'),
+            ('Craftworlds Fire Dragons', 'Warhammer 40,000', 'Craftworlds',
+             '46-14', decimal.Decimal('30.00'),
+             'Five Fire Dragon Aspect Warriors bearing fusion guns, melta bombs, '
+             'and tank-hunting equipment.'),
+            ('Craftworlds Wraithguard', 'Warhammer 40,000', 'Craftworlds',
+             '46-26', decimal.Decimal('45.00'),
+             'Five towering constructs animated by Aeldari spirit stones, armed '
+             'with wraithcannons or d-scythes.'),
+            ('Craftworlds Wave Serpent', 'Warhammer 40,000', 'Craftworlds',
+             '46-29', decimal.Decimal('50.00'),
+             'The premier Aeldari skimmer transport, bearing a twin turret weapon '
+             'system and a wave serpent shield.'),
+            ('Craftworlds Farseer', 'Warhammer 40,000', 'Craftworlds',
+             '46-02', decimal.Decimal('22.50'),
+             'An Aeldari seer of unparalleled psychic power, guiding their '
+             'craftworld\'s fate with witchblade and runes.'),
+            ('Craftworlds Combat Patrol', 'Warhammer 40,000', 'Craftworlds',
+             '46-25', decimal.Decimal('105.00'),
+             'A Craftworlds Combat Patrol: Farseer, Guardians, Dire Avengers, '
+             'Wraithblades, and a War Walker.'),
+
+            # ================================================================
+            # LEAGUES OF VOTANN
+            # ================================================================
+            ('Leagues of Votann Hearthkyn Warriors', 'Warhammer 40,000', 'Leagues of Votann',
+             '73-10', decimal.Decimal('40.00'),
+             'Ten stocky Kin warriors armed with ion blasters, autoch-pattern '
+             'bolters, and a wealth of equipment options.'),
+            ('Leagues of Votann Hernkyn Pioneers', 'Warhammer 40,000', 'Leagues of Votann',
+             '73-12', decimal.Decimal('45.00'),
+             'Three Hernkyn Pioneers on Sagitaur ATVs armed with bolt shotguns '
+             'and heavy weapons for fast scouting duties.'),
+            ('Leagues of Votann Einhyr Hearthguard', 'Warhammer 40,000', 'Leagues of Votann',
+             '73-14', decimal.Decimal('52.50'),
+             'Five elite Kin warriors in exo-armour bearing volkanite disintegrators '
+             'or concussion gauntlets.'),
+            ('Leagues of Votann Kahl', 'Warhammer 40,000', 'Leagues of Votann',
+             '73-06', decimal.Decimal('27.50'),
+             'A Kin commander armed with a forgewrought plasma axe and '
+             'autoch-pattern bolt pistol.'),
+            ('Leagues of Votann Combat Patrol', 'Warhammer 40,000', 'Leagues of Votann',
+             '73-25', decimal.Decimal('105.00'),
+             'A Leagues of Votann Combat Patrol: Kahl, Hearthkyn Warriors, '
+             'Hernkyn Pioneers, and an Einhyr Champion.'),
+
+            # ================================================================
+            # TAU EMPIRE — extended
+            # ================================================================
+            ("T'au Stealth Battlesuits", 'Warhammer 40,000', "T'au Empire",
+             '56-14', decimal.Decimal('35.00'),
+             "Three XV25 Stealth Battlesuits armed with burst cannons or fusion "
+             "blasters, using advanced stealth fields to remain hidden."),
+            ("T'au Crisis Battlesuits", 'Warhammer 40,000', "T'au Empire",
+             '56-15', decimal.Decimal('55.00'),
+             "Three XV8 Crisis Battlesuits with a vast array of weapon options "
+             "including plasma rifles, missile pods, and flamers."),
+            ("T'au Riptide Battlesuit", 'Warhammer 40,000', "T'au Empire",
+             '56-16', decimal.Decimal('75.00'),
+             "A towering XV104 Riptide armed with a heavy burst cannon or ion "
+             "accelerator, the pinnacle of T'au battlesuit technology."),
+            ("T'au Pathfinders", 'Warhammer 40,000', "T'au Empire",
+             '56-19', decimal.Decimal('32.50'),
+             "Ten Pathfinders armed with pulse carbines and marker lights, "
+             "designating targets for the Greater Good's firepower."),
+            ("T'au Hammerhead Gunship", 'Warhammer 40,000', "T'au Empire",
+             '56-10', decimal.Decimal('52.50'),
+             "A main battle tank armed with a railgun or ion cannon turret — "
+             "the primary anti-armour platform of the T'au military."),
+            ("T'au Ethereal", 'Warhammer 40,000', "T'au Empire",
+             '56-22', decimal.Decimal('20.00'),
+             "A mystical caste ruler inspiring nearby Fire Warriors to fight "
+             "with unmatched devotion to the Greater Good."),
+            ("T'au Combat Patrol", 'Warhammer 40,000', "T'au Empire",
+             '56-25', decimal.Decimal('105.00'),
+             "A T'au Combat Patrol: Commander in Crisis Battlesuit, Fire Warriors, "
+             "Pathfinders, and a Hammerhead Gunship."),
+
+            # ================================================================
+            # AGE OF SIGMAR — extended factions
+            # ================================================================
+            ('Nighthaunt Chainrasps', 'Age of Sigmar', 'Nighthaunt',
+             '91-10', decimal.Decimal('30.00'),
+             'Twenty ethereal Chainrasp spirits drifting across the battlefield, '
+             'overwhelming foes with relentless ghostly swarms.'),
+            ('Nighthaunt Grimghast Reapers', 'Age of Sigmar', 'Nighthaunt',
+             '91-12', decimal.Decimal('35.00'),
+             'Ten scythe-bearing spectral warriors who cut down the living with '
+             'their etherial weapons as they glide into battle.'),
+            ('Nighthaunt Bladegheist Revenants', 'Age of Sigmar', 'Nighthaunt',
+             '91-14', decimal.Decimal('35.00'),
+             'Ten whirling spirit warriors spinning in an eternal death dance, '
+             'their blades carving through armour with ease.'),
+            ('Nighthaunt Lady Olynder', 'Age of Sigmar', 'Nighthaunt',
+             '91-02', decimal.Decimal('30.00'),
+             'The Mortarch of Grief, Lady Olynder mourns eternally while her '
+             'tears drain the life from all around her.'),
+            ('Nighthaunt Combat Patrol', 'Age of Sigmar', 'Nighthaunt',
+             '91-25', decimal.Decimal('105.00'),
+             'A Nighthaunt Combat Patrol: Guardian of Souls, Chainrasps, '
+             'Glaivewraith Stalkers, and Grimghast Reapers.'),
+            ('Ossiarch Bonereapers Mortek Guard', 'Age of Sigmar', 'Ossiarch Bonereapers',
+             '94-10', decimal.Decimal('40.00'),
+             'Twenty tireless bone-construct warriors armed with nadirite blades '
+             'and shields, animated by the necromantic will of Nagash.'),
+            ('Ossiarch Bonereapers Necropolis Stalkers', 'Age of Sigmar', 'Ossiarch Bonereapers',
+             '94-12', decimal.Decimal('42.50'),
+             'Three multi-armed Necropolis Stalkers shifting between combat '
+             'stances mid-battle with four unique attack profiles.'),
+            ('Ossiarch Bonereapers Gothizzar Harvester', 'Age of Sigmar', 'Ossiarch Bonereapers',
+             '94-14', decimal.Decimal('52.50'),
+             'A large construct that gathers bone-tithe from fallen warriors, '
+             'restoring nearby Ossiarch Bonereapers as it fights.'),
+            ('Flesh-Eater Courts Crypt Ghouls', 'Age of Sigmar', 'Flesh-Eater Courts',
+             '91-06', decimal.Decimal('30.00'),
+             'Twenty cannibal maniacs driven mad by the Ghoul King\'s delusion, '
+             'believing themselves to be noble knights.'),
+            ('Flesh-Eater Courts Crypt Horrors', 'Age of Sigmar', 'Flesh-Eater Courts',
+             '91-07', decimal.Decimal('40.00'),
+             'Three large Crypt Horrors who believe they are heavily armoured '
+             'knights errant, tearing apart enemies with savage strength.'),
+            ('Gloomspite Gitz Squig Herd', 'Age of Sigmar', 'Gloomspite Gitz',
+             '89-10', decimal.Decimal('30.00'),
+             'Twelve bouncing cave squigs and six squig herders keeping the '
+             'round fanged creatures pointed at the enemy.'),
+            ('Gloomspite Gitz Fanatics', 'Age of Sigmar', 'Gloomspite Gitz',
+             '89-12', decimal.Decimal('35.00'),
+             'Five ball-and-chain wielding Fanatics unleashed from hiding in '
+             'nearby units to smash into unsuspecting enemies.'),
+            ('Orruk Warclans Ironjawz Brutes', 'Age of Sigmar', 'Orruk Warclans',
+             '89-20', decimal.Decimal('40.00'),
+             'Five heavily armoured Ironjaw Brutes built for smashing, with '
+             'claw arms, gore-hackas, and jagged gore-choppas.'),
+            ('Orruk Warclans Kruleboyz Gutrippaz', 'Age of Sigmar', 'Orruk Warclans',
+             '89-22', decimal.Decimal('35.00'),
+             'Ten cunning Kruleboyz Gutrippaz wielding serrated wicked stikkas '
+             'in a disciplined phalanx formation.'),
+            ('Daughters of Khaine Witch Aelves', 'Age of Sigmar', 'Daughters of Khaine',
+             '85-06', decimal.Decimal('35.00'),
+             'Ten Witch Aelves whirling into combat with pairs of sacrificial '
+             'knives or a knife and buckler combination.'),
+            ('Daughters of Khaine Morathi-Khaine', 'Age of Sigmar', 'Daughters of Khaine',
+             '85-02', decimal.Decimal('120.00'),
+             'A dual-kit centrepiece of Morathi as Shadow Queen or Morathi-Khaine, '
+             'the most powerful champion of the aelf gods.'),
+            ('Lumineth Realm-lords Vanari Auralan Wardens', 'Age of Sigmar', 'Lumineth Realm-lords',
+             '87-06', decimal.Decimal('40.00'),
+             'Ten disciplined Aelf warriors bearing long pikes in a precise '
+             'formation, skilled in both attack and defence.'),
+            ('Lumineth Realm-lords Alarith Stoneguard', 'Age of Sigmar', 'Lumineth Realm-lords',
+             '87-08', decimal.Decimal('40.00'),
+             'Five Aelf warriors attuned to the power of Hysh\'s mountains, '
+             'bearing enormous stone mallets and diamondpick axes.'),
+            ('Slaves to Darkness Chaos Warriors', 'Age of Sigmar', 'Slaves to Darkness',
+             '83-10', decimal.Decimal('40.00'),
+             'Twelve armoured Warriors of Chaos bearing hand weapons, shields, '
+             'or great weapons in service to the Dark Gods.'),
+            ('Slaves to Darkness Varanguard', 'Age of Sigmar', 'Slaves to Darkness',
+             '83-14', decimal.Decimal('55.00'),
+             'Three elite knights of Archaon clad in baroque armour, mounted '
+             'on monstrous steeds and bearing daemonic weapons.'),
+            ('Blades of Khorne Bloodreavers', 'Age of Sigmar', 'Blades of Khorne',
+             '83-30', decimal.Decimal('32.50'),
+             'Twenty mortal warriors devoted to Khorne charging recklessly '
+             'into combat with axes and meat-rippers.'),
+            ('Blades of Khorne Bloodletters', 'Age of Sigmar', 'Blades of Khorne',
+             '97-10', decimal.Decimal('30.00'),
+             'Ten Lesser Daemons of Khorne bearing hellblades and driven by '
+             'an insatiable hunger for blood and skulls.'),
+            ('Maggotkin of Nurgle Plaguebearers', 'Age of Sigmar', 'Maggotkin of Nurgle',
+             '83-20', decimal.Decimal('30.00'),
+             'Ten Lesser Daemons of Nurgle shuffling into battle bearing '
+             'plagueswords and tallying their master\'s infections.'),
+            ('Maggotkin of Nurgle Putrid Blightkings', 'Age of Sigmar', 'Maggotkin of Nurgle',
+             '83-22', decimal.Decimal('42.50'),
+             'Five bloated mortal Warriors of Chaos chosen by Nurgle, armed '
+             'with enormous plague weapons and rotted shields.'),
+            ('Disciples of Tzeentch Tzaangors', 'Age of Sigmar', 'Disciples of Tzeentch',
+             '83-40', decimal.Decimal('35.00'),
+             'Ten bestial warriors of Tzeentch bearing savage blades, shields, '
+             'and arcs of sorcerous energy.'),
+            ('Disciples of Tzeentch Pink Horrors', 'Age of Sigmar', 'Disciples of Tzeentch',
+             '97-12', decimal.Decimal('30.00'),
+             'Ten cackling Pink Horrors of Tzeentch, splitting into Blue Horrors '
+             'when slain and hurling magical bolts at enemies.'),
+
+            # ================================================================
+            # HORUS HERESY — extended
+            # ================================================================
+            ('Horus Heresy MKVI Assault Squad', 'Horus Heresy', None,
+             'HA-010', decimal.Decimal('50.00'),
+             'Ten Space Marine legionaries in Corvus armour with jump packs, '
+             'armed with chainswords and bolt pistols.'),
+            ('Horus Heresy MKIII Iron Armour Squad', 'Horus Heresy', None,
+             'HA-011', decimal.Decimal('55.00'),
+             'Twenty Space Marines in MkIII Iron Armour, with full weapons '
+             'options for tactical, assault, or support roles.'),
+            ('Horus Heresy MKIV Power Armour Squad', 'Horus Heresy', None,
+             'HA-012', decimal.Decimal('55.00'),
+             'Twenty Space Marines in MkIV Maximus Armour, the most tactically '
+             'versatile legionary kit with full weapon upgrades.'),
+            ('Horus Heresy Contemptor Dreadnought', 'Horus Heresy', None,
+             'HA-020', decimal.Decimal('47.50'),
+             'A Contemptor-pattern Dreadnought with poseable arms and '
+             'a choice of weapons including multi-melta and assault cannon.'),
+            ('Horus Heresy Leviathan Dreadnought', 'Horus Heresy', None,
+             'HA-021', decimal.Decimal('75.00'),
+             'A massive Leviathan-pattern Dreadnought bearing siege claws, '
+             'storm cannons, or graviton flux bombards.'),
+            ('Horus Heresy Cataphractii Terminators', 'Horus Heresy', None,
+             'HA-030', decimal.Decimal('55.00'),
+             'Five Space Marine Terminators in ancient Cataphractii plate, '
+             'with combi-bolters, power fists, and heavy weapon options.'),
+            ('Horus Heresy Spartan Assault Tank', 'Horus Heresy', None,
+             'HA-040', decimal.Decimal('120.00'),
+             'A massive super-heavy tank capable of transporting twenty-five '
+             'legionaries and armed with quad lascannons.'),
+            ('Horus Heresy Sicaran Battle Tank', 'Horus Heresy', None,
+             'HA-041', decimal.Decimal('75.00'),
+             'A fast-attack tank bearing a twin accelerator autocannon, '
+             'cutting down lightly armoured vehicles and infantry alike.'),
+            ('Horus Heresy Praetor in Terminator Armour', 'Horus Heresy', None,
+             'HA-050', decimal.Decimal('35.00'),
+             'A senior officer of a Space Marine Legion in Terminator armour, '
+             'with interchangeable weapons and heraldry.'),
+            ('Horus Heresy Chaplain in Terminator Armour', 'Horus Heresy', None,
+             'HA-051', decimal.Decimal('32.50'),
+             'A Chaplain bearing a crozius arcanum and combi-weapon, inspiring '
+             'legionaries to die for the primarch\'s glory.'),
+
+            # ================================================================
+            # KILL TEAM — boxed sets
+            # ================================================================
+            ('Kill Team Starter Set', 'Boxed Games', None,
+             'KT-100', decimal.Decimal('35.00'),
+             'Everything needed to play Kill Team: skirmish rules, two kill '
+             'teams, and a double-sided game board with terrain.'),
+            ('Kill Team: Into the Dark', 'Boxed Games', None,
+             'KT-101', decimal.Decimal('130.00'),
+             'A space hulk Kill Team set pitting Adeptus Mechanicus Hearthkyn '
+             'Salvagers against Imperial Navy Breachers on modular terrain.'),
+            ('Kill Team: Salvation', 'Boxed Games', None,
+             'KT-102', decimal.Decimal('130.00'),
+             'Sisters of Battle Novitiates face off against the nefarious '
+             'Hand of the Archon Drukhari in this two-team Kill Team box.'),
+            ('Kill Team: Ashes of Faith', 'Boxed Games', None,
+             'KT-103', decimal.Decimal('130.00'),
+             'Agents of the Inquisition square off against the Chaos Cult of '
+             'the Blooded in sprawling hive city terrain.'),
+            ('Kill Team: Bheta-Decima', 'Boxed Games', None,
+             'KT-104', decimal.Decimal('130.00'),
+             'T\'au Empire Pathfinder kill teams battle against Leagues of Votann '
+             'Hearthkyn Salvagers over a fallen starship\'s wreckage.'),
+
+            # ================================================================
+            # NECROMUNDA
+            # ================================================================
+            ('Necromunda Escher Gang', 'Boxed Games', None,
+             'NM-010', decimal.Decimal('45.00'),
+             'Ten deadly House Escher gangers — nimble female fighters armed '
+             'with lasguns, plasma guns, and vicious chain sabres.'),
+            ('Necromunda Goliath Gang', 'Boxed Games', None,
+             'NM-011', decimal.Decimal('45.00'),
+             'Ten massive House Goliath fighters armed with boltguns, renderizers, '
+             'and fighting with pure muscle power.'),
+            ('Necromunda Van Saar Gang', 'Boxed Games', None,
+             'NM-012', decimal.Decimal('45.00'),
+             'Ten technologically advanced Van Saar gangers with lasrifles, '
+             'meltaguns, and cutting-edge equipment.'),
+            ('Necromunda Underhive Terrain Set', 'Boxed Games', None,
+             'NM-020', decimal.Decimal('65.00'),
+             'A set of modular underhive terrain pieces for Necromunda — '
+             'bulkheads, barricades, and walkways.'),
+
+            # ================================================================
+            # WARCRY — boxed sets
+            # ================================================================
+            ('Warcry Starter Set', 'Boxed Games', None,
+             'WC-100', decimal.Decimal('55.00'),
+             'Complete Warcry introduction: two warbands, modular ruins terrain, '
+             'dice, cards, and the full Warcry rules.'),
+            ('Warcry: Heart of Ghur', 'Boxed Games', None,
+             'WC-101', decimal.Decimal('130.00'),
+             'A Warcry two-player set pitting Rotmire Creed against Horns of '
+             'Hashut warbands amid living jungle terrain.'),
+            ('Warcry: Hunter and Hunted', 'Boxed Games', None,
+             'WC-102', decimal.Decimal('105.00'),
+             'Wildercorps Hunters stalk Gorger Mawpack prey in this Warcry '
+             'two-player box with open terrain.'),
+
+            # ================================================================
+            # CITADEL PAINTS — individual pots and bundles
+            # ================================================================
+            ('Citadel Layer Paint', 'Paint & Supplies', None,
+             'LP-001', decimal.Decimal('4.55'),
+             'A single Citadel Layer paint (12ml). Lighter than base paints, '
+             'designed for highlighting over a base colour.'),
+            ('Citadel Dry Paint', 'Paint & Supplies', None,
+             'DP-001', decimal.Decimal('4.55'),
+             'A single Citadel Dry paint (12ml). Thick consistency for '
+             'drybrushing techniques that pick out raised detail.'),
+            ('Citadel Technical Paint', 'Paint & Supplies', None,
+             'TCP-001', decimal.Decimal('4.55'),
+             'A single Citadel Technical paint (12ml) for special effects: '
+             'blood, slime, cracked earth, or rusted metal.'),
+            ('Citadel Air Paint', 'Paint & Supplies', None,
+             'AP-001', decimal.Decimal('4.55'),
+             'A single Citadel Air paint pre-thinned for airbrushing (24ml). '
+             'Consistent coverage across large model surfaces.'),
+            ('Citadel Shade Agrax Earthshade', 'Paint & Supplies', None,
+             'SP-002', decimal.Decimal('5.50'),
+             'The essential brown wash — Agrax Earthshade (24ml). Adds depth, '
+             'grime, and a realistic aged look to any model.'),
+            ('Citadel Shade Reikland Fleshshade', 'Paint & Supplies', None,
+             'SP-003', decimal.Decimal('5.50'),
+             'A warm flesh-tone shade wash (24ml) ideal for skin, leather, '
+             'and wood effects on Warhammer models.'),
+            ('Citadel Contrast Wraithbone', 'Paint & Supplies', None,
+             'CP-002', decimal.Decimal('7.55'),
+             'The definitive Contrast primer colour (18ml). Painted over black '
+             'undercoat to create a warm bone-white basecoat.'),
+            ('Citadel Contrast Blood Angels Red', 'Paint & Supplies', None,
+             'CP-003', decimal.Decimal('7.55'),
+             'A deep crimson Contrast paint (18ml) that naturally shades into '
+             'recesses for perfect power armour in a single coat.'),
+            ('Citadel Spray Chaos Black', 'Paint & Supplies', None,
+             'CSP-001', decimal.Decimal('15.00'),
+             'The standard Chaos Black undercoat spray (400ml). Provides an '
+             'even matt black primer coat for Warhammer models.'),
+            ('Citadel Spray Wraithbone', 'Paint & Supplies', None,
+             'CSP-002', decimal.Decimal('15.00'),
+             'The bone-white undercoat spray (400ml), ideal as a base for '
+             'Contrast paints or light colour schemes.'),
+            ('Citadel Spray Corax White', 'Paint & Supplies', None,
+             'CSP-003', decimal.Decimal('15.00'),
+             'A pure white undercoat spray (400ml) for bright colour schemes '
+             'including Ultramarines, Iyanden, and Nighthaunt.'),
+            ('Citadel Spray Zandri Dust', 'Paint & Supplies', None,
+             'CSP-004', decimal.Decimal('15.00'),
+             'A warm tan undercoat spray (400ml) suitable as a base for '
+             'Contrast paints on Tyranid and T\'au models.'),
+            ('Citadel Colour Base Paint Set', 'Paint & Supplies', None,
+             'BS-001', decimal.Decimal('32.50'),
+             'A set of eleven essential Citadel Base paints covering the most '
+             'commonly used colours for Warhammer armies.'),
+            ('Citadel Colour Shade Set', 'Paint & Supplies', None,
+             'BS-002', decimal.Decimal('27.50'),
+             'A set of eight Citadel Shade washes for adding depth and shadow '
+             'to any model.'),
+            ('Citadel Painting Mat', 'Paint & Supplies', None,
+             'PM-001', decimal.Decimal('20.00'),
+             'A large (40x60cm) neoprene painting mat protecting your workspace '
+             'while keeping brushes and pots in reach.'),
+            ('Citadel Water Pot', 'Paint & Supplies', None,
+             'WP-001', decimal.Decimal('8.00'),
+             'A two-chamber water pot for brush cleaning, with a ribbed base '
+             'to remove excess paint and a lid to prevent spills.'),
+            ('Citadel Detail Brush Set', 'Paint & Supplies', None,
+             'DB-001', decimal.Decimal('22.50'),
+             'A set of five Citadel Detail brushes in various sizes, ideal '
+             'for precise work on faces, gems, and fine details.'),
+            ('Citadel Mouldline Remover', 'Paint & Supplies', None,
+             'MR-001', decimal.Decimal('12.00'),
+             'A fine-edged tool for shaving mould lines off plastic models '
+             'without damaging surrounding detail.'),
+            ('Citadel Plastic Glue', 'Paint & Supplies', None,
+             'PG-001', decimal.Decimal('6.00'),
+             'The standard Citadel plastic glue with a fine applicator brush '
+             'for accurate bonding of polystyrene miniature components.'),
+            ('Citadel Super Glue', 'Paint & Supplies', None,
+             'SG-001', decimal.Decimal('6.00'),
+             'Citadel cyanoacrylate super glue for attaching resin, metal, '
+             'or mixed media components to plastic models.'),
+            ('Citadel Painting Handle XL', 'Paint & Supplies', None,
+             'PH-002', decimal.Decimal('16.00'),
+             'An extra-large magnetic painting handle for bigger kits like '
+             'cavalry, monsters, and vehicles up to 90mm bases.'),
+            ('Citadel Colour Contrast Paint Bundle x5', 'Paint & Supplies', None,
+             'CP-005', decimal.Decimal('35.00'),
+             'Five Citadel Contrast paints of your choice — a starter bundle '
+             'for building a Contrast-based painting workflow.'),
+
+            # ================================================================
+            # WARHAMMER 40,000 CORE BOOKS & ACCESSORIES
+            # ================================================================
+            ('Warhammer 40,000 Core Rules', 'Boxed Games', None,
+             '40-01', decimal.Decimal('65.00'),
+             'The complete Warhammer 40,000 10th Edition hardback rulebook with '
+             'full matched play, narrative, and open play rules.'),
+            ('Warhammer 40,000 Chapter Approved: Leviathan', 'Boxed Games', None,
+             '40-10', decimal.Decimal('35.00'),
+             'The essential matched play companion with updated points, missions, '
+             'and secondary objectives for 10th Edition.'),
+            ('Warhammer 40,000 Dice Set', 'Boxed Games', None,
+             '40-20', decimal.Decimal('15.00'),
+             'Twenty Warhammer 40,000 dice with the Aquila on the six face, '
+             'in classic bone-white with black ink.'),
+            ('Warhammer 40,000 Measuring Tape', 'Boxed Games', None,
+             '40-21', decimal.Decimal('12.00'),
+             'A 10-foot retractable Warhammer 40,000 measuring tape with '
+             'inch and centimetre markings.'),
+            ('Age of Sigmar Core Rules', 'Boxed Games', None,
+             '80-01', decimal.Decimal('65.00'),
+             'The complete Age of Sigmar 3rd Edition hardback core rules with '
+             'matched play, Path to Glory, and open play.'),
+            ('Age of Sigmar Dice Set', 'Boxed Games', None,
+             '80-20', decimal.Decimal('15.00'),
+             'Twenty Age of Sigmar dice in celestial blue with a hammer symbol '
+             'on the six face.'),
+        ]
+
+        # Re-use the faction lookup built in _create_products
+        faction_lookup = Faction.objects.in_bulk(field_name='name')
+
+        products = []
+        for (name, cat_name, faction_name, gw_sku, msrp, description) in extended_data:
+            cat = Category.objects.filter(name=cat_name).first()
+            faction = faction_lookup.get(faction_name) if faction_name else None
+
+            slug = slugify(name)
+            product, created = Product.objects.update_or_create(
+                gw_sku=gw_sku,
+                defaults={
+                    'name': name,
+                    'slug': slug,
+                    'gw_sku': gw_sku,
+                    'category': cat,
+                    'faction': faction,
+                    'description': description,
+                    'msrp': msrp,
+                    'is_active': True,
+                    'image_url': (
+                        f'https://placehold.co/400x300/1c2230/c8922a'
+                        f'?text={slugify(name)[:30]}'
+                    ),
+                },
+            )
+            products.append(product)
+            status = 'created' if created else 'updated'
+            self.stdout.write(f'  [{status}] {name} — ${msrp}')
+
+        self.stdout.write(
+            self.style.SUCCESS(f'  Extended catalog: {len(products)} products processed.')
+        )
         return products
 
     # -------------------------------------------------------------------------

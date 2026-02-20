@@ -115,7 +115,13 @@
       {% endif %}
 
       {# Price comparison table #}
-      <h2 style="font-size:1.1rem;margin-bottom:var(--sp-4);">Price Comparison</h2>
+      <h2 style="font-size:1.1rem;margin-bottom:var(--sp-2);">Price Comparison</h2>
+      {# FTC / EPN near-link affiliate disclosure — required adjacent to buy links #}
+      <p class="price-table-disclosure">
+        <strong>#ad</strong> — Retailer links below may be affiliate links. ThriftHammer
+        may earn a commission on qualifying purchases at no extra cost to you.
+        <a href="{% url 'privacy_policy' %}#affiliate" style="color:var(--accent-gold);">Learn more</a>
+      </p>
       {% if current_prices %}
       <table class="price-table">
         <thead>
@@ -124,7 +130,7 @@
             <th>Price</th>
             <th>Discount</th>
             <th>Stock</th>
-            <th>Buy</th>
+            <th>Buy <span class="th-ad">#ad</span></th>
           </tr>
         </thead>
         <tbody>
@@ -152,7 +158,7 @@
               {% endif %}
             </td>
             <td>
-              <a href="{{ cp.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">Buy ↗</a>
+              <a href="{{ cp.url }}" target="_blank" rel="noopener noreferrer sponsored" class="btn btn-primary btn-sm">Buy ↗</a>
             </td>
           </tr>
           {% endfor %}
