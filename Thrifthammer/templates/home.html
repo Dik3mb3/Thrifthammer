@@ -57,7 +57,7 @@
         {# Hero stats bar #}
         <div class="hero-stats">
             <div class="hero-stat">
-                <span class="hero-stat-value">307+</span>
+                <span class="hero-stat-value">{{ product_count_display }}</span>
                 <span class="hero-stat-label">Kits tracked</span>
             </div>
             <div class="hero-stat">
@@ -209,7 +209,7 @@
                 <h3>Search Your Kit</h3>
                 <p>
                     Find any Warhammer 40,000, Age of Sigmar, Kill Team, or
-                    paints kit from our catalogue of 307+ tracked products.
+                    paints kit from our catalogue of {{ product_count_display }} tracked products.
                 </p>
             </div>
 
@@ -242,7 +242,7 @@
     <div class="container">
         <div class="trust-bar">
             <div class="trust-item">
-                <span class="trust-value">307+</span>
+                <span class="trust-value">{{ product_count_display }}</span>
                 <span class="trust-label">Kits tracked</span>
             </div>
             <div class="trust-item">

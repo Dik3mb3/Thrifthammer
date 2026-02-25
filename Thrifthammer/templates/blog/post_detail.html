@@ -85,7 +85,7 @@
       {# CTA: browse products #}
       <div class="blog-sidebar-card blog-sidebar-cta">
         <h3>Find the Best Prices</h3>
-        <p>Compare prices across US retailers on 307+ Warhammer kits.</p>
+        <p>Compare prices across US retailers on {{ product_count_display }} Warhammer kits.</p>
         <a href="{% url 'products:list' %}" class="btn btn-primary btn-full">Browse Products</a>
         <a href="{% url 'calculators:space_marines' %}" class="btn btn-secondary btn-full" style="margin-top:var(--sp-2);">
           Army Calculator
