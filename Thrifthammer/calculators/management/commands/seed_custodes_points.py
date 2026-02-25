@@ -92,10 +92,12 @@ class Command(BaseCommand):
         """Entry point."""
         self.stdout.write('Seeding Adeptus Custodes points…\n')
 
-        custodes_faction = Faction.objects.filter(name='Adeptus Custodes').first()
+        # Products are stored under 'Custodes' in populate_products.py.
+        # 'Adeptus Custodes' also exists as a faction row but has no products assigned.
+        custodes_faction = Faction.objects.filter(name='Custodes').first()
         if not custodes_faction:
             self.stdout.write(self.style.ERROR(
-                'Adeptus Custodes faction not found. Run populate_products first.'
+                'Custodes faction not found. Run populate_products first.'
             ))
             return
 

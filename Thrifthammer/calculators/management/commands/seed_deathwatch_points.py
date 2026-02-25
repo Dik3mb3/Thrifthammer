@@ -149,6 +149,36 @@ class Command(BaseCommand):
                 )
                 skipped_count += 1
 
+        # ── 48-07 SKU collision (Tactical Squad + Terminator Assault Squad) ──────
+        # Both products share gw_sku 48-07; must use name filtering to distinguish.
+        DW_SKU_COLLISIONS = [
+            ('48-07', 'Tactical',   140, 'Tactical Squad'),            # 140pts ✓
+            ('48-07', 'Terminator', 180, 'Terminator Assault Squad'),  # 180pts ✓
+        ]
+        for gw_sku, name_filter, points, label in DW_SKU_COLLISIONS:
+            product = Product.objects.filter(
+                gw_sku=gw_sku, name__icontains=name_filter
+            ).first()
+            if not product:
+                self.stdout.write(self.style.WARNING(
+                    f'  [skip]    {label} (SKU {gw_sku} not found in DB)'
+                ))
+                skipped_count += 1
+                continue
+            updated = UnitType.objects.filter(
+                product=product,
+                faction=dw_faction,
+            ).update(points_cost=points)
+            if updated:
+                self.stdout.write(f'  [updated] {label} > {points} pts')
+                updated_count += 1
+            else:
+                self.stdout.write(self.style.WARNING(
+                    f'  [no unit] {label} (SKU {gw_sku}) — DW UnitType not found. '
+                    f'Run populate_units first.'
+                ))
+                skipped_count += 1
+
         self.stdout.write(self.style.SUCCESS(
             f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
         ))

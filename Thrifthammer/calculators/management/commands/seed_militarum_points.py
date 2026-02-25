@@ -21,8 +21,7 @@ Notes:
     47-12 (Sentinel), 47-14 (Hellhound), 47-17 (Basilisk),
     47-19 (Infantry Squad), 47-30 (Cadian Shock Troops)
 - 47-25 (Combat Patrol) is a bundle — no UnitType entry.
-- 47-31 (Veteran Guardsmen box) has no standalone unit entry in the New Recruit
-  list — excluded until a matching unit type is confirmed.
+- 47-31 (Veteran Guardsmen box) builds Death Korps of Krieg — seeded at 60pts.
 - 47-12 (Sentinel): one kit builds Scout Sentinels (55pts) or Armoured Sentinels
   (65pts). Seeded at 55pts (Scout base cost).
 - Leman Russ variants: all share the 47-06 kit. Seeded at 185pts (Battle Tank
@@ -67,6 +66,7 @@ MILITARUM_POINTS = [
     ('47-48',  65, 'Catachan Jungle Fighters'),            # 65pts  ✓
     ('47-49',  65, 'Death Korps of Krieg'),                # 65pts  ✓
     ('47-19',  65, 'Infantry Squad'),                      # 65pts  ✓
+    ('47-31',  60, 'Death Korps of Krieg'),                # 60pts  ✓ (box labelled Veteran Guardsmen)
     # ── Infantry ──────────────────────────────────────────────────────────────
     ('47-50', 100, 'Bullgryn Squad'),                      # 100pts ✓
     ('47-51',  65, 'Cadian Heavy Weapons Squad'),          # 65pts  ✓

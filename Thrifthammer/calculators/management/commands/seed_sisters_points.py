@@ -94,10 +94,12 @@ class Command(BaseCommand):
         """Entry point."""
         self.stdout.write('Seeding Adepta Sororitas points…\n')
 
-        sisters_faction = Faction.objects.filter(name='Adepta Sororitas').first()
+        # Products are stored under 'Sisters of Battle' in populate_products.py.
+        # 'Adepta Sororitas' also exists as a faction row but has no products assigned.
+        sisters_faction = Faction.objects.filter(name='Sisters of Battle').first()
         if not sisters_faction:
             self.stdout.write(self.style.ERROR(
-                'Adepta Sororitas faction not found. Run populate_products first.'
+                'Sisters of Battle faction not found. Run populate_products first.'
             ))
             return
 
