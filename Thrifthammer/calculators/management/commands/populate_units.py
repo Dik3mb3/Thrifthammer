@@ -31,7 +31,7 @@ SKIP_KEYWORDS = [
     'combat patrol',
     'army set',
     'battleforce',
-    'vanguard',       # e.g. "Vanguard: Space Marines" mega-sets
+    'vanguard: ',     # e.g. "Vanguard: Space Marines" mega-sets (NOT "Vanguard Veteran Squad")
     'boarding patrol',
     'strike force',
     'crusade force',
@@ -426,6 +426,10 @@ class Command(BaseCommand):
 
     help = 'Populate the Army Calculator from all active 40K product SKUs.'
 
+    # Expected minimum number of unit types after a full seed run.
+    # Includes base SM UnitTypes (~145) + BT (~40) + BA (~40) + DA (~40) + DW (~40) cross-faction rows.
+    EXPECTED_UNITS = 310
+
     def add_arguments(self, parser):
         """Register command-line arguments."""
         parser.add_argument(
@@ -433,9 +437,27 @@ class Command(BaseCommand):
             action='store_true',
             help='Delete all existing UnitType and PrebuiltArmy data first.',
         )
+        parser.add_argument(
+            '--skip-if-current',
+            action='store_true',
+            help=(
+                'Exit immediately (no DB writes) when the expected number of unit types '
+                'are already present. Speeds up routine deploys.'
+            ),
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
+        # Fast-path: bail early when units are already seeded.
+        if options.get('skip_if_current') and not options.get('clear'):
+            unit_count = UnitType.objects.count()
+            if unit_count >= self.EXPECTED_UNITS:
+                self.stdout.write(self.style.SUCCESS(
+                    f'populate_units: DB already seeded '
+                    f'({unit_count} unit types) — skipping.'
+                ))
+                return
+
         if options['clear']:
             self.stdout.write('Clearing existing calculator data…')
             PrebuiltArmy.objects.all().delete()
@@ -443,6 +465,10 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING('Cleared.'))
 
         self._create_unit_types()
+        self._create_black_templars_cross_faction_units()
+        self._create_blood_angels_cross_faction_units()
+        self._create_dark_angels_cross_faction_units()
+        self._create_deathwatch_cross_faction_units()
 
         created = UnitType.objects.count()
         self.stdout.write(self.style.SUCCESS(
@@ -485,11 +511,11 @@ class Command(BaseCommand):
 
             unit, created = UnitType.objects.update_or_create(
                 product=product,
+                faction=product.faction,    # lookup key — one row per (product, faction) pair
                 defaults={
                     'name': product.name,
                     'category': role,
-                    'faction': product.faction,
-                    'points_cost': 0,       # points to be set manually in admin
+                    'points_cost': 0,       # points to be set by seed_*_points commands
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -510,4 +536,562 @@ class Command(BaseCommand):
             f'\n  Created: {created_count}  |  '
             f'Updated: {updated_count}  |  '
             f'Skipped (box sets): {skipped_count}'
+        )
+
+    def _create_black_templars_cross_faction_units(self):
+        """
+        Create Black Templars-specific UnitType rows for generic Space Marines
+        products that Black Templars can also field.
+
+        Because points costs differ between factions (e.g. Chaplain is 75pts for
+        Space Marines but 60pts for Black Templars), each faction needs its own
+        UnitType row with an independently managed points_cost. The update_or_create
+        lookup key is (product, faction), so these BT rows sit alongside — not
+        replace — the existing Space Marines rows for the same product.
+
+        Points are initialised to 0 here; run seed_black_templars_points afterwards
+        to apply the correct values.
+        """
+        self.stdout.write('\nCreating Black Templars cross-faction unit types…')
+
+        bt_faction = Faction.objects.filter(name='Black Templars').first()
+        if not bt_faction:
+            self.stdout.write(self.style.WARNING(
+                '  Black Templars faction not found — skipping cross-faction units. '
+                'Run populate_products first.'
+            ))
+            return
+
+        # (gw_sku, bt_unit_name, role)
+        # Only SM kits that Black Templars can also field; BT-exclusive kits (55-xx)
+        # are already handled by _create_unit_types() above via their own faction.
+        BT_CROSS_FACTION = [
+            # ── Battleline ───────────────────────────────────────────────────
+            ('48-76', 'Assault Intercessor Squad',    'battleline'),
+            ('48-75', 'Intercessor Squad',             'battleline'),
+            ('48-29', 'Scout Squad',                   'battleline'),
+            ('48-45', 'Infernus Squad',                'battleline'),
+            # ── Infantry ─────────────────────────────────────────────────────
+            ('48-92', 'Aggressor Squad',               'infantry'),
+            ('48-38', 'Bladeguard Veteran Squad',      'infantry'),
+            ('48-15', 'Devastator Squad',              'infantry'),
+            ('48-98', 'Eliminator Squad',              'infantry'),
+            ('48-39', 'Eradicator Squad',              'infantry'),
+            ('48-96', 'Incursor Squad',                'infantry'),
+            ('48-41', 'Infiltrator Squad',             'infantry'),
+            ('48-43', 'Sternguard Veteran Squad',      'infantry'),
+            ('48-08', 'Vanguard Veteran Squad',        'infantry'),
+            ('48-06', 'Terminator Squad',              'infantry'),
+            # ── Characters ───────────────────────────────────────────────────
+            ('48-33', 'Apothecary',                   'character'),
+            ('48-34', 'Ancient',                      'character'),
+            ('48-30', 'Librarian',                    'character'),
+            ('48-32', 'Chaplain',                     'character'),
+            ('48-36', 'Judiciar',                     'character'),
+            ('48-61', 'Lieutenant',                   'character'),
+            ('48-62', 'Captain',                      'character'),
+            ('48-37', 'Company Heroes',               'character'),
+            # ── Mounted / Fast Attack ─────────────────────────────────────────
+            ('48-40', 'Outrider Squad',               'mounted'),
+            ('48-42', 'Invader ATV',                  'mounted'),
+            ('48-97', 'Inceptor Squad',               'mounted'),
+            ('48-99', 'Suppressor Squad',             'mounted'),
+            # ── Vehicles ─────────────────────────────────────────────────────
+            ('48-46', 'Ballistus Dreadnought',        'vehicle'),
+            ('48-44', 'Brutalis Dreadnought',         'vehicle'),
+            ('48-93', 'Redemptor Dreadnought',        'vehicle'),
+            ('48-23', 'Predator Destructor',          'vehicle'),
+            ('48-25', 'Whirlwind',                    'vehicle'),
+            ('48-26', 'Vindicator',                   'vehicle'),
+            ('48-95', 'Repulsor Executioner',         'vehicle'),
+            # ── Transports ───────────────────────────────────────────────────
+            ('48-94', 'Impulsor',                     'transport'),
+            ('48-85', 'Repulsor',                     'transport'),
+            ('48-21', 'Land Raider',                  'transport'),
+            ('48-22', 'Land Raider Crusader',         'transport'),
+            # ── Fortifications ───────────────────────────────────────────────
+            ('48-27', 'Hammerfall Bunker',            'fortification'),
+            ('48-28', 'Firestrike Servo-Turrets',     'fortification'),
+        ]
+
+        # Handle the 48-07 SKU collision separately (Tactical Squad + Terminator Assault)
+        BT_SKU_COLLISION = [
+            ('48-07', 'Tactical',    'Tactical Squad',          'infantry'),
+            ('48-07', 'Terminator',  'Terminator Assault Squad', 'infantry'),
+        ]
+
+        created_count = 0
+        updated_count = 0
+
+        for gw_sku, bt_name, role in BT_CROSS_FACTION:
+            product = Product.objects.filter(gw_sku=gw_sku).first()
+            if not product:
+                self.stdout.write(self.style.WARNING(
+                    f'  [skip] BT {bt_name} — SKU {gw_sku} not in DB'
+                ))
+                continue
+
+            unit, created = UnitType.objects.update_or_create(
+                product=product,
+                faction=bt_faction,
+                defaults={
+                    'name': bt_name,
+                    'category': role,
+                    'points_cost': 0,
+                    'typical_quantity': 1,
+                    'description': '',
+                    'is_active': True,
+                },
+            )
+            if created:
+                created_count += 1
+                self.stdout.write(f'  [new BT] [{role:15}] {bt_name}')
+            else:
+                updated_count += 1
+
+        # Handle SKU collision entries
+        for gw_sku, name_filter, bt_name, role in BT_SKU_COLLISION:
+            product = Product.objects.filter(
+                gw_sku=gw_sku, name__icontains=name_filter
+            ).first()
+            if not product:
+                self.stdout.write(self.style.WARNING(
+                    f'  [skip] BT {bt_name} — SKU {gw_sku} ({name_filter}) not in DB'
+                ))
+                continue
+
+            unit, created = UnitType.objects.update_or_create(
+                product=product,
+                faction=bt_faction,
+                defaults={
+                    'name': bt_name,
+                    'category': role,
+                    'points_cost': 0,
+                    'typical_quantity': 1,
+                    'description': '',
+                    'is_active': True,
+                },
+            )
+            if created:
+                created_count += 1
+                self.stdout.write(f'  [new BT] [{role:15}] {bt_name}')
+            else:
+                updated_count += 1
+
+        self.stdout.write(
+            f'  BT cross-faction — Created: {created_count}  |  Updated: {updated_count}'
+        )
+
+    def _create_blood_angels_cross_faction_units(self):
+        """
+        Create Blood Angels-specific UnitType rows for generic Space Marines
+        products that Blood Angels can also field.
+
+        Blood Angels share the full Space Marines product range but have their
+        own detachment rules and some differing points costs (e.g. Chaplain 60pts).
+        Each BA row is independent — points are set to 0 here and populated by
+        seed_blood_angels_points afterwards.
+        """
+        self.stdout.write('\nCreating Blood Angels cross-faction unit types…')
+
+        ba_faction = Faction.objects.filter(name='Blood Angels').first()
+        if not ba_faction:
+            self.stdout.write(self.style.WARNING(
+                '  Blood Angels faction not found — skipping cross-faction units. '
+                'Run populate_products first.'
+            ))
+            return
+
+        # (gw_sku, ba_unit_name, role)
+        # Generic SM kits that Blood Angels also field; BA-exclusive kits (41-xx)
+        # are already handled by _create_unit_types() via their own faction.
+        BA_CROSS_FACTION = [
+            # ── Battleline ───────────────────────────────────────────────────
+            ('48-76', 'Assault Intercessor Squad',    'battleline'),
+            ('48-75', 'Intercessor Squad',             'battleline'),
+            ('48-29', 'Scout Squad',                   'battleline'),
+            ('48-45', 'Infernus Squad',                'battleline'),
+            # ── Infantry ─────────────────────────────────────────────────────
+            ('48-92', 'Aggressor Squad',               'infantry'),
+            ('48-38', 'Bladeguard Veteran Squad',      'infantry'),
+            ('48-15', 'Devastator Squad',              'infantry'),
+            ('48-98', 'Eliminator Squad',              'infantry'),
+            ('48-39', 'Eradicator Squad',              'infantry'),
+            ('48-96', 'Incursor Squad',                'infantry'),
+            ('48-41', 'Infiltrator Squad',             'infantry'),
+            ('48-43', 'Sternguard Veteran Squad',      'infantry'),
+            ('48-08', 'Vanguard Veteran Squad',        'infantry'),
+            ('48-06', 'Terminator Squad',              'infantry'),
+            # ── Characters ───────────────────────────────────────────────────
+            ('48-33', 'Apothecary',                   'character'),
+            ('48-34', 'Ancient',                      'character'),
+            ('48-30', 'Librarian',                    'character'),
+            ('48-32', 'Chaplain',                     'character'),
+            ('48-36', 'Judiciar',                     'character'),
+            ('48-61', 'Lieutenant',                   'character'),
+            ('48-62', 'Captain',                      'character'),
+            ('48-37', 'Company Heroes',               'character'),
+            # ── Mounted / Fast Attack ─────────────────────────────────────────
+            ('48-40', 'Outrider Squad',               'mounted'),
+            ('48-42', 'Invader ATV',                  'mounted'),
+            ('48-97', 'Inceptor Squad',               'mounted'),
+            ('48-99', 'Suppressor Squad',             'mounted'),
+            # ── Vehicles ─────────────────────────────────────────────────────
+            ('48-46', 'Ballistus Dreadnought',        'vehicle'),
+            ('48-44', 'Brutalis Dreadnought',         'vehicle'),
+            ('48-93', 'Redemptor Dreadnought',        'vehicle'),
+            ('48-23', 'Predator Destructor',          'vehicle'),
+            ('48-25', 'Whirlwind',                    'vehicle'),
+            ('48-26', 'Vindicator',                   'vehicle'),
+            ('48-95', 'Repulsor Executioner',         'vehicle'),
+            # ── Transports ───────────────────────────────────────────────────
+            ('48-94', 'Impulsor',                     'transport'),
+            ('48-85', 'Repulsor',                     'transport'),
+            ('48-21', 'Land Raider',                  'transport'),
+            ('48-22', 'Land Raider Crusader',         'transport'),
+            # ── Fortifications ───────────────────────────────────────────────
+            ('48-27', 'Hammerfall Bunker',            'fortification'),
+            ('48-28', 'Firestrike Servo-Turrets',     'fortification'),
+        ]
+
+        # Handle 48-07 SKU collision (Tactical Squad + Terminator Assault Squad)
+        BA_SKU_COLLISION = [
+            ('48-07', 'Tactical',   'Tactical Squad',           'infantry'),
+            ('48-07', 'Terminator', 'Terminator Assault Squad', 'infantry'),
+        ]
+
+        created_count = 0
+        updated_count = 0
+
+        for gw_sku, ba_name, role in BA_CROSS_FACTION:
+            product = Product.objects.filter(gw_sku=gw_sku).first()
+            if not product:
+                self.stdout.write(self.style.WARNING(
+                    f'  [skip] BA {ba_name} — SKU {gw_sku} not in DB'
+                ))
+                continue
+
+            unit, created = UnitType.objects.update_or_create(
+                product=product,
+                faction=ba_faction,
+                defaults={
+                    'name': ba_name,
+                    'category': role,
+                    'points_cost': 0,
+                    'typical_quantity': 1,
+                    'description': '',
+                    'is_active': True,
+                },
+            )
+            if created:
+                created_count += 1
+                self.stdout.write(f'  [new BA] [{role:15}] {ba_name}')
+            else:
+                updated_count += 1
+
+        for gw_sku, name_filter, ba_name, role in BA_SKU_COLLISION:
+            product = Product.objects.filter(
+                gw_sku=gw_sku, name__icontains=name_filter
+            ).first()
+            if not product:
+                self.stdout.write(self.style.WARNING(
+                    f'  [skip] BA {ba_name} — SKU {gw_sku} ({name_filter}) not in DB'
+                ))
+                continue
+
+            unit, created = UnitType.objects.update_or_create(
+                product=product,
+                faction=ba_faction,
+                defaults={
+                    'name': ba_name,
+                    'category': role,
+                    'points_cost': 0,
+                    'typical_quantity': 1,
+                    'description': '',
+                    'is_active': True,
+                },
+            )
+            if created:
+                created_count += 1
+                self.stdout.write(f'  [new BA] [{role:15}] {ba_name}')
+            else:
+                updated_count += 1
+
+        self.stdout.write(
+            f'  BA cross-faction — Created: {created_count}  |  Updated: {updated_count}'
+        )
+
+    def _create_dark_angels_cross_faction_units(self):
+        """
+        Create Dark Angels-specific UnitType rows for generic Space Marines
+        products that Dark Angels can also field.
+
+        Dark Angels have unique units (Deathwing, Ravenwing) handled by
+        _create_unit_types() already. This method adds DA-faction UnitType
+        rows for the shared SM range so points can be tracked independently.
+        Points are initialised to 0; run seed_dark_angels_points afterwards.
+        """
+        self.stdout.write('\nCreating Dark Angels cross-faction unit types…')
+
+        da_faction = Faction.objects.filter(name='Dark Angels').first()
+        if not da_faction:
+            self.stdout.write(self.style.WARNING(
+                '  Dark Angels faction not found — skipping cross-faction units. '
+                'Run populate_products first.'
+            ))
+            return
+
+        # (gw_sku, da_unit_name, role)
+        DA_CROSS_FACTION = [
+            # ── Battleline ───────────────────────────────────────────────────
+            ('48-76', 'Assault Intercessor Squad',    'battleline'),
+            ('48-75', 'Intercessor Squad',             'battleline'),
+            ('48-29', 'Scout Squad',                   'battleline'),
+            ('48-45', 'Infernus Squad',                'battleline'),
+            # ── Infantry ─────────────────────────────────────────────────────
+            ('48-92', 'Aggressor Squad',               'infantry'),
+            ('48-38', 'Bladeguard Veteran Squad',      'infantry'),
+            ('48-15', 'Devastator Squad',              'infantry'),
+            ('48-98', 'Eliminator Squad',              'infantry'),
+            ('48-39', 'Eradicator Squad',              'infantry'),
+            ('48-96', 'Incursor Squad',                'infantry'),
+            ('48-41', 'Infiltrator Squad',             'infantry'),
+            ('48-43', 'Sternguard Veteran Squad',      'infantry'),
+            ('48-08', 'Vanguard Veteran Squad',        'infantry'),
+            ('48-06', 'Terminator Squad',              'infantry'),
+            # ── Characters ───────────────────────────────────────────────────
+            ('48-33', 'Apothecary',                   'character'),
+            ('48-34', 'Ancient',                      'character'),
+            ('48-30', 'Librarian',                    'character'),
+            ('48-32', 'Chaplain',                     'character'),
+            ('48-36', 'Judiciar',                     'character'),
+            ('48-61', 'Lieutenant',                   'character'),
+            ('48-62', 'Captain',                      'character'),
+            ('48-37', 'Company Heroes',               'character'),
+            # ── Mounted / Fast Attack ─────────────────────────────────────────
+            ('48-40', 'Outrider Squad',               'mounted'),
+            ('48-42', 'Invader ATV',                  'mounted'),
+            ('48-97', 'Inceptor Squad',               'mounted'),
+            ('48-99', 'Suppressor Squad',             'mounted'),
+            # ── Vehicles ─────────────────────────────────────────────────────
+            ('48-46', 'Ballistus Dreadnought',        'vehicle'),
+            ('48-44', 'Brutalis Dreadnought',         'vehicle'),
+            ('48-93', 'Redemptor Dreadnought',        'vehicle'),
+            ('48-23', 'Predator Destructor',          'vehicle'),
+            ('48-25', 'Whirlwind',                    'vehicle'),
+            ('48-26', 'Vindicator',                   'vehicle'),
+            ('48-95', 'Repulsor Executioner',         'vehicle'),
+            # ── Transports ───────────────────────────────────────────────────
+            ('48-94', 'Impulsor',                     'transport'),
+            ('48-85', 'Repulsor',                     'transport'),
+            ('48-21', 'Land Raider',                  'transport'),
+            ('48-22', 'Land Raider Crusader',         'transport'),
+            # ── Fortifications ───────────────────────────────────────────────
+            ('48-27', 'Hammerfall Bunker',            'fortification'),
+            ('48-28', 'Firestrike Servo-Turrets',     'fortification'),
+        ]
+
+        DA_SKU_COLLISION = [
+            ('48-07', 'Tactical',   'Tactical Squad',           'infantry'),
+            ('48-07', 'Terminator', 'Terminator Assault Squad', 'infantry'),
+        ]
+
+        created_count = 0
+        updated_count = 0
+
+        for gw_sku, da_name, role in DA_CROSS_FACTION:
+            product = Product.objects.filter(gw_sku=gw_sku).first()
+            if not product:
+                self.stdout.write(self.style.WARNING(
+                    f'  [skip] DA {da_name} — SKU {gw_sku} not in DB'
+                ))
+                continue
+
+            unit, created = UnitType.objects.update_or_create(
+                product=product,
+                faction=da_faction,
+                defaults={
+                    'name': da_name,
+                    'category': role,
+                    'points_cost': 0,
+                    'typical_quantity': 1,
+                    'description': '',
+                    'is_active': True,
+                },
+            )
+            if created:
+                created_count += 1
+                self.stdout.write(f'  [new DA] [{role:15}] {da_name}')
+            else:
+                updated_count += 1
+
+        for gw_sku, name_filter, da_name, role in DA_SKU_COLLISION:
+            product = Product.objects.filter(
+                gw_sku=gw_sku, name__icontains=name_filter
+            ).first()
+            if not product:
+                self.stdout.write(self.style.WARNING(
+                    f'  [skip] DA {da_name} — SKU {gw_sku} ({name_filter}) not in DB'
+                ))
+                continue
+
+            unit, created = UnitType.objects.update_or_create(
+                product=product,
+                faction=da_faction,
+                defaults={
+                    'name': da_name,
+                    'category': role,
+                    'points_cost': 0,
+                    'typical_quantity': 1,
+                    'description': '',
+                    'is_active': True,
+                },
+            )
+            if created:
+                created_count += 1
+                self.stdout.write(f'  [new DA] [{role:15}] {da_name}')
+            else:
+                updated_count += 1
+
+        self.stdout.write(
+            f'  DA cross-faction — Created: {created_count}  |  Updated: {updated_count}'
+        )
+
+    def _create_deathwatch_cross_faction_units(self):
+        """
+        Create Deathwatch-specific UnitType rows for generic Space Marines
+        products that Deathwatch can also field.
+
+        Deathwatch share the full Space Marines product range but have their
+        own detachment rules and one differing points cost (Chaplain 60pts vs
+        75pts Space Marines). Each DW row is independent — points are set to 0
+        here and populated by seed_deathwatch_points afterwards.
+        """
+        self.stdout.write('\nCreating Deathwatch cross-faction unit types…')
+
+        dw_faction = Faction.objects.filter(name='Deathwatch').first()
+        if not dw_faction:
+            self.stdout.write(self.style.WARNING(
+                '  Deathwatch faction not found — skipping cross-faction units. '
+                'Run populate_products first.'
+            ))
+            return
+
+        # (gw_sku, dw_unit_name, role)
+        # Generic SM kits that Deathwatch also field; DW-exclusive kits (39-xx)
+        # are already handled by _create_unit_types() via their own faction.
+        DW_CROSS_FACTION = [
+            # ── Battleline ───────────────────────────────────────────────────
+            ('48-76', 'Assault Intercessor Squad',    'battleline'),
+            ('48-75', 'Intercessor Squad',             'battleline'),
+            ('48-29', 'Scout Squad',                   'battleline'),
+            ('48-45', 'Infernus Squad',                'battleline'),
+            # ── Infantry ─────────────────────────────────────────────────────
+            ('48-92', 'Aggressor Squad',               'infantry'),
+            ('48-38', 'Bladeguard Veteran Squad',      'infantry'),
+            ('48-15', 'Devastator Squad',              'infantry'),
+            ('48-98', 'Eliminator Squad',              'infantry'),
+            ('48-39', 'Eradicator Squad',              'infantry'),
+            ('48-96', 'Incursor Squad',                'infantry'),
+            ('48-41', 'Infiltrator Squad',             'infantry'),
+            ('48-43', 'Sternguard Veteran Squad',      'infantry'),
+            ('48-08', 'Vanguard Veteran Squad',        'infantry'),
+            ('48-06', 'Terminator Squad',              'infantry'),
+            # ── Characters ───────────────────────────────────────────────────
+            ('48-33', 'Apothecary',                   'character'),
+            ('48-34', 'Ancient',                      'character'),
+            ('48-30', 'Librarian',                    'character'),
+            ('48-32', 'Chaplain',                     'character'),
+            ('48-36', 'Judiciar',                     'character'),
+            ('48-61', 'Lieutenant',                   'character'),
+            ('48-62', 'Captain',                      'character'),
+            ('48-37', 'Company Heroes',               'character'),
+            # ── Mounted / Fast Attack ─────────────────────────────────────────
+            ('48-40', 'Outrider Squad',               'mounted'),
+            ('48-42', 'Invader ATV',                  'mounted'),
+            ('48-97', 'Inceptor Squad',               'mounted'),
+            ('48-99', 'Suppressor Squad',             'mounted'),
+            # ── Vehicles ─────────────────────────────────────────────────────
+            ('48-46', 'Ballistus Dreadnought',        'vehicle'),
+            ('48-44', 'Brutalis Dreadnought',         'vehicle'),
+            ('48-93', 'Redemptor Dreadnought',        'vehicle'),
+            ('48-23', 'Predator Destructor',          'vehicle'),
+            ('48-25', 'Whirlwind',                    'vehicle'),
+            ('48-26', 'Vindicator',                   'vehicle'),
+            ('48-95', 'Repulsor Executioner',         'vehicle'),
+            # ── Transports ───────────────────────────────────────────────────
+            ('48-94', 'Impulsor',                     'transport'),
+            ('48-85', 'Repulsor',                     'transport'),
+            ('48-21', 'Land Raider',                  'transport'),
+            ('48-22', 'Land Raider Crusader',         'transport'),
+            # ── Fortifications ───────────────────────────────────────────────
+            ('48-27', 'Hammerfall Bunker',            'fortification'),
+            ('48-28', 'Firestrike Servo-Turrets',     'fortification'),
+        ]
+
+        # Handle 48-07 SKU collision (Tactical Squad + Terminator Assault Squad)
+        DW_SKU_COLLISION = [
+            ('48-07', 'Tactical',   'Tactical Squad',           'infantry'),
+            ('48-07', 'Terminator', 'Terminator Assault Squad', 'infantry'),
+        ]
+
+        created_count = 0
+        updated_count = 0
+
+        for gw_sku, dw_name, role in DW_CROSS_FACTION:
+            product = Product.objects.filter(gw_sku=gw_sku).first()
+            if not product:
+                self.stdout.write(self.style.WARNING(
+                    f'  [skip] DW {dw_name} — SKU {gw_sku} not in DB'
+                ))
+                continue
+
+            unit, created = UnitType.objects.update_or_create(
+                product=product,
+                faction=dw_faction,
+                defaults={
+                    'name': dw_name,
+                    'category': role,
+                    'points_cost': 0,
+                    'typical_quantity': 1,
+                    'description': '',
+                    'is_active': True,
+                },
+            )
+            if created:
+                created_count += 1
+                self.stdout.write(f'  [new DW] [{role:15}] {dw_name}')
+            else:
+                updated_count += 1
+
+        for gw_sku, name_filter, dw_name, role in DW_SKU_COLLISION:
+            product = Product.objects.filter(
+                gw_sku=gw_sku, name__icontains=name_filter
+            ).first()
+            if not product:
+                self.stdout.write(self.style.WARNING(
+                    f'  [skip] DW {dw_name} — SKU {gw_sku} ({name_filter}) not in DB'
+                ))
+                continue
+
+            unit, created = UnitType.objects.update_or_create(
+                product=product,
+                faction=dw_faction,
+                defaults={
+                    'name': dw_name,
+                    'category': role,
+                    'points_cost': 0,
+                    'typical_quantity': 1,
+                    'description': '',
+                    'is_active': True,
+                },
+            )
+            if created:
+                created_count += 1
+                self.stdout.write(f'  [new DW] [{role:15}] {dw_name}')
+            else:
+                updated_count += 1
+
+        self.stdout.write(
+            f'  DW cross-faction — Created: {created_count}  |  Updated: {updated_count}'
         )

@@ -26,8 +26,17 @@ GW_IMAGES = {
     '01-10': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108013_CustodianVexWardens01.jpg',
     '01-11': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108014_VertusPraetors01.jpg',
     '01-20': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108094_ACCombatPatrol01.jpg',
+    '39-01': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108119_KTDeathwatch01.jpg',
+    '39-02': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108119_KTDeathwatch01.jpg',
+    '39-03': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108119_KTDeathwatch01.jpg',
+    '39-04': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108119_KTDeathwatch01.jpg',
+    '39-05': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108119_KTDeathwatch01.jpg',
     '39-06': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101284_SMBladeguardVeteransLeadUltramarines.jpg',
+    '39-07': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108119_KTDeathwatch01.jpg',
+    '39-08': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108119_KTDeathwatch01.jpg',
+    '39-09': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108119_KTDeathwatch01.jpg',
     '39-10': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108119_KTDeathwatch01.jpg',
+    '39-11': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108119_KTDeathwatch01.jpg',
     '40-01': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60040199167_ENGWH40kCoreRulebook1.jpg',
     '40-02': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60010199071_ENGKTStarterSet1.jpg',
     '40-03': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60010199058_ENGWH40kStarterSet2.jpg',
@@ -36,8 +45,15 @@ GW_IMAGES = {
     '40-21': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102041_LordofSkulls01.jpg',
     '41-02': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101266_BAMephistonLordofDeath01.jpg',
     '41-03': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101419_BAAstorathTheGrim01.jpg',
+    '41-04': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101419_BAAstorathTheGrim01.jpg',
+    '41-05': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101419_BAAstorathTheGrim01.jpg',
     '41-06': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101413_BASanguinaryGuard01.jpg',
     '41-07': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60030101063_EngBACodex01.jpg',
+    '41-08': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101419_BAAstorathTheGrim01.jpg',
+    '41-09': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101419_BAAstorathTheGrim01.jpg',
+    '41-10': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101413_BASanguinaryGuard01.jpg',
+    '41-11': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99070101007_BATerminatorLib01.jpg',
+    '41-12': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60030101063_EngBACodex01.jpg',
     '41-15': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99070101007_BATerminatorLib01.jpg',
     '43-02': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99560102260_MagnustheRed01.jpg',
     '43-03': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99560102202_MortariontheReaper01.jpg',
@@ -61,8 +77,21 @@ GW_IMAGES = {
     '43-90': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102195_TSCombatPatrol01.jpg',
     '43-95': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102196_WorldEatersCombatPatrol1.jpg',
     '44-02': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99060101326_EzekielUpdate2.jpg',
+    '44-03': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99060101326_EzekielUpdate2.jpg',
+    '44-04': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99060101326_EzekielUpdate2.jpg',
+    '44-05': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60010101006_EngDADeathwingAssault04.jpg',
+    '44-06': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99060101326_EzekielUpdate2.jpg',
+    '44-07': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99060101326_EzekielUpdate2.jpg',
+    '44-08': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101097_RavenwingCommand01.jpg',
+    '44-09': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101097_RavenwingCommand01.jpg',
     '44-10': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60010101006_EngDADeathwingAssault04.jpg',
+    '44-11': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60010101006_EngDADeathwingAssault04.jpg',
     '44-12': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101097_RavenwingCommand01.jpg',
+    '44-13': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60010101006_EngDADeathwingAssault04.jpg',
+    '44-14': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101097_RavenwingCommand01.jpg',
+    '44-15': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101097_RavenwingCommand01.jpg',
+    '44-16': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101097_RavenwingCommand01.jpg',
+    '44-17': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101097_RavenwingCommand01.jpg',
     '44-20': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101406_DACP2.jpg',
     '45-02': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112060_DrukhariArchon1.jpg',
     '45-06': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112057_DRUCombatPatrol01.jpg',
@@ -178,6 +207,12 @@ GW_IMAGES = {
     '55-20': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101351_CrusaderSquadLead.jpg',
     '55-21': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101363_BTHighMarshalHelbrechtLead.jpg',
     '55-22': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101366_EmperorsChampionLead.jpg',
+    '55-23': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101351_CrusaderSquadLead.jpg',
+    '55-24': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101363_BTHighMarshalHelbrechtLead.jpg',
+    '55-25': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101366_EmperorsChampionLead.jpg',
+    '55-26': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101366_EmperorsChampionLead.jpg',
+    '55-27': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101363_BTHighMarshalHelbrechtLead.jpg',
+    '55-28': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101363_BTHighMarshalHelbrechtLead.jpg',
     '55-30': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101428_BlackTemplarsCombatPatrol1.jpg',
     '56-06': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120113039_TauBreacherTeam01.jpg',
     '56-10': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120113028_TauHammerhead01.jpg',
@@ -201,6 +236,14 @@ GW_IMAGES = {
     '59-18': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120116006_AdMechBattleServitorsDestroyers01.jpg',
     '59-20': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120116009_AdMechCorpuscariiElectroPriests01.jpg',
     '59-25': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120116044_AMCombatPatrol01.jpg',
+    # Imperial Knights (54-xx) and Cerastus / Horus Heresy Knights (31-xx)
+    '54-15': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108055_KnightPreceptorCanisRex01.jpg',
+    '54-20': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108049_ArmigerWarglaivesNEW01.jpg',
+    '54-21': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108052_KnightDominus01.jpg',
+    '54-22': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108129_KnightQuestoris01.jpg',
+    '31-06': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120308068_CerastusKnightLancer01.jpg',
+    '31-66': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120308086_CerastusKnightCastigator01.jpg',
+    '31-67': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120308087_CerastusKnightAcheron01.jpg',
     '71-02': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60010199067_WH40kUltimateStarterSet2.jpg',
     '71-06': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102190_CSMCP1.jpg',
     '71-18': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120103115_OrkCP2.jpg',
@@ -338,6 +381,11 @@ class Command(BaseCommand):
 
     help = 'Populate database with sample Warhammer products and prices for testing.'
 
+    # Expected record counts — update these if you add new products/retailers.
+    EXPECTED_PRODUCTS  = 92
+    EXPECTED_RETAILERS = 4
+    EXPECTED_PRICES    = 236
+
     def add_arguments(self, parser):
         """Register command-line arguments."""
         parser.add_argument(
@@ -345,9 +393,34 @@ class Command(BaseCommand):
             action='store_true',
             help='Delete all existing products, categories, factions, retailers, and prices first.',
         )
+        parser.add_argument(
+            '--skip-if-current',
+            action='store_true',
+            help=(
+                'Exit immediately (no DB writes) when the expected number of products, '
+                'retailers and prices are already present. Speeds up routine deploys.'
+            ),
+        )
 
     def handle(self, *args, **options):
         """Entry point: orchestrate all seed data creation."""
+        # Fast-path: bail early when the DB already has the expected seed data.
+        if options.get('skip_if_current') and not options.get('clear'):
+            product_count  = Product.objects.count()
+            retailer_count = Retailer.objects.count()
+            price_count    = CurrentPrice.objects.count()
+            if (
+                product_count  >= self.EXPECTED_PRODUCTS
+                and retailer_count >= self.EXPECTED_RETAILERS
+                and price_count    >= self.EXPECTED_PRICES
+            ):
+                self.stdout.write(self.style.SUCCESS(
+                    f'populate_products: DB already seeded '
+                    f'({product_count} products, {retailer_count} retailers, '
+                    f'{price_count} prices) — skipping.'
+                ))
+                return
+
         if options['clear']:
             self.stdout.write('Clearing existing data…')
             CurrentPrice.objects.all().delete()
@@ -435,6 +508,10 @@ class Command(BaseCommand):
             ('Leagues of Votann', 'Warhammer 40,000'),
             ('Custodes', 'Warhammer 40,000'),
             ('Sisters of Battle', 'Warhammer 40,000'),
+            ('Imperial Knights', 'Warhammer 40,000'),
+            ('Adepta Sororitas', 'Warhammer 40,000'),
+            ('Adeptus Custodes', 'Warhammer 40,000'),
+            ('Agents of the Imperium', 'Warhammer 40,000'),
             # ── Age of Sigmar ──
             ('Stormcast Eternals', 'Age of Sigmar'),
             ('Skaven', 'Age of Sigmar'),
@@ -1074,6 +1151,34 @@ class Command(BaseCommand):
              '41-03', decimal.Decimal('27.50'),
              'The High Chaplain of the Blood Angels, who seeks out those lost '
              'to the Black Rage and grants them the Emperor\'s mercy in battle.'),
+            ('Blood Angels Commander Dante', 'Warhammer 40,000', 'Blood Angels',
+             '41-04', decimal.Decimal('32.50'),
+             'The oldest living Space Marine, Lord Commander of Imperium Nihilus '
+             'and Chapter Master of the Blood Angels, armed with the Axe Mortalis.'),
+            ('Blood Angels Lemartes', 'Warhammer 40,000', 'Blood Angels',
+             '41-05', decimal.Decimal('27.50'),
+             'Guardian of the Lost — a Blood Angels Chaplain who succumbed to '
+             'the Black Rage yet retains his will, leading the Death Company.'),
+            ('Blood Angels The Sanguinor', 'Warhammer 40,000', 'Blood Angels',
+             '41-08', decimal.Decimal('27.50'),
+             'A mysterious golden figure who appears when the Blood Angels are '
+             'at their darkest hour, embodying the spirit of their lost Primarch.'),
+            ('Blood Angels Sanguinary Priest', 'Warhammer 40,000', 'Blood Angels',
+             '41-09', decimal.Decimal('27.50'),
+             'A warrior-healer of the Blood Angels who bears the Blood Chalice '
+             'and grants nearby brothers powerful combat blessings.'),
+            ('Blood Angels Baal Predator', 'Warhammer 40,000', 'Blood Angels',
+             '41-10', decimal.Decimal('57.50'),
+             'A fast, assault-oriented variant of the Predator tank unique to '
+             'the Blood Angels, armed with twin baal flamestorm cannons.'),
+            ('Blood Angels Death Company Dreadnought', 'Warhammer 40,000', 'Blood Angels',
+             '41-11', decimal.Decimal('60.00'),
+             'A dreadnought piloted by a Blood Angel lost to the Black Rage, '
+             'channelling unbridled fury through its massive fists and weapons.'),
+            ('Blood Angels Death Company Marines with Jump Packs', 'Warhammer 40,000', 'Blood Angels',
+             '41-12', decimal.Decimal('40.00'),
+             'Five Death Company warriors equipped with jump packs, plunging '
+             'into melee with reckless, terrifying abandon and no fear of death.'),
 
             # ================================================================
             # DARK ANGELS
@@ -1094,6 +1199,58 @@ class Command(BaseCommand):
              '44-20', decimal.Decimal('105.00'),
              'A ready-to-play Dark Angels Combat Patrol: Primaris Lieutenant, '
              'Intercessors, Outriders, and a Redemptor Dreadnought.'),
+            ('Dark Angels Asmodai', 'Warhammer 40,000', 'Dark Angels',
+             '44-03', decimal.Decimal('27.50'),
+             'The Dark Angels Master Interrogator-Chaplain, who bears the Blades '
+             'of Reason and has broken the will of countless Fallen.'),
+            ('Dark Angels Azrael', 'Warhammer 40,000', 'Dark Angels',
+             '44-04', decimal.Decimal('35.00'),
+             'Supreme Grand Master of the Dark Angels Chapter, bearer of the '
+             'Sword of Secrets and Lion\'s Wrath, leading the hunt for the Fallen.'),
+            ('Dark Angels Belial', 'Warhammer 40,000', 'Dark Angels',
+             '44-05', decimal.Decimal('27.50'),
+             'Grand Master of the Deathwing, who leads the elite Terminator '
+             'warriors of the Dark Angels\' first company into battle.'),
+            ('Dark Angels Lion El\'Jonson', 'Warhammer 40,000', 'Dark Angels',
+             '44-06', decimal.Decimal('65.00'),
+             'The Primarch of the Dark Angels, the Lion returned from his '
+             'slumber, wielding Arma Luminis and the sword Fealty.'),
+            ('Dark Angels Lazarus', 'Warhammer 40,000', 'Dark Angels',
+             '44-07', decimal.Decimal('27.50'),
+             'Master of the 5th Company, who cheated death itself and returned '
+             'to lead his brothers armed with the power sword Enmity\'s Edge.'),
+            ('Dark Angels Sammael', 'Warhammer 40,000', 'Dark Angels',
+             '44-08', decimal.Decimal('35.00'),
+             'Grand Master of the Ravenwing, who rides his jetbike Corvex into '
+             'battle with his plasma cannon and the Raven Sword.'),
+            ('Dark Angels Ravenwing Command Squad', 'Warhammer 40,000', 'Dark Angels',
+             '44-09', decimal.Decimal('47.50'),
+             'Three elite Ravenwing bikers — an Ancient, Apothecary, and Champion '
+             '— forming the command element of the Dark Angels\' second company.'),
+            ('Dark Angels Deathwing Terminator Squad', 'Warhammer 40,000', 'Dark Angels',
+             '44-11', decimal.Decimal('55.00'),
+             'Five elite Deathwing Terminators in bone-white armour, armed with '
+             'storm bolters and power fists, hunting the Fallen across the galaxy.'),
+            ('Dark Angels Inner Circle Companions', 'Warhammer 40,000', 'Dark Angels',
+             '44-13', decimal.Decimal('47.50'),
+             'Three elite inner circle warriors armed with Calibanite greatswords, '
+             'serving as the personal guard of senior Dark Angels officers.'),
+            ('Dark Angels Ravenwing Dark Talon', 'Warhammer 40,000', 'Dark Angels',
+             '44-14', decimal.Decimal('57.50'),
+             'A unique Ravenwing flyer armed with a rift cannon and hurricane '
+             'bolters, capable of tearing holes in reality itself.'),
+            ('Dark Angels Ravenwing Darkshroud', 'Warhammer 40,000', 'Dark Angels',
+             '44-15', decimal.Decimal('47.50'),
+             'A Land Speeder variant that projects a shroud of darkness, '
+             'granting nearby Dark Angels a protective cover save.'),
+            ('Dark Angels Land Speeder Vengeance', 'Warhammer 40,000', 'Dark Angels',
+             '44-16', decimal.Decimal('47.50'),
+             'A Dark Angels Land Speeder armed with a plasma storm battery, '
+             'delivering devastating plasma fire across the battlefield.'),
+            ('Dark Angels Nephilim Jetfighter', 'Warhammer 40,000', 'Dark Angels',
+             '44-17', decimal.Decimal('57.50'),
+             'A fast jet fighter armed with an avenger mega bolter and blacksword '
+             'missiles, hunting enemy aircraft across war-torn skies.'),
 
             # ================================================================
             # SPACE WOLVES
@@ -1138,6 +1295,30 @@ class Command(BaseCommand):
              '55-30', decimal.Decimal('105.00'),
              'A Black Templars Combat Patrol featuring Marshal, Sword Brethren, '
              'Crusader Squad, and a Redemptor Dreadnought.'),
+            ('Black Templars Sword Brethren', 'Warhammer 40,000', 'Black Templars',
+             '55-23', decimal.Decimal('52.50'),
+             'Five elite Black Templars veterans in ornate armour, sworn to serve '
+             'their Marshal unto death. Armed with a wide variety of weaponry.'),
+            ('Black Templars Chaplain Grimaldus', 'Warhammer 40,000', 'Black Templars',
+             '55-24', decimal.Decimal('27.50'),
+             'The Hero of Helsreach — a legendary Black Templars Chaplain who held '
+             'the line against impossible odds, accompanied by his Cenobyte Servitors.'),
+            ('Black Templars Castellan', 'Warhammer 40,000', 'Black Templars',
+             '55-25', decimal.Decimal('27.50'),
+             'A battle-hardened Black Templars officer who leads crusader squads '
+             'with relentless zeal and iron tactical discipline.'),
+            ('Black Templars Execrator', 'Warhammer 40,000', 'Black Templars',
+             '55-26', decimal.Decimal('30.00'),
+             'A fearsome Black Templars champion who hunts psykers and sorcerers '
+             'across the galaxy, purging the taint of the warp with righteous fury.'),
+            ('Black Templars Crusade Ancient', 'Warhammer 40,000', 'Black Templars',
+             '55-27', decimal.Decimal('27.50'),
+             'A Black Templars Standard Bearer who carries a sacred crusade banner '
+             'into battle, inspiring nearby warriors to feats of extraordinary valour.'),
+            ('Black Templars Marshal', 'Warhammer 40,000', 'Black Templars',
+             '55-28', decimal.Decimal('30.00'),
+             'The commander of a Black Templars crusade force, a Marshal leads from '
+             'the front with consummate skill and unshakeable faith in the Emperor.'),
 
             # ================================================================
             # GREY KNIGHTS
@@ -1174,6 +1355,42 @@ class Command(BaseCommand):
              '39-06', decimal.Decimal('45.00'),
              'Five Deathwatch Veterans with extensive bespoke wargear options '
              'including frag cannons, infernus heavy bolters, and xenophase blades.'),
+            ('Watch Captain Artemis', 'Warhammer 40,000', 'Deathwatch',
+             '39-01', decimal.Decimal('27.50'),
+             'Watch Captain Artemis, veteran of the Long Watch, bears his famed '
+             'master-crafted bolt pistol and omniscope into battle.'),
+            ('Deathwatch Watch Master', 'Warhammer 40,000', 'Deathwatch',
+             '39-02', decimal.Decimal('27.50'),
+             'A Watch Master leads his kill team in the eternal vigil, wielding '
+             'a guardian spear and the enigmatic Vigil Spear.'),
+            ('Deathwatch Decimus Kill Team', 'Warhammer 40,000', 'Deathwatch',
+             '39-03', decimal.Decimal('47.50'),
+             'A specialised Deathwatch kill team adept at eliminating heavily '
+             'armoured targets with bolter drill and frag cannon.'),
+            ('Corvus Blackstar', 'Warhammer 40,000', 'Deathwatch',
+             '39-04', decimal.Decimal('57.50'),
+             'The Deathwatch\'s dedicated gunship, bristling with storm bolters, '
+             'lascannons, and infernum halo launchers.'),
+            ('Deathwatch Terminator Squad', 'Warhammer 40,000', 'Deathwatch',
+             '39-05', decimal.Decimal('55.00'),
+             'Elite Deathwatch warriors in Terminator armour, equipped with cyclone '
+             'missile launchers and thunder hammers for the heaviest engagements.'),
+            ('Deathwatch Fortis Kill Team', 'Warhammer 40,000', 'Deathwatch',
+             '39-07', decimal.Decimal('52.50'),
+             'A Deathwatch kill team of Primaris Space Marines trained to engage '
+             'xenos threats across every range and terrain type.'),
+            ('Deathwatch Indomitor Kill Team', 'Warhammer 40,000', 'Deathwatch',
+             '39-08', decimal.Decimal('52.50'),
+             'A close-assault Deathwatch kill team specialising in shock tactics '
+             'and breaching operations.'),
+            ('Deathwatch Spectrus Kill Team', 'Warhammer 40,000', 'Deathwatch',
+             '39-09', decimal.Decimal('52.50'),
+             'A stealth-focused Deathwatch kill team equipped with suppressed weaponry '
+             'and advanced targeting optics.'),
+            ('Deathwatch Talonstrike Kill Team', 'Warhammer 40,000', 'Deathwatch',
+             '39-11', decimal.Decimal('52.50'),
+             'A Deathwatch kill team specialising in aerial insertion and rapid assault '
+             'against heavily defended xenos positions.'),
 
             # ================================================================
             # CUSTODES
@@ -1406,6 +1623,52 @@ class Command(BaseCommand):
              '59-25', decimal.Decimal('105.00'),
              'An Adeptus Mechanicus Combat Patrol: Tech-Priest Manipulus, '
              'Skitarii Rangers, Sicarian Infiltrators, and a Dunecrawler.'),
+
+            # ================================================================
+            # IMPERIAL KNIGHTS
+            # ================================================================
+            # 54-22 Knight Questoris: builds Paladin, Errant, Gallant, Warden,
+            #   Crusader, or Defender (released September 2025). Single multi-build kit.
+            # 54-15 Knight Preceptor / Canis Rex: builds Preceptor or Canis Rex
+            #   (named character). Also builds standard Questoris variants.
+            #   Preceptor and Canis Rex can ONLY be built from this kit, not 54-22.
+            # 54-21 Knight Dominus: builds Castellan or Valiant (consolidated kit).
+            # 54-20 Knight Armigers: builds 2x Warglaive OR 2x Helverin.
+            # 31-06 / 31-66 / 31-67: Cerastus Knights — Horus Heresy plastic kits,
+            #   usable in Warhammer 40,000. Each kit builds one variant only.
+            # Forge World resin only (not stocked): Atrapos, Moirax, Acastus
+            #   Porphyrion/Asterius, Questoris Magaera/Styrix.
+            ('Imperial Knight Questoris', 'Warhammer 40,000', 'Imperial Knights',
+             '54-22', decimal.Decimal('115.00'),
+             'The standard Questoris-class Knight chassis, building the Knight Paladin, '
+             'Errant, Gallant, Warden, Crusader, or Defender — six variants from one kit.'),
+            ('Imperial Knight Preceptor / Canis Rex', 'Warhammer 40,000', 'Imperial Knights',
+             '54-15', decimal.Decimal('100.00'),
+             'Builds the Knight Preceptor or the legendary Canis Rex — the personal '
+             'Knight of Sir Hekhtur — plus standard Questoris variants. Includes on-foot '
+             'pilot model for Sir Hekhtur.'),
+            ('Imperial Knight Dominus', 'Warhammer 40,000', 'Imperial Knights',
+             '54-21', decimal.Decimal('118.00'),
+             'The towering Dominus-class Knight, building the Knight Castellan armed with '
+             'a volcano lance and plasma decimator, or the Knight Valiant bearing a '
+             'thundercoil harpoon and conflagration cannon.'),
+            ('Imperial Knight Armigers', 'Warhammer 40,000', 'Imperial Knights',
+             '54-20', decimal.Decimal('60.00'),
+             'Two Armiger-class Knights — lighter and faster than their Questoris cousins. '
+             'Builds two Armiger Warglaives (reaper chain-cleaver and thermal spear) or '
+             'two Armiger Helverins (twin autocannons) from one kit.'),
+            ('Cerastus Knight Lancer', 'Warhammer 40,000', 'Imperial Knights',
+             '31-06', decimal.Decimal('120.00'),
+             'The swift Cerastus Knight Lancer, armed with the devastating cerastus shock '
+             'lance. A Horus Heresy plastic kit fully compatible with Warhammer 40,000.'),
+            ('Cerastus Knight Castigator', 'Warhammer 40,000', 'Imperial Knights',
+             '31-66', decimal.Decimal('120.00'),
+             'The Cerastus Knight Castigator, bearing the castigator bolt cannon and '
+             'tempest warblade. A Horus Heresy plastic kit usable in Warhammer 40,000.'),
+            ('Cerastus Knight Acheron', 'Warhammer 40,000', 'Imperial Knights',
+             '31-67', decimal.Decimal('120.00'),
+             'The Cerastus Knight Acheron, armed with an acheron flame cannon and reaper '
+             'chainfist. A Horus Heresy plastic kit fully compatible with Warhammer 40,000.'),
 
             # ================================================================
             # GENESTEALER CULTS
