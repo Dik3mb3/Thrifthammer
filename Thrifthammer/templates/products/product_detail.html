@@ -145,30 +145,42 @@
         </thead>
         <tbody>
           {% for cp in current_prices %}
-          <tr{% if forloop.first and cp.in_stock %} class="cheapest"{% endif %}>
+          <tr{% if forloop.first and cp.in_stock and not cp.not_available %} class="cheapest"{% endif %}>
             <td style="font-weight:600;color:var(--text-primary);">{{ cp.retailer.name }}</td>
             <td class="price">
+              {% if cp.not_available %}
+              <span style="color:var(--text-muted);">—</span>
+              {% else %}
               ${{ cp.price|floatformat:"2" }}
               {% if forloop.first and cp.in_stock %}
               <span class="badge badge-green" style="margin-left:4px;">Best</span>
               {% endif %}
+              {% endif %}
             </td>
             <td>
-              {% if cp.discount_pct and cp.discount_pct > 0 %}
+              {% if cp.not_available %}
+              <span style="color:var(--text-muted);">—</span>
+              {% elif cp.discount_pct and cp.discount_pct > 0 %}
               <span class="badge badge-green">{{ cp.discount_pct }}% off</span>
               {% else %}
               <span style="color:var(--text-muted);">—</span>
               {% endif %}
             </td>
             <td>
-              {% if cp.in_stock %}
+              {% if cp.not_available %}
+              <span class="badge badge-red">Not Available</span>
+              {% elif cp.in_stock %}
               <span class="badge badge-green">In Stock</span>
               {% else %}
               <span class="badge badge-red">Out of Stock</span>
               {% endif %}
             </td>
             <td>
+              {% if cp.not_available %}
+              <span style="color:var(--text-muted);font-size:0.85rem;">Not Available</span>
+              {% else %}
               <a href="{{ cp.url }}" target="_blank" rel="noopener noreferrer sponsored" class="btn btn-primary btn-sm">Buy ↗</a>
+              {% endif %}
             </td>
           </tr>
           {% endfor %}

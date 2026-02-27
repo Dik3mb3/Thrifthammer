@@ -116,14 +116,19 @@ class MiniatureMarketScraper:
                 result = self._find_product(sku, product.name)
 
                 if result is None:
-                    # Not found on MM — remove stale price row if present
-                    deleted, _ = CurrentPrice.objects.filter(
-                        product=product, retailer=retailer
-                    ).delete()
-                    if deleted:
-                        logger.info('[removed]  %s — no longer on MM', product.name)
-                    else:
-                        logger.info('[skip]     %s — not on MM (SKU %s)', product.name, sku)
+                    # Not found on MM — record as not available, never skip
+                    CurrentPrice.objects.update_or_create(
+                        product=product,
+                        retailer=retailer,
+                        defaults={
+                            'price': None,
+                            'url': '',
+                            'in_stock': False,
+                            'not_available': True,
+                        },
+                    )
+                    logger.info('[n/a]      %s — not found on MM', product.name)
+                    job.prices_updated += 1
                 else:
                     price, in_stock, final_url = result
                     CurrentPrice.objects.update_or_create(
@@ -133,12 +138,13 @@ class MiniatureMarketScraper:
                             'price': price,
                             'url': final_url,
                             'in_stock': in_stock,
+                            'not_available': False,
                         },
                     )
                     stock_label = 'in stock' if in_stock else 'OUT OF STOCK'
                     logger.info(
-                        '[updated]  %s — $%.2f (%s) — %s',
-                        product.name, price, stock_label, final_url,
+                        '[updated]  %s — $%.2f (%s)',
+                        product.name, price, stock_label,
                     )
                     job.prices_updated += 1
 

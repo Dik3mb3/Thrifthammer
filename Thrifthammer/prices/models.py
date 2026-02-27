@@ -9,9 +9,13 @@ class CurrentPrice(models.Model):
     retailer = models.ForeignKey(
         'products.Retailer', on_delete=models.CASCADE, related_name='current_prices',
     )
-    price = models.DecimalField(max_digits=8, decimal_places=2)
-    url = models.URLField(help_text='Direct link to buy')
+    price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    url = models.URLField(help_text='Direct link to buy', blank=True, default='')
     in_stock = models.BooleanField(default=True)
+    not_available = models.BooleanField(
+        default=False,
+        help_text='True if this product is not carried by this retailer.',
+    )
     last_seen = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -19,6 +23,8 @@ class CurrentPrice(models.Model):
         ordering = ['price']
 
     def __str__(self):
+        if self.not_available:
+            return f"{self.product.name} @ {self.retailer.name}: NOT AVAILABLE"
         return f"{self.product.name} @ {self.retailer.name}: ${self.price:.2f}"
 
     @property
