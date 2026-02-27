@@ -13,6 +13,86 @@ from blog.models import Post, Tag
 
 POSTS = [
     {
+        'title': 'My Top 5 Warhammer Content Creators (and Why You Should Follow Them)',
+        'slug': 'top-5-warhammer-content-creators',
+        'excerpt': (
+            'From budget-friendly podcasts to elite competitive coaching, these are the '
+            'five Warhammer creators every hobbyist — casual or competitive — should know about.'
+        ),
+        'meta_title': 'Top 5 Warhammer Content Creators You Should Follow',
+        'meta_description': (
+            'Poorhammer, Goonhammer, 40k in 40 Minutes, Paul is Bad at Stuff, and Art of War — '
+            'the five Warhammer creators every hobbyist should follow in 2025.'
+        ),
+        'tags': ['Community', 'Content Creators', 'Podcasts', 'Competitive 40K', 'Budget Tips'],
+        'body': """<p>Let's be honest: Warhammer 40K has never been more popular, and the content creator scene has exploded. Between YouTube channels, podcasts, websites, and Discord servers, there's more Warhammer content than ever before.</p>
+
+<p>The following are my top 5 Warhammer creators that I genuinely think every hobbyist should check out — regardless of whether you are a casual or a competitive player.</p>
+
+<hr>
+
+<h2>#1: Poorhammer Podcast &mdash; <em>"My Personal Inspiration"</em></h2>
+
+<p>Poorhammer has a simple mission: make their community laugh. Hosts Brad and Eric have this incredible chemistry where they can discuss the most recent dataslate one minute and joke about meme armies they want to build next.</p>
+
+<p>These guys bring an extremely positive and hilarious energy to 40K unmatched by any creator in the space. They stress fun over competition — which is something I think most of us can stand behind. Episodes like <em>"The Four Horsemen of 9th Edition"</em> are hilarious breakdowns of the most broken units in recent memory, while their <em>"Meme Lists You Should Never Build"</em> series are always straight bangers.</p>
+
+<p>The best episodes have to be the ones focused on saving their community money. <em>"The $500 Army Challenge"</em>, <em>"Every Faction's Combat Patrol"</em>, and <em>"The Kitbashing Class"</em> were direct inspirations in creating <a href="https://thrifthammer.com">ThriftHammer.com</a>. While not every episode is my jam, there are no 40K podcasts I would put ahead of Poorhammer.</p>
+
+<hr>
+
+<h2>#2: Goonhammer &mdash; <em>"The Encyclopedia of Warhammer"</em></h2>
+<p><strong>Format:</strong> Website (<a href="https://www.goonhammer.com" target="_blank" rel="noopener">Goonhammer.com</a>)</p>
+
+<p>If Poorhammer is your fun friend who teaches you the game over beers, Goonhammer is the comprehensive textbook you probably need to read. Founded in 2018 by a group of former SomethingAwful forum posters, Goonhammer has become the definitive resource for the entire Games Workshop ecosystem.</p>
+
+<p>Goonhammer's archives stretch deep and you are in for hours of content for whatever Games Workshop game you are interested in. When I started Necromunda, Goonhammer was the first site I visited. When Bloodbowl Season 3 dropped, Goonhammer team guides kept me busy for hours building rosters for each team. For Warhammer, Goonhammer is the website for all gamers covering all parts of the hobby.</p>
+
+<p>My favourite Goonhammer article to this day remains <a href="https://www.goonhammer.com/to-all-the-armies-weve-loved-before/" target="_blank" rel="noopener">"To All the Armies We've Loved Before"</a> — a retrospective on armies let go by the panel of writers. I think many of us can sympathise, having had the experience of dropping a project or army at some point during our hobby journey. For newer players to any Warhammer-affiliated hobby, check out Goonhammer's faction and team guides — they are excellent resources for getting started.</p>
+
+<hr>
+
+<h2>#3: 40K in 40 Minutes (Play on Tabletop) &mdash; <em>"Battle Reports Done Right"</em></h2>
+
+<p>Battle reports are typically a slog. Three-hour videos where you can barely see what's happening, shaky camera work, confusing board states — we've all sat through bad ones. 40K in 40 Minutes figured out the perfect formula: tight editing, clear camera angles, great production value, and — most importantly — they're actually fun to watch.</p>
+
+<p>The Play on Tabletop crew may not be the most competitive players but there is a positive energy that sweeps through every game. Their reports move quickly and are punctuated with powerful narrative moments that leave a lasting impact. They are not the best resource for strategy or meta analysis, but they are unmatched in production quality and sheer watchability.</p>
+
+<p>My personal favourites are always the matchups featuring Nick or channel voice JT, who bring top-notch sportsmanship and charisma to every game. A recent highlight: <a href="https://youtu.be/jQZWfOJXU2c?si=eP4xDwpJKOP13q9d" target="_blank" rel="noopener">Nick vs Space Marine Steve</a>. Always look forward to new battle reports every week.</p>
+
+<hr>
+
+<h2>#4: Paul is Bad at Stuff &mdash; <em>"The Most Relatable"</em></h2>
+
+<p>Paul's channel name is <em>"Paul is Bad at Stuff"</em> — but here's the thing: Paul is actually pretty good at stuff. What makes his channel special isn't just the content, but how relatable he is to 99% of us gamers.</p>
+
+<p>In a hobby that can sometimes take itself way too seriously, Paul is just a guy who wants to play with his Centurions. His passion for such a mid unit (sorry Paul) is infectious. Paul is a great example of how winning at any cost isn't the point — winning on your own terms, using the models you love to paint and play, is what matters.</p>
+
+<p>My favourite series from him is <em>Hot Take Court</em>, a chaotic community-driven live stream that is pure entertainment. He is one of the most unique Warhammer content creators out there. High-end competitive players may not get much from Paul's content, but if you want refreshing and relatable hobby content, Paul is Bad at Stuff may be for you.</p>
+
+<hr>
+
+<h2>#5: Art of War 40K &mdash; <em>"The Competitive Deep End"</em></h2>
+
+<p>I was on the fence about including Art of War because I don't consider myself a competitive player — but Art of War is where you go if you're <em>serious</em> about competitive 40K. Founded by some of the best players in the world, they offer premium coaching, detailed strategy content, and a subscription service (The War Room) with hundreds of hours of advanced tactical analysis.</p>
+
+<p>Art of War assumes you already know how to play and want to master your faction. Their faction deep-dives are taught by players who've won majors with those armies. The focus is crystal clear: improving the level of competitive 40K worldwide.</p>
+
+<p>So why do I enjoy their content (specifically the free stuff)? Honestly, I enjoy competitive 40K the same way I enjoy competitive Starcraft 2 or the NBA. It's fascinating to see what separates top players from the rest of us, and what goes through the minds of pros when army-building or executing tactics. I have no desire to reach those competitive heights myself — but it's incredibly cool to listen to the best players in the world break it all down.</p>
+
+<p>If you're interested in competitive 40K or simply want to improve your game, Art of War is an excellent resource.</p>
+
+<hr>
+
+<h2>Honourable Mentions</h2>
+<ul>
+    <li><strong>Adeptus Ridiculous</strong> — Best Warhammer lore channel/podcast</li>
+    <li><strong>Bonehead Podcast</strong> (casual Bloodbowl) &amp; <strong>Andy Davo Bloodbowl</strong> (competitive Bloodbowl)</li>
+    <li><strong>Christian Von Carmian</strong> — Sisters of Battle / Genestealer Cult specialist channel</li>
+    <li><strong>Miniature Game Montage</strong> — Battle reports across various miniatures games</li>
+</ul>""",
+    },
+    {
         'title': '5 Warhammer Kit Hacks: How to Get More Minis for Your Money',
         'slug': '5-warhammer-kit-hacks-more-minis-for-your-money',
         'excerpt': (

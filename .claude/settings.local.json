@@ -33,7 +33,27 @@
       "Bash(powershell.exe -Command \"Set-Content ''C:/Users/khleu/ThriftHammer/build_gen_c5.ps1'' -Value ''Write-Host ok'' -Encoding UTF8\")",
       "Bash(echo:*)",
       "Bash(python3:*)",
-      "Bash(source:*)"
+      "Bash(source:*)",
+      "Bash(curl:*)",
+      "Bash(for i in 2 3 4 5 6)",
+      "Bash(do)",
+      "Bash(done)",
+      "Bash(dir \"C:\\\\Users\\\\khleu\\\\ThriftHammer\\\\Thrifthammer\\\\calculators\\\\management\\\\commands\"\")",
+      "Bash(findstr:*)",
+      "Bash(test:*)",
+      "Bash(ls \"C:\\\\Users\\\\khleu\\\\ThriftHammer\\\\Thrifthammer\\\\calculators\\\\management\\\\commands\"\" | findstr \"seed \")",
+      "Bash(dir:*)",
+      "WebFetch(domain:www.warhammer.com)",
+      "WebFetch(domain:sagaconcepts.com)",
+      "WebFetch(domain:www.discountgamesinc.com)",
+      "WebFetch(domain:www.forgeworld.co.uk)",
+      "WebFetch(domain:miniset.net)",
+      "WebFetch(domain:www.waylandgames.co.uk)",
+      "WebFetch(domain:www.wonderlandmodels.com)",
+      "WebFetch(domain:www.warhammer-community.com)",
+      "WebFetch(domain:elementgames.co.uk)",
+      "WebFetch(domain:www.games-workshop.com)",
+      "WebFetch(domain:www.bitsandkits.co.uk)"
     ]
   }
 }
