@@ -169,3 +169,9 @@ SCRAPER_USER_AGENT = os.environ.get(
     'Thrifthammer/1.0 (Warhammer Price Tracker)'
 )
 SCRAPER_REQUEST_DELAY = int(os.environ.get('SCRAPER_REQUEST_DELAY', '2'))
+
+# eBay API credentials — set in Railway environment variables
+# EBAY_APP_ID: App ID (Client ID) from developer.ebay.com
+# EBAY_CERT_ID: Cert ID (Client Secret) from developer.ebay.com
+EBAY_APP_ID = os.environ.get('EBAY_APP_ID', '')
+EBAY_CERT_ID = os.environ.get('EBAY_CERT_ID', '')
