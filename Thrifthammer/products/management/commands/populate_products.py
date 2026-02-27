@@ -383,7 +383,7 @@ class Command(BaseCommand):
 
     # Expected record counts — update these if you add new products/retailers.
     EXPECTED_PRODUCTS  = 92
-    EXPECTED_RETAILERS = 4
+    EXPECTED_RETAILERS = 5
     EXPECTED_PRICES    = 236
 
     def add_arguments(self, parser):
