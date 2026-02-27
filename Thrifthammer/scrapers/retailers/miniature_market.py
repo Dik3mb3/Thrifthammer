@@ -153,6 +153,10 @@ class MiniatureMarketScraper:
         """
         Fetch a single product page and extract price + stock status.
 
+        Miniature Market renders prices via JavaScript data layer JSON, so we
+        extract price from the raw HTML using regex against known JS patterns
+        rather than CSS selectors.
+
         Returns:
             (Decimal, bool) — (price, in_stock) if found
             None            — if the product is not listed (404 / redirect)
@@ -164,46 +168,73 @@ class MiniatureMarketScraper:
         except Exception as exc:
             raise RuntimeError(f'Network error fetching {url}: {exc}') from exc
 
-        # MM redirects to homepage or returns 404 for unknown SKUs
+        # MM returns 404 or redirects to homepage for unknown SKUs
         if response.status_code == 404:
             return None
         if response.status_code != 200:
             raise RuntimeError(f'HTTP {response.status_code} for {url}')
 
         # If redirected away from the product URL, SKU doesn't exist on MM
-        if 'gw-' + sku not in response.url:
+        if ('gw-' + sku.lower()) not in response.url.lower():
             return None
 
-        soup = BeautifulSoup(response.text, 'html.parser')
+        html = response.text
 
-        # ── Stock status ────────────────────────────────────────────────────
-        page_text = soup.get_text(separator=' ').lower()
-        in_stock = not any(phrase in page_text for phrase in OUT_OF_STOCK_PHRASES)
+        # ── Stock status ─────────────────────────────────────────────────────
+        # Check the JS data layer first: "availability":"in stock" / "out of stock"
+        stock_match = re.search(r'"availability"\s*:\s*"([^"]+)"', html, re.IGNORECASE)
+        if stock_match:
+            in_stock = 'out of stock' not in stock_match.group(1).lower()
+        else:
+            # Fallback: scan visible page text
+            soup = BeautifulSoup(html, 'html.parser')
+            page_text = soup.get_text(separator=' ').lower()
+            in_stock = not any(phrase in page_text for phrase in OUT_OF_STOCK_PHRASES)
 
-        # ── Price ───────────────────────────────────────────────────────────
+        # ── Price ─────────────────────────────────────────────────────────────
         price = None
 
-        for selector in PRICE_SELECTORS:
-            el = soup.select_one(selector)
-            if el:
-                raw = el.get_text(strip=True)
-                # Strip currency symbols and commas: "$53.99" → "53.99"
-                cleaned = re.sub(r'[^\d.]', '', raw)
-                if cleaned:
-                    try:
-                        price = Decimal(cleaned)
-                        break
-                    except InvalidOperation:
-                        continue
+        # Strategy 1: JS data layer — "productPrice":"53.99"
+        match = re.search(r'"productPrice"\s*:\s*"?([\d.]+)"?', html)
+        if match:
+            try:
+                price = Decimal(match.group(1))
+            except InvalidOperation:
+                pass
 
-        # Fallback: search for any text matching a price pattern
+        # Strategy 2: gtag / GA4 ecommerce — "price":53.99
         if price is None:
-            match = re.search(r'\$\s*(\d{1,4}\.\d{2})', response.text)
+            match = re.search(r'"price"\s*:\s*([\d.]+)', html)
+            if match:
+                try:
+                    candidate = Decimal(match.group(1))
+                    # Sanity check — GW products are between $5 and $1000
+                    if 5 <= candidate <= 1000:
+                        price = candidate
+                except InvalidOperation:
+                    pass
+
+        # Strategy 3: meta tag — <meta itemprop="price" content="53.99">
+        if price is None:
+            match = re.search(r'itemprop=["\']price["\'][^>]*content=["\']([^"\']+)["\']', html)
+            if not match:
+                match = re.search(r'content=["\']([^"\']+)["\'][^>]*itemprop=["\']price["\']', html)
             if match:
                 try:
                     price = Decimal(match.group(1))
                 except InvalidOperation:
                     pass
+
+        # Strategy 4: last resort — first $ price in reasonable range on the page
+        if price is None:
+            for m in re.finditer(r'\$\s*(\d{1,4}\.\d{2})', html):
+                try:
+                    candidate = Decimal(m.group(1))
+                    if 5 <= candidate <= 1000:
+                        price = candidate
+                        break
+                except InvalidOperation:
+                    continue
 
         if price is None or price <= 0:
             raise RuntimeError(f'Could not extract price from {url}')
