@@ -161,28 +161,130 @@ class MiniatureMarketScraper:
 
     def _find_product(self, sku, name):
         """
-        Try to locate the MM product page for a given SKU + name.
+        Locate the correct MM product page for a given SKU + name.
+
+        Priority order:
+          1. Name search — search MM by product name, then within results
+             prefer: (a) name AND SKU both match, (b) name match only,
+             (c) SKU match only.
+          2. Direct SKU URL fallback — try gw-{SKU}.html if search finds
+             nothing at all (some products aren't indexed in MM search).
 
         Returns:
             (Decimal, bool, str) — (price, in_stock, url) if found
             None                 — if not listed on MM
         """
-        # Step 1: direct SKU URL
-        direct_url = self.base_url.format(sku=sku)
-        result = self._try_direct_url(direct_url, sku)
+        # Step 1: name-based search (primary)
+        result = self._try_name_search(sku, name)
         if result is not None:
             return result
 
-        # Step 2: name-based search fallback
+        # Step 2: direct SKU URL fallback
         time.sleep(self.delay)
-        return self._try_name_search(sku, name)
+        return self._try_direct_url(sku)
 
-    def _try_direct_url(self, url, sku):
+    def _try_name_search(self, sku, name):
         """
-        Fetch the gw-{SKU}.html URL and verify the item_id matches.
+        Search MM by product name and score each result.
+
+        Scoring per result page:
+          +2  product name contains our search name (case-insensitive)
+          +1  item_id matches our SKU
+          Best score wins. Must score >= 1 to be accepted.
 
         Returns (price, in_stock, url) or None.
         """
+        search_name = self._clean_search_name(name)
+        search_url = SEARCH_URL.format(query=quote_plus(search_name))
+
+        try:
+            response = self.session.get(search_url, timeout=15)
+        except Exception as exc:
+            raise RuntimeError(f'Search request failed for "{search_name}": {exc}') from exc
+
+        if response.status_code != 200:
+            return None
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Collect product page links from search results
+        product_links = []
+        for a in soup.select('.product-item-link, .product-item-name a, a.product-item-photo'):
+            href = a.get('href', '')
+            if href and href.endswith('.html'):
+                product_links.append(href)
+        # Also catch any GW-prefixed links
+        for a in soup.select('a[href*="/gw-"]'):
+            href = a.get('href', '')
+            if href.endswith('.html') and href not in product_links:
+                product_links.append(href)
+
+        product_links = list(dict.fromkeys(product_links))  # deduplicate, preserve order
+
+        if not product_links:
+            logger.debug('No search results for "%s" (SKU %s)', search_name, sku)
+            return None
+
+        best_score = 0
+        best_result = None
+        search_name_lower = search_name.lower()
+
+        for link in product_links[:8]:  # check top 8 results
+            time.sleep(1)
+            try:
+                r = self.session.get(link, timeout=15, allow_redirects=True)
+                if r.status_code != 200:
+                    continue
+                data = self._extract_data_layer(r.text)
+                if not data or data.get('price') is None:
+                    continue
+
+                score = 0
+                item_id = data.get('item_id', '').upper().replace('GW-', '')
+                page_name = data.get('item_name', '').lower()
+
+                # +2 for name match (most reliable signal)
+                if search_name_lower in page_name or page_name in search_name_lower:
+                    score += 2
+
+                # +1 for SKU match (backup signal)
+                if item_id == sku.upper():
+                    score += 1
+
+                logger.debug(
+                    'Candidate: %s | score=%d | item_id=%s | name=%s',
+                    link, score, item_id, page_name,
+                )
+
+                if score > best_score:
+                    best_score = score
+                    best_result = (data['price'], data.get('in_stock', True), r.url)
+
+                # Perfect match — stop early
+                if score >= 3:
+                    break
+
+            except Exception:
+                continue
+
+        if best_result and best_score >= 1:
+            logger.debug(
+                'Search best match (score=%d): %s', best_score, best_result[2]
+            )
+            return best_result
+
+        return None
+
+    def _try_direct_url(self, sku):
+        """
+        Fallback: fetch gw-{SKU}.html directly.
+
+        Used when name search returns no results at all (product may not be
+        indexed in MM search but still has a direct product page).
+
+        Returns (price, in_stock, url) or None.
+        """
+        url = self.base_url.format(sku=sku)
         try:
             response = self.session.get(url, timeout=15, allow_redirects=True)
         except Exception as exc:
@@ -197,101 +299,11 @@ class MiniatureMarketScraper:
         if ('gw-' + sku.lower()) not in response.url.lower():
             return None
 
-        html = response.text
-        data = self._extract_data_layer(html)
-
-        if not data:
+        data = self._extract_data_layer(response.text)
+        if not data or data.get('price') is None:
             return None
 
-        # Verify item_id matches our SKU (e.g. "GW-48-75" matches "48-75")
-        item_id = data.get('item_id', '').upper().replace('GW-', '')
-        if item_id and item_id != sku.upper():
-            logger.debug(
-                'SKU mismatch on direct URL: expected %s, got %s — trying search',
-                sku, item_id,
-            )
-            return None
-
-        price = data.get('price')
-        in_stock = data.get('in_stock', True)
-        if price is None:
-            return None
-
-        return price, in_stock, response.url
-
-    def _try_name_search(self, sku, name):
-        """
-        Search MM by product name and find the best matching result.
-
-        Strips common GW prefixes ("Warhammer 40K:", "Space Marines -") and
-        searches for the core product name. Picks the result whose item_id
-        matches our SKU, or falls back to the closest name match.
-
-        Returns (price, in_stock, url) or None.
-        """
-        # Build a clean search query from the product name
-        # Remove faction prefixes like "Space Marine", "Necron", etc.
-        search_name = self._clean_search_name(name)
-        search_url = SEARCH_URL.format(query=quote_plus(search_name))
-
-        try:
-            response = self.session.get(search_url, timeout=15)
-        except Exception as exc:
-            raise RuntimeError(f'Search request failed: {exc}') from exc
-
-        if response.status_code != 200:
-            return None
-
-        soup = BeautifulSoup(response.text, 'html.parser')
-
-        # Find all product links on the search results page
-        product_links = []
-        for a in soup.select('a[href*="miniaturemarket.com"]'):
-            href = a.get('href', '')
-            if href.endswith('.html') and 'gw-' in href.lower():
-                product_links.append(href)
-
-        # Also try list item links
-        for a in soup.select('.product-item-link, .product-item-name a'):
-            href = a.get('href', '')
-            if href and href.endswith('.html'):
-                product_links.append(href)
-
-        # Deduplicate
-        product_links = list(dict.fromkeys(product_links))
-
-        if not product_links:
-            logger.debug('No search results for "%s" (SKU %s)', search_name, sku)
-            return None
-
-        # Check each result — prefer one whose item_id matches our SKU
-        for link in product_links[:5]:  # check top 5 results max
-            time.sleep(1)
-            try:
-                r = self.session.get(link, timeout=15, allow_redirects=True)
-                if r.status_code != 200:
-                    continue
-                data = self._extract_data_layer(r.text)
-                if not data:
-                    continue
-
-                item_id = data.get('item_id', '').upper().replace('GW-', '')
-                price = data.get('price')
-                in_stock = data.get('in_stock', True)
-
-                if price is None:
-                    continue
-
-                # Best case: item_id exactly matches our SKU
-                if item_id == sku.upper():
-                    logger.debug('Search matched by SKU: %s → %s', sku, link)
-                    return price, in_stock, r.url
-
-            except Exception:
-                continue
-
-        # Nothing matched by SKU — not found on MM
-        return None
+        return data['price'], data.get('in_stock', True), response.url
 
     # -------------------------------------------------------------------------
     # Data extraction helpers
@@ -315,6 +327,11 @@ class MiniatureMarketScraper:
         id_match = re.search(r'"item_id"\s*:\s*"([^"]+)"', html)
         if id_match:
             result['item_id'] = id_match.group(1)
+
+        # ── item_name ────────────────────────────────────────────────────────
+        name_match = re.search(r'"item_name"\s*:\s*"([^"]+)"', html)
+        if name_match:
+            result['item_name'] = name_match.group(1)
 
         # ── Stock status ─────────────────────────────────────────────────────
         # Schema.org availability (most reliable)
