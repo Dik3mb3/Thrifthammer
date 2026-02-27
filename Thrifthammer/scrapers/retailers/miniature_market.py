@@ -1,61 +1,66 @@
 """
 Miniature Market scraper.
 
-Scrapes live price, stock status, and product URL for every active GW product
-in the database. Uses the predictable Miniature Market URL pattern:
+For each active GW product, attempts to find the correct MM product page using
+a two-step approach:
 
-    https://www.miniaturemarket.com/gw-{SKU}.html
+  Step 1 — Direct SKU URL:
+    Fetch https://www.miniaturemarket.com/gw-{SKU}.html and verify the page's
+    item_id matches our SKU (e.g. "GW-48-75"). If confirmed, extract price.
 
-If a SKU returns a 404, the product is marked as not available at this retailer
-(the CurrentPrice row is deleted if it exists). If the page loads but shows
-"Out of stock", the price is saved with in_stock=False.
+  Step 2 — Name search fallback:
+    If Step 1 fails (404, wrong product, or SKU mismatch), search MM using the
+    product name and pick the best matching result by comparing names.
+
+Price and stock status are extracted from the JavaScript data layer JSON that
+MM embeds in every product page:
+  - "productPrice": "53.99"
+  - "availability": "http://schema.org/InStock"
+  - "item_id": "GW-48-75"
 
 Usage:
     python manage.py run_scrapers miniature-market
 
 Notes:
 - Respects SCRAPER_REQUEST_DELAY (default 2s) between requests.
-- Skips products whose gw_sku is blank or starts with a non-GW prefix
-  (e.g. custom SKUs like 'HA-', 'KT-', 'BP-' etc. that MM won't carry).
 - Only scrapes products with standard numeric GW SKUs (e.g. 48-75, 49-06).
+  Non-numeric prefixes (KT-, HA-, BP-, etc.) are skipped.
+- 404s and unmatched searches remove any stale CurrentPrice rows.
 """
 
+import json
 import logging
 import re
 import time
+from decimal import Decimal, InvalidOperation
+from urllib.parse import quote_plus
 
 from bs4 import BeautifulSoup
 from django.conf import settings
+from django.utils import timezone
 
 from prices.models import CurrentPrice
 from products.models import Product, Retailer
 from scrapers.models import ScrapeJob
-from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
-# SKU prefixes that are GW numeric format (e.g. 48-75) — only these are scraped.
-# Non-numeric prefixes (KT-, HA-, BP-, etc.) are skipped as MM won't list them
-# under the gw-{SKU}.html pattern.
+# Only scrape standard numeric GW SKUs like 48-75, 49-06, 101-23
 GW_SKU_PATTERN = re.compile(r'^\d{2,3}-\d{2,3}$')
 
-# Selectors — update here if MM redesigns their product page.
-PRICE_SELECTORS = [
-    'span.price',
-    '.product-info-price .price',
-    '[data-price-type="finalPrice"] .price',
-    '.special-price .price',
-    '.regular-price .price',
-]
-OUT_OF_STOCK_PHRASES = ['out of stock', 'unavailable', 'sold out']
+# Schema.org out-of-stock URL fragment
+OUT_OF_STOCK_SCHEMA = 'outofstock'
+
+# MM search URL
+SEARCH_URL = 'https://www.miniaturemarket.com/catalogsearch/result/index/?q={query}'
 
 
 class MiniatureMarketScraper:
     """
     Scraper for Miniature Market (miniaturemarket.com).
 
-    Iterates over all active products with standard GW SKUs, fetches each
-    product page, extracts price and stock status, and upserts CurrentPrice.
+    Uses a direct SKU URL first, then falls back to a name-based search
+    if the SKU URL returns the wrong product or a 404.
     """
 
     retailer_slug = 'miniature-market'
@@ -66,17 +71,21 @@ class MiniatureMarketScraper:
         import requests
         self.session = requests.Session()
         self.session.headers.update({
-            'User-Agent': getattr(
-                settings,
-                'SCRAPER_USER_AGENT',
+            'User-Agent': (
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
                 'AppleWebKit/537.36 (KHTML, like Gecko) '
-                'Chrome/120.0.0.0 Safari/537.36',
+                'Chrome/120.0.0.0 Safari/537.36'
             ),
             'Accept-Language': 'en-US,en;q=0.9',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept': (
+                'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+            ),
         })
         self.delay = getattr(settings, 'SCRAPER_REQUEST_DELAY', 2)
+
+    # -------------------------------------------------------------------------
+    # Public entry point
+    # -------------------------------------------------------------------------
 
     def run(self):
         """Execute a full scrape job and return the ScrapeJob record."""
@@ -92,47 +101,44 @@ class MiniatureMarketScraper:
             started_at=timezone.now(),
         )
         errors = []
-
         products = Product.objects.filter(is_active=True).exclude(gw_sku='')
 
         for product in products:
             sku = product.gw_sku.strip()
 
-            # Skip non-standard SKUs (KT-001, HA-001, BP-001, etc.)
             if not GW_SKU_PATTERN.match(sku):
                 logger.debug('Skipping non-standard SKU: %s (%s)', sku, product.name)
                 continue
 
-            url = self.base_url.format(sku=sku)
             job.products_found += 1
 
             try:
-                result = self._scrape_product(url, sku, product.name)
+                result = self._find_product(sku, product.name)
 
                 if result is None:
-                    # 404 — product not listed on MM; remove stale price if exists
+                    # Not found on MM — remove stale price row if present
                     deleted, _ = CurrentPrice.objects.filter(
                         product=product, retailer=retailer
                     ).delete()
                     if deleted:
-                        logger.info('[removed]  %s — no longer listed on MM', product.name)
+                        logger.info('[removed]  %s — no longer on MM', product.name)
                     else:
                         logger.info('[skip]     %s — not on MM (SKU %s)', product.name, sku)
                 else:
-                    price, in_stock = result
+                    price, in_stock, final_url = result
                     CurrentPrice.objects.update_or_create(
                         product=product,
                         retailer=retailer,
                         defaults={
                             'price': price,
-                            'url': url,
+                            'url': final_url,
                             'in_stock': in_stock,
                         },
                     )
                     stock_label = 'in stock' if in_stock else 'OUT OF STOCK'
                     logger.info(
-                        '[updated]  %s — £%.2f (%s)',
-                        product.name, price, stock_label,
+                        '[updated]  %s — $%.2f (%s) — %s',
+                        product.name, price, stock_label, final_url,
                     )
                     job.prices_updated += 1
 
@@ -149,94 +155,252 @@ class MiniatureMarketScraper:
         job.save()
         return job
 
-    def _scrape_product(self, url, sku, name):
-        """
-        Fetch a single product page and extract price + stock status.
+    # -------------------------------------------------------------------------
+    # Product finder — SKU URL first, name search fallback
+    # -------------------------------------------------------------------------
 
-        Miniature Market renders prices via JavaScript data layer JSON, so we
-        extract price from the raw HTML using regex against known JS patterns
-        rather than CSS selectors.
+    def _find_product(self, sku, name):
+        """
+        Try to locate the MM product page for a given SKU + name.
 
         Returns:
-            (Decimal, bool) — (price, in_stock) if found
-            None            — if the product is not listed (404 / redirect)
+            (Decimal, bool, str) — (price, in_stock, url) if found
+            None                 — if not listed on MM
         """
-        from decimal import Decimal, InvalidOperation
+        # Step 1: direct SKU URL
+        direct_url = self.base_url.format(sku=sku)
+        result = self._try_direct_url(direct_url, sku)
+        if result is not None:
+            return result
 
+        # Step 2: name-based search fallback
+        time.sleep(self.delay)
+        return self._try_name_search(sku, name)
+
+    def _try_direct_url(self, url, sku):
+        """
+        Fetch the gw-{SKU}.html URL and verify the item_id matches.
+
+        Returns (price, in_stock, url) or None.
+        """
         try:
             response = self.session.get(url, timeout=15, allow_redirects=True)
         except Exception as exc:
             raise RuntimeError(f'Network error fetching {url}: {exc}') from exc
 
-        # MM returns 404 or redirects to homepage for unknown SKUs
         if response.status_code == 404:
             return None
         if response.status_code != 200:
             raise RuntimeError(f'HTTP {response.status_code} for {url}')
 
-        # If redirected away from the product URL, SKU doesn't exist on MM
+        # Redirected away from our URL means SKU not found
         if ('gw-' + sku.lower()) not in response.url.lower():
             return None
 
         html = response.text
+        data = self._extract_data_layer(html)
+
+        if not data:
+            return None
+
+        # Verify item_id matches our SKU (e.g. "GW-48-75" matches "48-75")
+        item_id = data.get('item_id', '').upper().replace('GW-', '')
+        if item_id and item_id != sku.upper():
+            logger.debug(
+                'SKU mismatch on direct URL: expected %s, got %s — trying search',
+                sku, item_id,
+            )
+            return None
+
+        price = data.get('price')
+        in_stock = data.get('in_stock', True)
+        if price is None:
+            return None
+
+        return price, in_stock, response.url
+
+    def _try_name_search(self, sku, name):
+        """
+        Search MM by product name and find the best matching result.
+
+        Strips common GW prefixes ("Warhammer 40K:", "Space Marines -") and
+        searches for the core product name. Picks the result whose item_id
+        matches our SKU, or falls back to the closest name match.
+
+        Returns (price, in_stock, url) or None.
+        """
+        # Build a clean search query from the product name
+        # Remove faction prefixes like "Space Marine", "Necron", etc.
+        search_name = self._clean_search_name(name)
+        search_url = SEARCH_URL.format(query=quote_plus(search_name))
+
+        try:
+            response = self.session.get(search_url, timeout=15)
+        except Exception as exc:
+            raise RuntimeError(f'Search request failed: {exc}') from exc
+
+        if response.status_code != 200:
+            return None
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Find all product links on the search results page
+        product_links = []
+        for a in soup.select('a[href*="miniaturemarket.com"]'):
+            href = a.get('href', '')
+            if href.endswith('.html') and 'gw-' in href.lower():
+                product_links.append(href)
+
+        # Also try list item links
+        for a in soup.select('.product-item-link, .product-item-name a'):
+            href = a.get('href', '')
+            if href and href.endswith('.html'):
+                product_links.append(href)
+
+        # Deduplicate
+        product_links = list(dict.fromkeys(product_links))
+
+        if not product_links:
+            logger.debug('No search results for "%s" (SKU %s)', search_name, sku)
+            return None
+
+        # Check each result — prefer one whose item_id matches our SKU
+        for link in product_links[:5]:  # check top 5 results max
+            time.sleep(1)
+            try:
+                r = self.session.get(link, timeout=15, allow_redirects=True)
+                if r.status_code != 200:
+                    continue
+                data = self._extract_data_layer(r.text)
+                if not data:
+                    continue
+
+                item_id = data.get('item_id', '').upper().replace('GW-', '')
+                price = data.get('price')
+                in_stock = data.get('in_stock', True)
+
+                if price is None:
+                    continue
+
+                # Best case: item_id exactly matches our SKU
+                if item_id == sku.upper():
+                    logger.debug('Search matched by SKU: %s → %s', sku, link)
+                    return price, in_stock, r.url
+
+            except Exception:
+                continue
+
+        # Nothing matched by SKU — not found on MM
+        return None
+
+    # -------------------------------------------------------------------------
+    # Data extraction helpers
+    # -------------------------------------------------------------------------
+
+    def _extract_data_layer(self, html):
+        """
+        Extract price, stock status, and item_id from MM's JS data layer.
+
+        MM embeds structured data in multiple places:
+          - dataLayer.push({ productPrice, productCurrency })
+          - gtag ecommerce items array: { item_id, price }
+          - Schema.org: "availability": "http://schema.org/InStock"
+
+        Returns a dict with keys: price (Decimal), in_stock (bool), item_id (str)
+        or None if extraction fails.
+        """
+        result = {}
+
+        # ── item_id ──────────────────────────────────────────────────────────
+        id_match = re.search(r'"item_id"\s*:\s*"([^"]+)"', html)
+        if id_match:
+            result['item_id'] = id_match.group(1)
 
         # ── Stock status ─────────────────────────────────────────────────────
-        # Check the JS data layer first: "availability":"in stock" / "out of stock"
-        stock_match = re.search(r'"availability"\s*:\s*"([^"]+)"', html, re.IGNORECASE)
-        if stock_match:
-            in_stock = 'out of stock' not in stock_match.group(1).lower()
+        # Schema.org availability (most reliable)
+        avail_match = re.search(
+            r'"availability"\s*:\s*"([^"]+)"', html, re.IGNORECASE
+        )
+        if avail_match:
+            result['in_stock'] = OUT_OF_STOCK_SCHEMA not in avail_match.group(1).lower()
         else:
-            # Fallback: scan visible page text
+            # Fallback: page text
             soup = BeautifulSoup(html, 'html.parser')
             page_text = soup.get_text(separator=' ').lower()
-            in_stock = not any(phrase in page_text for phrase in OUT_OF_STOCK_PHRASES)
+            result['in_stock'] = 'out of stock' not in page_text
 
         # ── Price ─────────────────────────────────────────────────────────────
         price = None
 
-        # Strategy 1: JS data layer — "productPrice":"53.99"
-        match = re.search(r'"productPrice"\s*:\s*"?([\d.]+)"?', html)
-        if match:
+        # Strategy 1: "productPrice":"53.99"
+        m = re.search(r'"productPrice"\s*:\s*"?([\d.]+)"?', html)
+        if m:
             try:
-                price = Decimal(match.group(1))
+                price = Decimal(m.group(1))
             except InvalidOperation:
                 pass
 
-        # Strategy 2: gtag / GA4 ecommerce — "price":53.99
+        # Strategy 2: GA4 ecommerce "price":53.99
         if price is None:
-            match = re.search(r'"price"\s*:\s*([\d.]+)', html)
-            if match:
+            m = re.search(r'"price"\s*:\s*([\d.]+)', html)
+            if m:
                 try:
-                    candidate = Decimal(match.group(1))
-                    # Sanity check — GW products are between $5 and $1000
-                    if 5 <= candidate <= 1000:
+                    candidate = Decimal(m.group(1))
+                    if 5 <= candidate <= 1500:
                         price = candidate
                 except InvalidOperation:
                     pass
 
-        # Strategy 3: meta tag — <meta itemprop="price" content="53.99">
+        # Strategy 3: <meta itemprop="price" content="53.99">
         if price is None:
-            match = re.search(r'itemprop=["\']price["\'][^>]*content=["\']([^"\']+)["\']', html)
-            if not match:
-                match = re.search(r'content=["\']([^"\']+)["\'][^>]*itemprop=["\']price["\']', html)
-            if match:
+            m = re.search(
+                r'itemprop=["\']price["\'][^>]*content=["\']([^"\']+)["\']', html
+            )
+            if not m:
+                m = re.search(
+                    r'content=["\']([^"\']+)["\'][^>]*itemprop=["\']price["\']', html
+                )
+            if m:
                 try:
-                    price = Decimal(match.group(1))
+                    price = Decimal(m.group(1))
                 except InvalidOperation:
                     pass
 
-        # Strategy 4: last resort — first $ price in reasonable range on the page
+        # Strategy 4: first $ amount in valid range
         if price is None:
             for m in re.finditer(r'\$\s*(\d{1,4}\.\d{2})', html):
                 try:
                     candidate = Decimal(m.group(1))
-                    if 5 <= candidate <= 1000:
+                    if 5 <= candidate <= 1500:
                         price = candidate
                         break
                 except InvalidOperation:
                     continue
 
-        if price is None or price <= 0:
-            raise RuntimeError(f'Could not extract price from {url}')
+        if price and price > 0:
+            result['price'] = price
 
-        return price, in_stock
+        return result if result else None
+
+    @staticmethod
+    def _clean_search_name(name):
+        """
+        Strip faction/game prefixes from a product name to get a cleaner
+        search term for Miniature Market.
+
+        E.g. "Space Marine Intercessors" → "Intercessors"
+             "Necron Warriors"           → "Warriors"
+             "T'au Fire Warriors"        → "Fire Warriors"
+        """
+        # Remove leading game system prefixes MM adds
+        prefixes = [
+            'Warhammer 40K:', 'Warhammer 40,000:', 'Age of Sigmar:',
+            'Horus Heresy:', 'Kill Team:', 'Warcry:',
+        ]
+        cleaned = name
+        for prefix in prefixes:
+            if cleaned.lower().startswith(prefix.lower()):
+                cleaned = cleaned[len(prefix):].strip()
+
+        # Keep the full cleaned name for best search accuracy
+        return cleaned
