@@ -170,8 +170,23 @@ SCRAPER_USER_AGENT = os.environ.get(
 )
 SCRAPER_REQUEST_DELAY = int(os.environ.get('SCRAPER_REQUEST_DELAY', '2'))
 
-# eBay API credentials — set in Railway environment variables
-# EBAY_APP_ID: App ID (Client ID) from developer.ebay.com
-# EBAY_CERT_ID: Cert ID (Client Secret) from developer.ebay.com
-EBAY_APP_ID = os.environ.get('EBAY_APP_ID', '')
-EBAY_CERT_ID = os.environ.get('EBAY_CERT_ID', '')
+# ---------------------------------------------------------------------------
+# eBay Finding API configuration
+# ---------------------------------------------------------------------------
+# Set these in Railway environment variables (never hardcode keys).
+# EBAY_APP_ID_PRODUCTION : Production App ID from developer.ebay.com
+# EBAY_APP_ID_SANDBOX    : Sandbox App ID (for testing only)
+#
+# Rate limits (eBay developer program):
+#   - 5,000 calls/day on Finding API (free tier)
+#   - Our ~307 products use ~307 calls/run — well within limits
+#
+# Usage:
+#   python manage.py update_ebay_prices --sandbox --limit 5  (test)
+#   python manage.py update_ebay_prices --limit 10 --dry-run (verify)
+#   python manage.py update_ebay_prices                      (full run)
+EBAY_APP_ID_PRODUCTION = os.environ.get('EBAY_APP_ID_PRODUCTION', '')
+EBAY_APP_ID_SANDBOX = os.environ.get('EBAY_APP_ID_SANDBOX', '')
+EBAY_USE_SANDBOX = os.environ.get('EBAY_USE_SANDBOX', 'False').lower() in ('true', '1', 'yes')
+EBAY_CALLS_PER_DAY_LIMIT = 5000
+EBAY_DELAY_BETWEEN_CALLS = 0.5
