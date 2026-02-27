@@ -1,8 +1,0 @@
-[phases.install]
-cmds = ["pip install -r requirements.txt"]
-
-[phases.build]
-cmds = ["python manage.py collectstatic --noinput"]
-
-[start]
-cmd = "python manage.py migrate && python manage.py createcachetable --no-color || true && python manage.py populate_products --skip-if-current && python manage.py populate_units --skip-if-current && python manage.py seed_blog && gunicorn thrifthammer.wsgi --bind 0.0.0.0:$PORT"
