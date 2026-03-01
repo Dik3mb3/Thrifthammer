@@ -36,15 +36,18 @@ from django.utils.text import slugify
 
 from prices.models import CurrentPrice
 from products.models import Product, Retailer
-from products.ebay_api_client import EbayFindingAPI, EbayAPIError
+from products.ebay_api_client import EbayBrowseAPI, EbayAPIError
 
 
 class Command(BaseCommand):
     """
-    Fetch live eBay prices using the official Finding API.
+    Fetch live eBay UK prices using the Browse API v1.
 
     Updates CurrentPrice records for the eBay retailer. Products not
     found on eBay are marked not_available=True (never silently skipped).
+
+    The legacy Finding API was decommissioned in 2024. This command now
+    uses the Browse API with OAuth 2.0 Client Credentials authentication.
     """
 
     help = 'Update product prices from eBay using the official Finding API.'
@@ -95,7 +98,7 @@ class Command(BaseCommand):
 
         # ── Configuration summary ────────────────────────────────────────────
         env_label = 'SANDBOX (fake data)' if use_sandbox else 'PRODUCTION'
-        self.stdout.write('\neBay Finding API — Price Update')
+        self.stdout.write('\neBay Browse API — Price Update')
         self.stdout.write('=' * 50)
         self.stdout.write(f'  Environment : {env_label}')
         self.stdout.write(f'  Delay       : {delay}s between calls')
@@ -108,11 +111,12 @@ class Command(BaseCommand):
 
         # ── Initialise API client ────────────────────────────────────────────
         try:
-            ebay_api = EbayFindingAPI(use_sandbox=use_sandbox)
+            ebay_api = EbayBrowseAPI(use_sandbox=use_sandbox)
         except ValueError as exc:
             self.stderr.write(self.style.ERROR(f'Configuration error: {exc}'))
             self.stderr.write(
-                'Add EBAY_APP_ID_PRODUCTION to your Railway environment variables.'
+                'Add EBAY_APP_ID_PRODUCTION and EBAY_CERT_ID_PRODUCTION '
+                'to your Railway environment variables.'
             )
             return
 
@@ -165,6 +169,8 @@ class Command(BaseCommand):
                 break
 
             # Retry logic — up to 3 attempts per product
+            # EbayAPIError (rate limit, auth) aborts immediately — retrying
+            # won't help and wastes limited daily API calls.
             result = None
             last_error = None
             for attempt in range(1, 4):
@@ -173,12 +179,26 @@ class Command(BaseCommand):
                     break
                 except EbayAPIError as exc:
                     last_error = exc
-                    self.stdout.write(
-                        self.style.WARNING(
-                            f'  Attempt {attempt}/3 failed: {exc}'
+                    error_str = str(exc).lower()
+                    is_rate_limit = 'exceeded' in error_str or '10001' in error_str
+                    is_auth_error = 'invalid application' in error_str or '11002' in error_str
+
+                    if is_rate_limit:
+                        self.stdout.write(self.style.ERROR(
+                            '\n  eBay daily rate limit reached — stopping run.\n'
+                            '  The limit resets at midnight Pacific Time.\n'
+                            '  Run again tomorrow or after the reset.'
+                        ))
+                    elif is_auth_error:
+                        self.stdout.write(self.style.ERROR(
+                            '\n  eBay authentication failed — check your App ID.\n'
+                            '  Set EBAY_APP_ID_PRODUCTION in your environment.'
+                        ))
+                    else:
+                        self.stdout.write(
+                            self.style.ERROR(f'  eBay API error (aborting product): {exc}')
                         )
-                    )
-                    time.sleep(delay * 2)
+                    break
                 except RuntimeError as exc:
                     last_error = exc
                     self.stdout.write(
@@ -189,6 +209,12 @@ class Command(BaseCommand):
                     time.sleep(delay * 2)
 
             if last_error and result is None:
+                error_str = str(last_error).lower()
+                # Stop the entire run on rate limit or auth errors
+                if 'exceeded' in error_str or '10001' in error_str:
+                    break  # Already printed the message above
+                if 'invalid application' in error_str or '11002' in error_str:
+                    break  # Already printed the message above
                 self.stdout.write(
                     self.style.ERROR(f'  Failed after 3 attempts: {last_error}')
                 )

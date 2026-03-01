@@ -7,6 +7,13 @@ from pathlib import Path
 
 import dj_database_url
 
+# Load .env in local development (no-op if python-dotenv not installed or file missing)
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).resolve().parent.parent / '.env')
+except ImportError:
+    pass
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get(
@@ -171,22 +178,29 @@ SCRAPER_USER_AGENT = os.environ.get(
 SCRAPER_REQUEST_DELAY = int(os.environ.get('SCRAPER_REQUEST_DELAY', '2'))
 
 # ---------------------------------------------------------------------------
-# eBay Finding API configuration
+# eBay Browse API configuration
 # ---------------------------------------------------------------------------
-# Set these in Railway environment variables (never hardcode keys).
-# EBAY_APP_ID_PRODUCTION : Production App ID from developer.ebay.com
-# EBAY_APP_ID_SANDBOX    : Sandbox App ID (for testing only)
+# The legacy Finding API was decommissioned in 2024. We now use the
+# Browse API v1 with OAuth 2.0 Client Credentials authentication.
 #
-# Rate limits (eBay developer program):
-#   - 5,000 calls/day on Finding API (free tier)
-#   - Our ~307 products use ~307 calls/run — well within limits
+# Set these in Railway environment variables (never hardcode keys):
+#   EBAY_APP_ID_PRODUCTION   — Client ID from developer.ebay.com/my/keys
+#   EBAY_CERT_ID_PRODUCTION  — Client Secret (Cert ID) from same page
+#   EBAY_APP_ID_SANDBOX      — Sandbox Client ID (for testing)
+#   EBAY_CERT_ID_SANDBOX     — Sandbox Client Secret (for testing)
+#
+# Rate limits (Browse API, standard developer account):
+#   - 5,000 calls/day (resets midnight Pacific Time)
+#   - Our ~307 products use ~307 calls/run
 #
 # Usage:
 #   python manage.py update_ebay_prices --sandbox --limit 5  (test)
 #   python manage.py update_ebay_prices --limit 10 --dry-run (verify)
 #   python manage.py update_ebay_prices                      (full run)
-EBAY_APP_ID_PRODUCTION = os.environ.get('EBAY_APP_ID_PRODUCTION', '')
-EBAY_APP_ID_SANDBOX = os.environ.get('EBAY_APP_ID_SANDBOX', '')
+EBAY_APP_ID_PRODUCTION  = os.environ.get('EBAY_APP_ID_PRODUCTION', '')
+EBAY_CERT_ID_PRODUCTION = os.environ.get('EBAY_CERT_ID_PRODUCTION', '')
+EBAY_APP_ID_SANDBOX     = os.environ.get('EBAY_APP_ID_SANDBOX', '')
+EBAY_CERT_ID_SANDBOX    = os.environ.get('EBAY_CERT_ID_SANDBOX', '')
 EBAY_USE_SANDBOX = os.environ.get('EBAY_USE_SANDBOX', 'False').lower() in ('true', '1', 'yes')
 EBAY_CALLS_PER_DAY_LIMIT = 5000
 EBAY_DELAY_BETWEEN_CALLS = 0.5
