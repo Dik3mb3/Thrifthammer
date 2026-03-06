@@ -298,6 +298,14 @@ GW_IMAGES = {
     '96-55': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120218062_SCEPraetorsLead.jpg',
     '97-10': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120201200_BOKFangsoftheBloodGodSpearhead01.jpg',
     '97-12': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99129915032_PinkHorrors01.jpg',
+    # ── AoS Spearhead boxes (70-xx) — images reused from known GW CDN URLs ──
+    '70-10': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120207182_NHCursedShacklehordeSpearhead01.jpg',
+    '70-17': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120201200_BOKFangsoftheBloodGodSpearhead01.jpg',
+    '70-832': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120201203_WEBMaggotkinBubonicCellSpearhead1.jpg',
+    '70-839': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120201204_DisciplesofTzeentchTzaangorWarflockSpearhead1.jpg',
+    '70-893': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120209122_OWIronjawzBigmobSpearheadArmyBox1.jpg',
+    '70-894': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120209125_GloomspiteGitzSnarlpackHuntazSpearheadArmyBox01.jpg',
+    '70-915': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120207191_FlesheaterCourtsCharnelWatchSpearhead1.jpg',
     'AP-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/52170106001_TYRPaintSet01.jpg',
     'BP-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99199999068_SyntheticBaseBrushSmallLead.jpg',
     'BR-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99229999109_60mmRoundTextured.jpg',
@@ -374,6 +382,171 @@ from django.utils.text import slugify
 
 from prices.models import CurrentPrice, PriceHistory
 from products.models import Category, Faction, Product, Retailer
+
+
+# ---------------------------------------------------------------------------
+# eBay search name overrides — single source of truth
+# ---------------------------------------------------------------------------
+# Maps GW SKU → override name used when building eBay search queries.
+#
+# Add an entry here when a product's display name differs from how it appears
+# in eBay listing titles.  Common cases:
+#   • Faction-customised kits (e.g. Deathwatch units that reuse Space Marine
+#     sprues) — sellers list the base SM kit, not the faction variant name.
+#   • Characters whose GW product name includes faction prefix words that
+#     sellers omit (e.g. "Space Marine Marneus Calgar" → sellers write
+#     "Ultramarines: Marneus Calgar").
+#
+# populate_products applies these to Product.ebay_search_name on every run,
+# so editing this dict + re-running populate_products is all that is needed.
+# View all active overrides with:
+#   python manage.py update_ebay_prices --list-overrides
+#
+# Format: 'GW_SKU': 'eBay search name'
+_EBAY_SEARCH_OVERRIDES = {
+    # ── Deathwatch ────────────────────────────────────────────────────────
+    # Deathwatch units reuse standard Space Marine plastic kits plus a
+    # Deathwatch upgrade sprue.  eBay sellers list the base SM kit, so the
+    # Deathwatch variant name returns 0 results.
+    '39-05': 'Space Marine Terminator Squad',     # Deathwatch Terminator Squad
+    '39-06': 'Deathwatch Veterans',               # Deathwatch Veteran Squad
+    '39-07': 'Space Marine Intercessors',         # Deathwatch Fortis Kill Team
+    '39-08': 'Space Marine Aggressors',           # Deathwatch Indomitor Kill Team
+    '39-03': 'Space Marine Intercessors',         # Deathwatch Decimus Kill Team
+    '39-11': 'Space Marine Suppressors',          # Deathwatch Talonstrike Kill Team
+    # ── Adeptus Mechanicus ────────────────────────────────────────────────
+    # Singular vs plural: GW kit is one model that builds as Ballistarius OR
+    # Sydonian Dragoon, but eBay sellers consistently title it "Ballistarius"
+    # (singular).  Our DB name uses the plural "Ballistarii" — 0 results.
+    '59-14': 'Adeptus Mechanicus Ironstrider Ballistarius',
+    # Hyphenation: GW and sellers write "Electro-Priests" (hyphenated).
+    # Our DB name "Electropriests" (one word) gets 0 eBay results.
+    # The hyphen is stripped to a space by _build_search_query, giving
+    # the query "Adeptus Mechanicus Electro Priests" which eBay tokenises
+    # correctly against "Electro-Priests" in listing titles.
+    '59-20': 'Adeptus Mechanicus Electro-Priests',
+    # ── Genestealer Cults ─────────────────────────────────────────────────
+    # 51-42 "Genestealer Cults Patriarch" — GW sells the Patriarch as part of
+    # the "Broodcoven" multi-model kit (Patriarch + two Magi).  eBay sellers
+    # title it "Broodcoven", not "Patriarch", so 0 results with the display name.
+    '51-42': 'Genestealer Cults Broodcoven',
+    # ── Craftworlds (Aeldari) ─────────────────────────────────────────────
+    # GW rebranded "Craftworlds" / "Eldar" to "Aeldari" in 9th/10th edition.
+    # eBay sellers now title kits under "Aeldari"; the old "Craftworlds" prefix
+    # returns 0 results or only old-edition listings.
+    '46-02': 'Aeldari Farseer',
+    # ── Drukhari ──────────────────────────────────────────────────────────
+    # 45-12 "Drukhari Ravager" is built from the exact same plastic kit as the
+    # 45-10 "Drukhari Raider".  eBay sellers list the box as "Raider"; searching
+    # "Ravager" returns old metal/resin sculpts (e.g. 1999 pre-assembled models)
+    # rather than the current dual-build plastic kit.
+    '45-12': 'Drukhari Raider',
+    # ── Imperial Knights ──────────────────────────────────────────────────
+    # 54-15 "Imperial Knight Preceptor / Canis Rex" — the kit is listed by
+    # sellers either as "Canis Rex" or "Knight Preceptor" depending on which
+    # variant they built.  "Imperial Knights Canis Rex" returns only accessories;
+    # "Knight Preceptor" casts a wider net across both seller conventions.
+    '54-15': 'Imperial Knight Preceptor',
+    # ── Paint & Supplies: Base Paint Set ─────────────────────────────────
+    # BS-001 "Citadel Colour Base Paint Set" — eBay returns "Games Workshop
+    # Citadel Hobby Starter Set Paints/Glue/Cutters/Flock" because the unit-suffix
+    # fallback accepts 'paint' + 'set' without needing 'colour' or 'base'.
+    # Fix: use 5-keyword search "Citadel paint tools set 40K" (min_matches=4).
+    # The correct listing "Warhammer 40,000 Paints + Tools Set 60-12 Citadel 40K"
+    # scores 5/5.  AoS faction sets (no 'tools', no '40K') only score 3/5 → FAIL.
+    # Ultramarines lot and Hobby Starter Set also lack 'tools' + '40K' → FAIL.
+    'BS-001': 'Citadel paint tools set 40K',
+    # ── Paint & Supplies: Contrast paints ────────────────────────────────
+    # CP-002 "Citadel Contrast Wraithbone" — the 18ml paint pot must be
+    # distinguished from the 400ml "Contrast Wraithbone" spray primer (Aérosol).
+    # With only 2 keywords ('contrast' + 'wraithbone') min_matches=2, so the
+    # French spray listing (no "Citadel" or "paint") still achieves 2/2 and passes.
+    # Fix: use 4 keywords so min_matches=3. The spray title lacks both "Citadel"
+    # and "paint", scoring only 2/4. Real paint pot listings include all four.
+    'CP-002': 'Citadel Contrast Wraithbone paint',
+    # ── Paint & Supplies: Citadel Sprays ─────────────────────────────────
+    # Spray primer cans (400ml) share color names with paint pots (12ml) on eBay.
+    # e.g. "Corax White" returns both the 12ml pot AND the 400ml spray can.
+    # Fix: put "Spray" and "400ml" at the END of the search name so they become
+    # unit-suffix keywords. Titles containing only the color name (no "Spray" or
+    # "400ml") then fail both the 65% keyword threshold and the unit-suffix check.
+    'CSP-003': 'Citadel Corax White Spray 400ml',  # 400ml forces rejection of 12ml pot listings
+    'CSP-004': 'Citadel Zandri Dust Spray 400ml',  # ditto
+    'SP-011':  'Citadel Wraithbone Spray 400ml',   # ditto
+    # ── Paint & Supplies: Painting Handle ────────────────────────────────
+    # PH-002 "Citadel Painting Handle XL" — 'XL' is 2 chars and excluded from
+    # keyword matching (threshold is len >= 3). Without 'XL' as a keyword, the
+    # XL and standard handle share identical effective keywords and find the same
+    # listing (standard "Painting Handle Mk2").
+    # Fix: use the full product name for eBay search so eBay ranks XL results
+    # higher, and exclude "mk2" via ebay_negative_keywords so the standard Mk2
+    # handle is filtered out at the eBay query level.
+    'PH-002': 'Citadel Painting Handle XL',
+    # ── Orruk Warclans ────────────────────────────────────────────────────
+    # 89-22 "Orruk Warclans Gutrippaz" — eBay sellers typically search/title
+    # these as "Gutrippaz" or "Orruk Warclans Gutrippaz".  The GW name is
+    # "Gutrippaz" but sellers sometimes spell it "Gutrippez"; using just
+    # "Gutrippaz" casts the right net without ambiguity.
+    '89-22': 'Orruk Warclans Gutrippaz',
+    # ── Blades of Khorne ─────────────────────────────────────────────────
+    # 97-08 "Blades of Khorne Bloodletters" — eBay sellers drop the faction
+    # prefix and list as simply "Bloodletters" or "Bloodletters of Khorne".
+    # The full product name ("Blades of Khorne Bloodletters") fails keyword
+    # matching because sellers rarely include "Blades" or "Khorne" in titles.
+    '97-08': 'Bloodletters',
+}
+
+# ── Per-product eBay "no box" exemptions ─────────────────────────────────────
+#
+# When set to True for a SKU, eBay listings that contain "no box" in their
+# title are NOT filtered out.  Use for kits commonly sold as loose sprues
+# without retail packaging where the contents are still complete.
+#
+# Add entries here + re-run populate_products to apply.
+# ─────────────────────────────────────────────────────────────────────────────
+_EBAY_ALLOW_NO_BOX = {
+    # Bloodletters of Khorne: frequently sold unsealed (sprues only, no outer
+    # box) at genuine retail value — kit contents are complete and new.
+    '97-08': True,
+}
+
+# ── Per-product eBay negative keyword exclusions ──────────────────────────────
+#
+# Space-separated words that are appended to the eBay search query as -word
+# exclusions (eBay's native negative keyword syntax).  Use when our keyword
+# validator cannot distinguish two similarly-named products because they share
+# enough keywords to both reach the 65% match threshold.
+#
+# This filters at the eBay API level — listings containing the excluded word
+# in their title never reach our validator, so the result set is cleaner.
+#
+# Add entries here + re-run populate_products to apply.
+# ─────────────────────────────────────────────────────────────────────────────
+_EBAY_NEGATIVE_KEYWORDS = {
+    # BS-001 — handled via the search override "Citadel paint tools set 40K"
+    # (5 keywords, min_matches=4); wrong faction sets lack both 'tools' and '40K',
+    # so they fail validation without needing negatives.  No entry needed here.
+    # CP-002 "Citadel Contrast Wraithbone" — the 18ml Contrast paint shares its
+    # colour name with "Citadel Base: Wraithbone" (a different paint range).
+    # With 4 search keywords ('citadel contrast wraithbone paint') and min_matches=3,
+    # the Base Wraithbone listing still passes because 'citadel' + 'wraithbone' +
+    # 'paint' = 3/4 without needing 'contrast'.  Excluding "base" at the eBay
+    # query level ensures Base paint listings never reach the validator.
+    'CP-002': 'base',
+    # SG-001 "Citadel Super Glue" — eBay returns "Citadel Plastic Glue by Games
+    # Workshop Warhammer" because 'citadel' + 'glue' is enough for 3/4 keyword
+    # matches (passes 65% threshold). The word "plastic" distinguishes plastic
+    # glue from super glue, so excluding it at eBay query level solves the problem.
+    'SG-001': 'plastic',
+    # WP-001 "Citadel Water Pot" — searches return "Citadel Layer Paint Pot 12ml"
+    # because 'citadel' + 'pot' achieves min_matches.  "Layer" is the
+    # distinguishing word present in all paint pot listings.
+    'WP-001': 'layer',
+    # PH-002 "Citadel Painting Handle XL" — the standard handle is titled
+    # "Citadel Painting Handle Mk2".  Excluding "mk2" prevents the standard
+    # handle from appearing in results when searching for the XL model.
+    'PH-002': 'mk2',
+}
 
 
 class Command(BaseCommand):
@@ -676,14 +849,14 @@ class Command(BaseCommand):
             ),
             # ---- Chaos Space Marines ----
             (
-                'Chaos Space Marines',
+                'Chaos Space Marines Legionaries',
                 'Warhammer 40,000', 'Chaos Space Marines',
                 '43-06', decimal.Decimal('40.00'),
                 'Ten plastic Chaos Space Marines in corrupted power armour. '
                 'Includes weapon options for aspiring champion and special weapons.',
             ),
             (
-                'Chaos Predator Annihilator',
+                'Chaos Predator',
                 'Warhammer 40,000', 'Chaos Space Marines',
                 '43-09', decimal.Decimal('57.50'),
                 'A heavy tank armed with twin lascannons, the Predator Annihilator '
@@ -922,13 +1095,8 @@ class Command(BaseCommand):
                 'A compact starter with push-fit Space Marines and Tyranids, '
                 'a small rulebook, and all you need to play your first game.,'
             ),
-            (
-                'Combat Patrol: Space Marines',
-                'Warhammer 40,000', 'Space Marines',
-                '71-02', decimal.Decimal('105.00'),
-                'A ready-to-play Combat Patrol force of Space Marines: '
-                'Captain, Redemptor Dreadnought, Intercessors, and Outriders.,'
-            ),
+            # NOTE: 'Combat Patrol: Space Marines' (71-02) is defined in the
+            # main Space Marines section above — do not add a duplicate here.
             # ---- Starter Sets (AoS) ----
             (
                 'Age of Sigmar Warrior Starter Set',
@@ -981,10 +1149,15 @@ class Command(BaseCommand):
             faction = faction_lookup.get(faction_name) if faction_name else None
 
             slug = slugify(name)
+            # Key on gw_sku when available so renaming a product updates the
+            # existing row rather than creating a new one (slug changes with name).
+            # Fall back to slug for products with no SKU.
+            lookup = {'gw_sku': gw_sku} if gw_sku else {'slug': slug}
             product, created = Product.objects.update_or_create(
-                slug=slug,
+                **lookup,
                 defaults={
                     'name': name,
+                    'slug': slug,
                     'gw_sku': gw_sku,
                     'category': cat,
                     'faction': faction,
@@ -992,11 +1165,19 @@ class Command(BaseCommand):
                     'msrp': msrp,
                     'is_active': True,
                     'image_url': GW_IMAGES.get(gw_sku, f'https://placehold.co/400x300/1e1e1e/bb86fc?text={slugify(name)[:30]}'),
+                    # Apply eBay search name override if defined, clear it if removed.
+                    'ebay_search_name': _EBAY_SEARCH_OVERRIDES.get(gw_sku, ''),
+                    # Allow "no box" listings for products in the exemption dict.
+                    'ebay_allow_no_box': _EBAY_ALLOW_NO_BOX.get(gw_sku, False),
+                    # Apply per-product eBay negative keywords, clear if removed.
+                    'ebay_negative_keywords': _EBAY_NEGATIVE_KEYWORDS.get(gw_sku, ''),
                 },
             )
             products.append(product)
             status = 'created' if created else 'updated'
-            self.stdout.write(f'  [{status}] {name} — ${msrp}')
+            override = _EBAY_SEARCH_OVERRIDES.get(gw_sku, '')
+            override_note = f' [eBay: "{override}"]' if override else ''
+            self.stdout.write(f'  [{status}] {name} — ${msrp}{override_note}')
 
         return products
 
@@ -1075,7 +1256,7 @@ class Command(BaseCommand):
              '48-22', decimal.Decimal('85.00'),
              'A transport-focused Land Raider variant armed with hurricane bolters '
              'and a multi-melta, capable of ferrying twelve Space Marines.'),
-            ('Space Marine Predator Destructor', 'Warhammer 40,000', 'Space Marines',
+            ('Space Marine Predator', 'Warhammer 40,000', 'Space Marines',
              '48-23', decimal.Decimal('57.50'),
              'A battle tank with an autocannon turret and optional lascannons or '
              'heavy bolters in sponsons — an anti-infantry workhorse.'),
@@ -1479,7 +1660,7 @@ class Command(BaseCommand):
              '43-55', decimal.Decimal('42.50'),
              'A hovering daemon engine armed with plague probes and a fleshmower '
              'or plaguespitter — a disgusting fast-attack option.'),
-            ('Death Guard Mortarion', 'Warhammer 40,000', 'Death Guard',
+            ('Death Guard Mortarion Daemon Primarch', 'Warhammer 40,000', 'Death Guard',
              '43-03', decimal.Decimal('155.00'),
              'The Daemon Primarch of the Death Guard — an enormous centrepiece '
              'model with a scythe, war-bell, and retinue of nurgling attendants.'),
@@ -1547,18 +1728,10 @@ class Command(BaseCommand):
             # ================================================================
             # ASTRA MILITARUM
             # ================================================================
-            ('Astra Militarum Infantry Squad', 'Warhammer 40,000', 'Astra Militarum',
-             '47-19', decimal.Decimal('32.50'),
-             'Ten Imperial Guardsmen with lasrifles, a heavy weapon team, and '
-             'a sergeant — the backbone of the Imperial war machine.'),
             ('Astra Militarum Cadian Shock Troops', 'Warhammer 40,000', 'Astra Militarum',
              '47-30', decimal.Decimal('37.50'),
              'Ten Cadian Shock Troops in redesigned plastic, armed with lasrifles '
              'and upgrade options for special and heavy weapons.'),
-            ('Astra Militarum Veteran Guardsmen', 'Warhammer 40,000', 'Astra Militarum',
-             '47-31', decimal.Decimal('40.00'),
-             'Ten battle-hardened Veteran Guardsmen with extra equipment options '
-             'including demolition charges, grenade launchers, and shotguns.'),
             ('Astra Militarum Leman Russ Battle Tank', 'Warhammer 40,000', 'Astra Militarum',
              '47-06', decimal.Decimal('57.50'),
              'The standard battle tank of the Astra Militarum, armed with a '
@@ -1769,10 +1942,10 @@ class Command(BaseCommand):
              '73-14', decimal.Decimal('52.50'),
              'Five elite Kin warriors in exo-armour bearing volkanite disintegrators '
              'or concussion gauntlets.'),
-            ('Leagues of Votann Kahl', 'Warhammer 40,000', 'Leagues of Votann',
+            ('Leagues of Votann Kahl / Uthar the Destined', 'Warhammer 40,000', 'Leagues of Votann',
              '73-06', decimal.Decimal('27.50'),
-             'A Kin commander armed with a forgewrought plasma axe and '
-             'autoch-pattern bolt pistol.'),
+             'A Kin commander that builds either a standard Kahl armed with a '
+             'forgewrought plasma axe, or Uthar the Destined, a named Kahl character.'),
             ('Leagues of Votann Combat Patrol', 'Warhammer 40,000', 'Leagues of Votann',
              '73-25', decimal.Decimal('105.00'),
              'A Leagues of Votann Combat Patrol: Kahl, Hearthkyn Warriors, '
@@ -1809,6 +1982,16 @@ class Command(BaseCommand):
              '56-25', decimal.Decimal('105.00'),
              "A T'au Combat Patrol: Commander in Crisis Battlesuit, Fire Warriors, "
              "Pathfinders, and a Hammerhead Gunship."),
+            ('Blood Angels Combat Patrol', 'Warhammer 40,000', 'Blood Angels',
+             '41-25', decimal.Decimal('100.00'),
+             'A Blood Angels Combat Patrol: Blood Angels Captain, 6x Sanguinary '
+             'Guard, 10x Assault Intercessors, and Blood Angels Upgrade sprues — '
+             '17 miniatures with 540-transfer sheet.'),
+            ('Genestealer Cults Combat Patrol', 'Warhammer 40,000', 'Genestealer Cults',
+             '51-69', decimal.Decimal('95.00'),
+             'A Genestealer Cults Combat Patrol: Jackal Alphus, Achilles '
+             'Ridgerunner, 5x Atalan Jackals, and 10x Hybrid Metamorphs — '
+             'a mobile, fast-striking cult force of 17 miniatures.'),
 
             # ================================================================
             # AGE OF SIGMAR — extended factions
@@ -1829,10 +2012,11 @@ class Command(BaseCommand):
              '91-02', decimal.Decimal('30.00'),
              'The Mortarch of Grief, Lady Olynder mourns eternally while her '
              'tears drain the life from all around her.'),
-            ('Nighthaunt Combat Patrol', 'Age of Sigmar', 'Nighthaunt',
-             '91-25', decimal.Decimal('105.00'),
-             'A Nighthaunt Combat Patrol: Guardian of Souls, Chainrasps, '
-             'Glaivewraith Stalkers, and Grimghast Reapers.'),
+            ('Spearhead: Nighthaunt – Cursed Shacklehorde', 'Age of Sigmar', 'Nighthaunt',
+             '70-10', decimal.Decimal('87.50'),
+             'A ready-to-play Nighthaunt force: Spirit Torment, 2x Chainghasts, '
+             '2x Dreadblade Harrows, 10x Dreadscythe Harridans, and 10x Bladegheist '
+             'Revenants — 127 plastic components in total.'),
             ('Ossiarch Bonereapers Mortek Guard', 'Age of Sigmar', 'Ossiarch Bonereapers',
              '94-10', decimal.Decimal('40.00'),
              'Twenty tireless bone-construct warriors armed with nadirite blades '
@@ -1845,10 +2029,8 @@ class Command(BaseCommand):
              '94-14', decimal.Decimal('52.50'),
              'A large construct that gathers bone-tithe from fallen warriors, '
              'restoring nearby Ossiarch Bonereapers as it fights.'),
-            ('Flesh-Eater Courts Crypt Ghouls', 'Age of Sigmar', 'Flesh-Eater Courts',
-             '91-06', decimal.Decimal('30.00'),
-             'Twenty cannibal maniacs driven mad by the Ghoul King\'s delusion, '
-             'believing themselves to be noble knights.'),
+            # NOTE: FEC Crypt Ghouls are at 91-35 (ADDITIONAL section). SKU 91-06
+            # belongs to Nighthaunt Hexwraiths — entry removed to avoid overriding.
             ('Flesh-Eater Courts Crypt Horrors', 'Age of Sigmar', 'Flesh-Eater Courts',
              '91-07', decimal.Decimal('40.00'),
              'Three large Crypt Horrors who believe they are heavily armoured '
@@ -1857,15 +2039,13 @@ class Command(BaseCommand):
              '89-10', decimal.Decimal('30.00'),
              'Twelve bouncing cave squigs and six squig herders keeping the '
              'round fanged creatures pointed at the enemy.'),
-            ('Gloomspite Gitz Fanatics', 'Age of Sigmar', 'Gloomspite Gitz',
-             '89-12', decimal.Decimal('35.00'),
-             'Five ball-and-chain wielding Fanatics unleashed from hiding in '
-             'nearby units to smash into unsuspecting enemies.'),
+            # NOTE: 89-12 image URL was the Snarlpack Huntaz Spearhead (now 70-894).
+            # Correct Fanatics entry is at 89-06 in the ADDITIONAL section. Removed.
             ('Orruk Warclans Ironjawz Brutes', 'Age of Sigmar', 'Orruk Warclans',
              '89-20', decimal.Decimal('40.00'),
              'Five heavily armoured Ironjaw Brutes built for smashing, with '
              'claw arms, gore-hackas, and jagged gore-choppas.'),
-            ('Orruk Warclans Kruleboyz Gutrippaz', 'Age of Sigmar', 'Orruk Warclans',
+            ('Orruk Warclans Gutrippaz', 'Age of Sigmar', 'Orruk Warclans',
              '89-22', decimal.Decimal('35.00'),
              'Ten cunning Kruleboyz Gutrippaz wielding serrated wicked stikkas '
              'in a disciplined phalanx formation.'),
@@ -1877,7 +2057,7 @@ class Command(BaseCommand):
              '85-02', decimal.Decimal('120.00'),
              'A dual-kit centrepiece of Morathi as Shadow Queen or Morathi-Khaine, '
              'the most powerful champion of the aelf gods.'),
-            ('Lumineth Realm-lords Vanari Auralan Wardens', 'Age of Sigmar', 'Lumineth Realm-lords',
+            ('Lumineth Realm-lords Vanari Auralan Wardens (10)', 'Age of Sigmar', 'Lumineth Realm-lords',
              '87-06', decimal.Decimal('40.00'),
              'Ten disciplined Aelf warriors bearing long pikes in a precise '
              'formation, skilled in both attack and defence.'),
@@ -1885,7 +2065,7 @@ class Command(BaseCommand):
              '87-08', decimal.Decimal('40.00'),
              'Five Aelf warriors attuned to the power of Hysh\'s mountains, '
              'bearing enormous stone mallets and diamondpick axes.'),
-            ('Slaves to Darkness Chaos Warriors', 'Age of Sigmar', 'Slaves to Darkness',
+            ('Slaves to Darkness Chaos Warriors (12)', 'Age of Sigmar', 'Slaves to Darkness',
              '83-10', decimal.Decimal('40.00'),
              'Twelve armoured Warriors of Chaos bearing hand weapons, shields, '
              'or great weapons in service to the Dark Gods.'),
@@ -1897,14 +2077,10 @@ class Command(BaseCommand):
              '83-30', decimal.Decimal('32.50'),
              'Twenty mortal warriors devoted to Khorne charging recklessly '
              'into combat with axes and meat-rippers.'),
-            ('Blades of Khorne Bloodletters', 'Age of Sigmar', 'Blades of Khorne',
-             '97-10', decimal.Decimal('30.00'),
-             'Ten Lesser Daemons of Khorne bearing hellblades and driven by '
-             'an insatiable hunger for blood and skulls.'),
-            ('Maggotkin of Nurgle Plaguebearers', 'Age of Sigmar', 'Maggotkin of Nurgle',
-             '83-20', decimal.Decimal('30.00'),
-             'Ten Lesser Daemons of Nurgle shuffling into battle bearing '
-             'plagueswords and tallying their master\'s infections.'),
+            # NOTE: 97-10 image URL was the BoK Fangs of the Blood God Spearhead
+            # (now 70-17). Correct Bloodletters entry is at 97-08 in ADDITIONAL section.
+            # NOTE: 83-20 image URL was the Maggotkin Bubonic Cell Spearhead
+            # (now 70-832). Correct Plaguebearers entry is at 97-09 in ADDITIONAL section.
             ('Maggotkin of Nurgle Putrid Blightkings', 'Age of Sigmar', 'Maggotkin of Nurgle',
              '83-22', decimal.Decimal('42.50'),
              'Five bloated mortal Warriors of Chaos chosen by Nurgle, armed '
@@ -1913,10 +2089,77 @@ class Command(BaseCommand):
              '83-40', decimal.Decimal('35.00'),
              'Ten bestial warriors of Tzeentch bearing savage blades, shields, '
              'and arcs of sorcerous energy.'),
-            ('Disciples of Tzeentch Pink Horrors', 'Age of Sigmar', 'Disciples of Tzeentch',
-             '97-12', decimal.Decimal('30.00'),
-             'Ten cackling Pink Horrors of Tzeentch, splitting into Blue Horrors '
-             'when slain and hurling magical bolts at enemies.'),
+            # NOTE: 97-12 Pink Horrors removed — duplicate of 97-11 in ADDITIONAL section.
+
+            # ================================================================
+            # AGE OF SIGMAR — SPEARHEAD BOXES
+            # Combat Patrol equivalents for AoS 4th Edition (~£87.50 GBP each).
+            # SKUs in the 70-xx "Start Here" range; released 2024–2026.
+            # ================================================================
+            ('Spearhead: Stormcast Eternals', 'Age of Sigmar', 'Stormcast Eternals',
+             '70-21', decimal.Decimal('87.50'),
+             'A ready-to-play Stormcast Eternals force: Yndrasta the Celestial '
+             'Spear, Knight-Vexillor, Stormstrike Chariot, 3x Annihilators, and '
+             '10x Vanquishers — 16 multipart plastic miniatures.'),
+            ('Spearhead: Skaven', 'Age of Sigmar', 'Skaven',
+             '70-901', decimal.Decimal('87.50'),
+             'A ready-to-play Skaven force: Grey Seer, 20x Clanrats, '
+             '3x Stormfiends, and a Warp Lightning Cannon — 212 plastic components.'),
+            ('Spearhead: Ossiarch Bonereapers', 'Age of Sigmar', 'Ossiarch Bonereapers',
+             '70-09', decimal.Decimal('87.50'),
+             'A ready-to-play Ossiarch Bonereapers force: Mortisan Soulreaper, '
+             'Gothizzar Harvester, 5x Kavalos Deathriders, and 20x Mortek Guard.'),
+            ('Spearhead: Flesh-Eater Courts – Charnel Watch', 'Age of Sigmar', 'Flesh-Eater Courts',
+             '70-915', decimal.Decimal('87.50'),
+             'A ready-to-play Flesh-Eater Courts force led by an Abhorrant '
+             'Gorewarden with elite Crypt Flayers for the Charnel Watch warband.'),
+            ('Spearhead: Gloomspite Gitz – Snarlpack Huntaz', 'Age of Sigmar', 'Gloomspite Gitz',
+             '70-894', decimal.Decimal('87.50'),
+             'A ready-to-play Gloomspite Gitz force: Snarlboss, 2x Wolfgit Retinue, '
+             '2x Sunsteala Wheelas, and 6x Snarlpack Cavalry — 232 plastic components.'),
+            ('Spearhead: Orruk Warclans', 'Age of Sigmar', 'Orruk Warclans',
+             '70-892', decimal.Decimal('87.50'),
+             'A ready-to-play Kruleboyz force: Killaboss on Great Gnashtoof, '
+             'Murknob with Belcha-banna, Beast-skewer Killbow, 3x Man-skewer '
+             'Boltboyz, and 10x Gutrippaz.'),
+            ('Spearhead: Orruk Warclans – Ironjawz Bigmob', 'Age of Sigmar', 'Orruk Warclans',
+             '70-893', decimal.Decimal('87.50'),
+             'A ready-to-play Ironjawz force: Megaboss, Warchanter, 3x Brutes, '
+             '3x Gore-Gruntas, and 10x Ardboys — the hard-hitting Ironjawz Bigmob.'),
+            ('Spearhead: Daughters of Khaine', 'Age of Sigmar', 'Daughters of Khaine',
+             '70-12', decimal.Decimal('87.50'),
+             'A ready-to-play Daughters of Khaine force: Melusai Ironscale, '
+             '10x Witch Aelves, 5x Blood Stalkers, and 5x Doomfire Warlocks.'),
+            ('Spearhead: Lumineth Realm-lords', 'Age of Sigmar', 'Lumineth Realm-lords',
+             '70-11', decimal.Decimal('87.50'),
+             'A ready-to-play Lumineth Realm-lords force: Scinari Cathallar, '
+             '5x Vanari Bladelords, 10x Vanari Auralan Wardens, and 10x Vanari '
+             'Auralan Sentinels — 26 multipart plastic miniatures.'),
+            ('Spearhead: Cities of Sigmar', 'Age of Sigmar', 'Cities of Sigmar',
+             '70-22', decimal.Decimal('87.50'),
+             'A ready-to-play Cities of Sigmar force: Freeguild Cavalier-Marshal, '
+             'Ironweld Great Cannon, 5x Freeguild Cavaliers, and 10x Freeguild '
+             'Steelhelms — 17 multipart plastic miniatures.'),
+            ('Spearhead: Slaves to Darkness', 'Age of Sigmar', 'Slaves to Darkness',
+             '70-04', decimal.Decimal('87.50'),
+             'A ready-to-play Slaves to Darkness force: Chaos Lord, Chaos Chariot, '
+             '10x Chaos Warriors, and 5x Chaos Knights — 17 multipart plastic '
+             'miniatures, charging in the name of the Dark Gods.'),
+            ('Spearhead: Blades of Khorne', 'Age of Sigmar', 'Blades of Khorne',
+             '70-17', decimal.Decimal('87.50'),
+             'A ready-to-play Blades of Khorne force: Slaughterpriest, Mighty '
+             'Skullcrushers, Blood Warriors, and Bloodreavers — bathing the '
+             'battlefield in blood for Khorne.'),
+            ('Spearhead: Maggotkin of Nurgle', 'Age of Sigmar', 'Maggotkin of Nurgle',
+             '70-832', decimal.Decimal('87.50'),
+             'A ready-to-play Maggotkin of Nurgle force spreading Nurgle\'s '
+             'blessings across the Mortal Realms with Plaguebearers and allies.'),
+            ('Spearhead: Disciples of Tzeentch – Tzaangor Warflock', 'Age of Sigmar',
+             'Disciples of Tzeentch',
+             '70-839', decimal.Decimal('87.50'),
+             'A ready-to-play Disciples of Tzeentch force: Tzaangor Shaman, '
+             '3x Tzaangor Enlightened, 3x Tzaangor Skyfires, and 10x Tzaangors '
+             '— 17 multipart plastic miniatures soaring on Discs of Tzeentch.'),
 
             # ================================================================
             # HORUS HERESY — extended
@@ -2057,14 +2300,10 @@ class Command(BaseCommand):
              'CP-003', decimal.Decimal('7.55'),
              'A deep crimson Contrast paint (18ml) that naturally shades into '
              'recesses for perfect power armour in a single coat.'),
-            ('Citadel Spray Chaos Black', 'Paint & Supplies', None,
-             'CSP-001', decimal.Decimal('15.00'),
-             'The standard Chaos Black undercoat spray (400ml). Provides an '
-             'even matt black primer coat for Warhammer models.'),
-            ('Citadel Spray Wraithbone', 'Paint & Supplies', None,
-             'CSP-002', decimal.Decimal('15.00'),
-             'The bone-white undercoat spray (400ml), ideal as a base for '
-             'Contrast paints or light colour schemes.'),
+            # NOTE: CSP-001 (Chaos Black) and CSP-002 (Wraithbone) removed —
+            # superseded by SP-010 and SP-011 in the ADDITIONAL section below,
+            # which use the correct "Citadel Spray: …" naming convention and
+            # are grouped alongside SP-012 (Grey Seer).
             ('Citadel Spray Corax White', 'Paint & Supplies', None,
              'CSP-003', decimal.Decimal('15.00'),
              'A pure white undercoat spray (400ml) for bright colour schemes '
@@ -2183,7 +2422,7 @@ class Command(BaseCommand):
              'The essential reference guide containing rules for all Kill Team '
              'factions in one comprehensive volume.'),
             # === ADDITIONAL SPACE MARINES ===
-            ('Space Marine Marneus Calgar', 'Warhammer 40,000', 'Ultramarines',
+            ('Marneus Calgar', 'Warhammer 40,000', 'Ultramarines',
              '55-12', decimal.Decimal('45.00'),
              'Chapter Master of the Ultramarines and Lord Macragge, armed with '
              'the Gauntlets of Ultramar and accompanied by his Honour Guard.'),
@@ -2294,10 +2533,8 @@ class Command(BaseCommand):
              'Start your Waaagh! with a Warboss, Boyz, Deff Koptas, '
              'and a Deff Dread in this ready-to-play Combat Patrol.'),
             # === ADDITIONAL AGE OF SIGMAR ===
-            ('Nighthaunt Chainrasps', 'Age of Sigmar', 'Nighthaunt',
-             '91-28', decimal.Decimal('35.00'),
-             'Twenty spectral Chainrasp Hordes – the mournful spirits who '
-             'form the core of any Nighthaunt force.'),
+            # NOTE: 91-28 Chainrasps removed — duplicate of 91-10 (same 20-model box,
+            # current GW SKU is 91-10 at £30).
             ('Nighthaunt Knight of Shrouds', 'Age of Sigmar', 'Nighthaunt',
              '91-15', decimal.Decimal('22.50'),
              'A single Knight of Shrouds on ethereal steed, a powerful '
@@ -2310,10 +2547,9 @@ class Command(BaseCommand):
              '94-10', decimal.Decimal('42.50'),
              'Twenty Mortek Guard – the unyielding infantry of the Ossiarch '
              'legions, armed with nadirite blades and shields.'),
-            ('Ossiarch Bonereapers Gothizzar Harvester', 'Age of Sigmar', 'Ossiarch Bonereapers',
-             '94-12', decimal.Decimal('52.50'),
-             'A bone-harvesting construct that collects the remains of the '
-             'slain to repair and reinforce nearby Mortek Guard.'),
+            # NOTE: 94-12 Gothizzar Harvester entry removed — 94-12 is the correct
+            # SKU for Necropolis Stalkers (defined in the first AoS section above).
+            # Gothizzar Harvester is correctly at 94-14.
             ('Flesh-Eater Courts Crypt Ghouls', 'Age of Sigmar', 'Flesh-Eater Courts',
              '91-35', decimal.Decimal('35.00'),
              'Twenty Crypt Ghouls – the delusional flesh-eating servants of '
@@ -2346,7 +2582,7 @@ class Command(BaseCommand):
              '86-15', decimal.Decimal('42.50'),
              'Ten Freeguild Fusiliers armed with handguns and pistols, '
              'the black-powder ranged core of any Cities force.'),
-            ('Slaves to Darkness Chaos Warriors', 'Age of Sigmar', 'Slaves to Darkness',
+            ('Slaves to Darkness Chaos Warriors (10)', 'Age of Sigmar', 'Slaves to Darkness',
              '83-18', decimal.Decimal('42.50'),
              'Ten Chaos Warriors clad in ensorcelled plate armour, wielding '
              'hand weapons and shields in service of the dark gods.'),
@@ -2473,11 +2709,19 @@ class Command(BaseCommand):
                     'msrp': msrp,
                     'is_active': True,
                     'image_url': GW_IMAGES.get(gw_sku, f'https://placehold.co/400x300/1c2230/c8922a?text={slugify(name)[:30]}'),
+                    # Apply eBay search name override if defined, clear it if removed.
+                    'ebay_search_name': _EBAY_SEARCH_OVERRIDES.get(gw_sku, ''),
+                    # Allow "no box" listings for products in the exemption dict.
+                    'ebay_allow_no_box': _EBAY_ALLOW_NO_BOX.get(gw_sku, False),
+                    # Apply per-product eBay negative keywords, clear if removed.
+                    'ebay_negative_keywords': _EBAY_NEGATIVE_KEYWORDS.get(gw_sku, ''),
                 },
             )
             products.append(product)
             status = 'created' if created else 'updated'
-            self.stdout.write(f'  [{status}] {name} — ${msrp}')
+            override = _EBAY_SEARCH_OVERRIDES.get(gw_sku, '')
+            override_note = f' [eBay: "{override}"]' if override else ''
+            self.stdout.write(f'  [{status}] {name} — ${msrp}{override_note}')
 
         self.stdout.write(
             self.style.SUCCESS(f'  Extended catalog: {len(products)} products processed.')

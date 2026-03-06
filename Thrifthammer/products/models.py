@@ -145,6 +145,32 @@ class Product(models.Model):
         max_digits=10, decimal_places=2, null=True, blank=True,
         help_text='Games Workshop recommended retail price',
     )
+    ebay_search_name = models.CharField(
+        max_length=200, blank=True, default='',
+        help_text=(
+            'Override name used when building eBay search queries. '
+            'Leave blank to use the product name. '
+            'Use this when eBay sellers list a product under a different name '
+            'than its display name — e.g. Deathwatch units sold as Space Marine kits.'
+        ),
+    )
+    ebay_allow_no_box = models.BooleanField(
+        default=False,
+        help_text=(
+            'When True, eBay listings with "no box" in the title are not filtered '
+            'out for this product. Use for kits commonly sold as loose sprues without '
+            'retail packaging (e.g. Bloodletters, small infantry sets).'
+        ),
+    )
+    ebay_negative_keywords = models.CharField(
+        max_length=200, blank=True, default='',
+        help_text=(
+            'Space-separated words to exclude from eBay searches (eBay -word syntax). '
+            'Use when eBay returns a similar but wrong product. '
+            'e.g. "plastic" for Super Glue excludes "Citadel Plastic Glue" listings; '
+            '"mk2" for Painting Handle XL excludes standard Mk2 handle listings.'
+        ),
+    )
     # Allows soft-deletion: inactive products are hidden from catalog
     is_active = models.BooleanField(default=True, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
