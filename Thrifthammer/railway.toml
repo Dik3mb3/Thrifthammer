@@ -1,8 +1,13 @@
 [build]
 builder = "nixpacks"
 
-# Refresh eBay prices daily at 03:00 UTC.
-# This keeps the price comparison table current without needing a redeploy.
+# ── Scheduled price refresh jobs ──────────────────────────────────────────────
+# eBay: daily at 03:00 UTC (~375 API calls, ~6 min)
 [crons.update-ebay-prices]
 command = "python manage.py update_ebay_prices"
 schedule = "0 3 * * *"
+
+# Miniature Market: daily at 04:00 UTC (HTML scraper, ~10 min)
+[crons.scrape-miniature-market]
+command = "python manage.py run_scrapers miniature-market"
+schedule = "0 4 * * *"
