@@ -10,7 +10,11 @@ class CurrentPrice(models.Model):
         'products.Retailer', on_delete=models.CASCADE, related_name='current_prices',
     )
     price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    url = models.URLField(help_text='Direct link to buy', blank=True, default='')
+    url = models.URLField(
+        max_length=2000,
+        help_text='Direct link to buy (eBay URLs with tracking params can exceed 200 chars)',
+        blank=True, default='',
+    )
     in_stock = models.BooleanField(default=True)
     not_available = models.BooleanField(
         default=False,
