@@ -1,42 +1,45 @@
 """
-Miniature Market scraper.
+Miniature Market scraper — search-based approach.
 
-For each active GW product, tries to find the correct MM product page using
-a three-step approach:
+The original URL-guessing approach (gw-{SKU}.html) was unreliable because:
+  - GW recycles SKU numbers when products are discontinued/replaced
+  - MM keeps old product listings at those URLs, so the URL may point to a
+    completely different product than the one we want
+  - e.g. gw-01-08.html shows "Sisters of Silence", not "Custodian Guard"
 
-  Step 1 — Direct SKU URL (gw-{SKU}.html):
-    Fastest path. Verifies item_id in the JS data layer matches our SKU.
+New approach: use MM's /suggest endpoint, which correctly finds products by
+name search, then score the candidates by name similarity.
 
-  Step 2 — Variant URL patterns:
-    MM sometimes appends a year or variant suffix, e.g. gw-48-07-2023.html.
-    Tries a few known suffix patterns before giving up.
+  Step 1 — Search suggest:
+    Call /suggest?search={product_name} to get a list of MM product candidates.
+    MM's search ranks results well — the correct product is usually in the top 5.
 
-  Step 3 — Name match on direct page:
-    If both URL attempts land on a page, checks item_name similarity to
-    confirm it's the right product even if item_id differs (retailers
-    sometimes use different SKU codes).
+  Step 2 — Score each candidate:
+    Compare candidate title to our product name using normalised word overlap.
+    Require >= SUGGEST_ACCEPT_THRESHOLD (0.85) of our words to appear in the
+    candidate title (with basic plural normalisation).
 
-Price, stock status, and the confirmed URL are extracted from MM's JS
-data layer which contains:
-  - "productPrice": "53.99"
-  - "availability": "http://schema.org/InStock"
-  - "item_id": "GW-48-75"
-  - "item_name": "Warhammer 40K: Space Marine Primaris Intercessors"
+  Step 3 — Accept best match:
+    Take the highest-scoring candidate. If it meets the threshold, save the
+    URL and price. Otherwise mark the product as not_available.
+
+Price is extracted directly from the suggest response (MM shows it inline).
+Availability defaults to True (suggest results are in-stock items).
 
 Usage:
     python manage.py run_scrapers miniature-market
 
 Notes:
-- Scrapes ALL active products regardless of SKU format.
-- Numeric GW SKUs (48-75) use the gw-{SKU}.html URL pattern.
-- Non-numeric SKUs (KT-, HA-, etc.) go straight to not_available since
-  MM does not stock them under a predictable URL.
-- Every product always gets a row — either a real price or not_available=True.
+  - Only numeric GW SKUs (48-75, 49-06, 101-23) are scraped; non-numeric
+    SKUs (KT-, HA-, etc.) are immediately marked not_available.
+  - Every product always gets a row — either a real price or not_available=True.
+  - /suggest filters results to GW URLs (/gw-) to exclude board games, MTG, etc.
 """
 
 import logging
 import re
 import time
+import urllib.parse
 from decimal import Decimal, InvalidOperation
 
 from bs4 import BeautifulSoup
@@ -52,25 +55,32 @@ logger = logging.getLogger(__name__)
 # Standard numeric GW SKU pattern: 48-75, 49-06, 101-23
 GW_SKU_PATTERN = re.compile(r'^\d{2,3}-\d{2,3}$')
 
-# Schema.org out-of-stock indicator
-OUT_OF_STOCK_SCHEMA = 'outofstock'
+# MM's search suggest endpoint — returns an HTML dropdown fragment
+SUGGEST_URL = 'https://www.miniaturemarket.com/suggest?search={query}'
 
-# URL suffix variants MM sometimes uses
-URL_VARIANTS = [
-    'https://www.miniaturemarket.com/gw-{sku}.html',
-    'https://www.miniaturemarket.com/gw-{sku}-2024.html',
-    'https://www.miniaturemarket.com/gw-{sku}-2023.html',
-    'https://www.miniaturemarket.com/gw-{sku}-2022.html',
-]
+# Minimum F1-like score to accept a match.
+# F1 = 2 * |matched| / (|our_words| + |their_words|)
+# This penalises candidates with many extra words, so "Devastator Squad"
+# (4 words) scores higher than "Centurion Devastator Squad" (5 words)
+# when we search for "Space Marine Devastators" (3 words).
+# 0.75 accepts 2-word vs 3-word matches (e.g. "Custodian Guard" → "Guard Squad")
+# while rejecting distant cross-product matches.
+SUGGEST_ACCEPT_THRESHOLD = 0.75
+
+# CSS selector for product cards in the suggest dropdown
+SUGGEST_CARD_SELECTOR = 'a.search-suggest-product-link'
+
+# MM uses /gw- prefix for all Games Workshop product URLs
+GW_URL_PREFIX = '/gw-'
 
 
 class MiniatureMarketScraper:
     """
     Scraper for Miniature Market (miniaturemarket.com).
 
-    Tries direct SKU URL variants, verifies correctness by matching
-    item_name from the JS data layer against our product name.
-    Always writes a result row — either with price or not_available=True.
+    Uses MM's /suggest search endpoint to match products by name rather than
+    guessing URL patterns. Always writes a result row — either with a real
+    price or not_available=True.
     """
 
     retailer_slug = 'miniature-market'
@@ -90,7 +100,7 @@ class MiniatureMarketScraper:
                 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
             ),
         })
-        self.delay = getattr(settings, 'SCRAPER_REQUEST_DELAY', 2)
+        self.delay = getattr(settings, 'SCRAPER_REQUEST_DELAY', 1)
 
     # -------------------------------------------------------------------------
     # Public entry point
@@ -124,7 +134,7 @@ class MiniatureMarketScraper:
                     job.prices_updated += 1
                     continue
 
-                result = self._find_product(sku, product.name)
+                result = self._find_product(product.name, sku=sku)
 
                 if result is None:
                     self._save_not_available(product, retailer)
@@ -165,158 +175,204 @@ class MiniatureMarketScraper:
     # Product finder
     # -------------------------------------------------------------------------
 
-    def _find_product(self, sku, name):
+    def _find_product(self, name, sku=None):
         """
-        Try URL variants for gw-{SKU}.html and verify by name match.
+        Search MM's /suggest endpoint for a product matching our name.
 
-        For each URL variant:
-          1. Fetch the page
-          2. Extract data layer (item_name, item_id, price, availability)
-          3. Score the match:
-             +2  item_name closely matches our product name
-             +1  item_id matches our SKU
-          4. Accept if score >= 1
+        Returns (Decimal price, bool in_stock, str url) or None.
 
-        Returns (Decimal, bool, str) or None.
+        Scoring uses an F1-like formula (bidirectional word overlap) to ensure
+        the correct product scores higher than same-faction alternatives.
+        A SKU URL bonus (+0.05) breaks ties when multiple candidates match equally.
         """
-        clean_name = self._clean_name(name).lower()
+        suggestions = self._get_suggestions(name)
+        if not suggestions:
+            return None
 
-        for url_template in URL_VARIANTS:
-            url = url_template.format(sku=sku)
-            try:
-                response = self.session.get(url, timeout=15, allow_redirects=True)
-            except Exception:
-                continue
+        best_score = 0.0
+        best_hit = None
 
-            if response.status_code == 404:
-                continue
-            if response.status_code != 200:
-                continue
+        for hit in suggestions:
+            score = self._score_name(name, hit['title'])
 
-            # If redirected away from a gw- URL, this variant doesn't exist
-            if 'gw-' not in response.url.lower():
-                continue
-
-            data = self._extract_data_layer(response.text)
-            if not data or data.get('price') is None:
-                continue
-
-            # Score this result
-            score = 0
-            item_id = data.get('item_id', '').upper().replace('GW-', '')
-            page_name = self._clean_name(data.get('item_name', '')).lower()
-
-            # Name match — strip common MM prefix "Warhammer 40K: " for comparison
-            if clean_name and page_name:
-                if clean_name in page_name or page_name in clean_name:
-                    score += 2
-                else:
-                    # Partial word match — check if most words overlap
-                    our_words = set(clean_name.split())
-                    page_words = set(page_name.split())
-                    overlap = our_words & page_words
-                    if len(overlap) >= max(1, len(our_words) - 1):
-                        score += 1
-
-            # SKU match
-            if item_id and item_id == sku.upper():
-                score += 1
+            # Tiebreaker: prefer the URL that contains our GW SKU
+            # e.g. gw-48-75.html wins over gw-48-36.html for SKU 48-75
+            if sku and sku.lower() in hit['url'].lower():
+                score = min(1.0, score + 0.05)
 
             logger.debug(
-                'URL %s | score=%d | item_id=%s | page_name="%s" | our_name="%s"',
-                url, score, item_id, page_name, clean_name,
+                'Candidate "%s" | score=%.2f | price=%s',
+                hit['title'][:60], score, hit.get('price'),
             )
+            if score > best_score:
+                best_score = score
+                best_hit = hit
 
-            if score >= 1:
-                return data['price'], data.get('in_stock', True), response.url
+        if best_score < SUGGEST_ACCEPT_THRESHOLD or best_hit is None:
+            logger.debug(
+                'No match for "%s" (best=%.2f < %.2f)',
+                name, best_score, SUGGEST_ACCEPT_THRESHOLD,
+            )
+            return None
 
-            time.sleep(1)
+        price = best_hit.get('price')
+        if price is None:
+            logger.debug('Match found for "%s" but no price extracted.', name)
+            return None
 
-        return None
+        logger.debug(
+            'MATCH "%s" score=%.2f | MM="%s" | $%.2f | %s',
+            name, best_score, best_hit['title'][:60], price, best_hit['url'],
+        )
+        # Products appearing in MM's suggest results are generally in stock.
+        return price, True, best_hit['url']
 
     # -------------------------------------------------------------------------
-    # Data extraction
+    # Suggest endpoint
     # -------------------------------------------------------------------------
 
-    def _extract_data_layer(self, html):
+    def _get_suggestions(self, name):
         """
-        Extract price, stock, item_id, and item_name from MM's JS data layer.
+        Call MM's /suggest endpoint and return GW-product candidates.
 
-        Returns dict with keys: price, in_stock, item_id, item_name
-        or None if extraction fails entirely.
+        Returns list of dicts: {'title': str, 'price': Decimal|None, 'url': str}.
+        Filters to URLs containing '/gw-' to exclude non-GW items (MTG, etc.).
         """
-        result = {}
+        query = urllib.parse.quote(self._clean_name(name))
+        url = SUGGEST_URL.format(query=query)
+        try:
+            response = self.session.get(url, timeout=15)
+        except Exception as exc:
+            logger.warning('Suggest request failed for "%s": %s', name, exc)
+            return []
 
-        # item_id — e.g. "GW-48-75"
-        m = re.search(r'"item_id"\s*:\s*"([^"]+)"', html)
-        if m:
-            result['item_id'] = m.group(1)
+        if response.status_code != 200:
+            logger.debug('Suggest returned HTTP %d for "%s"', response.status_code, name)
+            return []
 
-        # item_name — e.g. "Warhammer 40K: Space Marine Primaris Intercessors"
-        m = re.search(r'"item_name"\s*:\s*"([^"]+)"', html)
-        if m:
-            result['item_name'] = m.group(1)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        results = []
 
-        # Stock status — schema.org availability
-        m = re.search(r'"availability"\s*:\s*"([^"]+)"', html, re.IGNORECASE)
-        if m:
-            result['in_stock'] = OUT_OF_STOCK_SCHEMA not in m.group(1).lower()
-        else:
-            soup = BeautifulSoup(html, 'html.parser')
-            result['in_stock'] = 'out of stock' not in soup.get_text().lower()
+        for link in soup.select(SUGGEST_CARD_SELECTOR):
+            title = link.get('title', '').strip()
+            href = link.get('href', '').strip()
 
-        # Price — try multiple strategies
-        price = None
+            if not title or not href:
+                continue
 
-        # Strategy 1: "productPrice":"53.99"
-        m = re.search(r'"productPrice"\s*:\s*"?([\d.]+)"?', html)
+            # Only GW products — MM uses /gw- prefix for all GW items
+            if GW_URL_PREFIX not in href.lower():
+                continue
+
+            # Extract price from link text, e.g. "Product Name$53.99"
+            text = link.get_text(strip=True)
+            price = self._extract_price_from_text(text)
+
+            results.append({'title': title, 'price': price, 'url': href})
+
+        return results
+
+    # -------------------------------------------------------------------------
+    # Scoring
+    # -------------------------------------------------------------------------
+
+    @staticmethod
+    def _score_name(our_name, candidate_title):
+        """
+        Score name similarity using an F1-like bidirectional word overlap.
+
+        F1 = 2 * |matched| / (|our_words| + |their_words|)
+
+        This penalises candidates with many extra words:
+          "Space Marine Devastators" (3 words) vs
+            "Devastator Squad"          (4 words)  → F1 = 2*3/(3+4) = 0.857 ✅
+            "Centurion Devastator Squad" (5 words) → F1 = 2*3/(3+5) = 0.750 ✅
+          Shorter, closer match scores higher and wins.
+
+        Returns 1.0 for exact cleaned-name containment.
+        Both sides are normalised to base form (scouts→scout, marines→marine).
+        """
+        our = MiniatureMarketScraper._clean_name(our_name).lower()
+        their = MiniatureMarketScraper._clean_name(candidate_title).lower()
+
+        if not our or not their:
+            return 0.0
+
+        # Exact containment — strongest signal, no word-split needed
+        if our in their or their in our:
+            return 1.0
+
+        our_words = MiniatureMarketScraper._normalise_words(our)
+        their_words = MiniatureMarketScraper._normalise_words(their)
+
+        if not our_words:
+            return 0.0
+
+        matched = sum(
+            1 for w in our_words
+            if MiniatureMarketScraper._word_matches(w, their_words)
+        )
+
+        # F1-like: penalises candidates with many extra words
+        return 2 * matched / (len(our_words) + len(their_words))
+
+    @staticmethod
+    def _normalise_words(text):
+        """
+        Split text into a set of normalised base-form tokens (len > 2).
+
+        Strips exactly one trailing 's' for basic de-pluralisation so that
+        'scouts' and 'scout', 'marines' and 'marine' resolve to the same token.
+        Only the base form is added to the set (not both forms), keeping
+        len(our_words) accurate for the F1 calculation.
+        """
+        words = set()
+        for w in text.split():
+            if len(w) <= 2:
+                continue
+            # Normalize to base form: strip one trailing 's' if word is long enough
+            if w.endswith('s') and len(w) > 3:
+                words.add(w[:-1])  # scouts→scout, marines→marine
+            else:
+                words.add(w)
+        return words
+
+    @staticmethod
+    def _word_matches(word, candidate_words):
+        """
+        Return True if word (normalised base form) appears in candidate_words.
+
+        Also checks the plural form (+s) since _normalise_words stores base forms.
+        e.g. 'scout' matches {'scout'} OR if candidate had 'scouts' it's stored as 'scout'.
+        """
+        if word in candidate_words:
+            return True
+        # Check if the candidate stored it in plural (shouldn't happen after normalisation
+        # but guard against edge cases like words already in base form on both sides)
+        if word + 's' in candidate_words:
+            return True
+        return False
+
+    # -------------------------------------------------------------------------
+    # Price extraction
+    # -------------------------------------------------------------------------
+
+    @staticmethod
+    def _extract_price_from_text(text):
+        """
+        Extract a USD price from suggest link text like "Product Name$53.99".
+
+        Returns Decimal or None.
+        """
+        m = re.search(r'\$\s*(\d{1,4}\.\d{2})', text)
         if m:
             try:
                 price = Decimal(m.group(1))
+                if 1 <= price <= 1500:
+                    return price
             except InvalidOperation:
                 pass
-
-        # Strategy 2: GA4 "price":53.99
-        if price is None:
-            m = re.search(r'"price"\s*:\s*([\d.]+)', html)
-            if m:
-                try:
-                    candidate = Decimal(m.group(1))
-                    if 1 <= candidate <= 1500:
-                        price = candidate
-                except InvalidOperation:
-                    pass
-
-        # Strategy 3: meta itemprop price
-        if price is None:
-            m = re.search(
-                r'itemprop=["\']price["\'][^>]*content=["\']([^"\']+)["\']', html
-            )
-            if not m:
-                m = re.search(
-                    r'content=["\']([^"\']+)["\'][^>]*itemprop=["\']price["\']', html
-                )
-            if m:
-                try:
-                    price = Decimal(m.group(1))
-                except InvalidOperation:
-                    pass
-
-        # Strategy 4: first $ amount in valid range
-        if price is None:
-            for m in re.finditer(r'\$\s*(\d{1,4}\.\d{2})', html):
-                try:
-                    candidate = Decimal(m.group(1))
-                    if 1 <= candidate <= 1500:
-                        price = candidate
-                        break
-                except InvalidOperation:
-                    continue
-
-        if price and price > 0:
-            result['price'] = price
-
-        return result if result else None
+        return None
 
     # -------------------------------------------------------------------------
     # Helpers
@@ -339,7 +395,7 @@ class MiniatureMarketScraper:
     @staticmethod
     def _clean_name(name):
         """
-        Strip common prefixes MM and GW add so names compare cleanly.
+        Strip common MM/GW prefixes and normalise whitespace.
 
         'Warhammer 40K: Space Marine Primaris Intercessors'
           → 'Space Marine Primaris Intercessors'
@@ -347,15 +403,20 @@ class MiniatureMarketScraper:
           → 'Space Marines Assault Intercessors'
         """
         prefixes = [
-            'Warhammer 40K:', 'Warhammer 40,000:', 'Age of Sigmar:',
-            'Horus Heresy:', 'Kill Team:', 'Warcry:', 'Necromunda:',
+            'Warhammer 40K:',
+            'Warhammer 40,000:',
+            'Age of Sigmar:',
+            'Horus Heresy:',
+            'Kill Team:',
+            'Warcry:',
+            'Necromunda:',
         ]
         cleaned = name.strip()
         for prefix in prefixes:
             if cleaned.lower().startswith(prefix.lower()):
                 cleaned = cleaned[len(prefix):].strip()
                 break
-        # Normalise dashes and extra spaces
+        # Normalise dashes/hyphens and extra whitespace
         cleaned = re.sub(r'\s*-\s*', ' ', cleaned)
         cleaned = re.sub(r'\s+', ' ', cleaned).strip()
         return cleaned
