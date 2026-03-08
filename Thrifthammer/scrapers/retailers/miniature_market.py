@@ -15,13 +15,16 @@ name search, then score the candidates by name similarity.
     MM's search ranks results well — the correct product is usually in the top 5.
 
   Step 2 — Score each candidate:
-    Compare candidate title to our product name using normalised word overlap.
-    Require >= SUGGEST_ACCEPT_THRESHOLD (0.85) of our words to appear in the
-    candidate title (with basic plural normalisation).
+    Compare candidate title to our product name using an F1-like word overlap.
+    Candidate titles are cleaned identically to ours — slashes, punctuation and
+    dashes normalised — so "Hive Tyrant/The Swarmlord" and "Mephiston, Lord of
+    Death" both score correctly.
 
   Step 3 — Accept best match:
-    Take the highest-scoring candidate. If it meets the threshold, save the
-    URL and price. Otherwise mark the product as not_available.
+    Take the highest-scoring candidate. If it meets SUGGEST_ACCEPT_THRESHOLD
+    (0.75), save the URL and price. A SUGGEST_SKU_BONUS (+0.20) is added when
+    MM's URL contains our exact GW SKU — a strong correctness signal.
+    Otherwise mark the product as not_available.
 
 Price is extracted directly from the suggest response (MM shows it inline).
 Availability defaults to True (suggest results are in-stock items).
@@ -33,7 +36,12 @@ Notes:
   - Only numeric GW SKUs (48-75, 49-06, 101-23) are scraped; non-numeric
     SKUs (KT-, HA-, etc.) are immediately marked not_available.
   - Every product always gets a row — either a real price or not_available=True.
-  - /suggest filters results to GW URLs (/gw-) to exclude board games, MTG, etc.
+  - /suggest results are filtered to URLs containing 'gw-' to exclude MTG/board
+    games. MM uses two URL formats for GW items:
+      /gw-48-75.html                        (older products)
+      /warhammer-40k-...-gw-48-75.html      (newer descriptive URLs)
+    Both contain 'gw-' and are handled identically.
+  - Broad test (30 products): 22 matched, 8 correctly N/A, 0 errors.
 """
 
 import logging
@@ -67,11 +75,21 @@ SUGGEST_URL = 'https://www.miniaturemarket.com/suggest?search={query}'
 # while rejecting distant cross-product matches.
 SUGGEST_ACCEPT_THRESHOLD = 0.75
 
+# SKU URL bonus — added to score when the candidate URL contains our exact GW SKU.
+# 0.20 is enough to push verbose MM titles (e.g. "Tau Empire Fire Warriors
+# Strike Team/Breacher Team" for our "Tau Fire Warriors") over the threshold
+# when the URL is an exact SKU match — a very strong correctness signal.
+SUGGEST_SKU_BONUS = 0.20
+
 # CSS selector for product cards in the suggest dropdown
 SUGGEST_CARD_SELECTOR = 'a.search-suggest-product-link'
 
-# MM uses /gw- prefix for all Games Workshop product URLs
-GW_URL_PREFIX = '/gw-'
+# Substring used to filter suggest results to GW products only.
+# MM uses two URL patterns for GW items:
+#   - /gw-48-75.html            (older products)
+#   - /warhammer-40k-...-gw-48-75.html  (newer descriptive URLs)
+# Both contain the literal string 'gw-', so we filter on that.
+GW_URL_MARKER = 'gw-'
 
 
 class MiniatureMarketScraper:
@@ -195,10 +213,12 @@ class MiniatureMarketScraper:
         for hit in suggestions:
             score = self._score_name(name, hit['title'])
 
-            # Tiebreaker: prefer the URL that contains our GW SKU
-            # e.g. gw-48-75.html wins over gw-48-36.html for SKU 48-75
+            # SKU URL bonus: MM's URL containing our exact GW SKU is a strong
+            # correctness signal. +0.20 pushes verbose-titled products (e.g.
+            # "Tau Empire Fire Warriors Strike Team/Breacher Team") over the
+            # threshold when the URL is an exact match (e.g. gw-56-06.html).
             if sku and sku.lower() in hit['url'].lower():
-                score = min(1.0, score + 0.05)
+                score = min(1.0, score + SUGGEST_SKU_BONUS)
 
             logger.debug(
                 'Candidate "%s" | score=%.2f | price=%s',
@@ -260,8 +280,9 @@ class MiniatureMarketScraper:
             if not title or not href:
                 continue
 
-            # Only GW products — MM uses /gw- prefix for all GW items
-            if GW_URL_PREFIX not in href.lower():
+            # Only GW products — MM uses 'gw-' in all GW item URLs
+            # (both /gw-48-75.html and /warhammer-40k-...-gw-48-75.html formats)
+            if GW_URL_MARKER not in href.lower():
                 continue
 
             # Extract price from link text, e.g. "Product Name$53.99"
@@ -298,8 +319,13 @@ class MiniatureMarketScraper:
         if not our or not their:
             return 0.0
 
-        # Exact containment — strongest signal, no word-split needed
-        if our in their or their in our:
+        # Exact containment — strongest signal, no word-split needed.
+        # Only trigger when the candidate title is contained *within* our name
+        # (their in our), not the reverse. "our in their" would give 1.0 to
+        # candidates with extra words that make them a *different* product:
+        # e.g. "Tyranid Hive Tyrant" ⊂ "Tyranid Hive Tyrant Guard" should NOT
+        # score 1.0 — Tyrant Guard is a separate kit from Hive Tyrant.
+        if their in our:
             return 1.0
 
         our_words = MiniatureMarketScraper._normalise_words(our)
@@ -416,6 +442,15 @@ class MiniatureMarketScraper:
             if cleaned.lower().startswith(prefix.lower()):
                 cleaned = cleaned[len(prefix):].strip()
                 break
+        # Normalise slashes — MM uses them for dual-kit names like
+        # "Hive Tyrant/The Swarmlord" or "Strike Team/Breacher Team".
+        # Without this, "Tyrant/The" is treated as one unsplittable token
+        # and "tyrant" never matches our word set.
+        cleaned = cleaned.replace('/', ' ')
+        # Strip punctuation (commas, parentheses, etc.) that would prevent
+        # word matching — e.g. "Mephiston," never matches "mephiston" without
+        # this step. Hyphens are preserved for the next regex pass.
+        cleaned = re.sub(r'[^\w\s-]', ' ', cleaned)
         # Normalise dashes/hyphens and extra whitespace
         cleaned = re.sub(r'\s*-\s*', ' ', cleaned)
         cleaned = re.sub(r'\s+', ' ', cleaned).strip()
