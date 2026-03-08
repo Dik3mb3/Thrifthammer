@@ -7,7 +7,7 @@ builder = "nixpacks"
 command = "python manage.py update_ebay_prices"
 schedule = "0 3 * * *"
 
-# Miniature Market: daily at 04:00 UTC (HTML scraper, ~10 min)
+# Miniature Market: weekly on Monday at 04:00 UTC (HTML scraper, ~2 min)
 [crons.scrape-miniature-market]
 command = "python manage.py run_scrapers miniature-market"
-schedule = "0 4 * * *"
+schedule = "0 4 * * 1"
