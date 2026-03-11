@@ -66,7 +66,7 @@
       </div>
 
       {# Best price card #}
-      {% if current_prices %}
+      {% if current_prices and current_prices.0.price %}
       {% with best=current_prices.0 %}
       <div class="best-price-card">
         <div class="best-price-label">Best Price Available</div>

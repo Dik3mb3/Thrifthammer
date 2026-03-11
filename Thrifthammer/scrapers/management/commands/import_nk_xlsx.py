@@ -281,7 +281,7 @@ class Command(BaseCommand):
             return 0, 0
 
         imported = 0
-        skipped = 0
+        matched_pks = set()
 
         for product in products:
             candidates = self._all_matches(product.name, nk_rows, min_score)
@@ -339,16 +339,40 @@ class Command(BaseCommand):
                         'url': url,
                         'listing_title': str(nk_name).strip() if nk_name else '',
                         'in_stock': True,
-                        'not_available': price is None and not url,
+                        'not_available': False,
                     },
                 )
 
+            matched_pks.add(product.pk)
             imported += 1
+
+        # Mark every in-scope product that had no spreadsheet match as "not
+        # available" at Noble Knight. This ensures the website shows "Not
+        # Available" (no link, no price) rather than stale placeholder data.
+        unmatched = [p for p in products if p.pk not in matched_pks]
+        not_available_count = len(unmatched)
+
+        if not dry_run and unmatched:
+            for product in unmatched:
+                CurrentPrice.objects.update_or_create(
+                    product=product,
+                    retailer=nk_retailer,
+                    defaults={
+                        'price': None,
+                        'url': '',
+                        'listing_title': '',
+                        'in_stock': False,
+                        'not_available': True,
+                    },
+                )
 
         skipped = len(products) - imported
 
         self.stdout.write(
-            f'  => {imported} matched, {skipped} skipped\n'
+            f'  => {imported} matched, '
+            f'{not_available_count} marked not available'
+            + (' (dry run)' if dry_run else '')
+            + '\n'
         )
         return imported, skipped
 

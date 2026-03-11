@@ -256,7 +256,8 @@ def product_detail(request, slug):
             CurrentPrice.objects
             .filter(product=product)
             .select_related('retailer')
-            .order_by('price')
+            # not_available entries (price=NULL) always sink to the bottom
+            .order_by('not_available', 'price')
         )
         related_products = list(
             Product.objects
