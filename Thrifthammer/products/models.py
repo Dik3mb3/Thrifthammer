@@ -145,6 +145,16 @@ class Product(models.Model):
         max_digits=10, decimal_places=2, null=True, blank=True,
         help_text='Games Workshop recommended retail price',
     )
+    gw_search_name = models.CharField(
+        max_length=300, blank=True, default='',
+        help_text=(
+            'Override name used when matching against the Games Workshop spreadsheet. '
+            'Set this to the EXACT GW product title when the automatic matching picks '
+            'the wrong product (e.g. "Khorne Berzerkers" for World Eaters Berzerkers, '
+            '"Infiltrator Squad" for Space Marine Infiltrators). '
+            'Leave blank to use the standard fuzzy-matching algorithm.'
+        ),
+    )
     ebay_search_name = models.CharField(
         max_length=200, blank=True, default='',
         help_text=(
