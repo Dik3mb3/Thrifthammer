@@ -8,6 +8,7 @@ and improving organic SEO. Articles are created by staff in the Django admin.
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.text import slugify
 
 from products.utils import unique_slug
 
