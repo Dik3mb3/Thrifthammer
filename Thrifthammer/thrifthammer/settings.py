@@ -170,6 +170,21 @@ if DEBUG:
         },
     }
 
+# ---------------------------------------------------------------------------
+# Production security settings
+# ---------------------------------------------------------------------------
+# Railway terminates SSL at the load balancer, so we trust its forwarded header
+# rather than redirecting at the Django level.
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000       # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+
 # Scraper settings
 SCRAPER_USER_AGENT = os.environ.get(
     'SCRAPER_USER_AGENT',

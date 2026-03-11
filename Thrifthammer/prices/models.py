@@ -15,6 +15,16 @@ class CurrentPrice(models.Model):
         help_text='Direct link to buy (eBay URLs with tracking params can exceed 200 chars)',
         blank=True, default='',
     )
+    listing_title = models.CharField(
+        max_length=300,
+        blank=True,
+        default='',
+        help_text=(
+            "The retailer's own name for this product listing "
+            "(e.g. 'Assault Intercessors (2021 Edition)' on Noble Knight). "
+            "Populated by import commands; used for display and debugging."
+        ),
+    )
     in_stock = models.BooleanField(default=True)
     not_available = models.BooleanField(
         default=False,

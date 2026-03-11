@@ -6,8 +6,10 @@ models, with custom columns and bulk-management helpers.
 """
 
 from django.contrib import admin
+from django.db.models import Prefetch
 from django.utils.html import format_html
 
+from prices.models import CurrentPrice
 from .models import Category, Faction, Product, Retailer
 
 
@@ -105,40 +107,45 @@ class ProductAdmin(admin.ModelAdmin):
         }),
     )
 
+    def get_queryset(self, request):
+        """Prefetch current prices so list view doesn't fire 2 queries per product row."""
+        return super().get_queryset(request).prefetch_related(
+            Prefetch(
+                'current_prices',
+                queryset=CurrentPrice.objects.select_related('retailer').order_by('price'),
+                to_attr='_prefetched_prices',
+            )
+        )
+
     @admin.display(description='Best price')
     def cheapest_current_price(self, obj):
         """
         Display the lowest current price with retailer name.
 
-        Shown in both list view and the detail fieldset so staff can
-        quickly assess how competitive a product's pricing is.
+        Uses prefetched data in the list view to avoid N+1 queries.
+        Falls back to a direct query when called from the detail page fieldset.
         """
-        from prices.models import CurrentPrice  # avoid circular import at module level
-        best = (
-            CurrentPrice.objects
-            .filter(product=obj, in_stock=True)
-            .select_related('retailer')
-            .order_by('price')
-            .first()
-        )
-        if best:
-            return format_html(
-                '<strong>{}</strong> @ {}',
-                f'${best.price}',
-                best.retailer.name,
+        prices = getattr(obj, '_prefetched_prices', None)
+        if prices is None:
+            # Detail page: prefetch doesn't apply, fall back to direct query
+            prices = list(
+                CurrentPrice.objects
+                .filter(product=obj)
+                .select_related('retailer')
+                .order_by('price')
             )
-        # Fall back to out-of-stock prices if no in-stock option exists
-        best_oos = (
-            CurrentPrice.objects
-            .filter(product=obj)
-            .select_related('retailer')
-            .order_by('price')
-            .first()
+
+        in_stock = [p for p in prices if p.in_stock and p.price is not None]
+        best = in_stock[0] if in_stock else next(
+            (p for p in prices if p.price is not None), None
         )
-        if best_oos:
-            return format_html(
-                '<span style="color:#888">{} @ {} (OOS)</span>',
-                f'${best_oos.price}',
-                best_oos.retailer.name,
-            )
-        return '—'
+
+        if not best:
+            return '—'
+        if best.in_stock:
+            return format_html('<strong>{}</strong> @ {}', f'${best.price}', best.retailer.name)
+        return format_html(
+            '<span style="color:#888">{} @ {} (OOS)</span>',
+            f'${best.price}',
+            best.retailer.name,
+        )

@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ThriftHammer",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["Thrifthammer/manage.py", "runserver", "8000"],
+      "port": 8000,
+      "env": {
+        "DJANGO_DEBUG": "True",
+        "DJANGO_ALLOWED_HOSTS": "localhost,127.0.0.1"
+      }
+    }
+  ]
+}

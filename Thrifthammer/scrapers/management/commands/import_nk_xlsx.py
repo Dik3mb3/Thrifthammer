@@ -5,11 +5,19 @@ Imports Noble Knight prices from an Octoparse-generated XLSX file into
 CurrentPrice records, matching spreadsheet rows to our products by name.
 
 Noble Knight XLSX format (columns):
-    SKU          - NK product name (NOT a GW SKU — used for name matching)
-    Game         - Game system (e.g. "Warhammer 40,000")
-    Price        - USD price (e.g. 58.95)
-    Item Number  - NK internal product ID
-    URL          - Direct Noble Knight product URL
+    Current (3-column) format from Octoparse:
+        Title    - NK product name (used for name matching)
+        URL      - Direct Noble Knight product URL
+        Price2   - USD price (e.g. 58.95)
+
+    Legacy (5-column) format also supported:
+        SKU / Name   - NK product name
+        Game         - Game system (e.g. "Warhammer 40,000")
+        Price        - USD price
+        Item Number  - NK internal product ID
+        URL          - Direct Noble Knight product URL
+
+    The format is auto-detected from the header column count.
 
 Matching strategy:
     For each active product in our DB, the command searches the spreadsheet
@@ -36,7 +44,10 @@ Notes:
       US retailer so prices will display in USD on the site.
     - Products with no match above --min-score are silently skipped.
     - Safe to re-run — uses update_or_create.
-    - Each product gets exactly one NK CurrentPrice row (best match wins).
+    - Each product gets exactly one NK CurrentPrice row. When multiple
+      editions of the same product match (e.g. "2016" and "2021" boxes),
+      the cheapest valid price is stored so ThriftHammer always shows
+      the best available deal.
 """
 
 import os
@@ -56,23 +67,40 @@ from products.models import Product, Retailer
 # Includes edition years and non-product words that inflate similarity scores.
 _SKIP_WORDS = frozenset({
     'edition', 'new', 'box', 'set', 'the', 'and', 'of', 'at',
+    '2014', '2015', '2016', '2017',  # older NK edition years
     '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025',
-    'index', 'codex', 'datacards',  # rulebooks — never match to miniatures
+    'index', 'codex', 'datacards', 'datasheets',  # rulebooks — never match to miniatures
+    # Generic unit-type words that appear across many different products;
+    # stripping them prevents false cross-product matches.
+    'squad', 'warriors', 'warrior', 'guard', 'veteran',
 })
 
 # Faction/game prefix phrases stripped before matching so that "adepta sororitas"
 # in an NK title doesn't inflate the score for every Sororitas product equally.
 _FACTION_PREFIXES = [
+    # Warhammer 40,000 factions
     'adepta sororitas', 'adeptus astartes', 'adeptus custodes',
-    'adeptus mechanicus', 'adeptus titanicus', 'aeldari', 'age of sigmar',
-    'blood angels', 'chaos daemons', 'chaos space marines',
-    'dark angels', 'death guard', 'drukhari', 'genestealer cults',
-    'grey knights', 'horus heresy', 'imperial guard', 'imperial knights',
-    'kill team', 'leagues of votann', 'necromunda', 'necrons',
-    'orks', 'orruk warclans', 'space marines', 'space wolves',
-    'stormcast eternals', 'tau empire', 't\'au empire',
-    'thousand sons', 'tyranids', 'warcry', 'warhammer 40000',
-    'warhammer 40k', 'world eaters',
+    'adeptus mechanicus', 'adeptus titanicus', 'aeldari', 'astra militarum',
+    'black templars', 'blood angels', 'chaos daemons', 'chaos space marines',
+    'craftworlds', 'dark angels', 'death guard', 'deathwatch', 'drukhari',
+    'genestealer cults', 'grey knights', 'horus heresy', 'imperial guard',
+    'imperial knights', 'kill team', 'leagues of votann', 'necromunda',
+    'necrons', 'necron',       # both plural and singular forms
+    'orks', 'ork',             # both plural and singular forms
+    'skitarii',                # strips from both "Skitarii Rangers" and "Datacards - Skitarii"
+    'space marines', 'space marine',  # both plural and singular
+    'space wolves', 'thousand sons', "t'au empire", 'tau empire',
+    "t'au", 'tau',             # bare prefix used in some product names
+    'tyranids', 'tyranid',     # both plural and singular
+    'ultramarines', 'warhammer 40000', 'warhammer 40k', 'world eaters',
+    # Age of Sigmar factions (included so AoS products don't get common words counted)
+    'age of sigmar', 'blades of khorne', 'cities of sigmar',
+    'daughters of khaine', 'disciples of tzeentch', 'flesh-eater courts',
+    'gloomspite gitz', 'lumineth realm-lords', 'maggotkin of nurgle',
+    'nighthaunt', 'orruk warclans', 'ossiarch bonereapers',
+    'skaven', 'slaves to darkness', 'stormcast eternals',
+    # Other specialist games
+    'necromunda', 'warcry',
 ]
 
 NK_RETAILER_SLUG = 'noble-knight-games'
@@ -233,6 +261,15 @@ class Command(BaseCommand):
 
         wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
         ws = wb.active
+
+        # Detect column format from the header row.
+        #   Old format (5 cols): (SKU/Name, Game, Price, Item Number, URL)
+        #   New format (3 cols): (Title, URL, Price2)
+        # Price is column index 2 in both; URL position differs.
+        header = next(ws.iter_rows(min_row=1, max_row=1, values_only=True), ())
+        ncols = sum(1 for c in header if c is not None)
+        new_format = (ncols == 3)  # True → (title, url, price); False → old 5-col
+
         nk_rows = [
             row for row in ws.iter_rows(min_row=2, values_only=True)
             if row[0]  # skip blank rows
@@ -247,18 +284,49 @@ class Command(BaseCommand):
         skipped = 0
 
         for product in products:
-            best_score, best_row = self._best_match(product.name, nk_rows)
+            candidates = self._all_matches(product.name, nk_rows, min_score)
 
-            if best_score < min_score or best_row is None:
+            if not candidates:
                 continue  # no match in this file for this product
 
-            nk_name, _game, price_raw, _item_num, url = best_row
+            # Default: highest-scoring match (used when no candidate has a price).
+            chosen_score, chosen_row = candidates[0]
+            chosen_price = None
 
-            price = self._parse_price(price_raw)
-            url = str(url).strip() if url else ''
+            # Among near-top-scoring candidates only, pick the cheapest valid price.
+            # SCORE_TOLERANCE ensures we only compare true edition duplicates
+            # (same score) — not different products that share one keyword.
+            # e.g. "Assault Intercessors" (1.0) beats "Heavy Intercessors" (0.5)
+            # even if Heavy Intercessors is cheaper.
+            # Older editions with the same score are fairly compared (2016 vs 2021).
+            SCORE_TOLERANCE = 0.10
+            best_score = candidates[0][0]
+            for score, row in candidates:
+                if best_score - score > SCORE_TOLERANCE:
+                    break  # remaining candidates diverge too far; stop
+                p = self._parse_price(row[2])
+                if p is not None and (chosen_price is None or p < chosen_price):
+                    chosen_price = p
+                    chosen_score, chosen_row = score, row
+
+            edition_note = (
+                f' ({len(candidates)} editions found, cheapest chosen)'
+                if len(candidates) > 1 else ''
+            )
+
+            # Unpack the chosen row according to the detected column format.
+            if new_format:
+                # New 3-column format: (Title, URL, Price2)
+                nk_name, url_raw, price_raw = chosen_row
+            else:
+                # Old 5-column format: (Name, Game, Price, Item Number, URL)
+                nk_name, _game, price_raw, _item_num, url_raw = chosen_row
+
+            price = chosen_price if chosen_price is not None else self._parse_price(price_raw)
+            url = str(url_raw).strip() if url_raw else ''
 
             self.stdout.write(
-                f'  [{best_score:.2f}] {product.name}\n'
+                f'  [{chosen_score:.2f}] {product.name}{edition_note}\n'
                 f'         -> {nk_name}  ${price_raw}  {url[:70]}'
             )
 
@@ -269,6 +337,7 @@ class Command(BaseCommand):
                     defaults={
                         'price': price,
                         'url': url,
+                        'listing_title': str(nk_name).strip() if nk_name else '',
                         'in_stock': True,
                         'not_available': price is None and not url,
                     },
@@ -286,30 +355,67 @@ class Command(BaseCommand):
     # ── Name matching ──────────────────────────────────────────────────────────
 
     @staticmethod
-    def _best_match(product_name, nk_rows):
+    def _get_faction(text):
         """
-        Find the highest-scoring NK row for a given product name.
+        Return the first faction prefix found in text (lowercase), or None.
 
-        Returns (score, row) or (0.0, None) if nothing meets the threshold.
+        Prefixes are checked longest-first so 'chaos space marines' is
+        returned before 'space marines' for a matching text.
+        """
+        lower = text.lower()
+        for prefix in sorted(_FACTION_PREFIXES, key=len, reverse=True):
+            if prefix in lower:
+                return prefix
+        return None
+
+    @staticmethod
+    def _all_matches(product_name, nk_rows, min_score):
+        """
+        Return all NK rows whose name similarity meets min_score.
+
+        NK often lists multiple editions of the same product (e.g. "Acolyte
+        Hybrids 2016" and "Acolyte Hybrids 2021") at different prices. This
+        method collects every candidate so the caller can pick the cheapest.
+
+        A faction-conflict penalty (-0.6) is applied when our product belongs
+        to faction A but the NK row explicitly names a different faction B.
+        This prevents "Combat Patrol - Blood Angels" from being matched to
+        "Dark Angels Combat Patrol" — the penalty drops the score below the
+        default min_score (0.5) so the wrong-faction row is excluded entirely.
+
+        Returns a list of (score, row) tuples sorted by score descending,
+        or an empty list if no row meets min_score.
         """
         p_words = Command._keywords(product_name)
         if not p_words:
-            return 0.0, None
+            return []
 
-        best_score = 0.0
-        best_row = None
+        # Detect which faction (if any) our DB product belongs to.
+        our_faction = Command._get_faction(product_name)
 
+        matches = []
         for row in nk_rows:
-            nk_words = Command._keywords(str(row[0]))
+            nk_title = str(row[0])
+            nk_words = Command._keywords(nk_title)
             if not nk_words:
                 continue
             shared = len(p_words & nk_words)
             score = 2 * shared / (len(p_words) + len(nk_words))
-            if score > best_score:
-                best_score = score
-                best_row = row
 
-        return best_score, best_row
+            # Faction-conflict penalty: if our product has faction A and the
+            # NK row explicitly names a DIFFERENT faction B, subtract 0.6 so
+            # the wrong-faction row falls below the min_score threshold and
+            # is excluded. E.g. "Combat Patrol - Blood Angels" (NK) won't
+            # match "Dark Angels Combat Patrol" (DB).
+            if our_faction is not None:
+                nk_faction = Command._get_faction(nk_title)
+                if nk_faction is not None and nk_faction != our_faction:
+                    score -= 0.6
+
+            if score >= min_score:
+                matches.append((score, row))
+
+        return sorted(matches, key=lambda x: x[0], reverse=True)
 
     @staticmethod
     def _keywords(name):

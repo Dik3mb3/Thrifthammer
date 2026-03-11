@@ -13,7 +13,8 @@ import json
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
-from django.utils.text import slugify
+
+from products.utils import unique_slug
 
 
 class UnitType(models.Model):
@@ -160,13 +161,9 @@ class SavedArmy(models.Model):
     def save(self, *args, **kwargs):
         """Auto-generate a unique slug from the user and army name."""
         if not self.slug:
-            base = slugify(f"{self.user.username}-{self.name}")
-            slug = base
-            counter = 1
-            while SavedArmy.objects.filter(slug=slug).exclude(pk=self.pk).exists():
-                slug = f"{base}-{counter}"
-                counter += 1
-            self.slug = slug
+            self.slug = unique_slug(
+                f"{self.user.username}-{self.name}", SavedArmy, exclude_pk=self.pk
+            )
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):

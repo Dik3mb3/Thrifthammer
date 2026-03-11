@@ -13,11 +13,10 @@ import json
 import decimal
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, TemplateView
 
 from products.models import Faction
@@ -318,7 +317,6 @@ class ViewSavedArmyView(DetailView):
         qs = SavedArmy.objects.select_related('user', 'faction')
         if self.request.user.is_authenticated:
             # Show own armies (any privacy) + all public armies
-            from django.db.models import Q
             return qs.filter(Q(is_public=True) | Q(user=self.request.user))
         return qs.filter(is_public=True)
 

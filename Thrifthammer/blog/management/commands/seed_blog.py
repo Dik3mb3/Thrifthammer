@@ -143,6 +143,108 @@ POSTS = [
 <p>Warhammer will always test both your tactical and financial skills — but with a little creativity and a sharp hobby knife, you can build beautiful armies and keep your wallet intact.</p>
 <p>Whether you're kitbashing Orks or resurrecting Necrons, remember: <strong>every sprue hides a secret unit.</strong></p>""",
     },
+    {
+        'title': 'The 3 Best (and 3 Worst) Warhammer Video Games (That I Have Played)',
+        'slug': '3-best-3-worst-warhammer-video-games',
+        'excerpt': (
+            'From Rogue Trader\'s grimdark storytelling to the disaster of Underhive Wars — '
+            'my personal picks for the 3 best and 3 worst Warhammer video games I\'ve actually played.'
+        ),
+        'meta_title': 'The 3 Best (and 3 Worst) Warhammer Video Games',
+        'meta_description': (
+            'Rogue Trader, Space Marine, and Dawn of War make the best list — while Underhive Wars, '
+            'Talisman: Horus Heresy, and Realms of Ruin get the wooden spoon.'
+        ),
+        'tags': ['Video Games', 'Reviews', 'Warhammer 40K', 'Age of Sigmar'],
+        'body': """<p>While tabletop will always be the peak of the hobby, there's no denying that Warhammer video games have carved out their own niche among casual and hardcore fans alike. Today, players have more ways than ever to dive into the grimdark universe &mdash; but for every masterpiece that nails the tone of the 41st millennium, there's a stinker that makes you beg for the sweet mercy of Exterminatus.</p>
+
+<p>Here are my personal picks for the 3 best and 3 worst Warhammer video games, plus a few that narrowly missed each list.</p>
+
+<hr>
+
+<h2>The 3 Best Warhammer Video Games</h2>
+
+<h3>#1. Warhammer 40,000: Rogue Trader &mdash; <em>"The Emperor's Chosen CRPG"</em></h3>
+
+<p>If you love deep stories, moral ambiguity, and tactical combat, Rogue Trader is everything you've ever wanted from a Warhammer RPG.</p>
+
+<p>Developed by Owlcat Games (the studio behind <em>Pathfinder: Wrath of the Righteous</em>), this is the definitive Warhammer CRPG. You play as a Rogue Trader commanding a voidship, making difficult decisions while interacting with countless in-universe factions.</p>
+
+<p>Every companion feels like a page out of a Black Library novel, yet the game remains approachable for newcomers with little lore knowledge. My favourite part? It perfectly balances being a fun video game with faithfully infusing the atmosphere and lore of 40K.</p>
+
+<p>This is a must-buy for lore lovers, CRPG fans, or anyone who's ever wondered what it's like to command your own fleet in the Imperium.</p>
+
+<h3>#2. Space Marine 1 &amp; 2 &mdash; <em>"The Emperor Protects&hellip; and So Do You"</em></h3>
+
+<p>Few games truly make you feel like a Space Marine.</p>
+
+<p>The original Space Marine was a phenomenal first attempt &mdash; fast, brutal, and gloriously over-the-top. Space Marine 2 takes that foundation and amplifies it with more scale, more violence, and even more enemies to pulp into paste.</p>
+
+<p>It's a bombastic thrill ride that delivers exactly what you want: heavy metal carnage and righteous fury. The gameplay feels like <em>Gears of War</em> for Warhammer fans &mdash; each weapon feels satisfying to fire, every chainsword swing hits with weight, and the bloodshed is pure cinematic bliss.</p>
+
+<p>The story does its job moving you between set pieces without ever getting in the way of the action. And with regular updates and future content planned, Space Marine 2 is only getting better.</p>
+
+<h3>#3. Dawn of War &mdash; <em>"The OG RTS That Still Rules"</em></h3>
+
+<p>One of Warhammer's earliest forays into video games, Dawn of War showed us what digital Warhammer could truly be.</p>
+
+<p>I played it long before I ever touched a tabletop model &mdash; my copy came from trading a few cards with a friend. Relic's 2004 classic perfectly blended tactical base-building with brutal frontline combat. The voice lines, animations, and faction design still hit harder than most modern RTS games.</p>
+
+<p>With expansions like <em>Dark Crusade</em> and <em>Soulstorm</em>, Dawn of War built a thriving community that's still active thanks to mods, fan patches, and the new Dawn of War Remastered.</p>
+
+<p>The only reason it ranks #3 for me is simple: StarCraft II exists. It's hard to go back in 2026, but for many of us, Dawn of War was the gateway into both Warhammer and gaming.</p>
+
+<hr>
+
+<h2>Just Missed the List</h2>
+<ul>
+    <li><strong>Blood Bowl 2</strong> &mdash; Brutal fantasy football with dice. The best Blood Bowl video game ever made for one of GW's best specialist games.</li>
+    <li><strong>Shootas, Blood &amp; Teef</strong> &mdash; Pure, chaotic fun and beautifully Orky.</li>
+    <li><strong>Vermintide 2</strong> &mdash; Fantastic co-op hack-and-slash that I sadly only put a few dozen hours into before moving on.</li>
+</ul>
+
+<hr>
+
+<h2>&#128128; The 3 Worst Warhammer Video Games</h2>
+
+<h3>#1. Necromunda: Underhive Wars &mdash; <em>"Most Disappointing"</em></h3>
+
+<p>Necromunda might be Warhammer's coolest setting &mdash; dark, industrial, and full of gang warfare. On paper, Underhive Wars should've been a slam dunk: a gritty, tactical skirmish game in the hive's depths.</p>
+
+<p>Instead, what we got was a buggy, confusing mess with terrible AI, clunky mechanics, and a campaign that completely missed the tone of the tabletop game.</p>
+
+<p>The AI is so bad it ruins single-player entirely. And with the multiplayer scene long dead, there's virtually nothing left for new players. Even at its frequent $2 sale price, Underhive Wars is a chore to play.</p>
+
+<p>I had high hopes because Necromunda on tabletop is a blast &mdash; full of stories, betrayal, and personality. Unfortunately, this game's failure likely killed any chance of another Necromunda adaptation for years to come.</p>
+
+<p><em>Necromunda deserves better.</em></p>
+
+<h3>#2. Talisman: The Horus Heresy &mdash; <em>"Why Did I Play This?"</em></h3>
+
+<p>Long story short: I played this with a friend who loves Talisman&hellip; and I learned I don't.</p>
+
+<p>I'm a huge board gamer (<em>Terraforming Mars</em>, <em>Gaia Project</em>, <em>Wingspan</em>), so I was curious to finally try Talisman &mdash; especially with a Warhammer 40K skin. But what I got was a slow, repetitive, random slog that felt like watching paint dry on a Rhino hull.</p>
+
+<p>To be fair, it has mostly positive reviews on Steam &mdash; fans of the original Talisman appreciate the tweaks and flavour. But if you're not already a Talisman die-hard, stay away.</p>
+
+<h3>#3. Warhammer Age of Sigmar: Realms of Ruin &mdash; <em>"Style Over Substance"</em></h3>
+
+<p>Realms of Ruin had promise: beautiful visuals, an ambitious RTS setup, and the chance to finally give Age of Sigmar its moment in the spotlight.</p>
+
+<p>But it just never delivers. The gameplay is slow and shallow, the missions repetitive, and the factions lack meaningful variety. It's an RTS that fails at the fundamentals &mdash; no strategic depth, limited unit diversity, and a story so generic it feels like it was written by a servitor.</p>
+
+<p>Worse, the game leans heavily into DLC and monetisation rather than delivering a complete experience. Even with low expectations, I was shocked by how half-baked the final product felt.</p>
+
+<p><em>Realms of Ruin looks incredible &mdash; but plays like a tech demo.</em></p>
+
+<hr>
+
+<h2>Final Thoughts</h2>
+
+<p>Warhammer video games are like the galaxy itself &mdash; a mix of glory, horror, and occasional disaster.</p>
+
+<p>When they work (<em>Rogue Trader</em>, <em>Space Marine</em>, <em>Dawn of War</em>), they pull you deep into the 41st millennium and remind you why you love the universe. When they don't (<em>Underhive Wars</em>, <em>Realms of Ruin</em>), they make you want to offer your GPU to the Machine God in penance.</p>""",
+    },
 ]
 
 

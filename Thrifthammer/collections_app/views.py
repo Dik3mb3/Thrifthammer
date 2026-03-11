@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum, F
+from django.db.models import DecimalField, ExpressionWrapper, F, Sum
 from django.shortcuts import get_object_or_404, redirect, render
 
 from products.models import Product
@@ -19,10 +19,11 @@ def my_collection(request):
     total_spent = items.exclude(status='wishlist').aggregate(
         total=Sum(F('price_paid') * F('quantity'))
     )['total'] or 0
-    total_msrp = 0
-    for item in items.exclude(status='wishlist'):
-        if item.product.msrp:
-            total_msrp += item.product.msrp * item.quantity
+    total_msrp = items.exclude(status='wishlist').aggregate(
+        total=Sum(
+            ExpressionWrapper(F('product__msrp') * F('quantity'), output_field=DecimalField()),
+        )
+    )['total'] or 0
 
     owned = items.filter(status='owned')
     building = items.filter(status='building')

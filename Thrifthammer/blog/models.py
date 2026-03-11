@@ -8,7 +8,8 @@ and improving organic SEO. Articles are created by staff in the Django admin.
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.text import slugify
+
+from products.utils import unique_slug
 
 
 class Tag(models.Model):
@@ -122,13 +123,7 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         """Auto-generate unique slug from title if not already set."""
         if not self.slug:
-            base = slugify(self.title)[:210]
-            slug = base
-            counter = 1
-            while Post.objects.filter(slug=slug).exclude(pk=self.pk).exists():
-                slug = f"{base}-{counter}"
-                counter += 1
-            self.slug = slug
+            self.slug = unique_slug(self.title, Post, max_len=210, exclude_pk=self.pk)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):

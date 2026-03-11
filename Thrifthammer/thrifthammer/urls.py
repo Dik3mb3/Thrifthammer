@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
@@ -26,3 +27,10 @@ urlpatterns = [
     path('army-calculator/', include('calculators.urls')),
     path('blog/', include('blog.urls')),
 ]
+
+if settings.DEBUG:
+    try:
+        import debug_toolbar  # noqa: F401
+        urlpatterns += [path('__debug__/', include('debug_toolbar.urls'))]
+    except ImportError:
+        pass

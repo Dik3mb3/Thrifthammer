@@ -82,7 +82,7 @@ class UnitTypeModelTest(TestCase):
         )
         self.unit = UnitType.objects.create(
             name='Intercessors',
-            category='troops',
+            category='battleline',
             product=self.product,
             points_cost=20,
             typical_quantity=5,
@@ -109,7 +109,7 @@ class UnitTypeModelTest(TestCase):
     def test_str(self):
         """__str__ includes name and category display."""
         self.assertIn('Intercessors', str(self.unit))
-        self.assertIn('Troops', str(self.unit))
+        self.assertIn('Battleline', str(self.unit))
 
 
 @override_settings(STORAGES=_TEST_STORAGES)
@@ -178,7 +178,7 @@ class ArmyCalculatorViewTest(TestCase):
         self.client = Client()
         self.faction = _make_faction()
         self.unit = UnitType.objects.create(
-            name='Intercessors', category='troops', faction=self.faction,
+            name='Intercessors', category='battleline', faction=self.faction,
             points_cost=20, typical_quantity=5, is_active=True,
         )
         self.url = reverse('calculators:space_marines')
