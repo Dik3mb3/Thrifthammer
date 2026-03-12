@@ -17,7 +17,7 @@ Performance strategy:
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.paginator import InvalidPage, Paginator
-from django.db.models import DecimalField, Min, OuterRef, Q, Subquery
+from django.db.models import Case, DecimalField, ExpressionWrapper, F, FloatField, Min, OuterRef, Q, Subquery, Value, When
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_GET
@@ -174,6 +174,20 @@ def product_list(request):
         .filter(is_active=True)
         .select_related('category', 'faction')
         .annotate(min_price=Min('current_prices__price'))
+        .annotate(
+            min_discount_pct=Case(
+                When(
+                    msrp__gt=0,
+                    min_price__isnull=False,
+                    then=ExpressionWrapper(
+                        (F('msrp') - F('min_price')) / F('msrp') * Value(100),
+                        output_field=FloatField(),
+                    ),
+                ),
+                default=None,
+                output_field=FloatField(),
+            )
+        )
     )
 
     if query:
