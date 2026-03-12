@@ -43,7 +43,7 @@ class CurrentPrice(models.Model):
 
     @property
     def discount_pct(self):
-        if self.product.msrp and self.product.msrp > 0:
+        if self.price is not None and self.product.msrp and self.product.msrp > 0:
             return round((1 - self.price / self.product.msrp) * 100, 1)
         return None
 

@@ -60,6 +60,8 @@ def _get_spotlight_deals(count=SPOTLIGHT_COUNT):
             product__is_active=True,
             product__msrp__isnull=False,
             product__msrp__gt=0,
+            price__isnull=False,
+            not_available=False,
         )
         .order_by('product_id', 'price')  # cheapest first per product
     )
