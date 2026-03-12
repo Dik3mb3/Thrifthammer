@@ -245,6 +245,217 @@ POSTS = [
 
 <p>When they work (<em>Rogue Trader</em>, <em>Space Marine</em>, <em>Dawn of War</em>), they pull you deep into the 41st millennium and remind you why you love the universe. When they don't (<em>Underhive Wars</em>, <em>Realms of Ruin</em>), they make you want to offer your GPU to the Machine God in penance.</p>""",
     },
+    {
+        'title': 'The Best Value Miniature Paints for Your Money',
+        'slug': 'best-value-miniature-paints',
+        'excerpt': (
+            'We compared Citadel, Vallejo, Army Painter, Pro Acryl, and AK Interactive '
+            'by cost per ml and starter set value — here\'s which brands give you the most '
+            'paint for your money.'
+        ),
+        'meta_title': 'Best Value Miniature Paints: Cost Per ML Compared',
+        'meta_description': (
+            'Citadel, Vallejo, Army Painter, Pro Acryl, and AK Interactive compared by cost per ml '
+            'and starter set value — find the best miniature paint for your budget.'
+        ),
+        'tags': ['Painting', 'Budget Tips', 'Guides', 'Hobby'],
+        'body': """<p>Painting miniatures is one of the most expensive parts of the hobby. Between base colors, washes, metallics, and specialty paints, many hobbyists end up spending hundreds of dollars per year on paints alone.</p>
+
+<p>But not all miniature paints offer the same value.</p>
+
+<p>To find the best value miniature paints, I analyzed several factors:</p>
+
+<ul>
+    <li>Cost per bottle</li>
+    <li>Cost per milliliter (ml)</li>
+    <li>Starter set value</li>
+    <li>Community feedback from hobbyists</li>
+</ul>
+
+<p>Here&rsquo;s how the biggest brands stack up.</p>
+
+<hr>
+
+<h2>Contenders for the Best Miniature Paints</h2>
+
+<p>We surveyed hobbyists across Reddit and our local gaming community and narrowed the list down to five major contenders:</p>
+
+<ul>
+    <li>Citadel</li>
+    <li>Vallejo</li>
+    <li>The Army Painter</li>
+    <li>Pro Acryl</li>
+    <li>AK Interactive</li>
+</ul>
+
+<p>While other brands were mentioned, these five consistently stood out for their quality, ease of use, versatility, and overall value for miniature painters.</p>
+
+<hr>
+
+<h2>Price Per Bottle and Cost Per ML</h2>
+
+<p>The easiest way to compare miniature paints is cost per milliliter. For this comparison, we used the standard bottle size for each brand and the lowest price we could find online.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Brand</th>
+            <th>Bottle Size</th>
+            <th>Avg Price</th>
+            <th>Cost per ML</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td>Citadel</td><td>12 ml</td><td>$3.87</td><td>$0.32/ml</td></tr>
+        <tr><td>Vallejo</td><td>17 ml</td><td>$3.99</td><td>$0.23/ml</td></tr>
+        <tr><td>The Army Painter</td><td>18 ml</td><td>$4.31</td><td>$0.24/ml</td></tr>
+        <tr><td>Pro Acryl</td><td>22 ml</td><td>$5.00</td><td>$0.23/ml</td></tr>
+        <tr><td>AK Interactive</td><td>17 ml</td><td>$4.50</td><td>$0.26/ml</td></tr>
+    </tbody>
+</table>
+
+<p><strong>Key takeaway:</strong> Citadel is the most expensive paint per ml by a wide margin.</p>
+
+<p>This doesn&rsquo;t necessarily mean Citadel paints are bad &mdash; but if you&rsquo;re strictly looking at value for money, they are the most expensive option in this comparison.</p>
+
+<hr>
+
+<h2>Bottle Size Matters More Than People Realize</h2>
+
+<p>Many hobbyists compare price per bottle, which can be misleading. For example:</p>
+
+<ul>
+    <li>Citadel: 12 ml</li>
+    <li>Vallejo: 17 ml</li>
+</ul>
+
+<p>That means a Vallejo bottle contains over 40% more paint than a Citadel pot.</p>
+
+<p>When comparing miniature paint brands, <strong>cost per ml is far more important than sticker price</strong>.</p>
+
+<hr>
+
+<h2>Starter Sets vs Individual Bottles</h2>
+
+<p>Starter sets almost always provide better value per bottle. To test this, we compared starter sets listed on each company&rsquo;s website using MSRP pricing.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Brand</th>
+            <th>Typical Set</th>
+            <th>Price</th>
+            <th>Total ML</th>
+            <th>Cost per ML</th>
+            <th>Discount vs Individual</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td>Vallejo Game Color Set</td><td>16 paints</td><td>~$50</td><td>272 ml</td><td>$0.18/ml</td><td>&minus;22%</td></tr>
+        <tr><td>Army Painter Warpaints Set</td><td>11 paints</td><td>~$43</td><td>198 ml</td><td>$0.22/ml</td><td>&minus;8%</td></tr>
+        <tr><td>Citadel Paint Set</td><td>13 paints</td><td>~$45</td><td>156 ml</td><td>$0.29/ml</td><td>&minus;9%</td></tr>
+        <tr><td>Pro Acryl Metallic Set</td><td>9 paints</td><td>~$42</td><td>198 ml</td><td>$0.21/ml</td><td>&minus;9%</td></tr>
+        <tr><td>AK Interactive Basic Set</td><td>14 paints</td><td>~$63</td><td>238 ml</td><td>$0.26/ml</td><td>~0%</td></tr>
+    </tbody>
+</table>
+
+<p><strong>Biggest savings:</strong> Vallejo starter sets offer the largest discount by far.</p>
+
+<p>Most other brands offer around 10% savings at MSRP, but starter sets frequently go on sale. When that happens, discounts can reach 15&ndash;25% or more.</p>
+
+<p>If you&rsquo;re building your first paint collection, starter sets are almost always the best value.</p>
+
+<hr>
+
+<h2>What Reddit Hobbyists Say About Paint Value</h2>
+
+<p>Across multiple discussions on miniature painting subreddits, several clear patterns emerged.</p>
+
+<h3>Vallejo: Most Popular Choice</h3>
+
+<p>Vallejo was the most consistently recommended brand among hobbyists.</p>
+
+<p>One painter noted:</p>
+
+<blockquote><p>&ldquo;Vallejo paints are quality paints and will make your life as a new painter easier because when shaken they are more consistent and layer smoothly.&rdquo;</p></blockquote>
+
+<p><strong>Common pros mentioned</strong></p>
+<ul>
+    <li>Dropper bottles reduce wasted paint</li>
+    <li>Large color range</li>
+    <li>Strong pigmentation</li>
+</ul>
+
+<p><strong>Common cons mentioned</strong></p>
+<ul>
+    <li>Some hobby stores carry limited ranges</li>
+    <li>Distribution can be inconsistent at certain FLGS locations</li>
+</ul>
+
+<h3>Army Painter: You Can&rsquo;t Go Wrong</h3>
+
+<p>The Army Painter ranked highly across most reviews, especially for starter sets and batch painting. Many hobbyists felt Army Painter offered a reliable middle ground between price and performance.</p>
+
+<p><strong>Common pros mentioned</strong></p>
+<ul>
+    <li>Wide color range</li>
+    <li>Huge starter sets</li>
+    <li>Designed for batch painting armies (great coverage)</li>
+</ul>
+
+<p><strong>Common cons mentioned</strong></p>
+<ul>
+    <li>Colors can lack vibrancy compared to competitors</li>
+    <li>Individual paints often feel less valuable than starter sets</li>
+</ul>
+
+<h3>Citadel: Best Ecosystem (Worst Value)</h3>
+
+<p>Citadel paints remain extremely popular because they are tightly integrated with tutorials and guides for Warhammer 40,000 and Warhammer Age of Sigmar. However, from a pure value perspective, they are difficult to justify. At roughly $0.32 per ml, Citadel paints are the most expensive paint line in our comparison.</p>
+
+<p><strong>Common pros mentioned</strong></p>
+<ul>
+    <li>Best distribution (easy to find at local game stores)</li>
+    <li>Strong color vibrancy</li>
+    <li>Massive paint range</li>
+</ul>
+
+<p><strong>Common cons mentioned</strong></p>
+<ul>
+    <li>Expensive</li>
+    <li>Small pots</li>
+    <li>Lid design can dry out paints over time</li>
+</ul>
+
+<h3>Pro Acryl: The Most Underrated</h3>
+
+<p>Pro Acryl scored extremely well in value metrics, and the feedback we saw was overwhelmingly positive. I personally bought a few bottles after researching this article, and early results have been great.</p>
+
+<p><strong>Common pros mentioned</strong></p>
+<ul>
+    <li>Large bottle size</li>
+    <li>Excellent coverage</li>
+    <li>Very vibrant pigments</li>
+</ul>
+
+<p><strong>Common cons mentioned</strong></p>
+<ul>
+    <li>Some weaker colors in the range</li>
+    <li>Bottle caps can be inconsistent</li>
+</ul>
+
+<hr>
+
+<h2>Final Thoughts</h2>
+
+<p>One thing became very clear after talking with hobbyists and researching miniature paints: <strong>don&rsquo;t cheap out on hobby paint.</strong></p>
+
+<p>Stay away from generic craft paints from big box stores like Walmart or Hobby Lobby. While they may seem cheaper upfront, they typically lack the pigmentation and consistency needed for painting miniatures. Stick to brands that miniature painters know and trust.</p>
+
+<p>As a relatively new painter myself, I may not be the ultimate authority on paint quality, but my experience with Vallejo and Army Painter has been consistently positive. Pro Acryl has also impressed me in the short time I&rsquo;ve been using it.</p>
+
+<p>At the end of the day, I can confidently recommend four out of the five brands on this list (sorry AK Interactive). Find the brand &mdash; or mix of brands &mdash; that works best for you, and always keep an eye out for starter set deals to maximize your painting budget.</p>""",
+    },
 ]
 
 
