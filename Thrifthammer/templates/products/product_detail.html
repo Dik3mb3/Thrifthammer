@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load price_filters %}
 
 {% block title %}{{ product.name }} — Best Price | ThriftHammer{% endblock %}
 
@@ -70,7 +71,17 @@
       {% with best=current_prices.0 %}
       <div class="best-price-card">
         <div class="best-price-label">Best Price Available</div>
-        <div class="best-price-amount">${{ best.price|floatformat:"2" }}</div>
+        <div style="display:flex;align-items:baseline;gap:var(--sp-3);flex-wrap:wrap;">
+          <div class="best-price-amount">${{ best.price|floatformat:"2" }}</div>
+          {# Discount badge vs GW price — shown next to the dollar amount #}
+          {% if gw_ref_price %}
+          {% with best_disc=best.price|discount_vs:gw_ref_price %}
+          {% if best_disc > 0.5 %}
+          <span class="badge badge-green" style="font-size:0.95rem;padding:3px 8px;">−{{ best_disc|floatformat:"0" }}% vs GW</span>
+          {% endif %}
+          {% endwith %}
+          {% endif %}
+        </div>
         <div class="best-price-retailer">at {{ best.retailer.name }}
           {% if best.in_stock %}
           <span class="badge badge-green" style="margin-left:var(--sp-2);">In Stock</span>
@@ -78,12 +89,9 @@
           <span class="badge badge-red" style="margin-left:var(--sp-2);">Out of Stock</span>
           {% endif %}
         </div>
-        {% if savings and savings.percent > 0 %}
-        <div class="best-price-savings">
-          ⬇ Save ${{ savings.amount|floatformat:"2" }} ({{ savings.percent }}% off GW RRP)
-        </div>
-        {% endif %}
-        {% if product.msrp %}
+        {% if gw_ref_price %}
+        <p style="font-size:0.8rem;color:var(--text-muted);">GW Price: ${{ gw_ref_price }}</p>
+        {% elif product.msrp %}
         <p style="font-size:0.8rem;color:var(--text-muted);">GW RRP: ${{ product.msrp }}</p>
         {% endif %}
       </div>
@@ -160,8 +168,16 @@
             <td>
               {% if cp.not_available %}
               <span style="color:var(--text-muted);">—</span>
-              {% elif cp.discount_pct and cp.discount_pct > 0 %}
-              <span class="badge badge-green">{{ cp.discount_pct }}% off</span>
+              {% elif gw_ref_price and cp.price %}
+              {% with disc=cp.price|discount_vs:gw_ref_price %}
+              {% if disc > 0.5 %}
+              <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
+              {% elif disc < -0.5 %}
+              <span class="badge badge-red">+{{ disc|floatformat:"0"|cut:"-" }}%</span>
+              {% else %}
+              <span style="color:var(--text-muted);">—</span>
+              {% endif %}
+              {% endwith %}
               {% else %}
               <span style="color:var(--text-muted);">—</span>
               {% endif %}

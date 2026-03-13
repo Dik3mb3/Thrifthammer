@@ -284,11 +284,21 @@ def product_detail(request, slug):
         )
         savings = product.get_savings_vs_retail()
 
+        # Use the GW row in the price table as the discount reference price.
+        # This gives accurate % discounts vs what GW actually charges in USD.
+        # Falls back to product.msrp when GW isn't in the retailer list.
+        gw_ref_price = next(
+            (cp.price for cp in current_prices
+             if cp.retailer.name == 'Games Workshop' and cp.price),
+            product.msrp,
+        )
+
         cached_ctx = {
             'product':          product,
             'current_prices':   current_prices,
             'related_products': related_products,
             'savings':          savings,
+            'gw_ref_price':     gw_ref_price,
         }
         cache.set(cache_key, cached_ctx, timeout=1800)  # 30 minutes
 
