@@ -54,8 +54,10 @@ IMG_SP003_EBAY     = 'https://i.ebayimg.com/images/g/OWsAAOSwp5dkdQ9T/s-l500.jpg
 IMG_CSP003_EBAY    = 'https://i.ebayimg.com/images/g/FdEAAOSwB4hkjOr1/s-l500.jpg'        # Corax White Spray CSP-003
 IMG_TCP001_EBAY    = 'https://i.ebayimg.com/images/g/LdEAAOSwQ8hm5GBT/s-l500.jpg'        # Technical Paint TCP-001
 
-# GW Death Company image — correct product photo (not the codex cover)
-IMG_41_07_GW = 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101402_BADeathCompanyMarines02.jpg'
+# Death Company image — from the verified eBay listing (GW no longer lists this product)
+# GW removed Death Company Marines from their online store (not in GW Algolia index);
+# the eBay listing image shows the actual product correctly.
+IMG_41_07_GW = 'https://i.ebayimg.com/images/g/dZIAAeSwMotpqdhy/s-l500.jpg'
 
 
 # ===========================================================================

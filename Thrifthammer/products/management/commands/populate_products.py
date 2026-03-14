@@ -48,12 +48,12 @@ GW_IMAGES = {
     '41-04': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101419_BAAstorathTheGrim01.jpg',
     '41-05': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101419_BAAstorathTheGrim01.jpg',
     '41-06': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101413_BASanguinaryGuard01.jpg',
-    '41-07': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60030101063_EngBACodex01.jpg',
+    '41-07': 'https://i.ebayimg.com/images/g/dZIAAeSwMotpqdhy/s-l500.jpg',  # GW discontinued product; eBay listing image
     '41-08': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101419_BAAstorathTheGrim01.jpg',
     '41-09': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101419_BAAstorathTheGrim01.jpg',
     '41-10': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101413_BASanguinaryGuard01.jpg',
     '41-11': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99070101007_BATerminatorLib01.jpg',
-    '41-12': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60030101063_EngBACodex01.jpg',
+    '41-12': 'https://i.ebayimg.com/images/g/dZIAAeSwMotpqdhy/s-l500.jpg',  # GW discontinued; same eBay listing image as 41-07
     '41-15': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99070101007_BATerminatorLib01.jpg',
     '43-02': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99560102260_MagnustheRed01.jpg',
     '43-03': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99560102202_MortariontheReaper01.jpg',
