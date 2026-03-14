@@ -378,6 +378,28 @@ GW_IMAGES = {
     'WC-102': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60010299038_WCSunderedFateHuntersOfHuanchiLead.jpg',
     'WP-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99811466026_MEWatcherInTheWaterCharacterRerelease01.jpg',
 }
+
+# ---------------------------------------------------------------------------
+# Citadel brand logo — overrides individual product images for all active
+# Citadel paint/hobby SKUs.  Painting Handles (PH-001/PH-002) keep their own
+# product-specific images.
+# Source: Citadel Colour app icon, Apple App Store CDN (confirmed 200 OK).
+# ---------------------------------------------------------------------------
+_CITADEL_LOGO_IMG = (
+    'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/'
+    'a0/02/88/a002887a-2e90-2346-2d9d-d65999e42b75/'
+    'AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/1200x630wa.png'
+)
+for _sku in [
+    'AP-001', 'BP-001', 'BR-001', 'BR-002', 'BS-001', 'BS-002',
+    'CP-001', 'CP-002', 'CP-003', 'CP-005', 'CP-010',
+    'CSP-003', 'CSP-004', 'DB-001', 'DP-001', 'HK-001', 'LP-001',
+    'MR-001', 'PG-001', 'PM-001', 'SG-001',
+    'SP-001', 'SP-002', 'SP-003', 'SP-010', 'SP-011', 'SP-012', 'SP-020',
+    'TCP-001', 'TE-001', 'TP-001', 'WP-001',
+]:
+    GW_IMAGES[_sku] = _CITADEL_LOGO_IMG
+
 from django.utils.text import slugify
 
 from prices.models import CurrentPrice, PriceHistory

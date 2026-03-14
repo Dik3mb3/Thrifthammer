@@ -10,13 +10,8 @@ Changes covered:
   Section 3  - Fix eBay prices (1 correction)
   Section 4  - Fix HA-050 Praetor: rename + fix all 5 retailer links + image
   Section 5  - Reclassify HA-051 Chaplain (Horus Heresy -> WH40K / Space Marines)
-
-NOTE — Citadel logo image (pending):
-  The user requested that all active Citadel products (except Painting Handles)
-  be updated to show the generic Citadel company logo.  The attached image URL
-  was not available in this session.  Once the URL is confirmed, update the
-  constant below and add back / uncomment the Citadel image section.
-  CITADEL_LOGO_IMG = '??? — confirm URL with user'
+  Section 6  - Set Citadel brand logo on all active Citadel products
+               (excludes PH-001/PH-002 Painting Handles)
 
 Usage:
     python manage.py apply_batch_fixes_mar2026c
@@ -37,6 +32,16 @@ IMG_HA050_GW = (
     'https://www.warhammer.com/app/resources/catalog/product/920x950/'
     '99123001023_HHPraetorandChaplainConsulStock.jpg'
 )
+
+# Citadel Colour app icon — Apple App Store CDN (confirmed 200 OK, image/png):
+CITADEL_LOGO_IMG = (
+    'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/'
+    'a0/02/88/a002887a-2e90-2346-2d9d-d65999e42b75/'
+    'AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/1200x630wa.png'
+)
+
+# Citadel SKUs that should display the brand logo (Painting Handles excluded).
+CITADEL_LOGO_SKUS_EXCLUDE = ['PH-001', 'PH-002']
 
 # ===========================================================================
 # SKUs TO DEACTIVATE (is_active -> False)
@@ -345,11 +350,28 @@ class Command(BaseCommand):
         else:
             self.stdout.write(self.style.WARNING('  [skip] HA-051 not found'))
 
+        # ==================================================================
+        # SECTION 6: Set Citadel brand logo on active Citadel products
+        # ==================================================================
+        self.stdout.write(self.style.MIGRATE_HEADING(
+            f'\n{prefix}=== Section 6: Citadel product images ==='))
+        citadel_qs = Product.objects.filter(
+            name__icontains='Citadel',
+            is_active=True,
+        ).exclude(gw_sku__in=CITADEL_LOGO_SKUS_EXCLUDE)
+
+        count = citadel_qs.count()
+        self.stdout.write(
+            f'  Found {count} active Citadel product(s) '
+            f'(excluding Painting Handles)')
+        if dry_run:
+            for p in citadel_qs.order_by('gw_sku'):
+                self.stdout.write(
+                    f'  [dry] {p.gw_sku:<12} {p.name}')
+        else:
+            updated = citadel_qs.update(image_url=CITADEL_LOGO_IMG)
+            self.stdout.write(self.style.SUCCESS(
+                f'  Updated {updated} Citadel product image(s)'))
+
         self.stdout.write(self.style.SUCCESS(
             f'\n{prefix}=== All sections complete! ==='))
-        self.stdout.write(self.style.WARNING(
-            '\n[TODO] Citadel logo image — user attached an image in the '
-            'request but it was not accessible in this session.  Once the '
-            'URL is confirmed, add a Section 6 to update all active Citadel '
-            'product image_urls (excluding PH-001 and PH-002 Painting '
-            'Handles) to the new logo URL.'))
