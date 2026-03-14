@@ -38,22 +38,22 @@ AMAZON_DATA = {
     '01-20': ('138.53', 'https://www.amazon.com/dp/B0D14W3KTM', True),   # Combat Patrol
     '01-08': ('55.25',  'https://www.amazon.com/dp/B06XT84VV8', False),  # Custodian Guard
     '01-10': ('53.13',  'https://www.amazon.com/dp/B079CJ6YLL', True),   # Custodian Wardens
-    '01-07': ('51.00',  'https://www.amazon.com/dp/B0795XTD6L', True),   # Shield-Captain
-    '01-02': ('62.48',  'https://www.amazon.com/dp/B0795Y92B5', True),   # Trajann Valoris
+    '01-07': ('35.70',  'https://www.amazon.com/dp/B0D639NL6S', True),   # Shield-Captain  ✓ FIXED (old B0795XTD6L was wrong product)
+    '01-02': ('40.80',  'https://www.amazon.com/dp/B0795Y92B5', True),   # Trajann Valoris  ✓ FIXED (price updated $62.48→$40.80)
     '01-11': ('52.18',  'https://www.amazon.com/dp/B09TM1TGZ3', True),   # Vertus Praetors
 
     # ── Adeptus Mechanicus ────────────────────────────────────────────────
     '59-25': ('138.29', 'https://www.amazon.com/dp/B0CNTTMBPD', True),   # Combat Patrol
     '59-16': ('71.40',  'https://www.amazon.com/dp/B00WA4QHPQ', True),   # Dunecrawler
-    '59-20': ('28.99',  'https://www.amazon.com/dp/B095J6PXFF', True),   # Electropriests
-    '59-18': ('35.70',  'https://www.amazon.com/dp/B0CNTVKXZD', True),   # Kataphron Destroyers
+    '59-20': ('48.99',  'https://www.amazon.com/dp/B00YHWCMO4', True),   # Electropriests  ✓ FIXED (old B095J6PXFF was bundle, not unit box)
+    '59-18': ('55.25',  'https://www.amazon.com/dp/B00XTZUSB4', True),   # Kataphron Destroyers  ✓ FIXED (old B0CNTVKXZD was Kastelans)
     '59-10': ('49.30',  'https://www.amazon.com/dp/B00VE6WTPI', True),   # Skitarii Rangers
     '59-11': ('49.30',  'https://www.amazon.com/dp/B00VE6WTPI', True),   # Skitarii Vanguard (same kit)
     '59-06': ('33.15',  'https://www.amazon.com/dp/B09BBKFJD4', True),   # Tech-Priest Dominus
 
     # ── Age of Sigmar ─────────────────────────────────────────────────────
     '80-20': ('26.70',  'https://www.amazon.com/dp/B0D8LHNZB2', True),   # Dice Set
-    '80-15': ('58.65',  'https://www.amazon.com/dp/B09B48MGJW', True),   # Warrior Starter Set
+    # 80-15 Warrior Starter Set — SKU deactivated Mar 2026 (discontinued); removed from seed
 
     # ── Orruk Warclans ────────────────────────────────────────────────────
     '89-30': ('33.15',  'https://www.amazon.com/dp/B0CHRXGQ8N', True),   # Ardboys
@@ -65,22 +65,22 @@ AMAZON_DATA = {
     # ── Astra Militarum ───────────────────────────────────────────────────
     '47-30': ('45.05',  'https://www.amazon.com/dp/B0BSFPT9VX', False),  # Cadian Shock Troops
     '47-05': ('55.25',  'https://www.amazon.com/dp/B003CRRMU4', True),   # Chimera
-    '47-08': ('26.99',  'https://www.amazon.com/dp/B0DHLRML9F', True),   # Commissar
+    '47-08': ('33.15',  'https://www.amazon.com/dp/B0BVMGVP2X', True),   # Commissar  ✓ FIXED (old B0DHLRML9F was datasheet card pack, not miniature)
     '47-25': ('138.00', 'https://www.amazon.com/dp/B0DVT8JDQ6', False),  # Combat Patrol
     '47-14': ('61.75',  'https://www.amazon.com/dp/B002ICCZDS', True),   # Hellhound  ✓ FIXED
     '47-06': ('59.50',  'https://www.amazon.com/dp/B0BSFPSMZ6', False),  # Leman Russ Battle Tank
-    # 47-12 Sentinel — JoyToy only on Amazon; removed
-    # 47-17 Basilisk — not listed on Amazon; removed
+    '47-12': ('40.80',  'https://www.amazon.com/dp/B0BSFPTZWJ', True),   # Sentinel  ✓ ADDED (previously omitted; old scrape found JoyToy figure)
+    # 47-17 Basilisk — Amazon listing at $29.75 was wrong (toy, not GW kit); removed
 
     # ── Blood Angels ──────────────────────────────────────────────────────
     '41-03': ('29.92',  'https://www.amazon.com/dp/B005FPTQJQ', True),   # Astorath
     '41-10': ('78.41',  'https://www.amazon.com/dp/B003E6N2L6', True),   # Baal Predator
     '41-25': ('130.00', 'https://www.amazon.com/dp/B0DK3T1QSG', True),   # Combat Patrol
     '41-04': ('40.80',  'https://www.amazon.com/dp/B0C2459XDP', True),   # Commander Dante
-    # 41-07 Death Company Marines — no correct Amazon listing; removed
+    # 41-07 Death Company Marines — no correct Amazon listing found; removed
     # 41-12 Death Company Marines with Jump Packs — no correct Amazon listing; removed
-    '41-05': ('65.59',  'https://www.amazon.com/dp/B0FPR7Q65F', True),   # Lemartes
-    '41-15': ('39.38',  'https://www.amazon.com/dp/B00R119G4C', True),   # Librarian Dreadnought
+    '41-05': ('38.99',  'https://www.amazon.com/dp/B0DJFF398H', True),   # Lemartes  ✓ FIXED (old B0FPR7Q65F was Librarian Dreadnought — wrong product!)
+    # 41-15 Librarian Dreadnought — SKU deactivated Mar 2026; removed from seed
     '41-02': ('40.80',  'https://www.amazon.com/dp/B08PS67BH6', True),   # Mephiston
     '41-06': ('51.00',  'https://www.amazon.com/dp/B08RCBMNNS', True),   # Sanguinary Guard
     '41-09': ('40.00',  'https://www.amazon.com/dp/B08Y5P6S4N', True),   # Sanguinary Priest
@@ -121,25 +121,25 @@ AMAZON_DATA = {
     'BP-001': ('7.95',  'https://www.amazon.com/dp/B007RQ4060', True),   # Base Paint (single)
     'BR-001': ('6.80',  'https://www.amazon.com/dp/B094Y8KNQS', True),   # Brush: Medium Base
     'BR-002': ('9.99',  'https://www.amazon.com/dp/B094Y3SRW9', True),   # Brush: Medium Layer
-    'BS-001': ('4.55',  'https://www.amazon.com/dp/B0B6Z81PKV', False),  # Colour Base Paint Set
-    'BS-002': ('11.99', 'https://www.amazon.com/dp/B094Y5X3QJ', True),   # Colour Shade Set
-    'CP-005': ('6.99',  'https://www.amazon.com/dp/B0CMTVKVGK', True),   # Contrast Paint Bundle x5
-    'CP-010': ('6.99',  'https://www.amazon.com/dp/B0CMTVKVGK', True),   # Contrast Paint Bundle x10
+    'BS-001': ('38.25', 'https://www.amazon.com/dp/B0CBKHZY3V', True),   # Colour Base Paint Set  ✓ FIXED (old B0B6Z81PKV was single pot $4.55 — NOT the set!)
+    # BS-002 Colour Shade Set — SKU deactivated Mar 2026; removed from seed
+    # CP-005 Contrast Paint Bundle x5 — SKU deactivated Mar 2026; removed from seed
+    # CP-010 Contrast Paint Bundle x10 — SKU deactivated Mar 2026; removed from seed
     'CP-001': ('9.99',  'https://www.amazon.com/dp/B07SSQ1LG8', True),   # Contrast Paint (single)
     'CP-003': ('9.99',  'https://www.amazon.com/dp/B07SRQ88S2', True),   # Contrast Blood Angels Red
-    'CP-002': ('29.99', 'https://www.amazon.com/dp/B07T5RYSQZ', False),  # Contrast Wraithbone
-    'CSP-003': ('9.90', 'https://www.amazon.com/dp/B0C5R5MDQ9', True),   # Spray Corax White
+    # CP-002 Contrast Wraithbone 18ml — SKU deactivated Mar 2026 (confused with SP-011 spray); removed
+    # CSP-003 Spray Corax White — Amazon listing was wrong size; not available on Amazon
     'CSP-004': ('25.00','https://www.amazon.com/dp/B00T86KNJK', True),   # Spray Zandri Dust
-    'DB-001': ('9.99',  'https://www.amazon.com/dp/B0CDBWXLK7', False),  # Detail Brush Set
-    'DP-001': ('3.87',  'https://www.amazon.com/dp/B007RRZHLG', True),   # Dry Paint
-    'HK-001': ('7.95',  'https://www.amazon.com/dp/B0743Y2YF4', True),   # Hobby Knife
+    # DB-001 Detail Brush Set — SKU deactivated Mar 2026; removed from seed
+    # DP-001 Dry Paint — SKU deactivated Mar 2026; removed from seed
+    # HK-001 Hobby Knife — SKU deactivated Mar 2026; removed from seed
     'LP-001': ('4.25',  'https://www.amazon.com/dp/B007RS6EWQ', True),   # Layer Paint
     'MR-001': ('22.95', 'https://www.amazon.com/dp/B0BHTRDSJ5', False),  # Mouldline Remover
     'PH-001': ('13.67', 'https://www.amazon.com/dp/B08MC88KWZ', False),  # Painting Handle
     'PH-002': ('17.95', 'https://www.amazon.com/dp/B09KHBPRVL', False),  # Painting Handle XL
-    'PM-001': ('36.80', 'https://www.amazon.com/dp/B01M14EZHF', True),   # Painting Mat
-    # PG-001 Plastic Glue — individual not on Amazon (bundle only); removed
-    'SG-001': ('6.99',  'https://www.amazon.com/dp/B0DJN7PGJC', True),   # Super Glue
+    # PM-001 Painting Mat — SKU deactivated Mar 2026; removed from seed
+    'PG-001': ('12.49', 'https://www.amazon.com/dp/B004CDA3GC', True),   # Plastic Glue  ✓ ADDED (previously omitted)
+    # SG-001 Super Glue — SKU deactivated Mar 2026; removed from seed
     'SP-001': ('14.43', 'https://www.amazon.com/dp/B01H7JECW8', True),   # Shade: Nuln Oil
     'SP-002': ('9.99',  'https://www.amazon.com/dp/B0B6CK8PD5', False),  # Shade: Agrax Earthshade
     'SP-003': ('15.12', 'https://www.amazon.com/dp/B018GZD62E', True),   # Shade: Reikland Fleshshade
@@ -148,9 +148,9 @@ AMAZON_DATA = {
     'SP-012': ('32.33', 'https://www.amazon.com/dp/B08ZHKMTRV', True),   # Spray: Grey Seer
     'SP-020': ('26.90', 'https://www.amazon.com/dp/B08JJNFHKR', True),   # Munitorum Varnish
     'TCP-001': ('4.55', 'https://www.amazon.com/dp/B0C69CR9JH', True),   # Technical Paint
-    'TE-001':  ('4.55', 'https://www.amazon.com/dp/B0C69CR9JH', True),   # Technical Paint (Nihilakh Oxide)
-    'TP-001': ('11.49', 'https://www.amazon.com/dp/B0BZK486FG', True),   # Texture Paint (Astrogranite)
-    'WP-001': ('7.95',  'https://www.amazon.com/dp/B0F3WDR56W', True),   # Water Pot
+    # TE-001 Technical Paint (Nihilakh Oxide) — SKU deactivated Mar 2026; removed from seed
+    # TP-001 Texture Paint (Astrogranite) — SKU deactivated Mar 2026; removed from seed
+    # WP-001 Water Pot — SKU deactivated Mar 2026; removed from seed
 
     # ── Craftworlds (Aeldari) ─────────────────────────────────────────────
     '46-06': ('40.80',  'https://www.amazon.com/dp/B077XLMHX7', True),   # Dire Avengers

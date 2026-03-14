@@ -494,6 +494,24 @@ _EBAY_SEARCH_OVERRIDES = {
     # The full product name ("Blades of Khorne Bloodletters") fails keyword
     # matching because sellers rarely include "Blades" or "Khorne" in titles.
     '97-08': 'Bloodletters',
+    # ── Astra Militarum ───────────────────────────────────────────────────
+    # 47-30 "Astra Militarum Cadian Shock Troops" — generic search "Cadian"
+    # returned "Cadian Command Squad" and other Cadian kits.  Adding
+    # "Warhammer" prefix with full kit name forces the correct listing.
+    '47-30': 'Warhammer Cadian Shock Troops',
+    # 47-08 "Astra Militarum Commissar" — old search was too generic and
+    # matched codex supplement listings titled "Commissar".  Faction prefix
+    # "Astra Militarum" ensures we find the miniature, not rulebooks.
+    '47-08': 'Astra Militarum Commissar',
+    # ── Black Templars ────────────────────────────────────────────────────
+    # 55-24 "Black Templars Chaplain Grimaldus" — old search was returning
+    # generic Black Templars character lots.  "Chaplain Grimaldus" is
+    # specific enough to find only the correct single-model blister.
+    '55-24': 'Chaplain Grimaldus',
+    # ── Blood Angels ──────────────────────────────────────────────────────
+    # 41-07 "Blood Angels Death Company" (renamed from "...Marines") — using
+    # the shorter name matches how eBay sellers title the listing.
+    '41-07': 'Blood Angels Death Company',
 }
 
 # ── Per-product eBay "no box" exemptions ─────────────────────────────────────
