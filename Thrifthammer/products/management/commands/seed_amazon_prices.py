@@ -235,14 +235,14 @@ AMAZON_DATA = {
     # ── Horus Heresy ──────────────────────────────────────────────────────
     'HA-001': ('44.00',  'https://www.amazon.com/dp/B0CWBVGDKG', True),  # MKVI Tactical Squad
     'HA-002': ('55.25',  'https://www.amazon.com/dp/B0B8ZMZ99L', True),  # Contemptor Dreadnought  ✓ FIXED (old B0CRH15FDS wrong)
-    'HA-010': ('45.05',  'https://www.amazon.com/dp/B0D6RF8C3V', True),  # MKIII Infantry Squad
-    'HA-011': ('58.65',  'https://www.amazon.com/dp/B0GJV364PB', True),  # Cataphractii Terminators
+    'HA-010': ('66.95',  'https://www.amazon.com/dp/B0CKRY88GB', True),   # MKIII Tactical Squad  ✓ FIXED (old B0D6RF8C3V wrong; price $45.05 too low)
+    # HA-011 Cataphractii Terminators (B0GJV364PB) — deactivated wave D; removed
     'HA-012': ('66.30',  'https://www.amazon.com/dp/B0BD5H9WRZ', True),  # Legiones Astartes Predator
     'HA-013': ('100.30', 'https://www.amazon.com/dp/B0B8ZNSRXZ', True),  # Spartan Assault Tank
     'HA-020': ('29.75',  'https://www.amazon.com/dp/B0CYCSZ4QV', True),  # Solar Auxilia Lasrifle Section
     'HA-021': ('65.00',  'https://www.amazon.com/dp/B0B6W3RPPQ', True),  # Leviathan Dreadnought  ✓ FIXED (old B0B8ZMZ99L was Contemptor; price est.)
-    'HA-040': ('89.08',  'https://www.amazon.com/dp/B0F29NXG8C', True),  # Spartan Assault Tank (HA)
-    'HA-041': ('68.00',  'https://www.amazon.com/dp/B0F29RQ8JH', True),  # Sicaran Battle Tank
+    'HA-040': ('101.30', 'https://www.amazon.com/dp/B0B8ZNSRXZ', True),  # Spartan Assault Tank  ✓ FIXED (old B0F29NXG8C wrong)
+    'HA-041': ('75.65',  'https://www.amazon.com/dp/B0B8ZM7M3T', True),  # Sicaran Battle Tank   ✓ FIXED (old B0F29RQ8JH wrong)
     'HA-051': ('39.95',  'https://www.amazon.com/dp/B0CJRZJPM9', True),  # Chaplain in Terminator Armour
     # HH-001 Age of Darkness starter — Dice ASIN wrong; starter box not on Amazon; removed
 
@@ -253,25 +253,23 @@ AMAZON_DATA = {
     '54-22': ('158.77', 'https://www.amazon.com/dp/B0FPDM6H37', True),   # Knight Questoris
 
     # ── Kill Team ─────────────────────────────────────────────────────────
-    'KT-100': ('129.95', 'https://www.amazon.com/dp/B07HMRPD11', True),  # Starter Set
-    'KT-002': ('45.70',  'https://www.amazon.com/dp/1804570087', True),  # Into the Dark
-    'KT-101': ('36.43',  'https://www.amazon.com/dp/B0DH4XZH2D', True),  # Operatives Datacard Pack 2024
-    'KT-104': ('28.90',  'https://www.amazon.com/dp/B0DKNVQX8X', True),  # Chaos Legionaries
-    'KT-107': ('63.58',  'https://www.amazon.com/dp/B0C448FPG7', True),  # Exaction Squad  ✓ FIXED
-    'KT-109': ('115.00', 'https://www.amazon.com/dp/B0DPMY5CFW', True),  # Killzone Essentials Terrain
-    'KT-110': ('55.39',  'https://www.amazon.com/dp/1839064218', False),  # Compendium
-    'KT-103': ('33.15',  'https://www.amazon.com/dp/B0BVMGVP2X', True),  # Veteran Guardsmen (keep original first entry)
-    # KT-001 Kill Team: Nightmare — no Amazon listing for miniature box; removed
-    # KT-103 Kill Team: Veteran Guardsmen — no correct Amazon listing found; kept original
-    # KT-105 Kill Team: Intercession Squad — Exaction Squad datacards wrong; removed
-    # KT-106 Kill Team: Hunter Clade — Datacards wrong; removed
-    # KT-108 Kill Team: Salvation — Datacards wrong; removed
+    # All Kill Team faction boxes / supplements deactivated wave D.
+    # KT-003 (Kill Team: Starter Set) remains active but has no Amazon listing.
+    # KT-100 (Starter Set duplicate, B07HMRPD11) — deactivated; removed
+    # KT-002 (Into the Dark, 1804570087)         — deactivated; removed
+    # KT-101 (Datacards 2024, B0DH4XZH2D)        — deactivated; removed
+    # KT-103 (Veteran Guardsmen, B0BVMGVP2X)     — deactivated; removed
+    # KT-104 (Chaos Legionaries, B0DKNVQX8X)     — deactivated; removed
+    # KT-107 (Exaction Squad, B0C448FPG7)        — deactivated; removed
+    # KT-109 (Killzone Terrain, B0DPMY5CFW)      — deactivated; removed
+    # KT-110 (Compendium, 1839064218)            — deactivated; removed
 
     # ── Leagues of Votann ─────────────────────────────────────────────────
-    '73-25': ('138.56', 'https://www.amazon.com/dp/B0FL37XSL6', True),   # Combat Patrol
-    '73-14': ('53.13',  'https://www.amazon.com/dp/B0BK9NJJFH', True),   # Einhyr Hearthguard
+    '73-06': ('36.00',  'https://www.amazon.com/dp/B0BK9MJ83N', True),   # Einhyr Champion  ✓ FIXED (was NOT_AVAIL)
     '73-10': ('51.00',  'https://www.amazon.com/dp/B0BK9NSQDP', True),   # Hearthkyn Warriors
     '73-12': ('58.65',  'https://www.amazon.com/dp/B0BK9NKXYW', False),  # Hernkyn Pioneers
+    '73-14': ('53.13',  'https://www.amazon.com/dp/B0BK9NJJFH', True),   # Einhyr Hearthguard
+    '73-25': ('138.56', 'https://www.amazon.com/dp/B0FL37XSL6', True),   # Combat Patrol
 
     # ── Lumineth Realm-lords ──────────────────────────────────────────────
     '87-08': ('53.13',  'https://www.amazon.com/dp/B08HWKPQP8', True),   # Alarith Stoneguard

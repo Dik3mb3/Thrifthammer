@@ -250,7 +250,7 @@ GW_IMAGES = {
     '71-19': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106081_TyranidAssaultBroodCombatPatrol1.jpg',
     '71-20': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120110077_NECCP2.jpg',
     '71-55': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120218022_PalladorsVanguard01.jpg',
-    '73-06': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120118011_KharlLead.jpg',
+    '73-06': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120118012_EinhyrChampLead.jpg',  # FIXED: was KharlLead (Kahl image)
     '73-10': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120118007_LoVHearthkynWarriorsLead.jpg',
     '73-12': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120118008_HernkynPioneersLead.jpg',
     '73-14': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120118001_LoVEinhyrHGLead.jpg',
@@ -1997,10 +1997,12 @@ class Command(BaseCommand):
              '73-14', decimal.Decimal('52.50'),
              'Five elite Kin warriors in exo-armour bearing volkanite disintegrators '
              'or concussion gauntlets.'),
-            ('Leagues of Votann Kahl / Uthar the Destined', 'Warhammer 40,000', 'Leagues of Votann',
-             '73-06', decimal.Decimal('27.50'),
-             'A Kin commander that builds either a standard Kahl armed with a '
-             'forgewrought plasma axe, or Uthar the Destined, a named Kahl character.'),
+            ('Leagues of Votann Einhyr Champion', 'Warhammer 40,000', 'Leagues of Votann',
+             '73-06', decimal.Decimal('36.00'),
+             'A heavily-armoured Leagues of Votann champion in exo-armour, wielding a '
+             'crushing mass hammer or darkstar axe alongside an Autoch-pattern '
+             'combi-bolter. Kit includes choice of crests, head options, and '
+             'shield plate designs.'),
             ('Leagues of Votann Combat Patrol', 'Warhammer 40,000', 'Leagues of Votann',
              '73-25', decimal.Decimal('105.00'),
              'A Leagues of Votann Combat Patrol: Kahl, Hearthkyn Warriors, '
@@ -2219,10 +2221,9 @@ class Command(BaseCommand):
             # ================================================================
             # HORUS HERESY — extended
             # ================================================================
-            ('Horus Heresy MKVI Assault Squad', 'Horus Heresy', None,
-             'HA-010', decimal.Decimal('50.00'),
-             'Ten Space Marine legionaries in Corvus armour with jump packs, '
-             'armed with chainswords and bolt pistols.'),
+            # NOTE: MKVI Assault Squad has no assigned SKU yet — placeholder
+            # removed to avoid overwriting the correct HA-010 (MKIII Tactical
+            # Squad) defined later in this list.
             ('Horus Heresy MKIII Iron Armour Squad', 'Horus Heresy', None,
              'HA-011', decimal.Decimal('55.00'),
              'Twenty Space Marines in MkIII Iron Armour, with full weapons '
@@ -2666,8 +2667,8 @@ class Command(BaseCommand):
              'Twenty fanatical Plague Monks of Clan Pestilens, spreading '
              'disease and decay with foetid blades.'),
             # === HORUS HERESY — more units ===
-            ('Legiones Astartes MKIII Infantry Squad', 'Horus Heresy', None,
-             'HA-010', decimal.Decimal('45.00'),
+            ('Horus Heresy MKIII Tactical Squad', 'Horus Heresy', None,
+             'HA-010', decimal.Decimal('65.00'),
              'Ten Space Marine legionaries in Mark III Iron Armour – the '
              'original heresy-era close-assault armour variant.'),
             ('Legiones Astartes Cataphractii Terminators', 'Horus Heresy', None,
