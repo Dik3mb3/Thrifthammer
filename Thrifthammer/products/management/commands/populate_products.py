@@ -334,7 +334,7 @@ GW_IMAGES = {
     'HA-030': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99123001075_HorusHeresyLegionesAstartesCataphractiiTerminatorswithVolkiteChargersandPowerMauls1.jpg',
     'HA-040': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99123001006_SpartanLead.jpg',
     'HA-041': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99123001005_SicaranLead.jpg',
-    'HA-050': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99550101620_WSCataphracillPraetor1.jpg',
+    'HA-050': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99123001023_HHPraetorandChaplainConsulStock.jpg',  # FIXED: was Stormcast Eternals image
     'HA-051': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99123001023_HHPraetorandChaplainConsulLead.jpg',
     'HH-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60043099013_ENGHorusHeresyAgeofDarknessRulebookHBSTDED1.jpg',
     'HK-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99239999117_ModellingKnifeLead.jpg',
@@ -512,6 +512,11 @@ _EBAY_SEARCH_OVERRIDES = {
     # 41-07 "Blood Angels Death Company" (renamed from "...Marines") — using
     # the shorter name matches how eBay sellers title the listing.
     '41-07': 'Blood Angels Death Company',
+    # ── Disciples of Tzeentch ─────────────────────────────────────────────
+    # 83-40 "Disciples of Tzeentch Tzaangors" — default search returned a
+    # cheap used listing at $33.15.  Adding "Games Workshop" to the search
+    # improves specificity and should surface the correct sealed kit listing.
+    '83-40': 'Disciples Tzeentch Tzaangors Games Workshop',
     # ── Dark Angels ───────────────────────────────────────────────────────
     # 44-13 "Dark Angels Inner Circle Companions" — default search (product
     # name) returned a used/incomplete lot at $26.50 instead of the sealed

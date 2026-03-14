@@ -204,6 +204,8 @@ AMAZON_DATA = {
 
     # ── Disciples of Tzeentch ─────────────────────────────────────────────
     '97-11': ('40.80',  'https://www.amazon.com/dp/B0BL1KFDM5', True),   # Pink Horrors
+    # 97-12 Pink Horrors duplicate — SKU deactivated Mar 2026c; removed from seed
+    '83-40': ('57.53',  'https://www.amazon.com/dp/B01NBYRM58', True),   # Tzaangors           ✓ ADDED
 
     # ── Drukhari ──────────────────────────────────────────────────────────
     '45-02': ('34.00',  'https://www.amazon.com/dp/B0FX34K7JW', True),   # Archon
@@ -215,7 +217,7 @@ AMAZON_DATA = {
     # ── Flesh-Eater Courts ────────────────────────────────────────────────
     '91-35': ('49.48',  'https://www.amazon.com/dp/B01FY2RCD6', True),   # Crypt Ghouls
     '91-07': ('50.99',  'https://www.amazon.com/dp/B0FGKQN38V', True),   # Crypt Horrors/Flayers (same kit)  ✓ FIXED
-    '91-32': ('22.70',  'https://www.amazon.com/dp/1788264290', True),   # Terrorgheist
+    # 91-32 Terrorgheist — Amazon has no listing (old ASIN 1788264290 was an ISBN/book); removed
 
     # ── Genestealer Cults ─────────────────────────────────────────────────
     '51-44': ('40.80',  'https://www.amazon.com/dp/B07NG31CVQ', True),   # Aberrants
@@ -238,7 +240,7 @@ AMAZON_DATA = {
     'HA-012': ('66.30',  'https://www.amazon.com/dp/B0BD5H9WRZ', True),  # Legiones Astartes Predator
     'HA-013': ('100.30', 'https://www.amazon.com/dp/B0B8ZNSRXZ', True),  # Spartan Assault Tank
     'HA-020': ('29.75',  'https://www.amazon.com/dp/B0CYCSZ4QV', True),  # Solar Auxilia Lasrifle Section
-    'HA-021': ('55.25',  'https://www.amazon.com/dp/B0B8ZMZ99L', True),  # Leviathan Dreadnought
+    'HA-021': ('65.00',  'https://www.amazon.com/dp/B0B6W3RPPQ', True),  # Leviathan Dreadnought  ✓ FIXED (old B0B8ZMZ99L was Contemptor; price est.)
     'HA-040': ('89.08',  'https://www.amazon.com/dp/B0F29NXG8C', True),  # Spartan Assault Tank (HA)
     'HA-041': ('68.00',  'https://www.amazon.com/dp/B0F29RQ8JH', True),  # Sicaran Battle Tank
     'HA-051': ('39.95',  'https://www.amazon.com/dp/B0CJRZJPM9', True),  # Chaplain in Terminator Armour
