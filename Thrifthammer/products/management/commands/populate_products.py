@@ -512,6 +512,16 @@ _EBAY_SEARCH_OVERRIDES = {
     # 41-07 "Blood Angels Death Company" (renamed from "...Marines") — using
     # the shorter name matches how eBay sellers title the listing.
     '41-07': 'Blood Angels Death Company',
+    # ── Dark Angels ───────────────────────────────────────────────────────
+    # 44-13 "Dark Angels Inner Circle Companions" — default search (product
+    # name) returned a used/incomplete lot at $26.50 instead of the sealed
+    # kit.  Adding "Warhammer 40K" prefix makes the query more specific and
+    # should rank the sealed, new listing (item 176254333774) higher.
+    '44-13': 'Warhammer 40K Dark Angels Inner Circle Companions',
+    # 44-16 "Dark Angels Land Speeder Vengeance" — scraper returned NOT_AVAIL
+    # using the product name alone.  Adding "Warhammer 40K" prefix should
+    # help eBay surface the correct vehicle kit (item 174202381018).
+    '44-16': 'Warhammer 40K Dark Angels Land Speeder Vengeance',
 }
 
 # ── Per-product eBay "no box" exemptions ─────────────────────────────────────

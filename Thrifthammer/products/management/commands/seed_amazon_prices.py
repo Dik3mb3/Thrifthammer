@@ -154,29 +154,29 @@ AMAZON_DATA = {
 
     # ── Craftworlds (Aeldari) ─────────────────────────────────────────────
     '46-06': ('40.80',  'https://www.amazon.com/dp/B077XLMHX7', True),   # Dire Avengers
-    '46-02': ('',       'https://www.amazon.com/dp/B09WNGQTBT', False),  # Farseer
-    # 46-14 Fire Dragons — not listed on Amazon; removed
+    '46-02': ('29.75',  'https://www.amazon.com/dp/B0B2X2C51V', True),   # Farseer          ✓ FIXED (old B09WNGQTBT wrong)
+    '46-14': ('53.11',  'https://www.amazon.com/dp/B0DV41T8NQ', True),   # Fire Dragons     ✓ ADDED (old B0D3CPJRSC was paint)
     '46-29': ('60.00',  'https://www.amazon.com/dp/B0746GG3PF', False),  # Wave Serpent
     '46-26': ('51.00',  'https://www.amazon.com/dp/B074MCDX59', True),   # Wraithguard
-    '46-25': ('',       'https://www.amazon.com/dp/B0DYFB9D4G', False),  # Combat Patrol
+    '46-25': ('136.00', 'https://www.amazon.com/dp/B0DYFB9D4G', True),   # Combat Patrol    ✓ FIXED (had empty price + in_stock=False)
 
     # ── Dark Angels ───────────────────────────────────────────────────────
     '44-03': ('39.95',  'https://www.amazon.com/dp/B0CVXN5W6P', False),  # Asmodai
     '44-04': ('40.80',  'https://www.amazon.com/dp/B0C244GN97', False),  # Azrael
     '44-05': ('39.95',  'https://www.amazon.com/dp/B0CVXP43B1', True),   # Belial
-    '44-20': ('40.95',  'https://www.amazon.com/dp/B0F53YP53G', True),   # Combat Patrol
+    '44-20': ('136.00', 'https://www.amazon.com/dp/B0CVXCZ5YL', True),   # Combat Patrol         ✓ FIXED (old B0F53YP53G wrong; price est.)
     '44-10': ('59.48',  'https://www.amazon.com/dp/B0CVXNHD3P', True),   # Deathwing Knights
-    # 44-11 Deathwing Terminator Squad — not separate on Amazon; removed
-    # 44-02 Ezekiel — no correct Amazon listing found (old ASIN was eBook); removed
+    # 44-11 Deathwing Terminator Squad — SKU deactivated Mar 2026b; removed from seed
+    # 44-02 Ezekiel — Amazon not available (old ASIN was eBook); removed
     '44-13': ('51.00',  'https://www.amazon.com/dp/B0CVXNJHNP', True),   # Inner Circle Companions
-    '44-16': ('133.00', 'https://www.amazon.com/dp/B0CVXCZ5YL', True),   # Land Speeder Vengeance
+    # 44-16 Land Speeder Vengeance — not sold on Amazon (old B0CVXCZ5YL was Combat Patrol); removed
     '44-07': ('44.00',  'https://www.amazon.com/dp/B08THKXQ5J', True),   # Lazarus
-    '44-06': ('155.99', 'https://www.amazon.com/dp/B0CKPSLCQ4', True),   # Lion El'Jonson
+    '44-06': ('62.48',  'https://www.amazon.com/dp/B0CB1BFQCZ', True),   # Lion El'Jonson        ✓ FIXED (old B0CKPSLCQ4 $155.99 wrong)
     '44-17': ('84.55',  'https://www.amazon.com/dp/B00AYU3YZY', True),   # Nephilim Jetfighter
-    '44-12': ('39.95',  'https://www.amazon.com/dp/B0CVXP43B1', True),   # Ravenwing Black Knights
+    '44-12': ('55.25',  'https://www.amazon.com/dp/B00AYUGFZ0', True),   # Ravenwing Black Knights ✓ FIXED (old B0CVXP43B1 was Belial)
     '44-09': ('55.25',  'https://www.amazon.com/dp/B08THMGCVL', False),  # Ravenwing Command Squad
     '44-14': ('84.55',  'https://www.amazon.com/dp/B00AYU3YZY', True),   # Ravenwing Dark Talon  ✓ FIXED
-    '44-15': ('84.55',  'https://www.amazon.com/dp/B00AYU3YZY', True),   # Ravenwing Darkshroud (same kit)  ✓ FIXED
+    # 44-15 Ravenwing Darkshroud — SKU deactivated Mar 2026b (same kit as Dark Talon); removed
     '44-08': ('64.48',  'https://www.amazon.com/dp/B0067PVHLS', True),   # Sammael  ✓ FIXED
 
     # ── Death Guard ───────────────────────────────────────────────────────
@@ -190,14 +190,14 @@ AMAZON_DATA = {
     '43-08': ('40.80',  'https://www.amazon.com/dp/B08QFS24H5', True),   # Typhus  ✓ FIXED
 
     # ── Deathwatch ────────────────────────────────────────────────────────
-    '39-03': ('63.13',  'https://www.amazon.com/dp/B0FZD1N1FQ', False),  # Decimus Kill Team
-    '39-07': ('63.13',  'https://www.amazon.com/dp/B0FZD1N1FQ', False),  # Fortis Kill Team
-    '39-08': ('63.13',  'https://www.amazon.com/dp/B0FZD1N1FQ', False),  # Indomitor Kill Team
-    '39-10': ('63.13',  'https://www.amazon.com/dp/B0FZD1N1FQ', False),  # Kill Team
-    '39-09': ('63.13',  'https://www.amazon.com/dp/B0FZD1N1FQ', False),  # Spectrus Kill Team
-    '39-11': ('63.13',  'https://www.amazon.com/dp/B0FZD1N1FQ', False),  # Talonstrike Kill Team
-    '39-05': ('51.00',  'https://www.amazon.com/dp/B09C3NTQSP', True),   # Terminator Squad
-    # 39-06 Veteran Squad — Vanguard Veterans ASIN wrong; no Amazon listing; removed
+    # 39-03 Decimus Kill Team      — SKU deactivated Mar 2026b; removed from seed
+    # 39-07 Fortis Kill Team       — SKU deactivated Mar 2026b; removed from seed
+    # 39-08 Indomitor Kill Team    — SKU deactivated Mar 2026b; removed from seed
+    # 39-10 Kill Team              — SKU deactivated Mar 2026b; removed from seed
+    # 39-09 Spectrus Kill Team     — SKU deactivated Mar 2026b; removed from seed
+    # 39-11 Talonstrike Kill Team  — SKU deactivated Mar 2026b; removed from seed
+    # 39-05 Terminator Squad       — SKU deactivated Mar 2026b; removed from seed
+    # 39-06 Veteran Squad          — Vanguard Veterans ASIN wrong; no Amazon listing; removed
     '39-02': ('33.15',  'https://www.amazon.com/dp/B01KUYPREO', True),   # Watch Master
     '39-01': ('34.00',  'https://www.amazon.com/dp/B0DC6PBHSD', True),   # Watch Captain Artemis
     '39-04': ('81.60',  'https://www.amazon.com/dp/B08MC6BF6V', True),   # Corvus Blackstar
@@ -232,7 +232,7 @@ AMAZON_DATA = {
 
     # ── Horus Heresy ──────────────────────────────────────────────────────
     'HA-001': ('44.00',  'https://www.amazon.com/dp/B0CWBVGDKG', True),  # MKVI Tactical Squad
-    'HA-002': ('36.48',  'https://www.amazon.com/dp/B0CRH15FDS', True),  # Contemptor Dreadnought
+    'HA-002': ('55.25',  'https://www.amazon.com/dp/B0B8ZMZ99L', True),  # Contemptor Dreadnought  ✓ FIXED (old B0CRH15FDS wrong)
     'HA-010': ('45.05',  'https://www.amazon.com/dp/B0D6RF8C3V', True),  # MKIII Infantry Squad
     'HA-011': ('58.65',  'https://www.amazon.com/dp/B0GJV364PB', True),  # Cataphractii Terminators
     'HA-012': ('66.30',  'https://www.amazon.com/dp/B0BD5H9WRZ', True),  # Legiones Astartes Predator
