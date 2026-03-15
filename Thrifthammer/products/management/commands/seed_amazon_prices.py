@@ -56,7 +56,7 @@ AMAZON_DATA = {
     # 80-15 Warrior Starter Set — SKU deactivated Mar 2026 (discontinued); removed from seed
 
     # ── Orruk Warclans ────────────────────────────────────────────────────
-    '89-30': ('33.15',  'https://www.amazon.com/dp/B0CHRXGQ8N', True),   # Ardboys
+    '89-30': ('55.25',  'https://www.amazon.com/dp/B0CHRYV6WD', True),   # Ardboys  ✓ FIXED wave F (old B0CHRXGQ8N $33.15 wrong)
     '89-22': ('51.00',  'https://www.amazon.com/dp/B09GBLLTKZ', True),   # Gutrippaz
     '89-20': ('53.13',  'https://www.amazon.com/dp/B01EVDPFBK', True),   # Ironjawz Brutes
     '89-06': ('53.86',  'https://www.amazon.com/dp/B07MFCSZCZ', True),   # Gloomspite Fanatics
@@ -239,7 +239,7 @@ AMAZON_DATA = {
     # HA-011 Cataphractii Terminators (B0GJV364PB) — deactivated wave D; removed
     'HA-012': ('66.30',  'https://www.amazon.com/dp/B0BD5H9WRZ', True),  # Legiones Astartes Predator
     # HA-013 Spartan Assault Tank — deactivated wave E (duplicate of HA-040); removed
-    'HA-020': ('29.75',  'https://www.amazon.com/dp/B0CYCSZ4QV', True),  # Solar Auxilia Lasrifle Section
+    'HA-020': ('67.15',  'https://www.amazon.com/dp/B0CYCQJ4NQ', True),  # Solar Auxilia Lasrifle Section  ✓ FIXED wave F (old B0CYCSZ4QV $29.75 wrong)
     'HA-021': ('65.00',  'https://www.amazon.com/dp/B0B6W3RPPQ', True),  # Leviathan Dreadnought  ✓ FIXED (old B0B8ZMZ99L was Contemptor; price est.)
     'HA-040': ('101.30', 'https://www.amazon.com/dp/B0B8ZNSRXZ', True),  # Spartan Assault Tank  ✓ FIXED (old B0F29NXG8C wrong)
     'HA-041': ('75.65',  'https://www.amazon.com/dp/B0B8ZM7M3T', True),  # Sicaran Battle Tank   ✓ FIXED (old B0F29RQ8JH wrong)
@@ -308,7 +308,7 @@ AMAZON_DATA = {
     '91-28': ('40.80',  'https://www.amazon.com/dp/B07FSWK3D7', True),   # Chainrasps (canonical)  ✓ ADDED (was NOT_AVAIL)
     '91-12': ('51.00',  'https://www.amazon.com/dp/B07F1YC259', True),   # Grimghast Reapers
     '91-06': ('52.50',  'https://www.amazon.com/dp/B07FBJQY74', True),   # Hexwraiths
-    '91-15': ('35.70',  'https://www.amazon.com/dp/B0FLZJWWGP', True),   # Knight of Shrouds
+    # 91-15 Knight of Shrouds — confirmed no active Amazon listing; removed wave F
     '91-02': ('51.00',  'https://www.amazon.com/dp/B07F1WS813', True),   # Lady Olynder
 
     # ── Orks ──────────────────────────────────────────────────────────────
@@ -323,35 +323,36 @@ AMAZON_DATA = {
     '50-11': ('51.00',  'https://www.amazon.com/dp/B000CESDXA', True),   # Trukk
     # 50-05 Warboss (regular) — Mega Armour ASIN wrong; regular Warboss not on Amazon; removed
     '50-02': ('36.98',  'https://www.amazon.com/dp/B09NSSWG75', True),   # Warboss in Mega Armour
+    '71-18': ('144.50', 'https://www.amazon.com/dp/B0D14VVJ26', True),  # Combat Patrol  ✓ ADDED wave F (was NOT_AVAIL)
 
     # ── Ossiarch Bonereapers ──────────────────────────────────────────────
     '94-10': ('55.25',  'https://www.amazon.com/dp/B07ZTPJ69Q', True),   # Mortek Guard
     '94-12': ('51.00',  'https://www.amazon.com/dp/B07ZTQ263Z', True),   # Necropolis Stalkers
 
     # ── Skaven ────────────────────────────────────────────────────────────
-    '90-10': ('29.75',  'https://www.amazon.com/dp/B0DFWN8F73', True),   # Clanrats
+    # 90-10 Clanrats — listing B0DFWN8F73 out of stock / unavailable; removed wave F
     '90-12': ('40.80',  'https://www.amazon.com/dp/B013XDID9K', False),  # Plague Monks
     '90-17': ('69.70',  'https://www.amazon.com/dp/B0C2YQYPB2', True),   # Stormfiends
 
     # ── Slaves to Darkness ────────────────────────────────────────────────
-    '83-10': ('54.35',  'https://www.amazon.com/dp/B0BRY3JPBX', True),   # Chaos Warriors (12)
+    # 83-10 Chaos Warriors (12) — deactivated wave F (duplicate of 83-18); removed
     '83-14': ('93.50',  'https://www.amazon.com/dp/B0CH4B6G13', True),   # Varanguard
-    '83-18': ('54.35',  'https://www.amazon.com/dp/B0BRY3JPBX', True),   # Chaos Warriors (10) — same kit
+    '83-18': ('54.35',  'https://www.amazon.com/dp/B0BRY3JPBX', True),   # Chaos Warriors (renamed in wave F; same ASIN)
 
     # ── Space Marines ─────────────────────────────────────────────────────
-    '48-92': ('33.15',  'https://www.amazon.com/dp/B0CJS1MKVJ', True),   # Aggressors
+    '48-92': ('51.00',  'https://www.amazon.com/dp/B0746GR78Q',  True),  # Aggressors  ✓ FIXED wave F (old B0CJS1MKVJ $33.15 wrong)
     '48-33': ('35.70',  'https://www.amazon.com/dp/B08F2V3TP6', True),   # Apothecary
     '48-34': ('36.98',  'https://www.amazon.com/dp/B09RG8VTR7', False),  # Ancient
     '48-76': ('55.25',  'https://www.amazon.com/dp/B08P7XNWPG', False),  # Assault Intercessors
     '48-44': ('72.25',  'https://www.amazon.com/dp/B0CJS1HRQY', False),  # Brutalis Dreadnought
     '48-46': ('62.48',  'https://www.amazon.com/dp/B0CVKJJB63', False),  # Ballistus Dreadnought
     '48-38': ('51.00',  'https://www.amazon.com/dp/B08VHDSFSC', False),  # Bladeguard Veterans
-    '48-32': ('69.95',  'https://www.amazon.com/dp/B0055UCUR6', True),   # Chaplain
+    '48-32': ('35.70',  'https://www.amazon.com/dp/B074DSM6W1',  True),  # Chaplain  ✓ FIXED wave F (old B0055UCUR6 $69.95 wrong)
     '48-37': ('57.45',  'https://www.amazon.com/dp/B0CJS1GK5P', True),   # Company Heroes
     '48-15': ('55.25',  'https://www.amazon.com/dp/B0775237DV', False),  # Devastator Squad
-    '48-98': ('42.99',  'https://www.amazon.com/dp/B0D3FN245T', True),   # Eliminators
-    '48-39': ('28.90',  'https://www.amazon.com/dp/B0DH4W3XYK', True),   # Eradicators  (seed had B08VHF72L8)
-    '48-28': ('152.50', 'https://www.amazon.com/dp/B0FTZYXRQV', True),   # Firestrike Servo-Turrets
+    '48-98': ('50.00',  'https://www.amazon.com/dp/B08MVMPLJQ',  True),  # Primaris Eliminators  ✓ FIXED wave F (old B0D3FN245T $42.99 wrong)
+    '48-39': ('51.00',  'https://www.amazon.com/dp/B08VHF72L8',  True),  # Eradicators  ✓ FIXED wave F (old B0DH4W3XYK $28.90 was Scouts!)
+    '48-28': ('33.15',  'https://www.amazon.com/dp/B08KHQPW8M',  True),  # Firestrike Servo-Turrets  ✓ FIXED wave F (old B0FTZYXRQV $152.50 wrong)
     '48-27': ('58.65',  'https://www.amazon.com/dp/B08LB95FQ5', False),  # Hammerfall Bunker
     '48-97': ('51.00',  'https://www.amazon.com/dp/B074RJKKBP', True),   # Inceptors
     '48-96': ('24.97',  'https://www.amazon.com/dp/B07J3PG964', False),  # Incursors
@@ -382,6 +383,7 @@ AMAZON_DATA = {
     '48-26': ('68.00',  'https://www.amazon.com/dp/B00109WAOY', True),   # Vindicator
     '48-25': ('74.00',  'https://www.amazon.com/dp/B000CESE1G', True),   # Whirlwind
     '48-94': ('75.65',  'https://www.amazon.com/dp/B08HY7FY5K', True),   # Impulsor  ✓ FIXED
+    '71-02': ('147.58', 'https://www.amazon.com/dp/B0CLVTKD9K', True),  # Combat Patrol  ✓ ADDED wave F (was NOT_AVAIL)
 
     # ── Space Wolves ──────────────────────────────────────────────────────
     '53-20': ('144.50', 'https://www.amazon.com/dp/B0FJ935YFL', True),   # Combat Patrol

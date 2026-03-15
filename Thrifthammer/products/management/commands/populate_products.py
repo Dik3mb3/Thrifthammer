@@ -555,6 +555,12 @@ _EBAY_SEARCH_OVERRIDES = {
     # search URL encoding and return 0 results.  Override with a plain-ASCII
     # equivalent so the eBay scraper finds the correct listing.
     '49-20': 'Necron Ctan Shard Void Dragon',
+    # ── Orks ──────────────────────────────────────────────────────────────────
+    # 50-16 "Ork Deff Dread" — the broad search "Ork Deff Dread" was returning
+    # Lootas listings with "Dread" in the seller description.  Using "40000"
+    # (not "40K" which is too short to be a keyword) helps eBay surface only
+    # the correct walker kit.
+    '50-16': 'Ork Deff Dread 40000',
 }
 
 # ── Per-product eBay "no box" exemptions ─────────────────────────────────────
@@ -618,6 +624,14 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # filters these out; it is the universal differentiator printed on their
     # packaging and consistently appears in eBay listing titles.
     'HA-001': '1:18',
+    # 90-10 "Skaven Clanrats" — eBay returns vintage 1989 board-game box sets
+    # that include "Clanrats" in their title. Excluding "1989" keeps results
+    # to the modern Age of Sigmar plastic kit only.
+    '90-10': '1989',
+    # 50-10 "Ork Boyz" — eBay surfaces "Ork Lootas Boyz" listings that pass
+    # keyword matching because both units share the "Ork Boyz" label. Excluding
+    # "lootas" at query level prevents false matches.
+    '50-10': 'lootas',
 }
 
 
@@ -1372,7 +1386,7 @@ class Command(BaseCommand):
              '48-96', decimal.Decimal('40.00'),
              'Five Primaris Incursors optimised for close-quarters combat with '
              'paired combat blades and haywire mine deployable systems.'),
-            ('Space Marine Eliminators', 'Warhammer 40,000', 'Space Marines',
+            ('Space Marine Primaris Eliminators', 'Warhammer 40,000', 'Space Marines',
              '48-98', decimal.Decimal('37.50'),
              'Three Primaris Eliminators equipped with bolt sniper rifles and '
              'las fusils, able to pick off targets from extreme range.'),
@@ -2086,7 +2100,7 @@ class Command(BaseCommand):
              '91-02', decimal.Decimal('30.00'),
              'The Mortarch of Grief, Lady Olynder mourns eternally while her '
              'tears drain the life from all around her.'),
-            ('Spearhead: Nighthaunt – Cursed Shacklehorde', 'Age of Sigmar', 'Nighthaunt',
+            ('Nighthaunt Spearhead', 'Age of Sigmar', 'Nighthaunt',
              '70-10', decimal.Decimal('87.50'),
              'A ready-to-play Nighthaunt force: Spirit Torment, 2x Chainghasts, '
              '2x Dreadblade Harrows, 10x Dreadscythe Harridans, and 10x Bladegheist '
@@ -2655,7 +2669,7 @@ class Command(BaseCommand):
              '86-15', decimal.Decimal('42.50'),
              'Ten Freeguild Fusiliers armed with handguns and pistols, '
              'the black-powder ranged core of any Cities force.'),
-            ('Slaves to Darkness Chaos Warriors (10)', 'Age of Sigmar', 'Slaves to Darkness',
+            ('Slaves to Darkness Chaos Warriors', 'Age of Sigmar', 'Slaves to Darkness',
              '83-18', decimal.Decimal('42.50'),
              'Ten Chaos Warriors clad in ensorcelled plate armour, wielding '
              'hand weapons and shields in service of the dark gods.'),
