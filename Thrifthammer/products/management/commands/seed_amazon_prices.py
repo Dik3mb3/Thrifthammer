@@ -355,26 +355,26 @@ AMAZON_DATA = {
     '48-28': ('33.15',  'https://www.amazon.com/dp/B08KHQPW8M',  True),  # Firestrike Servo-Turrets  ✓ FIXED wave F (old B0FTZYXRQV $152.50 wrong)
     '48-27': ('58.65',  'https://www.amazon.com/dp/B08LB95FQ5', False),  # Hammerfall Bunker
     '48-97': ('51.00',  'https://www.amazon.com/dp/B074RJKKBP', True),   # Inceptors
-    '48-96': ('24.97',  'https://www.amazon.com/dp/B07J3PG964', False),  # Incursors
+    # 48-96 Incursors — B07J3PG964 was wrong product; no Amazon listing; removed wave G
     '48-45': ('51.00',  'https://www.amazon.com/dp/B0CVS2PN2X', True),   # Infernus Squad  ✓ FIXED
     '48-41': ('55.25',  'https://www.amazon.com/dp/B08GC37WBR', True),   # Infiltrators
     '48-75': ('55.25',  'https://www.amazon.com/dp/B074MCKC99', True),   # Intercessors
     '48-42': ('45.05',  'https://www.amazon.com/dp/B08KHQ2CMC', True),   # Invader ATV
     # 48-36 Judiciar — Primaris Ancient ASIN wrong; no Amazon listing; removed
-    '48-21': ('97.75',  'https://www.amazon.com/dp/B001GQQT2A', True),   # Land Raider
+    # 48-21 Land Raider — deactivated wave G (duplicate of 48-22 Crusader/Redeemer); removed
     '48-22': ('97.75',  'https://www.amazon.com/dp/B001GQQT2A', True),   # Land Raider Crusader/Redeemer
-    '48-30': ('75.00',  'https://www.amazon.com/dp/B08CTK7K4F', True),   # Librarian
-    '48-40': ('34.99',  'https://www.amazon.com/dp/B0DYJKS2JP', True),   # Outriders
+    '48-30': ('35.70',  'https://www.amazon.com/dp/B08HSS6KJ1', True),   # Librarian  ✓ FIXED wave G (old B08CTK7K4F $75.00 wrong)
+    '48-40': ('55.25',  'https://www.amazon.com/dp/B08LZYX55N', True),   # Outriders  ✓ FIXED wave G (old B0DYJKS2JP $34.99 wrong)
     '48-62': ('39.20',  'https://www.amazon.com/dp/B09RGCPT3L', True),   # Primaris Captain
     '48-61': ('33.15',  'https://www.amazon.com/dp/B07WJ7CF9D', True),   # Primaris Lieutenant
-    '48-23': ('28.99',  'https://www.amazon.com/dp/B0FL3X8DFY', False),  # Predator
+    '48-23': ('68.00',  'https://www.amazon.com/dp/B07WJHVDFC', True),   # Predator  ✓ FIXED wave G (old B0FL3X8DFY $28.99 wrong)
     '48-93': ('69.70',  'https://www.amazon.com/dp/B08HSRX6Z3', False),  # Redemptor Dreadnought
     '48-85': ('81.60',  'https://www.amazon.com/dp/B08HSVFY4N', True),   # Repulsor  ✓ FIXED
     '48-95': ('97.75',  'https://www.amazon.com/dp/B08J5NZ8RH', False),  # Repulsor Executioner
     '55-02': ('62.48',  'https://www.amazon.com/dp/B0795YC5J2', True),   # Roboute Guilliman
     '55-12': ('69.29',  'https://www.amazon.com/dp/B0FX34N7PR', True),   # Marneus Calgar  ✓ FIXED (old B0F5GGH8LH wrong)
     '55-16': ('28.99',  'https://www.amazon.com/dp/B0F9DPFMP3', False),  # Ultramarines Honour Guard
-    '48-29': ('28.90',  'https://www.amazon.com/dp/B0DH4W3XYK', True),   # Scouts
+    '48-29': ('69.70',  'https://www.amazon.com/dp/B0DH4Y2GJS', True),   # Scouts (Kill Team 2024)  ✓ FIXED wave G (old B0DH4W3XYK $28.90 wrong)
     '48-43': ('55.25',  'https://www.amazon.com/dp/B0CJS1VS6C', True),   # Sternguard Veteran Squad  ✓ FIXED
     '48-99': ('51.00',  'https://www.amazon.com/dp/B08MVMPLJQ', True),   # Suppressors
     '48-07': ('51.00',  'https://www.amazon.com/dp/B077Y4PTR4', True),   # Tactical Squad

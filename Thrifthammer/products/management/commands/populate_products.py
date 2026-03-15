@@ -143,7 +143,7 @@ GW_IMAGES = {
     '48-44': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101371_SMBrutlisDread1.jpg',
     '48-45': 'https://www.warhammer.com/app/resources/catalog/product/920x950/52170101001_SMInfernusPaintSet01.jpg',
     '48-46': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101393_BallistusDreadnought1.jpg',
-    '48-61': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101179_PrimarisCaptain01.jpg',
+    '48-61': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99070101079_SMLieutenant1.jpg',  # ✓ FIXED wave G (was PrimarisCaptain01 — wrong image)
     '48-62': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101179_PrimarisCaptain01.jpg',
     '48-75': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101488_WEBSpaceMarinesHeads1.jpg',
     '48-76': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101392_SMJumpPkIntercessors2.jpg',
