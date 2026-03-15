@@ -645,6 +645,17 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # prevents these third-party figures from appearing.
     '53-02': 'JoyToy',
     '53-10': 'JoyToy',
+    # 56-25 "T'au Combat Patrol" — eBay returns damaged/incomplete spare-parts
+    # listings that pass keyword matching.  Excluding "spare parts" at query
+    # level removes these from results.
+    '56-25': 'spare parts',
+    # 56-19 "T'au Pathfinders" — eBay returns T'au Pathfinder Datacards (a
+    # separate product) and "Apex" brand items.  Excluding both at query level
+    # narrows results to the correct miniature kit.
+    '56-19': 'datacards Apex',
+    # 43-02 "Magnus the Red" — JoyToy produces 1:18-scale action figures
+    # including Magnus that contaminate eBay search results.
+    '43-02': 'JoyToy',
 }
 
 
@@ -1086,11 +1097,11 @@ class Command(BaseCommand):
                 'shields. The foundational Stormcast Eternal troops.',
             ),
             (
-                'Stormcast Eternals Judicators',
+                'Stormcast Eternals Knight-Judicator with Gryph-hounds',
                 'Age of Sigmar', 'Stormcast Eternals',
                 '96-12', decimal.Decimal('42.50'),
-                'Five ranged Stormcast warriors armed with skybolt bows or '
-                'boltstorm crossbows. Excellent objective controllers.',
+                'A single Knight-Judicator with two Gryph-hound companions, '
+                'wielding a heavenshot bow for precision ranged strikes.',
             ),
             (
                 'Stormcast Eternals Lord-Celestant',

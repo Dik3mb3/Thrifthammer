@@ -404,41 +404,42 @@ AMAZON_DATA = {
     '70-893': ('127.50', 'https://www.amazon.com/dp/B0DR8VR7Y7', True),   # Orruk Warclans Ironjawz
     '70-901': ('123.25', 'https://www.amazon.com/dp/B0DFWLXLY6', True),   # Skaven
     '70-04':  ('123.25', 'https://www.amazon.com/dp/B0DNFZDMWN', True),   # Slaves to Darkness
+    '70-09':  ('127.51', 'https://www.amazon.com/dp/B0D6N7B7GZ', True),   # Ossiarch Bonereapers Spearhead  ✓ ADDED wave I
     '70-21':  ('127.00', 'https://www.amazon.com/dp/B0CX1WC7JJ', False),  # Stormcast Eternals
     '70-11':  ('128.89', 'https://www.amazon.com/dp/B0D9YTJT5Y', True),   # Lumineth Realm-lords Hurakan Vanguard  ✓ ADDED wave H
     '70-832': ('127.50', 'https://www.amazon.com/dp/B0G9VMQW9D', True),   # Maggotkin of Nurgle Spearhead  ✓ ADDED wave H
 
     # ── Stormcast Eternals ────────────────────────────────────────────────
-    '96-12': ('22.72',  'https://www.amazon.com/dp/1785813609', True),   # Judicators
-    '96-11': ('85.00',  'https://www.amazon.com/dp/B0CJPDMR9C', True),   # Liberators
-    '96-14': ('162.35', 'https://www.amazon.com/dp/B09CV9CD6J', True),   # Lord-Celestant
+    '96-12': ('31.46',  'https://www.amazon.com/dp/B09FXBFW1P', True),   # Knight-Judicator with Gryph-hounds  ✓ FIXED wave I (old 1785813609 $22.72 wrong — that's a rulebook)
+    # 96-11 Liberators — Amazon NOT_AVAIL wave I (old B0CJPDMR9C $85.00 wrong); removed
+    # 96-14 Lord-Celestant — Amazon NOT_AVAIL wave I (old B09CV9CD6J $162.35 wrong); removed
     '96-55': ('49.30',  'https://www.amazon.com/dp/B09K4K9T89', True),   # Praetors
-    '96-50': ('35.00',  'https://www.amazon.com/dp/B0C1P2G6ZS', True),   # Vindictors
-    '71-55': ('22.72',  'https://www.amazon.com/dp/1785813609', True),   # Vanguard (Stormcast)
+    '96-50': ('51.00',  'https://www.amazon.com/dp/B09K4JGTVX', True),   # Vindictors  ✓ FIXED wave I (old B0C1P2G6ZS $35.00 wrong)
+    # 71-55 Stormcast Vanguard — deactivated wave I (duplicate starter-set entry); removed
 
     # ── T'au Empire ───────────────────────────────────────────────────────
-    '56-13': ('55.25',  'https://www.amazon.com/dp/B000CEQBSY', True),   # Broadside Battlesuit
+    '56-13': ('53.03',  'https://www.amazon.com/dp/B011KPL5BQ', True),   # Broadside Battlesuit  ✓ FIXED wave I (old B000CEQBSY $55.25 wrong)
     '56-25': ('144.50', 'https://www.amazon.com/dp/B0D2J2XJG8', False),  # Combat Patrol
     '56-15': ('75.65',  'https://www.amazon.com/dp/B09SZPLZ7X', True),   # Crisis Battlesuits
     '56-22': ('29.75',  'https://www.amazon.com/dp/B09RFZGL74', True),   # Ethereal
     '56-06': ('59.95',  'https://www.amazon.com/dp/B07G8N6HJ8', True),   # Fire Warriors
     '56-10': ('68.00',  'https://www.amazon.com/dp/B00C4UUYPK', True),   # Hammerhead Gunship
-    '56-19': ('21.87',  'https://www.amazon.com/dp/B07KW5TRCL', True),   # Pathfinders
+    '56-19': ('40.80',  'https://www.amazon.com/dp/B016S4S9OK', True),   # Pathfinders  ✓ FIXED wave I (old B07KW5TRCL $21.87 wrong)
     '56-16': ('103.70', 'https://www.amazon.com/dp/B09SZMQV11', True),   # Riptide Battlesuit
     '56-14': ('',       'https://www.amazon.com/dp/B075X58BFJ', False),  # Stealth Battlesuits
 
     # ── Thousand Sons ─────────────────────────────────────────────────────
-    '43-30': ('29.75',  'https://www.amazon.com/dp/B0B2PKL77J', True),   # Ahriman
+    '43-30': ('40.80',  'https://www.amazon.com/dp/B09KFQYBJ8', True),   # Ahriman  ✓ FIXED wave I (old B0B2PKL77J $29.75 wrong)
     '43-90': ('135.96', 'https://www.amazon.com/dp/B0F8BVJ69F', True),   # Combat Patrol
     '43-38': ('55.25',  'https://www.amazon.com/dp/B09FYQ38GZ', False),  # Exalted Sorcerers
-    '43-02': ('125.99', 'https://www.amazon.com/dp/B0F4QTPVS4', True),   # Magnus the Red
+    '43-02': ('150.17', 'https://www.amazon.com/dp/B09HJNFB65', True),   # Magnus the Red  ✓ FIXED wave I (old B0F4QTPVS4 $125.99 wrong)
     '43-35': ('55.25',  'https://www.amazon.com/dp/B01N1LRFWV', False),  # Rubric Marines
     '43-36': ('55.25',  'https://www.amazon.com/dp/B09FYSF6Y6', True),   # Scarab Occult Terminators
 
     # ── Tyranids ──────────────────────────────────────────────────────────
-    # 51-06 Carnifex — Broodlord ASIN wrong; no correct Amazon listing found; removed
     '51-04': ('55.25',  'https://www.amazon.com/dp/B007G9NQ40', True),   # Hive Tyrant
-    '51-16': ('22.65',  'https://www.amazon.com/dp/B0D5ZSGDC3', True),   # Termagants
+    '51-06': ('104.88', 'https://www.amazon.com/dp/B00HSS263G', True),   # Carnifex Brood  ✓ ADDED wave I (previously removed; B00HSS263G confirmed correct)
+    '51-16': ('40.80',  'https://www.amazon.com/dp/B0CGV6V47P', True),   # Termagants  ✓ FIXED wave I (old B0D5ZSGDC3 $22.65 wrong)
     '51-08': ('55.26',  'https://www.amazon.com/dp/B075GWMKMT', True),   # Warriors
 
     # ── Warcry ────────────────────────────────────────────────────────────
