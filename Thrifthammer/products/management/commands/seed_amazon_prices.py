@@ -373,7 +373,7 @@ AMAZON_DATA = {
     '48-95': ('97.75',  'https://www.amazon.com/dp/B08J5NZ8RH', False),  # Repulsor Executioner
     '55-02': ('62.48',  'https://www.amazon.com/dp/B0795YC5J2', True),   # Roboute Guilliman
     '55-12': ('69.29',  'https://www.amazon.com/dp/B0FX34N7PR', True),   # Marneus Calgar  ✓ FIXED (old B0F5GGH8LH wrong)
-    '55-16': ('28.99',  'https://www.amazon.com/dp/B0F9DPFMP3', False),  # Ultramarines Honour Guard
+    '55-16': ('92.42',  'https://www.amazon.com/dp/B0FXNDT7XR', True),   # Ultramarines Honour Guard  ✓ FIXED wave J (old B0F9DPFMP3 $28.99 wrong)
     '48-29': ('69.70',  'https://www.amazon.com/dp/B0DH4Y2GJS', True),   # Scouts (Kill Team 2024)  ✓ FIXED wave G (old B0DH4W3XYK $28.90 wrong)
     '48-43': ('55.25',  'https://www.amazon.com/dp/B0CJS1VS6C', True),   # Sternguard Veteran Squad  ✓ FIXED
     # 48-99 Suppressors — deactivated wave H (B08MVMPLJQ belongs to Eliminators); removed
@@ -443,19 +443,20 @@ AMAZON_DATA = {
     '51-08': ('55.26',  'https://www.amazon.com/dp/B075GWMKMT', True),   # Warriors
 
     # ── Warcry ────────────────────────────────────────────────────────────
-    'WC-100': ('33.95', 'https://www.amazon.com/dp/B0C8V4T6S9', True),   # Starter Set
-    'WC-102': ('24.99', 'https://www.amazon.com/dp/B0BN1WTFFB', True),   # Hunter and Hunted
+    # WC-100 Warcry Starter Set — deactivated wave J; removed
+    # WC-101 Warcry Heart of Ghur — deactivated wave J; removed
+    # WC-102 Warcry Hunter and Hunted — deactivated wave J; removed
 
     # ── Warhammer 40,000 General ──────────────────────────────────────────
-    '40-01': ('54.40',  'https://www.amazon.com/dp/1804573744', False),  # Core Rules
+    # 40-01 Core Rules — deactivated wave J; removed
     # 40-02 Leviathan Starter Set — Amazon does not carry this limited launch box; NOT_AVAIL (wave E)
-    '40-03': ('96.90',  'https://www.amazon.com/dp/B0CBKLS5XD', True),   # Starter Set
-    '40-10': ('29.75',  'https://www.amazon.com/dp/B0F9B5CTBK', False),  # Chapter Approved: Leviathan
-    '40-20': ('28.90',  'https://www.amazon.com/dp/B0FS2CWJQ5', True),   # Dice Set
-    '40-21': ('12.49',  'https://www.amazon.com/dp/B000Y4E7RO', False),  # Measuring Tape
+    # 40-03 Starter Set — deactivated wave J; removed
+    # 40-10 Chapter Approved: Leviathan — deactivated wave J; removed
+    # 40-20 Dice Set — deactivated wave J; removed
+    # 40-21 Measuring Tape — deactivated wave J; removed
 
     # ── World Eaters ──────────────────────────────────────────────────────
-    '43-04': ('345.00', 'https://www.amazon.com/dp/B0DZZNHNJ2', True),   # Angron
+    '43-04': ('140.00', 'https://www.amazon.com/dp/B0BTDDDLD5', True),   # Angron  ✓ FIXED wave J (old B0DZZNHNJ2 $345.00 wrong)
     '43-60': ('57.45',  'https://www.amazon.com/dp/B0BTDHL1MH', False),  # Berzerkers
     '43-95': ('134.03', 'https://www.amazon.com/dp/B0F5X8GV4B', True),   # Combat Patrol
     '43-62': ('55.25',  'https://www.amazon.com/dp/B0BTDD6Z24', False),  # Eightbound

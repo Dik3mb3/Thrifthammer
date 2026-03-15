@@ -656,6 +656,10 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # 43-02 "Magnus the Red" — JoyToy produces 1:18-scale action figures
     # including Magnus that contaminate eBay search results.
     '43-02': 'JoyToy',
+    # 55-16 "Ultramarines Honour Guard" — eBay returns action-figure listings
+    # (JoyToy and similar brands) that pass keyword matching.  Excluding
+    # "Action Figure" narrows results to the correct plastic kit.
+    '55-16': 'Action Figure',
 }
 
 
