@@ -38,7 +38,7 @@ GW_IMAGES = {
     '39-10': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108119_KTDeathwatch01.jpg',
     '39-11': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108119_KTDeathwatch01.jpg',
     '40-01': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60040199167_ENGWH40kCoreRulebook1.jpg',
-    '40-02': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60010199071_ENGKTStarterSet1.jpg',
+    '40-02': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60010199057_Leviathan12.jpg',
     '40-03': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60010199058_ENGWH40kStarterSet2.jpg',
     '40-10': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60040199167_ENGWH40kCoreRulebook1.jpg',
     '40-20': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60010199067_ENGWH40KUltimateStarterCombatPatrolVersionLEAD.jpg',
@@ -354,8 +354,8 @@ GW_IMAGES = {
     'KT-110': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60040199176_ENGKTCoreBook2.jpg',
     'LP-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99199999067_SyntheticLayerBrushMediumLead.jpg',
     'MR-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99239999116_MouldlineRemoverLead.jpg',
-    'NM-010': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60630599012_HouseBladesDigi01.jpg',
-    'NM-011': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60630599011_HouseofChains01.jpg',
+    'NM-010': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120599004_EscherGang02.jpg',
+    'NM-011': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120599003_GoliathGang02.jpg',
     'NM-012': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120599006_VanSaarGang01.jpg',
     'NM-020': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120599045_NECUnderhiveMarketLead.jpg',
     'PG-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99219999037_PlasticGlue2016Global01.jpg',
@@ -549,6 +549,12 @@ _EBAY_SEARCH_OVERRIDES = {
     # using the product name alone.  Adding "Warhammer 40K" prefix should
     # help eBay surface the correct vehicle kit (item 174202381018).
     '44-16': 'Warhammer 40K Dark Angels Land Speeder Vengeance',
+    # ── Necrons ───────────────────────────────────────────────────────────
+    # 49-20 "Necron C'tan Shard of the Void Dragon" — the C'tan name uses a
+    # Unicode right-single-quotation-mark (U+2019) which can break eBay's
+    # search URL encoding and return 0 results.  Override with a plain-ASCII
+    # equivalent so the eBay scraper finds the correct listing.
+    '49-20': 'Necron Ctan Shard Void Dragon',
 }
 
 # ── Per-product eBay "no box" exemptions ─────────────────────────────────────
@@ -601,6 +607,17 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # "Citadel Painting Handle Mk2".  Excluding "mk2" prevents the standard
     # handle from appearing in results when searching for the XL model.
     'PH-002': 'mk2',
+    # ── Space Marines / Horus Heresy ─────────────────────────────────────
+    # 55-12 "Marneus Calgar" — eBay searches surface JoyToy brand 1:18-scale
+    # Calgar action figures which pass keyword matching (they include both
+    # "Marneus" and "Calgar" in the title).  Excluding "JoyToy" at the eBay
+    # query level prevents these non-GW figures from appearing in results.
+    '55-12': 'JoyToy',
+    # HA-001 "MKVI Tactical Squad" — searches surface JoyToy and other
+    # third-party 1:18-scale Space Marine action figures.  Excluding "1:18"
+    # filters these out; it is the universal differentiator printed on their
+    # packaging and consistently appears in eBay listing titles.
+    'HA-001': '1:18',
 }
 
 

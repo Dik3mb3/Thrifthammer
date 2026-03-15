@@ -233,12 +233,12 @@ AMAZON_DATA = {
     '57-06': ('45.32',  'https://www.amazon.com/dp/B08QJ4FCSL', True),   # Strike Squad
 
     # ── Horus Heresy ──────────────────────────────────────────────────────
-    'HA-001': ('44.00',  'https://www.amazon.com/dp/B0CWBVGDKG', True),  # MKVI Tactical Squad
+    'HA-001': ('44.00',  'https://www.amazon.com/dp/B0CP673J8F', True),  # MKVI Tactical Squad  ✓ FIXED (old B0CWBVGDKG wrong)
     'HA-002': ('55.25',  'https://www.amazon.com/dp/B0B8ZMZ99L', True),  # Contemptor Dreadnought  ✓ FIXED (old B0CRH15FDS wrong)
     'HA-010': ('66.95',  'https://www.amazon.com/dp/B0CKRY88GB', True),   # MKIII Tactical Squad  ✓ FIXED (old B0D6RF8C3V wrong; price $45.05 too low)
     # HA-011 Cataphractii Terminators (B0GJV364PB) — deactivated wave D; removed
     'HA-012': ('66.30',  'https://www.amazon.com/dp/B0BD5H9WRZ', True),  # Legiones Astartes Predator
-    'HA-013': ('100.30', 'https://www.amazon.com/dp/B0B8ZNSRXZ', True),  # Spartan Assault Tank
+    # HA-013 Spartan Assault Tank — deactivated wave E (duplicate of HA-040); removed
     'HA-020': ('29.75',  'https://www.amazon.com/dp/B0CYCSZ4QV', True),  # Solar Auxilia Lasrifle Section
     'HA-021': ('65.00',  'https://www.amazon.com/dp/B0B6W3RPPQ', True),  # Leviathan Dreadnought  ✓ FIXED (old B0B8ZMZ99L was Contemptor; price est.)
     'HA-040': ('101.30', 'https://www.amazon.com/dp/B0B8ZNSRXZ', True),  # Spartan Assault Tank  ✓ FIXED (old B0F29NXG8C wrong)
@@ -273,22 +273,25 @@ AMAZON_DATA = {
 
     # ── Lumineth Realm-lords ──────────────────────────────────────────────
     '87-08': ('53.13',  'https://www.amazon.com/dp/B08HWKPQP8', True),   # Alarith Stoneguard
-    '87-06': ('55.25',  'https://www.amazon.com/dp/B08HK4QRK7', True),   # Vanari Auralan Wardens (10)
-    '87-10': ('55.25',  'https://www.amazon.com/dp/B08HK4QRK7', True),   # Vanari Auralan Wardens (same kit)
+    # 87-06 Vanari Auralan Wardens (10) — deactivated wave E (duplicate of 87-10); removed
+    '87-10': ('55.25',  'https://www.amazon.com/dp/B08HK4QRK7', True),   # Vanari Auralan Wardens (canonical)
 
     # ── Maggotkin of Nurgle ───────────────────────────────────────────────
-    '97-09': ('17.00',  'https://www.amazon.com/dp/B09PF8BHJY', True),   # Plaguebearers
+    # 97-09 Plaguebearers — deactivated wave E (duplicate of 83-20); removed
+    '83-20': ('36.98',  'https://www.amazon.com/dp/B0746GFZYZ', True),   # Plaguebearers  ✓ FIXED (was NOT_AVAIL)
     '83-22': ('55.25',  'https://www.amazon.com/dp/B0G9W5XWLR', True),   # Putrid Blightkings
 
     # ── Necromunda ────────────────────────────────────────────────────────
-    'NM-010': ('19.99', 'https://www.amazon.com/dp/B0BNJ3ZHVR', True),   # Escher Gang
+    # NM-001 Hive War               — deactivated wave E; no Amazon listing
+    'NM-010': ('45.05', 'https://www.amazon.com/dp/B0779NTT1V', True),   # Escher Gang  ✓ FIXED (old B0BNJ3ZHVR was Dice Set at $19.99)
     'NM-011': ('45.05', 'https://www.amazon.com/dp/B0779Q1K7P', True),   # Goliath Gang
     'NM-012': ('45.05', 'https://www.amazon.com/dp/B07CQCCXMD', True),   # Van Saar Gang
-    'NM-020': ('61.24', 'https://www.amazon.com/dp/B085W6FJ9H', True),   # Underhive Terrain Set
+    # NM-020 Underhive Terrain Set  — deactivated wave E; removed
 
     # ── Necrons ───────────────────────────────────────────────────────────
     '49-14': ('40.80',  'https://www.amazon.com/dp/B007Y9PVA4', True),   # Canoptek Spyder
-    '49-12': ('18.00',  'https://www.amazon.com/dp/B0FNN67JTJ', False),  # Doomsday Ark
+    '49-12': ('58.65',  'https://www.amazon.com/dp/B08HCL7SFY', True),   # Doomsday Ark  ✓ FIXED (old B0FNN67JTJ $18.00 clearly wrong; dual-build kit w/ Ghost Ark)
+    '49-13': ('65.45',  'https://www.amazon.com/dp/B08GC4PD6K', True),   # Doom Scythe  ✓ ADDED (was NOT_AVAIL)
     '49-17': ('51.00',  'https://www.amazon.com/dp/B095J8FYZP', True),   # Flayed Ones
     '49-10': ('40.80',  'https://www.amazon.com/dp/B00631UMA8', True),   # Immortals
     '49-11': ('51.00',  'https://www.amazon.com/dp/B00631WTB8', True),   # Lychguard
@@ -301,7 +304,8 @@ AMAZON_DATA = {
 
     # ── Nighthaunt ────────────────────────────────────────────────────────
     '91-14': ('55.77',  'https://www.amazon.com/dp/B07G2S55DT', True),   # Bladegheist Revenants
-    '91-10': ('32.00',  'https://www.amazon.com/dp/B0BPS3W8XM', True),   # Chainrasps
+    # 91-10 Chainrasps — deactivated wave E (duplicate of 91-28); removed
+    '91-28': ('40.80',  'https://www.amazon.com/dp/B07FSWK3D7', True),   # Chainrasps (canonical)  ✓ ADDED (was NOT_AVAIL)
     '91-12': ('51.00',  'https://www.amazon.com/dp/B07F1YC259', True),   # Grimghast Reapers
     '91-06': ('52.50',  'https://www.amazon.com/dp/B07FBJQY74', True),   # Hexwraiths
     '91-15': ('35.70',  'https://www.amazon.com/dp/B0FLZJWWGP', True),   # Knight of Shrouds
@@ -367,7 +371,7 @@ AMAZON_DATA = {
     '48-85': ('81.60',  'https://www.amazon.com/dp/B08HSVFY4N', True),   # Repulsor  ✓ FIXED
     '48-95': ('97.75',  'https://www.amazon.com/dp/B08J5NZ8RH', False),  # Repulsor Executioner
     '55-02': ('62.48',  'https://www.amazon.com/dp/B0795YC5J2', True),   # Roboute Guilliman
-    '55-12': ('69.29',  'https://www.amazon.com/dp/B0F5GGH8LH', True),   # Marneus Calgar
+    '55-12': ('69.29',  'https://www.amazon.com/dp/B0FX34N7PR', True),   # Marneus Calgar  ✓ FIXED (old B0F5GGH8LH wrong)
     '55-16': ('28.99',  'https://www.amazon.com/dp/B0F9DPFMP3', False),  # Ultramarines Honour Guard
     '48-29': ('28.90',  'https://www.amazon.com/dp/B0DH4W3XYK', True),   # Scouts
     '48-43': ('55.25',  'https://www.amazon.com/dp/B0CJS1VS6C', True),   # Sternguard Veteran Squad  ✓ FIXED
@@ -439,7 +443,7 @@ AMAZON_DATA = {
 
     # ── Warhammer 40,000 General ──────────────────────────────────────────
     '40-01': ('54.40',  'https://www.amazon.com/dp/1804573744', False),  # Core Rules
-    '40-02': ('75.14',  'https://www.amazon.com/dp/B0B8ZP1BDL', False),  # Leviathan Starter Set
+    # 40-02 Leviathan Starter Set — Amazon does not carry this limited launch box; NOT_AVAIL (wave E)
     '40-03': ('96.90',  'https://www.amazon.com/dp/B0CBKLS5XD', True),   # Starter Set
     '40-10': ('29.75',  'https://www.amazon.com/dp/B0F9B5CTBK', False),  # Chapter Approved: Leviathan
     '40-20': ('28.90',  'https://www.amazon.com/dp/B0FS2CWJQ5', True),   # Dice Set
