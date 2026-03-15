@@ -561,6 +561,13 @@ _EBAY_SEARCH_OVERRIDES = {
     # (not "40K" which is too short to be a keyword) helps eBay surface only
     # the correct walker kit.
     '50-16': 'Ork Deff Dread 40000',
+    # ── Space Marines ─────────────────────────────────────────────────────────
+    # 48-06 "Space Marine Terminator Squad" — the current (2025) retail box is
+    # titled "Terminator Assault Squad" on eBay.  Searching "Space Marine
+    # Terminator Squad" misses this listing; overriding to "Assault Squad" form
+    # matches listing 187763771467 ("Space Marines: Terminator Assault Squad
+    # (2025 ver.)").
+    '48-06': 'Space Marine Terminator Assault Squad',
 }
 
 # ── Per-product eBay "no box" exemptions ─────────────────────────────────────
@@ -632,6 +639,12 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # keyword matching because both units share the "Ork Boyz" label. Excluding
     # "lootas" at query level prevents false matches.
     '50-10': 'lootas',
+    # 53-02 "Ragnar Blackmane" and 53-10 "Thunderwolf Cavalry" — JoyToy
+    # produces 1:18-scale action figures of Space Wolf characters that
+    # contaminate eBay search results.  Excluding "JoyToy" at query level
+    # prevents these third-party figures from appearing.
+    '53-02': 'JoyToy',
+    '53-10': 'JoyToy',
 }
 
 

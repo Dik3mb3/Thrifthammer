@@ -376,9 +376,9 @@ AMAZON_DATA = {
     '55-16': ('28.99',  'https://www.amazon.com/dp/B0F9DPFMP3', False),  # Ultramarines Honour Guard
     '48-29': ('69.70',  'https://www.amazon.com/dp/B0DH4Y2GJS', True),   # Scouts (Kill Team 2024)  ✓ FIXED wave G (old B0DH4W3XYK $28.90 wrong)
     '48-43': ('55.25',  'https://www.amazon.com/dp/B0CJS1VS6C', True),   # Sternguard Veteran Squad  ✓ FIXED
-    '48-99': ('51.00',  'https://www.amazon.com/dp/B08MVMPLJQ', True),   # Suppressors
+    # 48-99 Suppressors — deactivated wave H (B08MVMPLJQ belongs to Eliminators); removed
     '48-07': ('51.00',  'https://www.amazon.com/dp/B077Y4PTR4', True),   # Tactical Squad
-    '48-06': ('51.00',  'https://www.amazon.com/dp/B000CEM3E0', True),   # Terminator Squad
+    '48-06': ('61.22',  'https://www.amazon.com/dp/B0G3D2F6BH', True),   # Terminator Squad  ✓ FIXED wave H (old B000CEM3E0 $51.00 wrong)
     '48-08': ('51.00',  'https://www.amazon.com/dp/B08HPXH2GV', True),   # Vanguard Veteran Squad
     '48-26': ('68.00',  'https://www.amazon.com/dp/B00109WAOY', True),   # Vindicator
     '48-25': ('74.00',  'https://www.amazon.com/dp/B000CESE1G', True),   # Whirlwind
@@ -388,8 +388,8 @@ AMAZON_DATA = {
     # ── Space Wolves ──────────────────────────────────────────────────────
     '53-20': ('144.50', 'https://www.amazon.com/dp/B0FJ935YFL', True),   # Combat Patrol
     '53-06': ('53.13',  'https://www.amazon.com/dp/B0FF4NG625', True),   # Grey Hunters
-    '53-02': ('62.99',  'https://www.amazon.com/dp/B0FGJVB1LQ', True),   # Ragnar Blackmane
-    '53-10': ('249.00', 'https://www.amazon.com/dp/B0DTDYR7BM', False),  # Thunderwolf Cavalry
+    '53-02': ('40.02',  'https://www.amazon.com/dp/B08LZY9Z3K', True),   # Ragnar Blackmane  ✓ FIXED wave H (old B0FGJVB1LQ $62.99 wrong)
+    '53-10': ('55.25',  'https://www.amazon.com/dp/B08MV13YVH', True),   # Thunderwolf Cavalry  ✓ FIXED wave H (old B0DTDYR7BM $249.00 wrong)
     '53-08': ('58.65',  'https://www.amazon.com/dp/B0FF4X73N1', False),  # Wolf Guard Terminators
 
     # ── Spearhead ─────────────────────────────────────────────────────────
@@ -398,13 +398,15 @@ AMAZON_DATA = {
     '70-12':  ('127.50', 'https://www.amazon.com/dp/B0D74W7R2H', True),   # Daughters of Khaine
     '70-839': ('127.50', 'https://www.amazon.com/dp/B0D9YXFMNY', True),   # Disciples of Tzeentch
     '70-915': ('127.50', 'https://www.amazon.com/dp/B0FLZLQ7YY', True),   # Flesh-Eater Courts
-    '70-894': ('51.00',  'https://www.amazon.com/dp/B0DZ32PLNB', True),   # Gloomspite Gitz
+    '70-894': ('118.95', 'https://www.amazon.com/dp/B0FQ6TJGQM', True),   # Gloomspite Gitz Snarlpack Huntaz  ✓ FIXED wave H (old B0DZ32PLNB $51.00 wrong)
     '70-10':  ('123.99', 'https://www.amazon.com/dp/B0FLZW4SYX', True),   # Nighthaunt
     '70-892': ('124.39', 'https://www.amazon.com/dp/B0D9YT1G2R', True),   # Orruk Warclans
     '70-893': ('127.50', 'https://www.amazon.com/dp/B0DR8VR7Y7', True),   # Orruk Warclans Ironjawz
     '70-901': ('123.25', 'https://www.amazon.com/dp/B0DFWLXLY6', True),   # Skaven
     '70-04':  ('123.25', 'https://www.amazon.com/dp/B0DNFZDMWN', True),   # Slaves to Darkness
     '70-21':  ('127.00', 'https://www.amazon.com/dp/B0CX1WC7JJ', False),  # Stormcast Eternals
+    '70-11':  ('128.89', 'https://www.amazon.com/dp/B0D9YTJT5Y', True),   # Lumineth Realm-lords Hurakan Vanguard  ✓ ADDED wave H
+    '70-832': ('127.50', 'https://www.amazon.com/dp/B0G9VMQW9D', True),   # Maggotkin of Nurgle Spearhead  ✓ ADDED wave H
 
     # ── Stormcast Eternals ────────────────────────────────────────────────
     '96-12': ('22.72',  'https://www.amazon.com/dp/1785813609', True),   # Judicators
