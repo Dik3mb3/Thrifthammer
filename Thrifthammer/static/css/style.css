@@ -1826,11 +1826,7 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
 }
 .roadmap-badge-soon    { background: var(--accent-green);  color: #fff; }
 .roadmap-badge-planned { background: var(--accent-gold);   color: var(--bg-primary); }
-.roadmap-badge-longterm {
-  background: transparent;
-  color: var(--accent-gold-lt);
-  border: 1px solid var(--accent-gold);
-}
+.roadmap-badge-longterm { background: #5a3e8a; color: #fff; }
 .roadmap-badge-exploring { background: var(--accent-blue); color: #fff; }
 .roadmap-col-items {
   list-style: none;
@@ -1861,7 +1857,7 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
 /* Column accent lines */
 .roadmap-col-soon     { border-top: 2px solid var(--accent-green); }
 .roadmap-col-planned  { border-top: 2px solid var(--accent-gold); }
-.roadmap-col-longterm { border-top: 2px solid var(--accent-gold-lt); }
+.roadmap-col-longterm { border-top: 2px solid #5a3e8a; }
 .roadmap-col-exploring { border-top: 2px solid var(--accent-blue); }
 
 /* Contact */
