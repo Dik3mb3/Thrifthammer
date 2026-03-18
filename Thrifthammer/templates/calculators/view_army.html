@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load price_filters %}
 
 {% block title %}{{ army.name }}{% endblock %}
 
@@ -24,7 +25,7 @@
     border-bottom: 1px solid #333; color: #888; font-size: 0.85rem;
     text-transform: uppercase; letter-spacing: 0.05em;
   }
-  .units-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #222; }
+  .units-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #222; vertical-align: middle; }
   .units-table tr:last-child td { border-bottom: none; }
   .units-table .price-col { color: #03dac6; }
   .units-table .pts-col { color: #bb86fc; }
@@ -32,6 +33,30 @@
     background: #2a2a2a; border-radius: 3px; padding: 0.1rem 0.4rem;
     font-size: 0.75rem; color: #888;
   }
+
+  /* Expandable detail row */
+  .army-detail-row { display: none; background: var(--bg-secondary); }
+  .army-detail-row.open { display: table-row; }
+  .army-detail-cell { padding: var(--sp-3) var(--sp-4) !important; }
+
+  .army-expand-btn {
+    background: none; border: 1px solid var(--border-mid); border-radius: 4px;
+    cursor: pointer; color: var(--text-muted); font-size: 0.75rem;
+    padding: 2px 8px; transition: border-color 0.15s, color 0.15s;
+  }
+  .army-expand-btn:hover, .army-expand-btn.open {
+    border-color: var(--accent-gold); color: var(--accent-gold-lt);
+  }
+
+  .army-prices-table { width: 100%; font-size: 0.82rem; border-collapse: collapse; margin-bottom: var(--sp-3); }
+  .army-prices-table th {
+    text-align: left; padding: 0.3rem 0.6rem;
+    border-bottom: 1px solid var(--border-mid); color: var(--text-muted);
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .army-prices-table td { padding: 0.35rem 0.6rem; border-bottom: 1px solid var(--border-dark); }
+  .army-prices-table tr:last-child td { border-bottom: none; }
+  .army-unit-actions { display: flex; gap: var(--sp-2); flex-wrap: wrap; padding-top: var(--sp-2); }
 
   .share-section { margin-top: 1.5rem; }
 </style>
@@ -74,7 +99,7 @@
 
 <!-- Unit list -->
 <h2>Units</h2>
-{% if army.units_data %}
+{% if unit_details %}
 <table class="units-table">
   <thead>
     <tr>
@@ -84,12 +109,14 @@
       <th>Pts (total)</th>
       <th>Price × Qty</th>
       <th>MSRP × Qty</th>
+      <th style="width:40px;"></th>
     </tr>
   </thead>
   <tbody>
-    {% for unit in army.units_data %}
+    {% for unit in unit_details %}
+    {# Main unit row #}
     <tr>
-      <td>{{ unit.name }}</td>
+      <td style="font-weight:600;">{{ unit.name }}</td>
       <td><span class="cat-badge">{{ unit.category }}</span></td>
       <td>{{ unit.quantity }}</td>
       <td class="pts-col">
@@ -108,7 +135,80 @@
           ${{ unit.msrp }} × {{ unit.quantity }}
         {% else %}—{% endif %}
       </td>
+      <td>
+        {# Only show expand button if there are live prices or action buttons #}
+        {% if unit.top_prices or unit.product_slug %}
+        <button
+          class="army-expand-btn"
+          data-target="army-detail-{{ forloop.counter }}"
+          aria-label="Show prices for {{ unit.name }}"
+          type="button"
+        >▶</button>
+        {% endif %}
+      </td>
     </tr>
+
+    {# Expandable detail row: live top-3 prices + action buttons #}
+    {% if unit.top_prices or unit.product_slug %}
+    <tr id="army-detail-{{ forloop.counter }}" class="army-detail-row">
+      <td colspan="7" class="army-detail-cell">
+
+        {% if unit.top_prices %}
+        <table class="army-prices-table">
+          <thead>
+            <tr>
+              <th>Retailer</th>
+              <th>Price</th>
+              <th>Discount</th>
+              <th>Buy</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cp in unit.top_prices %}
+            <tr>
+              <td>{{ cp.retailer.name }}</td>
+              <td style="color:var(--accent-green-lt);font-weight:600;">${{ cp.price|floatformat:"2" }}</td>
+              <td>
+                {% if unit.gw_msrp and cp.price %}
+                {% with disc=cp.price|discount_vs:unit.gw_msrp %}
+                {% if disc > 0.5 %}
+                <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
+                {% else %}—{% endif %}
+                {% endwith %}
+                {% else %}—{% endif %}
+              </td>
+              <td>
+                <a href="{{ cp.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">Buy ↗</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p style="color:var(--text-muted);font-size:0.85rem;margin:0 0 var(--sp-3);">No live prices available for this unit right now.</p>
+        {% endif %}
+
+        {% if unit.product_slug and user.is_authenticated %}
+        <div class="army-unit-actions">
+          <form method="post" action="{% url 'products:toggle_watchlist' unit.product_slug %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary btn-sm">
+              {% if unit.on_watchlist %}👁 Watching{% else %}👁 Add to Watchlist{% endif %}
+            </button>
+          </form>
+          <a href="{% url 'collections:add' unit.product_slug %}" class="btn btn-secondary btn-sm">
+            {% if unit.in_collection %}✓ In Collection{% else %}+ Add to Collection{% endif %}
+          </a>
+        </div>
+        {% elif unit.product_slug and not user.is_authenticated %}
+        <p style="font-size:0.82rem;color:var(--text-muted);margin:0;">
+          <a href="{% url 'accounts:login' %}?next={{ request.path }}">Log in</a> to add to Watchlist or Collection.
+        </p>
+        {% endif %}
+
+      </td>
+    </tr>
+    {% endif %}
     {% endfor %}
   </tbody>
 </table>
@@ -135,6 +235,22 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+// Expand/collapse unit detail rows
+(function () {
+  'use strict';
+  document.querySelectorAll('.army-expand-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var targetId = btn.dataset.target;
+      var row = document.getElementById(targetId);
+      if (!row) return;
+      var isOpen = row.classList.toggle('open');
+      btn.classList.toggle('open', isOpen);
+      btn.textContent = isOpen ? '▼' : '▶';
+    });
+  });
+})();
+</script>
 {% if army.is_public %}
 <script>
 document.getElementById('copy-link-btn').addEventListener('click', function () {

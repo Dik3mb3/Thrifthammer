@@ -1,13 +1,69 @@
 {% extends "base.html" %}
 
-{% block title %}Add to Collection{% endblock %}
+{% block title %}{{ product.name }} — Add to Collection{% endblock %}
 
 {% block content %}
-<h1>Add "{{ product.name }}" to Collection</h1>
-<form method="post" class="auth-form">
+<div class="page-content" style="max-width:560px;">
+
+  <div style="margin-bottom:var(--sp-4);">
+    <h1 class="section-title" style="font-size:1.3rem;">
+      {% if form.instance.pk %}Update{% else %}Add to{% endif %} Collection
+    </h1>
+    <div class="gold-rule"></div>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-top:var(--sp-2);">
+      <a href="{% url 'products:detail' product.slug %}" style="color:var(--accent-gold-lt);">{{ product.name }}</a>
+    </p>
+  </div>
+
+  <form method="post" class="auth-form">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a href="{% url 'products:detail' product.slug %}" class="btn btn-secondary">Cancel</a>
-</form>
+
+    {# Status #}
+    <div class="form-group" style="margin-bottom:var(--sp-4);">
+      <label for="{{ form.status.id_for_label }}" class="form-label">Status</label>
+      {{ form.status }}
+      {% if form.status.errors %}
+      <p class="form-error">{{ form.status.errors|join:", " }}</p>
+      {% endif %}
+    </div>
+
+    {# Quantity #}
+    <div class="form-group" style="margin-bottom:var(--sp-4);">
+      <label for="{{ form.quantity.id_for_label }}" class="form-label">Quantity</label>
+      {{ form.quantity }}
+      {% if form.quantity.errors %}
+      <p class="form-error">{{ form.quantity.errors|join:", " }}</p>
+      {% endif %}
+    </div>
+
+    {# Price Paid — optional #}
+    <div class="form-group" style="margin-bottom:var(--sp-4);">
+      <label for="{{ form.price_paid.id_for_label }}" class="form-label">
+        Price Paid <span style="color:var(--text-muted);font-weight:400;">(optional)</span>
+      </label>
+      {{ form.price_paid }}
+      <p style="font-size:0.78rem;color:var(--text-muted);margin-top:var(--sp-1);">What you actually paid. Leave blank if you don't know or don't want to track it.</p>
+      {% if form.price_paid.errors %}
+      <p class="form-error">{{ form.price_paid.errors|join:", " }}</p>
+      {% endif %}
+    </div>
+
+    {# Notes — optional #}
+    <div class="form-group" style="margin-bottom:var(--sp-6);">
+      <label for="{{ form.notes.id_for_label }}" class="form-label">
+        Notes <span style="color:var(--text-muted);font-weight:400;">(optional)</span>
+      </label>
+      {{ form.notes }}
+      {% if form.notes.errors %}
+      <p class="form-error">{{ form.notes.errors|join:", " }}</p>
+      {% endif %}
+    </div>
+
+    <div style="display:flex;gap:var(--sp-3);flex-wrap:wrap;">
+      <button type="submit" class="btn btn-primary">Save</button>
+      <a href="{% url 'products:detail' product.slug %}" class="btn btn-secondary">Cancel</a>
+    </div>
+
+  </form>
+</div>
 {% endblock %}

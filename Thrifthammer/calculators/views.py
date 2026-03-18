@@ -19,6 +19,9 @@ from django.shortcuts import get_object_or_404
 from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
 
+from accounts.models import WatchlistItem
+from collections_app.models import CollectionItem
+from prices.models import CurrentPrice
 from products.models import Faction
 
 from .models import PrebuiltArmy, SavedArmy, UnitType
@@ -319,6 +322,72 @@ class ViewSavedArmyView(DetailView):
             # Show own armies (any privacy) + all public armies
             return qs.filter(Q(is_public=True) | Q(user=self.request.user))
         return qs.filter(is_public=True)
+
+    def get_context_data(self, **kwargs):
+        """
+        Enrich each unit in units_data with live top-3 retailer prices,
+        watchlist/collection membership, and the product slug so the
+        template can render expandable price rows and action buttons.
+        """
+        context = super().get_context_data(**kwargs)
+        army = self.object
+
+        # Gather all unit_type_ids referenced in this army's snapshot
+        unit_ids = [u['unit_type_id'] for u in (army.units_data or [])]
+        unit_map = {
+            ut.pk: ut
+            for ut in UnitType.objects.filter(pk__in=unit_ids).select_related('product')
+        }
+
+        # Collect product IDs that have a linked Product
+        product_ids = [ut.product_id for ut in unit_map.values() if ut.product_id]
+
+        # Fetch all in-stock prices for those products, ordered cheapest first
+        all_prices = (
+            CurrentPrice.objects
+            .filter(product_id__in=product_ids, in_stock=True, not_available=False)
+            .select_related('retailer')
+            .order_by('product_id', 'price')
+        )
+        # Keep at most 3 prices per product
+        prices_by_product: dict = {}
+        for cp in all_prices:
+            lst = prices_by_product.setdefault(cp.product_id, [])
+            if len(lst) < 3:
+                lst.append(cp)
+
+        # Watchlist / collection membership for authenticated users
+        watchlist_pids: set = set()
+        collection_pids: set = set()
+        if self.request.user.is_authenticated:
+            watchlist_pids = set(
+                WatchlistItem.objects
+                .filter(user=self.request.user, product_id__in=product_ids)
+                .values_list('product_id', flat=True)
+            )
+            collection_pids = set(
+                CollectionItem.objects
+                .filter(user=self.request.user, product_id__in=product_ids)
+                .values_list('product_id', flat=True)
+            )
+
+        # Build enriched unit list
+        unit_details = []
+        for entry in (army.units_data or []):
+            ut = unit_map.get(entry['unit_type_id'])
+            product = ut.product if ut else None
+            pid = product.pk if product else None
+            unit_details.append({
+                **entry,
+                'product_slug': product.slug if product else None,
+                'top_prices': prices_by_product.get(pid, []),
+                'on_watchlist': pid in watchlist_pids,
+                'in_collection': pid in collection_pids,
+                'gw_msrp': product.msrp if product else None,
+            })
+
+        context['unit_details'] = unit_details
+        return context
 
 
 class UserArmiesListView(LoginRequiredMixin, ListView):

@@ -356,22 +356,31 @@ def search_autocomplete(request):
 
 
 @login_required
+@require_http_methods(['POST'])
 def toggle_watchlist(request, slug):
     """
     Toggle a product on/off the authenticated user's watchlist.
 
-    Only POST is honoured — GET silently redirects to the product page
-    without making any changes, protecting against link prefetch.
-    """
-    if request.method != 'POST':
-        return redirect('products:detail', slug=slug)
+    POST only.  Supports both standard form POST (redirects back to the
+    product page) and AJAX (returns JSON so the page can update in-place
+    without creating a duplicate browser-history entry, which caused the
+    'Back button needs two clicks' bug).
 
+    AJAX callers must set the ``X-Requested-With: XMLHttpRequest`` header.
+    Response: ``{"on_watchlist": true|false}``
+    """
     product = get_object_or_404(Product.objects.filter(is_active=True), slug=slug)
     item, created = WatchlistItem.objects.get_or_create(
         user=request.user, product=product,
     )
     if not created:
         item.delete()
+        on_watchlist = False
+    else:
+        on_watchlist = True
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'on_watchlist': on_watchlist})
 
     return redirect('products:detail', slug=slug)
 

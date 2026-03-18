@@ -137,12 +137,17 @@
       {# Actions #}
       <div class="product-actions">
         {% if user.is_authenticated %}
-        <form method="post" action="{% url 'products:toggle_watchlist' product.slug %}">
-          {% csrf_token %}
-          <button type="submit" class="btn {% if on_watchlist %}btn-secondary{% else %}btn-primary{% endif %}">
-            {% if on_watchlist %}👁 Remove from Watchlist{% else %}👁 Add to Watchlist{% endif %}
-          </button>
-        </form>
+        {# AJAX watchlist toggle — avoids adding a history entry so Back button works in one press #}
+        <button
+          id="watchlist-btn"
+          class="btn {% if on_watchlist %}btn-secondary{% else %}btn-primary{% endif %}"
+          data-url="{% url 'products:toggle_watchlist' product.slug %}"
+          data-csrf="{{ csrf_token }}"
+          data-on="{{ on_watchlist|lower }}"
+          type="button"
+        >
+          {% if on_watchlist %}👁 Remove from Watchlist{% else %}👁 Add to Watchlist{% endif %}
+        </button>
         <a href="{% url 'collections:add' product.slug %}" class="btn btn-secondary">+ Add to Collection</a>
         {% else %}
         <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn btn-secondary">Log in to Track Prices</a>
@@ -276,4 +281,65 @@
   {% endif %}
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% if user.is_authenticated %}
+<script>
+(function () {
+  'use strict';
+  var btn = document.getElementById('watchlist-btn');
+  if (!btn) return;
+
+  btn.addEventListener('click', function () {
+    var url    = btn.dataset.url;
+    var csrf   = btn.dataset.csrf;
+    var isOn   = btn.dataset.on === 'true';
+
+    // Disable button while request is in flight
+    btn.disabled = true;
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrf,
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'csrfmiddlewaretoken=' + encodeURIComponent(csrf),
+    })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      var nowOn = data.on_watchlist;
+      btn.dataset.on = nowOn ? 'true' : 'false';
+      if (nowOn) {
+        btn.textContent = '👁 Remove from Watchlist';
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-secondary');
+      } else {
+        btn.textContent = '👁 Add to Watchlist';
+        btn.classList.remove('btn-secondary');
+        btn.classList.add('btn-primary');
+      }
+    })
+    .catch(function () {
+      // On error, fall back to full page POST so the action still works
+      var form = document.createElement('form');
+      form.method = 'post';
+      form.action = url;
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'csrfmiddlewaretoken';
+      input.value = csrf;
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+    })
+    .finally(function () {
+      btn.disabled = false;
+    });
+  });
+})();
+</script>
+{% endif %}
 {% endblock %}
