@@ -190,9 +190,9 @@ class Command(BaseCommand):
             published_at=timezone.now(),
             meta_title="ThriftHammer Roadmap — What We're Building Next",
             meta_description=(
-                'A deep dive into the ThriftHammer roadmap: price intelligence, army cost '
-                'planning, collection tracking, alerts, and community features. '
-                'Help us build what matters.'
+                'ThriftHammer roadmap: price intelligence, army cost planning, '
+                'collection tracking, alerts, and community features. '
+                'Help us shape what comes next.'
             ),
         )
 
