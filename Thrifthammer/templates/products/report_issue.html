@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Report Issue — {{ product.name }} | ThriftHammer{% endblock %}
+
+{% block content %}
+<div class="product-detail">
+
+  {# ── Breadcrumbs ── #}
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="{% url 'home' %}">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="{% url 'products:list' %}">Products</a>
+    <span aria-hidden="true">›</span>
+    <a href="{% url 'products:detail' product.slug %}">{{ product.name|truncatechars:40 }}</a>
+    <span aria-hidden="true">›</span>
+    <span style="color:var(--text-secondary);">Report Issue</span>
+  </nav>
+
+  <div style="max-width:560px;margin:var(--sp-8) auto;">
+
+    <h1 style="font-size:1.4rem;margin-bottom:var(--sp-2);">Report a Data Issue</h1>
+    <p style="color:var(--text-secondary);margin-bottom:var(--sp-6);">
+      Found a wrong price, broken link, or out-of-date stock status on
+      <strong>{{ product.name }}</strong>?
+      Let us know and we'll get it fixed.
+    </p>
+
+    <form method="post" action="{% url 'products:report_issue' product.slug %}">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+      <div class="alert alert-error" role="alert">
+        {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="form-group" style="margin-bottom:var(--sp-4);">
+        <label for="{{ form.issue_type.id_for_label }}" style="display:block;font-weight:600;margin-bottom:var(--sp-1);">
+          {{ form.issue_type.label }}
+        </label>
+        {{ form.issue_type }}
+        {% if form.issue_type.errors %}
+        <p style="color:var(--danger,#d9534f);font-size:0.85rem;margin-top:2px;">{{ form.issue_type.errors.as_text }}</p>
+        {% endif %}
+      </div>
+
+      <div class="form-group" style="margin-bottom:var(--sp-4);">
+        <label for="{{ form.description.id_for_label }}" style="display:block;font-weight:600;margin-bottom:var(--sp-1);">
+          {{ form.description.label }}
+        </label>
+        {{ form.description }}
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">{{ form.description.help_text }}</p>
+        {% if form.description.errors %}
+        <p style="color:var(--danger,#d9534f);font-size:0.85rem;margin-top:2px;">{{ form.description.errors.as_text }}</p>
+        {% endif %}
+      </div>
+
+      <div class="form-group" style="margin-bottom:var(--sp-6);">
+        <label for="{{ form.contact_email.id_for_label }}" style="display:block;font-weight:600;margin-bottom:var(--sp-1);">
+          {{ form.contact_email.label }}
+        </label>
+        {{ form.contact_email }}
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">{{ form.contact_email.help_text }}</p>
+        {% if form.contact_email.errors %}
+        <p style="color:var(--danger,#d9534f);font-size:0.85rem;margin-top:2px;">{{ form.contact_email.errors.as_text }}</p>
+        {% endif %}
+      </div>
+
+      <div style="display:flex;gap:var(--sp-3);flex-wrap:wrap;">
+        <button type="submit" class="btn btn-primary">Submit Report</button>
+        <a href="{% url 'products:detail' product.slug %}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+{% endblock %}

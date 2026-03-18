@@ -219,3 +219,30 @@ EBAY_CERT_ID_SANDBOX    = os.environ.get('EBAY_CERT_ID_SANDBOX', '')
 EBAY_USE_SANDBOX = os.environ.get('EBAY_USE_SANDBOX', 'False').lower() in ('true', '1', 'yes')
 EBAY_CALLS_PER_DAY_LIMIT = 5000
 EBAY_DELAY_BETWEEN_CALLS = 0.5
+
+# ---------------------------------------------------------------------------
+# Email configuration — for the "Report Issue" feature
+# ---------------------------------------------------------------------------
+# In production set these Railway environment variables:
+#   EMAIL_BACKEND   = django.core.mail.backends.smtp.EmailBackend
+#   EMAIL_HOST      = smtp.gmail.com
+#   EMAIL_PORT      = 587
+#   EMAIL_USE_TLS   = True
+#   EMAIL_HOST_USER = Thrifthammer.com@gmail.com
+#   EMAIL_HOST_PASSWORD = <Gmail App Password (Settings → Security → App passwords)>
+#   DEFAULT_FROM_EMAIL  = Thrifthammer.com@gmail.com
+#
+# Locally the console backend prints emails to stdout — no config needed.
+EMAIL_BACKEND = os.environ.get(
+    'EMAIL_BACKEND',
+    'django.core.mail.backends.console.EmailBackend',
+)
+EMAIL_HOST          = os.environ.get('EMAIL_HOST',     'smtp.gmail.com')
+EMAIL_PORT          = int(os.environ.get('EMAIL_PORT', '587'))
+EMAIL_USE_TLS       = os.environ.get('EMAIL_USE_TLS', 'True').lower() in ('true', '1', 'yes')
+EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER',     '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL  = os.environ.get('DEFAULT_FROM_EMAIL',  'noreply@thrifthammer.com')
+
+# Address that receives "Report Issue" submissions
+ISSUE_REPORT_EMAIL = 'Thrifthammer.com@gmail.com'

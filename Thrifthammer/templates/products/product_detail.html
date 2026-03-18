@@ -124,6 +124,15 @@
         {% endif %}
       </div>
 
+      {# Report Issue link — small, unobtrusive, visible to everyone #}
+      <p style="margin-top:var(--sp-3);font-size:0.82rem;color:var(--text-muted);">
+        Noticed a wrong price or broken link?
+        <a href="{% url 'products:report_issue' product.slug %}"
+           style="color:var(--text-muted);text-decoration:underline;">
+          Report an issue
+        </a>
+      </p>
+
       {# Description #}
       {% if product.description %}
       <div class="product-description">

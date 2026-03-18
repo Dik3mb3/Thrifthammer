@@ -14,17 +14,21 @@ Performance strategy:
 - Autocomplete limited to 10 results, cached 5 minutes.
 """
 
+from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
+from django.core.mail import send_mail
 from django.core.paginator import InvalidPage, Paginator
 from django.db.models import Case, DecimalField, ExpressionWrapper, F, FloatField, Min, OuterRef, Q, Subquery, Value, When
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_http_methods
 
 from accounts.models import WatchlistItem
 from prices.models import CurrentPrice
 
+from .forms import IssueReportForm
 from .models import Category, Faction, Product
 
 
@@ -378,3 +382,63 @@ def toggle_watchlist(request, slug):
         item.delete()
 
     return redirect('products:detail', slug=slug)
+
+
+@require_http_methods(['GET', 'POST'])
+def report_issue(request, slug):
+    """
+    Let any visitor report a data problem on a product page.
+
+    GET  — renders the report form inside a modal (or as a standalone page
+           if JS is disabled / the user navigates directly to the URL).
+    POST — validates the form, sends an email to ISSUE_REPORT_EMAIL, then
+           redirects back to the product page with a flash message.
+
+    No login required — anonymous reports are accepted so that casual
+    visitors can flag stale prices without creating an account.
+    """
+    product = get_object_or_404(
+        Product.objects.filter(is_active=True),
+        slug=slug,
+    )
+
+    if request.method == 'POST':
+        form = IssueReportForm(request.POST)
+        if form.is_valid():
+            issue_label = dict(IssueReportForm.ISSUE_TYPE_CHOICES).get(
+                form.cleaned_data['issue_type'],
+                form.cleaned_data['issue_type'],
+            )
+            description   = form.cleaned_data['description']
+            contact_email = form.cleaned_data.get('contact_email') or 'Anonymous'
+
+            body = (
+                f"Product : {product.name} (SKU: {product.gw_sku})\n"
+                f"Page    : https://www.thrifthammer.com/products/{product.slug}/\n\n"
+                f"Issue   : {issue_label}\n\n"
+                f"Details :\n{description}\n\n"
+                f"Reporter: {contact_email}"
+            )
+
+            send_mail(
+                subject=f'[ThriftHammer] Issue Report — {product.name}',
+                message=body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.ISSUE_REPORT_EMAIL],
+                fail_silently=True,  # never crash the user's page on email failure
+            )
+
+            messages.success(
+                request,
+                'Thanks for the report! We review every submission and will '
+                'update the data as quickly as possible.',
+            )
+            return redirect('products:detail', slug=slug)
+        # form invalid — fall through to re-render with errors
+    else:
+        form = IssueReportForm()
+
+    return render(request, 'products/report_issue.html', {
+        'product': product,
+        'form':    form,
+    })
