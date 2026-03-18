@@ -10,7 +10,8 @@
 <meta property="og:description" content="Compare Warhammer 40,000 prices across US retailers. Find the cheapest deal on every kit, every day.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.thrifthammer.com/">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://www.thrifthammer.com/static/images/bg-grimdark.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ThriftHammer — Warhammer Price Tracker">
 <meta name="twitter:description" content="Compare Warhammer 40,000 prices across US retailers. Never overpay for plastic again.">
 <link rel="canonical" href="https://www.thrifthammer.com/">
@@ -50,8 +51,11 @@
         </div>
 
         <div style="display:flex;gap:var(--sp-3);justify-content:center;flex-wrap:wrap;">
-            <a href="{% url 'products:list' %}" class="btn btn-primary btn-lg">Browse All Products</a>
-            <a href="{% url 'calculators:space_marines' %}" class="btn btn-secondary btn-lg">Army Calculator</a>
+            <a href="{% url 'products:list' %}" class="btn btn-primary btn-lg btn-hero">Browse All Products</a>
+            <a href="{% url 'calculators:space_marines' %}" class="btn btn-blue btn-lg btn-hero">Army Calculator</a>
+            {% if not user.is_authenticated %}
+            <a href="{% url 'accounts:register' %}" class="btn btn-purple btn-lg btn-hero">Sign Up Now</a>
+            {% endif %}
         </div>
 
         {# Hero stats bar #}
@@ -94,6 +98,7 @@
                     src="{{ cp.product.image_url }}"
                     alt="{{ cp.product.name }}"
                     class="product-card-img"
+                    width="300" height="300"
                     loading="lazy"
                 >
                 {% else %}
@@ -186,7 +191,7 @@
                     <span class="calc-preview-total-price">$265.00</span>
                 </div>
                 <p style="font-size:0.72rem;color:var(--text-muted);margin-top:var(--sp-3);text-align:center;">
-                    vs. $310+ at GW retail — save ~$45
+                    vs. $310+ at GW retail. Save ~$45.
                 </p>
             </div>
 
@@ -218,7 +223,7 @@
                 <h3>Compare Prices</h3>
                 <p>
                     See live prices from Miniature Market, Noble Knight,
-                    eBay, Amazon, and more — side by side.
+                    eBay, Amazon, and more, side by side.
                 </p>
             </div>
 
@@ -236,6 +241,27 @@
 </section>
 
 {# Categories moved to sidebar on the browse page #}
+
+{# ─── DEAL ALERT EMAIL CAPTURE ────────────────────────────────────────── #}
+<section class="section section-alt" aria-label="Weekly deal alerts signup">
+    <div class="container" style="max-width:580px;text-align:center;">
+        <h2 style="font-family:'Cinzel',serif;font-size:clamp(1.2rem,3vw,1.6rem);margin-bottom:var(--sp-2);">
+            Get Weekly Deal Alerts
+        </h2>
+        <p style="color:var(--text-secondary);margin-bottom:var(--sp-5);">
+            We'll email you the best price drops across US Warhammer retailers every week.
+            No spam. Unsubscribe any time.
+        </p>
+        <form method="post" action="{% url 'newsletter_signup' %}"
+              style="display:flex;gap:var(--sp-3);flex-wrap:wrap;justify-content:center;">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="your@email.com" required
+                   style="flex:1;min-width:220px;padding:0.65rem 1rem;background:var(--bg-elevated);border:1px solid var(--border-mid);border-radius:var(--rounded);color:var(--text-primary);font-size:0.95rem;"
+                   aria-label="Email address for weekly deal alerts">
+            <button type="submit" class="btn btn-primary">Get Deal Alerts</button>
+        </form>
+    </div>
+</section>
 
 {# ─── TRUST BAR ───────────────────────────────────────────────────────── #}
 <section class="section" aria-label="Site statistics">
@@ -284,7 +310,7 @@
                     }
                     data.results.forEach(function (r) {
                         var a = document.createElement("a");
-                        a.href = "/products/" + r.slug + "/";
+                        a.href = "{% url 'products:list' %}" + r.slug + "/";
                         var name = document.createElement("span");
                         name.textContent = r.name;
                         a.appendChild(name);

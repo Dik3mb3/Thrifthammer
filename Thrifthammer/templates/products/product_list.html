@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Browse Warhammer 40K Products — Compare Prices{% endblock %}
+{% block title %}Browse Warhammer 40K Products | ThriftHammer{% endblock %}
 
 {% block meta_description %}<meta name="description" content="Browse all Warhammer 40,000 kits and compare prices across US retailers including Games Workshop, Miniature Market, Noble Knight, Amazon and more.">{% endblock %}
 
@@ -8,6 +8,7 @@
 <meta property="og:title" content="Browse Warhammer 40K Products — ThriftHammer">
 <meta property="og:description" content="Find the cheapest price on every Warhammer 40,000 kit. Filter by faction, compare retailers, save money.">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://www.thrifthammer.com/static/images/bg-grimdark.jpg">
 <link rel="canonical" href="https://www.thrifthammer.com/products/">
 {% endblock %}
 
@@ -178,6 +179,7 @@
             src="{{ product.image_url }}"
             alt="{{ product.name }}"
             class="product-card-img"
+            width="300" height="300"
             loading="lazy"
           >
           {% else %}
@@ -303,7 +305,7 @@
           if (!data.results || !data.results.length) { dropdown.style.display = "none"; return; }
           data.results.forEach(function (r) {
             var a = document.createElement("a");
-            a.href = "/products/" + r.slug + "/";
+            a.href = "{% url 'products:list' %}" + r.slug + "/";
             var name = document.createElement("span");
             name.textContent = r.name;
             a.appendChild(name);

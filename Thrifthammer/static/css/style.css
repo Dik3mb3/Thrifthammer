@@ -154,6 +154,8 @@ h3, h4, h5 {
   position: sticky;
   top: 0;
   z-index: 100;
+  /* Needed so the absolute mobile menu is anchored to the navbar */
+  isolation: isolate;
   background: rgba(13, 15, 20, 0.97);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -363,16 +365,43 @@ h3, h4, h5 {
   background: var(--bg-elevated);
 }
 
-/* Mobile nav toggle */
+/* Mobile nav toggle (legacy stub, superseded by .nav-hamburger) */
 .nav-toggle {
   display: none;
-  background: none;
-  border: none;
-  color: var(--text-primary);
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: var(--sp-2);
 }
+
+/* Hamburger button — hidden on desktop, visible on mobile */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: 1px solid var(--border-mid);
+  border-radius: var(--rounded);
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: border-color 200ms ease;
+}
+.nav-hamburger:hover { border-color: var(--accent-gold-lt); }
+.nav-hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--text-secondary);
+  border-radius: 2px;
+  transition: transform 200ms ease, opacity 200ms ease, background 200ms ease;
+  transform-origin: center;
+}
+.nav-hamburger:hover span { background: var(--accent-gold-lt); }
+/* Animate to X when open */
+.nav-hamburger.nav-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.nav-open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-hamburger.nav-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* =============================================================================
    Buttons
@@ -471,6 +500,14 @@ h3, h4, h5 {
 .btn-lg { padding: 0.8rem 2rem; font-size: 1rem; border-radius: var(--rounded-lg); }
 .btn-sm { padding: 0.3rem 0.7rem; font-size: 0.75rem; }
 .btn-full { width: 100%; }
+/* Hero button modifier — uniform gold text, equal width, regardless of box colour */
+.btn-hero { color: var(--accent-gold-lt) !important; font-weight: 700 !important; letter-spacing: 0.04em; min-width: 200px; text-align: center; justify-content: center; }
+.btn-hero:hover { color: var(--accent-gold-lt) !important; }
+
+.btn-blue { background: var(--accent-blue); color: var(--accent-gold-lt); border-color: var(--accent-blue-lt); }
+.btn-blue:hover { background: var(--accent-blue-lt); color: var(--accent-gold-lt); text-decoration: none; }
+.btn-purple { background: var(--accent-purple); color: var(--accent-gold-lt); border-color: var(--accent-purple-lt); }
+.btn-purple:hover { background: var(--accent-purple-lt); color: var(--accent-gold-lt); text-decoration: none; }
 
 /* =============================================================================
    Cards
@@ -1659,13 +1696,41 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   .browse-sidebar { position: static; display: none; }
   .browse-sidebar.mobile-open { display: block; }
   .sidebar-hamburger { display: flex; }
+
+  /* Hamburger nav */
+  .nav-hamburger { display: flex; }
+  .navbar-links {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: rgba(13, 15, 20, 0.98);
+    border-bottom: 1px solid var(--border-mid);
+    padding: var(--sp-3) var(--sp-4) var(--sp-4);
+    gap: 2px;
+    z-index: 99;
+  }
+  .navbar-links.nav-open { display: flex; }
+  .navbar-links a {
+    padding: var(--sp-3) var(--sp-4);
+    font-size: 0.9rem;
+    border-radius: var(--rounded);
+    white-space: normal;
+  }
+  .btn-logout-link {
+    padding: var(--sp-3) var(--sp-4);
+    font-size: 0.9rem;
+    width: 100%;
+    text-align: left;
+  }
 }
 
 @media (max-width: 640px) {
   .container { padding: 0 var(--sp-4); }
   .navbar-inner { padding: 0 var(--sp-4); }
-  .navbar-links a { padding: var(--sp-2); font-size: 0.72rem; }
-  .btn-logout-link { padding: var(--sp-2); font-size: 0.72rem; }
   .brand-logo { height: 34px; }
   .hero { padding: var(--sp-8) 0; }
   .hero p { font-size: 0.95rem; }

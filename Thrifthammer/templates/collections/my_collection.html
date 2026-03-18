@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}My Collection{% endblock %}
+{% block title %}My Collection | ThriftHammer{% endblock %}
 
 {% block content %}
 <div class="page-content">
@@ -63,7 +63,7 @@
         <td style="max-width:220px;font-size:0.82rem;color:var(--text-muted);">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
           <a href="{% url 'collections:add' item.product.slug %}" class="btn btn-secondary btn-sm">Edit</a>
-          <a href="{% url 'collections:remove' item.product.slug %}" class="btn btn-danger btn-sm">Remove</a>
+          <form method="post" action="{% url 'collections:remove' item.product.slug %}" style="display:inline;">{% csrf_token %}<button type="submit" class="btn btn-danger btn-sm">Remove</button></form>
         </td>
       </tr>
       {% endfor %}
@@ -94,7 +94,7 @@
         <td style="max-width:220px;font-size:0.82rem;color:var(--text-muted);">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
           <a href="{% url 'collections:add' item.product.slug %}" class="btn btn-secondary btn-sm">Edit</a>
-          <a href="{% url 'collections:remove' item.product.slug %}" class="btn btn-danger btn-sm">Remove</a>
+          <form method="post" action="{% url 'collections:remove' item.product.slug %}" style="display:inline;">{% csrf_token %}<button type="submit" class="btn btn-danger btn-sm">Remove</button></form>
         </td>
       </tr>
       {% endfor %}
@@ -125,7 +125,7 @@
         <td style="max-width:220px;font-size:0.82rem;color:var(--text-muted);">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
           <a href="{% url 'collections:add' item.product.slug %}" class="btn btn-secondary btn-sm">Edit</a>
-          <a href="{% url 'collections:remove' item.product.slug %}" class="btn btn-danger btn-sm">Remove</a>
+          <form method="post" action="{% url 'collections:remove' item.product.slug %}" style="display:inline;">{% csrf_token %}<button type="submit" class="btn btn-danger btn-sm">Remove</button></form>
         </td>
       </tr>
       {% endfor %}
@@ -154,7 +154,7 @@
         <td style="max-width:220px;font-size:0.82rem;color:var(--text-muted);">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
           <a href="{% url 'collections:add' item.product.slug %}" class="btn btn-secondary btn-sm">Edit</a>
-          <a href="{% url 'collections:remove' item.product.slug %}" class="btn btn-danger btn-sm">Remove</a>
+          <form method="post" action="{% url 'collections:remove' item.product.slug %}" style="display:inline;">{% csrf_token %}<button type="submit" class="btn btn-danger btn-sm">Remove</button></form>
         </td>
       </tr>
       {% endfor %}

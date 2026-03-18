@@ -283,3 +283,21 @@ class Product(models.Model):
             'percent': percent,
             'retailer': cheapest.retailer,
         }
+
+
+class NewsletterSignup(models.Model):
+    """Email address submitted via the homepage deal-alert opt-in."""
+
+    email = models.EmailField(
+        unique=True,
+        help_text='Email address for weekly deal alert emails.',
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Newsletter Signup'
+        verbose_name_plural = 'Newsletter Signups'
+
+    def __str__(self):
+        return self.email

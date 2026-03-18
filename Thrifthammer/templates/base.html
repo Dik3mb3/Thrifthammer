@@ -12,7 +12,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}ThriftHammer{% endblock %} — Warhammer Price Tracker</title>
+    <title>{% block title %}ThriftHammer — Warhammer Price Tracker{% endblock %}</title>
     {% block meta_description %}<meta name="description" content="ThriftHammer tracks Warhammer 40,000 prices across US retailers. Compare prices on every kit and find the best deal before you buy.">{% endblock %}
     <meta name="robots" content="index, follow">
     <meta name="impact-site-verification" content="531f6b3b-fdd6-4d3a-bd01-96bbde75381d">
@@ -63,8 +63,15 @@
                 <div id="navbar-search-results" class="hero-search-results" role="listbox" aria-label="Search suggestions"></div>
             </div>
 
+            {# Hamburger toggle — visible only on mobile #}
+            <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="navbar-links">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             {# Right-side links #}
-            <div class="navbar-links">
+            <div class="navbar-links" id="navbar-links">
                 <a href="{% url 'home' %}">Home</a>
                 <a href="{% url 'products:list' %}">Browse</a>
                 <a href="{% url 'blog:post_list' %}">Blog</a>
@@ -146,8 +153,8 @@
                     <h4>Retailer Links</h4>
                     <p class="disclosure-text">
                         ThriftHammer links directly to retailers for your convenience.
-                        Some outbound links may become affiliate links in the future —
-                        any such arrangement will be clearly disclosed.
+                        Some outbound links may become affiliate links in the future.
+                        Any such arrangement will be clearly disclosed.
                     </p>
                     <p class="disclosure-text">
                         Retailer ranking is based solely on price. We always show
@@ -160,8 +167,9 @@
             {# Full-width pricing disclosure + last-updated timestamp #}
             <div class="footer-affiliate-bar">
                 <span>
-                    All retailers are ranked by price — lowest first, always.
+                    All retailers are ranked by price: lowest first, always.
                     Prices are for reference only; always verify on the retailer's site before purchasing.
+                    We aim to update pricing and links weekly for the freshest data.
                     {% if last_price_update %}
                     · Prices last updated {{ last_price_update|date:"j M Y, H:i" }} UTC.
                     {% endif %}
@@ -177,6 +185,30 @@
     </footer>
 
     {% block extra_js %}{% endblock %}
+
+    {# Mobile nav hamburger toggle #}
+    <script>
+    (function () {
+        var btn   = document.getElementById("nav-hamburger");
+        var links = document.getElementById("navbar-links");
+        if (!btn || !links) return;
+        btn.addEventListener("click", function () {
+            var open = links.classList.toggle("nav-open");
+            btn.classList.toggle("nav-open", open);
+            btn.setAttribute("aria-expanded", open ? "true" : "false");
+            btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+        });
+        // Close on link click (for single-page navigation feel)
+        links.querySelectorAll("a").forEach(function (a) {
+            a.addEventListener("click", function () {
+                links.classList.remove("nav-open");
+                btn.classList.remove("nav-open");
+                btn.setAttribute("aria-expanded", "false");
+                btn.setAttribute("aria-label", "Open menu");
+            });
+        });
+    })();
+    </script>
 
     {# Navbar search autocomplete — shared across all pages #}
     <script>
@@ -203,7 +235,7 @@
                         }
                         data.results.forEach(function (r) {
                             var a = document.createElement("a");
-                            a.href = "/products/" + r.slug + "/";
+                            a.href = "{% url 'products:list' %}" + r.slug + "/";
                             var name = document.createElement("span");
                             name.textContent = r.name;
                             a.appendChild(name);

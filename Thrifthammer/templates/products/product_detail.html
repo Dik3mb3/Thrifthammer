@@ -69,6 +69,7 @@
         <img
           src="{{ product.image_url }}"
           alt="{{ product.name }}"
+          width="400" height="400"
           loading="eager"
         >
         {% else %}
@@ -107,7 +108,7 @@
           {% if gw_ref_price %}
           {% with best_disc=best.price|discount_vs:gw_ref_price %}
           {% if best_disc > 0.5 %}
-          <span class="badge badge-green" style="font-size:0.95rem;padding:3px 8px;">−{{ best_disc|floatformat:"0" }}% vs GW</span>
+          <span class="badge badge-green" style="font-size:0.95rem;padding:3px 8px;">−{{ best_disc|floatformat:"0" }}% vs RRP</span>
           {% endif %}
           {% endwith %}
           {% endif %}
@@ -120,9 +121,7 @@
           {% endif %}
         </div>
         {% if gw_ref_price %}
-        <p style="font-size:0.8rem;color:var(--text-muted);">GW Price: ${{ gw_ref_price }}</p>
-        {% elif product.msrp %}
-        <p style="font-size:0.8rem;color:var(--text-muted);">GW RRP: ${{ product.msrp }}</p>
+        <p style="font-size:0.8rem;color:var(--text-muted);">RRP: ${{ gw_ref_price }}</p>
         {% endif %}
       </div>
       {% endwith %}
@@ -245,7 +244,7 @@
       </p>
       {% else %}
       <p style="color:var(--text-muted);font-size:0.9rem;">
-        No price data yet — check back after the next scrape.
+        No price data yet. Check back after the next scrape.
       </p>
       {% endif %}
 

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Warhammer Savings Blog{% endblock %}
+{% block title %}Warhammer Savings Blog | ThriftHammer{% endblock %}
 
 {% block meta_description %}<meta name="description" content="Tips, guides and Top 10 lists to help you save money on Warhammer 40,000. New posts weekly from ThriftHammer.">{% endblock %}
 
@@ -108,7 +108,7 @@
   <div style="text-align:center;padding:var(--sp-16) 0;">
     <p style="color:var(--text-muted);font-size:1rem;margin-bottom:var(--sp-4);">
       No posts published yet{% if active_tag %} for the tag <strong>{{ active_tag.name }}</strong>{% endif %}.
-      Check back soon — new posts every week.
+      Check back soon. New posts every week.
     </p>
     <a href="{% url 'products:list' %}" class="btn btn-secondary">Browse Products</a>
   </div>

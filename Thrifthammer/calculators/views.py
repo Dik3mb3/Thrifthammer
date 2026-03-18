@@ -74,18 +74,22 @@ class ArmyCalculatorView(TemplateView):
             .order_by('name')
         )
 
-        # Fetch units — filtered by faction if one is selected
-        unit_qs = (
-            UnitType.objects
-            .filter(is_active=True)
-            .select_related('product', 'faction')
-            .prefetch_related('product__current_prices__retailer')
-            .order_by('category', 'name')
-        )
+        # Fetch units — only when a faction is selected.
+        # Always exclude units whose linked product has been deactivated/removed
+        # from the catalog (product__is_active=False), keeping units with no
+        # linked product (product__isnull=True) since those still have price data.
         if selected_faction:
-            unit_qs = unit_qs.filter(faction=selected_faction)
-
-        units = list(unit_qs)
+            unit_qs = (
+                UnitType.objects
+                .filter(is_active=True, faction=selected_faction)
+                .filter(Q(product__isnull=True) | Q(product__is_active=True))
+                .select_related('product', 'faction')
+                .prefetch_related('product__current_prices__retailer')
+                .order_by('category', 'name')
+            )
+            units = list(unit_qs)
+        else:
+            units = []
 
         # Group units by their 10th Edition battlefield role
         categories: dict = {}

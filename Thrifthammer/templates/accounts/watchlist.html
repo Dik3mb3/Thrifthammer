@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}My Watchlist{% endblock %}
+{% block title %}My Watchlist | ThriftHammer{% endblock %}
 
 {% block content %}
 <div class="page-content">
@@ -42,6 +42,7 @@
         {# Image #}
         {% if row.item.product.image_url %}
         <img src="{{ row.item.product.image_url }}" alt="{{ row.item.product.name }}"
+             width="80" height="80" loading="lazy"
              style="width:80px;height:80px;object-fit:contain;background:var(--bg-elevated);border-radius:var(--rounded);border:1px solid var(--border-subtle);margin-top:var(--sp-1);">
         {% else %}
         <div style="width:80px;height:80px;background:var(--bg-elevated);border-radius:var(--rounded);border:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:center;color:var(--border-mid);font-family:'Cinzel',serif;font-size:1.1rem;font-weight:900;margin-top:var(--sp-1);" aria-hidden="true">TH</div>
@@ -63,7 +64,7 @@
           <div style="display:flex;gap:var(--sp-4);flex-wrap:wrap;align-items:center;margin-bottom:var(--sp-4);">
             {% if row.best %}
             <span style="font-size:1.1rem;font-weight:700;color:var(--accent-green-lt);">
-              £{{ row.best.price }}
+              ${{ row.best.price }}
               <span style="font-size:0.75rem;font-weight:400;color:var(--text-muted);">at {{ row.best.retailer.name }}</span>
             </span>
             {% else %}
@@ -74,7 +75,7 @@
             {% if row.item.alert_type != 'none' %}
             <span class="watchlist-alert-badge">
               {% if row.item.alert_type == 'price' %}
-                🔔 Alert: £{{ row.item.target_price }}
+                🔔 Alert: ${{ row.item.target_price }}
               {% elif row.item.alert_type == 'site_low' %}
                 🔔 Alert: website low
               {% elif row.item.alert_type == 'pct_off' %}
@@ -104,7 +105,7 @@
               </div>
 
               <div class="alert-form-row alert-field-price" {% if row.item.alert_type != 'price' %}style="display:none"{% endif %}>
-                <label class="alert-form-label">Price threshold (£)</label>
+                <label class="alert-form-label">Price threshold ($)</label>
                 <input type="number" name="target_price" step="0.01" min="0" placeholder="e.g. 29.99"
                        value="{{ row.item.target_price|default:'' }}" class="alert-input">
               </div>
@@ -122,7 +123,7 @@
                 </label>
                 {% if not request.user.email %}
                 <p style="font-size:0.75rem;color:var(--accent-gold-lt);margin-top:var(--sp-1);">
-                  ⚠ No email on your account — add one in <a href="{% url 'accounts:profile' %}" style="color:var(--accent-gold-lt);">Profile Settings</a>.
+                  ⚠ No email on your account. Add one in <a href="{% url 'accounts:profile' %}" style="color:var(--accent-gold-lt);">Profile Settings</a>.
                 </p>
                 {% endif %}
               </div>

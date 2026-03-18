@@ -26,10 +26,6 @@
   {# ── Faction filter bar ── #}
   {% if available_factions %}
   <div class="calc-faction-bar" role="navigation" aria-label="Select faction">
-    <a href="{% url 'calculators:space_marines' %}"
-       class="calc-faction-btn{% if not selected_faction %} active{% endif %}">
-      All Factions
-    </a>
     {% for faction in available_factions %}
     <a href="?faction={{ faction.slug }}"
        class="calc-faction-btn{% if selected_faction.slug == faction.slug %} active{% endif %}">
@@ -43,6 +39,13 @@
 
     {# ===== Unit picker ===== #}
     <div class="unit-picker">
+      {% if not selected_faction %}
+      <div style="text-align:center;padding:var(--sp-12) var(--sp-4);color:var(--text-muted);">
+        <div style="font-size:2.5rem;margin-bottom:var(--sp-3);" aria-hidden="true">⚔️</div>
+        <p style="font-size:1rem;margin-bottom:var(--sp-2);">Select a faction above to see units and prices.</p>
+        <p style="font-size:0.85rem;">More factions coming soon.</p>
+      </div>
+      {% else %}
       {% for cat_key, cat in ordered_categories %}
       <div class="unit-category" data-category="{{ cat_key }}">
         <div class="unit-category-header">{{ cat.label }}</div>
@@ -91,6 +94,7 @@
         {% endif %}
       </div>
       {% endfor %}
+      {% endif %}
     </div>
 
     {# ===== Sidebar ===== #}
@@ -323,7 +327,7 @@
         if (statusEl) statusEl.textContent = data.error || 'Save failed.';
       }
     })
-    .catch(function () { if (statusEl) statusEl.textContent = 'Network error — please try again.'; });
+    .catch(function () { if (statusEl) statusEl.textContent = 'Network error. Please try again.'; });
   }
 
   function getCookie(name) {

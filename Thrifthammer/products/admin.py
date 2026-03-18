@@ -10,7 +10,7 @@ from django.db.models import Prefetch
 from django.utils.html import format_html
 
 from prices.models import CurrentPrice
-from .models import Category, Faction, Product, Retailer
+from .models import Category, Faction, NewsletterSignup, Product, Retailer
 
 
 @admin.register(Category)
@@ -149,3 +149,13 @@ class ProductAdmin(admin.ModelAdmin):
             f'${best.price}',
             best.retailer.name,
         )
+
+
+@admin.register(NewsletterSignup)
+class NewsletterSignupAdmin(admin.ModelAdmin):
+    """Admin for homepage deal-alert email signups."""
+
+    list_display = ('email', 'created_at')
+    search_fields = ('email',)
+    readonly_fields = ('created_at',)
+    ordering = ('-created_at',)

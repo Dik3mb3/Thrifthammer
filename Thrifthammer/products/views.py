@@ -23,13 +23,15 @@ from django.core.paginator import InvalidPage, Paginator
 from django.db.models import Case, DecimalField, ExpressionWrapper, F, FloatField, Min, OuterRef, Q, Subquery, Value, When
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.decorators.http import require_GET, require_http_methods
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
 from accounts.models import WatchlistItem
 from prices.models import CurrentPrice
 
 from .forms import IssueReportForm
-from .models import Category, Faction, Product
+from .models import Category, Faction, NewsletterSignup, Product
 
 
 # ---------------------------------------------------------------------------
@@ -271,23 +273,42 @@ def product_detail(request, slug):
             # not_available entries (price=NULL) always sink to the bottom
             .order_by('not_available', 'price')
         )
+        # Related products: prefer same faction+category, then same faction,
+        # then same category — avoids the alphabetical Adepta Sororitas problem.
+        exclude_pk = product.pk
         related_products = list(
             Product.objects
-            .filter(category=product.category, is_active=True)
-            .exclude(pk=product.pk)
+            .filter(faction=product.faction, category=product.category, is_active=True)
+            .exclude(pk=exclude_pk)
             .select_related('category', 'faction')
             .order_by('name')[:4]
         )
+        if len(related_products) < 4 and product.faction_id:
+            existing_pks = {p.pk for p in related_products} | {exclude_pk}
+            more = list(
+                Product.objects
+                .filter(faction=product.faction, is_active=True)
+                .exclude(pk__in=existing_pks)
+                .select_related('category', 'faction')
+                .order_by('name')[:4 - len(related_products)]
+            )
+            related_products.extend(more)
+        if len(related_products) < 4:
+            existing_pks = {p.pk for p in related_products} | {exclude_pk}
+            more = list(
+                Product.objects
+                .filter(category=product.category, is_active=True)
+                .exclude(pk__in=existing_pks)
+                .select_related('category', 'faction')
+                .order_by('name')[:4 - len(related_products)]
+            )
+            related_products.extend(more)
+
         savings = product.get_savings_vs_retail()
 
-        # Use the GW row in the price table as the discount reference price.
-        # This gives accurate % discounts vs what GW actually charges in USD.
-        # Falls back to product.msrp when GW isn't in the retailer list.
-        gw_ref_price = next(
-            (cp.price for cp in current_prices
-             if cp.retailer.name == 'Games Workshop' and cp.price),
-            product.msrp,
-        )
+        # Always use product.msrp as the discount reference so the homepage
+        # "Best Deals" percentage and the product detail percentage match.
+        gw_ref_price = product.msrp
 
         cached_ctx = {
             'product':          product,
@@ -443,3 +464,33 @@ def report_issue(request, slug):
         'product': product,
         'form':    form,
     })
+
+
+@require_POST
+def newsletter_signup(request):
+    """
+    Save an email address for the weekly deal alerts opt-in.
+
+    POST only. Redirects back to the home page with a flash message.
+    Gracefully handles duplicate signups and invalid addresses.
+    """
+    email = request.POST.get('email', '').strip().lower()
+    if not email:
+        messages.error(request, 'Please enter a valid email address.')
+        return redirect('home')
+
+    try:
+        validate_email(email)
+    except ValidationError:
+        messages.error(request, 'Please enter a valid email address.')
+        return redirect('home')
+
+    _, created = NewsletterSignup.objects.get_or_create(email=email)
+    if created:
+        messages.success(
+            request,
+            "You're on the list! We'll send you the best weekly deals.",
+        )
+    else:
+        messages.info(request, "You're already signed up for deal alerts.")
+    return redirect('home')
