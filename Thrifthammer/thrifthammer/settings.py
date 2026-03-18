@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     # Thrifthammer apps
     'accounts',
     'products',
-    'prices',
+    'prices.apps.PricesConfig',
     'scrapers',
     'collections_app',
     'calculators',
