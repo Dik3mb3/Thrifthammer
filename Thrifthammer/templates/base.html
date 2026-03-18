@@ -157,11 +157,14 @@
 
             </div>
 
-            {# Full-width links notice #}
+            {# Full-width pricing disclosure + last-updated timestamp #}
             <div class="footer-affiliate-bar">
                 <span>
-                    Outbound links on this site go directly to retailers for your convenience.
-                    Prices shown are for reference only — always verify on the retailer's site before purchasing.
+                    All retailers are ranked by price — lowest first, always.
+                    Prices are for reference only; always verify on the retailer's site before purchasing.
+                    {% if last_price_update %}
+                    · Prices last updated {{ last_price_update|date:"j M Y, H:i" }} UTC.
+                    {% endif %}
                     <a href="{% url 'privacy_policy' %}">Privacy Policy →</a>
                 </span>
             </div>

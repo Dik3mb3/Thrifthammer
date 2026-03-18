@@ -3,14 +3,16 @@ Views for the ThriftHammer blog.
 
 Provides:
 - PostListView: paginated list of published posts, filterable by tag
-- PostDetailView: full post with SEO meta tags
+- PostDetailView: full post with comments and SEO meta tags
 """
 
-from django.shortcuts import get_object_or_404, render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.generic import DetailView, ListView
 
-from .models import Post, Tag
+from .forms import CommentForm
+from .models import Comment, Post, Tag
 
 POSTS_PER_PAGE = 12
 
@@ -62,10 +64,14 @@ class PostListView(ListView):
 
 class PostDetailView(DetailView):
     """
-    Full blog post detail page with SEO meta tags.
+    Full blog post detail page with comments and SEO meta tags.
 
     Only published posts with a past published_at date are accessible.
     Drafts return 404 to avoid accidental preview leaks.
+
+    GET:  renders the post with existing comments and an empty CommentForm.
+    POST: saves a new comment (login required); redirects back to #comments
+          to prevent duplicate submissions on refresh.
     """
 
     model = Post
@@ -82,7 +88,7 @@ class PostDetailView(DetailView):
         ).prefetch_related('tags')
 
     def get_context_data(self, **kwargs):
-        """Add recent posts sidebar to context."""
+        """Add recent posts, comments, and comment form to context."""
         context = super().get_context_data(**kwargs)
         context['recent_posts'] = list(
             Post.objects
@@ -93,4 +99,26 @@ class PostDetailView(DetailView):
             .exclude(pk=self.object.pk)
             .order_by('-published_at')[:5]
         )
+        context['comments'] = self.object.comments.select_related('author').all()
+        context['comment_form'] = CommentForm()
         return context
+
+    def post(self, request, *args, **kwargs):
+        """Handle comment submission — login required."""
+        if not request.user.is_authenticated:
+            return redirect(f'{request.build_absolute_uri("/accounts/login/")}?next={request.path}')
+
+        post_obj = self.get_object()
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post_obj
+            comment.author = request.user
+            comment.save()
+            return redirect(post_obj.get_absolute_url() + '#comments')
+
+        # If form invalid, re-render page with errors
+        self.object = post_obj
+        context = self.get_context_data()
+        context['comment_form'] = form  # replace with the invalid form to show errors
+        return self.render_to_response(context)

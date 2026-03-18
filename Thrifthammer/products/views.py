@@ -38,25 +38,25 @@ from .models import Category, Faction, Product
 # Isolated function — change SPOTLIGHT_COUNT or the scoring formula here to
 # adjust which deals appear on the home page without touching the view.
 
-SPOTLIGHT_COUNT = 8  # Number of deals to show in the Hot Deals section
+SPOTLIGHT_COUNT = 10  # Number of deals to show in the Top 10 Best Deals section
 
 
 def _get_spotlight_deals(count=SPOTLIGHT_COUNT):
     """
-    Return the best-value CurrentPrice entries for the Hot Deals section.
+    Return the top deals by discount percentage for the home page.
 
     Selection strategy:
-    - Only products that have both a current price and an MSRP set.
+    - Only active products with both a current price and an MSRP set.
+    - Only in-stock, available entries.
     - Deduplicated by product — only the single best (lowest) price per product.
-    - Scored by (absolute_saving × discount_pct) so higher-priced kits with
-      large percentage discounts rank above cheap kits with small savings.
-    - Returns at most `count` results, sorted best score first.
+    - Ranked by discount_pct descending — highest percentage off GW/MSRP first.
+    - Returns at most `count` results.
 
     Returns:
         list[CurrentPrice]: Evaluated list with .product and .retailer
         pre-fetched and a .discount_pct attribute attached.
     """
-    # Fetch all active priced entries that have an MSRP to compare against
+    # Fetch all active priced in-stock entries that have an MSRP to compare
     candidates = list(
         CurrentPrice.objects
         .select_related('product', 'retailer')
@@ -65,6 +65,7 @@ def _get_spotlight_deals(count=SPOTLIGHT_COUNT):
             product__msrp__isnull=False,
             product__msrp__gt=0,
             price__isnull=False,
+            in_stock=True,
             not_available=False,
         )
         .order_by('product_id', 'price')  # cheapest first per product
@@ -78,21 +79,12 @@ def _get_spotlight_deals(count=SPOTLIGHT_COUNT):
             seen_products.add(cp.product_id)
             unique.append(cp)
 
-    # Score each deal; discount_pct is already a @property on CurrentPrice,
-    # so we read it directly rather than trying to assign to it.
-    scored = []
-    for cp in unique:
-        pct = cp.discount_pct  # uses the existing @property
-        if pct is None or pct <= 0:
-            continue
-        abs_saving = float(cp.product.msrp) - float(cp.price)
-        # Combined score weights both absolute dollar saving and percentage
-        cp._score = abs_saving * float(pct)
-        scored.append(cp)
+    # Keep only deals with a positive discount percentage
+    discounted = [cp for cp in unique if cp.discount_pct and cp.discount_pct > 0]
 
-    # Return top N deals sorted by score (highest first)
-    scored.sort(key=lambda x: x._score, reverse=True)
-    return scored[:count]
+    # Sort by discount percentage — highest % off first
+    discounted.sort(key=lambda cp: cp.discount_pct, reverse=True)
+    return discounted[:count]
 
 
 # Products shown per page on the list view
@@ -128,7 +120,7 @@ def home(request):
     The hot deals are selected by _get_spotlight_deals() — edit that
     function to change the selection strategy without touching this view.
     """
-    cache_key = 'home_page_data_v2'
+    cache_key = 'home_page_data_v3'
     ctx = cache.get(cache_key)
     if ctx is None:
         categories = list(Category.objects.all())

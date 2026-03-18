@@ -5,6 +5,7 @@ The blog is focused on helping Warhammer 40K players save money on the hobby
 and improving organic SEO. Articles are created by staff in the Django admin.
 """
 
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -149,3 +150,34 @@ class Post(models.Model):
     def effective_meta_description(self):
         """Return SEO meta description or fall back to the excerpt."""
         return self.meta_description or self.excerpt
+
+
+class Comment(models.Model):
+    """
+    A reader comment on a blog post.
+
+    Only authenticated users can post comments.  Comments are stored in
+    chronological order and displayed below the post body.
+    """
+
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='comments',
+    )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='blog_comments',
+    )
+    body = models.TextField(
+        max_length=1000,
+        help_text='Comment text — max 1,000 characters.',
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f'Comment by {self.author} on "{self.post}" ({self.created_at:%Y-%m-%d})'

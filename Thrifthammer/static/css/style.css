@@ -1194,16 +1194,16 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 2px;
+  height: 3px;
   background: linear-gradient(90deg, var(--accent-green), var(--accent-gold));
 }
 .best-price-label {
   font-family: 'Oswald', sans-serif;
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent-gold-lt);
+  font-weight: 700;
   margin-bottom: var(--sp-2);
 }
 .best-price-amount {
@@ -1214,6 +1214,14 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   font-variant-numeric: tabular-nums;
   line-height: 1;
   margin-bottom: var(--sp-2);
+  text-shadow: 0 0 24px rgba(74, 171, 114, 0.35);
+}
+/* Pulsing glow on discount badge inside the best-price card */
+.best-price-card .badge-green {
+  animation: badge-pulse 2.2s ease-in-out infinite;
+  font-size: 1rem !important;
+  padding: 4px 10px !important;
+  font-weight: 700;
 }
 .best-price-retailer { font-size: 0.875rem; color: var(--text-muted); margin-bottom: var(--sp-3); }
 .best-price-savings {
@@ -2148,4 +2156,117 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
 @media (max-width: 900px) {
   .blog-detail-layout { grid-template-columns: 1fr; }
   .blog-sidebar { position: static; }
+}
+
+/* ── Comments ──────────────────────────────────────────────────────────── */
+.comments-section {
+  margin-top: var(--sp-12);
+  padding-top: var(--sp-8);
+  border-top: 1px solid var(--border-subtle);
+}
+.comments-heading {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.15rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+  margin-bottom: var(--sp-6);
+}
+.comments-count {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+.comment-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded-lg);
+  padding: var(--sp-4) var(--sp-5);
+  margin-bottom: var(--sp-4);
+}
+.comment-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-2);
+}
+.comment-author {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-gold-lt);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.comment-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.comment-body {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0;
+}
+.comments-empty {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: var(--sp-6);
+}
+.comment-form-wrap {
+  margin-top: var(--sp-8);
+  padding-top: var(--sp-6);
+  border-top: 1px solid var(--border-subtle);
+}
+.comment-form-heading {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+  margin-bottom: var(--sp-3);
+}
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  max-width: 600px;
+}
+.comment-textarea {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--rounded-lg);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  padding: var(--sp-3) var(--sp-4);
+  resize: vertical;
+  transition: border-color var(--transition);
+}
+.comment-textarea:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 2px rgb(200 146 42 / 0.15);
+}
+.comment-error {
+  font-size: 0.8rem;
+  color: #e07070;
+  margin: 0;
+}
+.comments-login-cta {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+.comments-login-cta a {
+  color: var(--accent-gold-lt);
+  text-decoration: underline;
+}
+
+/* ── Best Price Card — enhanced visual pop ──────────────────────────────── */
+@keyframes badge-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74, 171, 114, 0.5); }
+  50%       { box-shadow: 0 0 0 6px rgba(74, 171, 114, 0); }
 }
