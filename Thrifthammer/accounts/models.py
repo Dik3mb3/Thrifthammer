@@ -5,7 +5,19 @@ from django.db import models
 
 
 class WatchlistItem(models.Model):
-    """A product the user wants to track prices for."""
+    """A product the user wants to track prices for, with optional email alert."""
+
+    ALERT_NONE = 'none'
+    ALERT_PRICE = 'price'
+    ALERT_SITE_LOW = 'site_low'
+    ALERT_PCT_OFF = 'pct_off'
+    ALERT_TYPE_CHOICES = [
+        (ALERT_NONE,     'No alert'),
+        (ALERT_PRICE,    'Specific price'),
+        (ALERT_SITE_LOW, 'Website low'),
+        (ALERT_PCT_OFF,  '% off MSRP'),
+    ]
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -16,9 +28,26 @@ class WatchlistItem(models.Model):
         on_delete=models.CASCADE,
         related_name='watchers',
     )
+    # Kept for backwards compatibility; used as the threshold when alert_type='price'
     target_price = models.DecimalField(
         max_digits=8, decimal_places=2, null=True, blank=True,
-        help_text='Get notified when price drops below this.',
+        help_text='Alert when best price drops at or below this value.',
+    )
+    alert_type = models.CharField(
+        max_length=10, choices=ALERT_TYPE_CHOICES, default=ALERT_NONE,
+        help_text='Which condition triggers the email alert.',
+    )
+    alert_percent = models.DecimalField(
+        max_digits=5, decimal_places=1, null=True, blank=True,
+        help_text='Percentage off MSRP that triggers the alert (1–99).',
+    )
+    email_alerts = models.BooleanField(
+        default=False,
+        help_text='Send an email when the alert condition is met.',
+    )
+    last_alerted_price = models.DecimalField(
+        max_digits=8, decimal_places=2, null=True, blank=True,
+        help_text='The price at which we last sent an alert — prevents repeat spam.',
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -28,6 +57,30 @@ class WatchlistItem(models.Model):
 
     def __str__(self):
         return f"{self.user.username} watching {self.product.name}"
+
+    def alert_condition_met(self, current_price_obj) -> bool:
+        """Return True if the current price satisfies this item's alert condition."""
+        if self.alert_type == self.ALERT_NONE or current_price_obj is None:
+            return False
+        price = current_price_obj.price
+        if self.alert_type == self.ALERT_PRICE:
+            return self.target_price is not None and price <= self.target_price
+        if self.alert_type == self.ALERT_SITE_LOW:
+            from prices.models import PriceHistory
+            min_ever = (
+                PriceHistory.objects
+                .filter(product=self.product, price__isnull=False)
+                .order_by('price')
+                .values_list('price', flat=True)
+                .first()
+            )
+            return min_ever is not None and price <= min_ever
+        if self.alert_type == self.ALERT_PCT_OFF:
+            msrp = self.product.msrp
+            if msrp and self.alert_percent:
+                threshold = msrp * (1 - self.alert_percent / 100)
+                return price <= threshold
+        return False
 
 
 class SecurityProfile(models.Model):

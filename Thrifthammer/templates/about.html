@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}About ThriftHammer — Warhammer Price Tracker{% endblock %}
+{% block title %}About ThriftHammer — Warhammer 40K Price Comparison Tool{% endblock %}
 
-{% block meta_description %}<meta name="description" content="ThriftHammer is a Warhammer price comparison tool built by a hobbyist, for hobbyists. Learn about the mission to help 40K players find the best deals across US retailers.">{% endblock %}
+{% block meta_description %}<meta name="description" content="ThriftHammer is a free Warhammer 40K price comparison tool built by a hobbyist, for hobbyists. Compare prices across US retailers, track price history, and save money on every kit you buy.">{% endblock %}
 
 {% block extra_head %}
-<meta property="og:title" content="About ThriftHammer — Warhammer Price Tracker">
-<meta property="og:description" content="Built by a Warhammer hobbyist to help fellow players find the best prices on Games Workshop products across US retailers.">
+<meta property="og:title" content="About ThriftHammer — Warhammer 40K Price Comparison Tool">
+<meta property="og:description" content="Built by a Warhammer 40K player to help fellow hobbyists find the cheapest prices on Games Workshop products across US retailers. Free to use, always.">
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://www.thrifthammer.com/about/">
 {% endblock %}
@@ -74,11 +74,11 @@
             </div>
 
             <div class="about-feature-card">
-                <h3>Watchlist Alerts</h3>
+                <h3>Watchlist &amp; Price Alerts</h3>
                 <p>
-                    Add any kit to your personal watchlist. When the price drops, you'll know.
-                    No more manually checking retailer sites every week hoping something has gone
-                    on sale — we do the watching so you can focus on painting.
+                    Add any kit to your personal watchlist and set a price alert — notify me
+                    when it hits a specific price, reaches a website low, or drops a set
+                    percentage off RRP. We do the watching so you can focus on painting.
                 </p>
             </div>
 
@@ -106,61 +106,98 @@
 
 {# ── Roadmap ── #}
 <section class="section">
-    <div class="container about-container">
-        <h2 class="about-section-heading">What's Coming Next</h2>
-        <div class="gold-rule" style="margin-bottom:var(--sp-6);"></div>
-        <p style="color:var(--text-secondary);margin-bottom:var(--sp-6);">
-            ThriftHammer is actively being developed. Here's what's on the roadmap
-            for the coming months:
+    <div class="container">
+        <h2 class="about-section-heading" style="text-align:center;margin-bottom:var(--sp-2);">Product Roadmap</h2>
+        <div class="gold-rule" style="margin:0 auto var(--sp-4);"></div>
+        <p style="color:var(--text-secondary);text-align:center;margin-bottom:var(--sp-8);max-width:600px;margin-left:auto;margin-right:auto;">
+            ThriftHammer is actively developed. Here is a transparent look at what is coming,
+            what is planned, and what we are exploring for the future of the platform.
         </p>
 
-        <div class="roadmap-list">
+        <div class="roadmap-chart">
 
-            <div class="roadmap-item roadmap-soon">
-                <div class="roadmap-badge">Coming Soon</div>
-                <div class="roadmap-content">
-                    <h3>Add More Retailers</h3>
-                    <p>Expanding coverage with more hobby retailers so you get an even broader picture of where to find the best deals on every kit.</p>
+            {# Column 1 — Coming Soon #}
+            <div class="roadmap-col roadmap-col-soon">
+                <div class="roadmap-col-header">
+                    <span class="roadmap-col-badge roadmap-badge-soon">Coming Soon</span>
                 </div>
+                <ul class="roadmap-col-items">
+                    <li>
+                        <strong>Adding More SKUs</strong>
+                        <p>Expanding the product catalogue to cover more of the full Warhammer range — more kits, factions, and accessories added regularly.</p>
+                    </li>
+                    <li>
+                        <strong>Fixing Website Bugs</strong>
+                        <p>Ongoing improvements to site performance, price data accuracy, and UI polish based on user feedback.</p>
+                    </li>
+                </ul>
             </div>
 
-            <div class="roadmap-item roadmap-soon">
-                <div class="roadmap-badge">Coming Soon</div>
-                <div class="roadmap-content">
-                    <h3>Add More SKUs</h3>
-                    <p>Growing the product catalogue to cover more of the Warhammer range — including older kits, limited releases, and accessories.</p>
+            {# Column 2 — Planned #}
+            <div class="roadmap-col roadmap-col-planned">
+                <div class="roadmap-col-header">
+                    <span class="roadmap-col-badge roadmap-badge-planned">Planned</span>
                 </div>
+                <ul class="roadmap-col-items">
+                    <li>
+                        <strong>UK Price Checker</strong>
+                        <p>A dedicated Warhammer price comparison tool for UK hobbyists — because overpaying for plastic is a global problem.</p>
+                    </li>
+                    <li>
+                        <strong>Adding More Retailers</strong>
+                        <p>Broadening coverage with additional US hobby retailers to give you the most complete picture of where to find the best deal.</p>
+                    </li>
+                    <li>
+                        <strong>Army Cost Calculator — All Factions</strong>
+                        <p>Expanding the Army Calculator beyond Space Marines to cover every 40K faction, Age of Sigmar, Horus Heresy, and other Warhammer game systems.</p>
+                    </li>
+                    <li>
+                        <strong>Custom Website Art &amp; Graphics</strong>
+                        <p>Commissioning original artwork to give ThriftHammer a truly unique grimdark identity built from the ground up.</p>
+                    </li>
+                    <li>
+                        <strong>Price Checker for Used &amp; Second-Hand Products</strong>
+                        <p>Track used and second-hand Warhammer listings so budget-conscious hobbyists can find the best deals on pre-owned kits too.</p>
+                    </li>
+                </ul>
             </div>
 
-            <div class="roadmap-item roadmap-planned">
-                <div class="roadmap-badge roadmap-badge-planned">Planned</div>
-                <div class="roadmap-content">
-                    <h3>UK Price Checker</h3>
-                    <p>A dedicated price comparison tool for UK hobbyists — because the hobby is just as expensive across the pond and you deserve savings too.</p>
+            {# Column 3 — Long-term #}
+            <div class="roadmap-col roadmap-col-longterm">
+                <div class="roadmap-col-header">
+                    <span class="roadmap-col-badge roadmap-badge-longterm">Long-term</span>
                 </div>
+                <ul class="roadmap-col-items">
+                    <li>
+                        <strong>Expand to Other Miniature &amp; Board Games</strong>
+                        <p>Extending price tracking beyond Warhammer to other popular miniature games and board games — more hobby, more savings.</p>
+                    </li>
+                    <li>
+                        <strong>Expand to Other Regions</strong>
+                        <p>Price comparison tools for hobbyists in Europe, Australia, Canada, and beyond — because the hobby is a global community.</p>
+                    </li>
+                    <li>
+                        <strong>Hobby Tools</strong>
+                        <p>Useful tools for hobbyists — paint matching, colour scheme planners, assembly guides, and more built around the community's needs.</p>
+                    </li>
+                </ul>
             </div>
 
-            <div class="roadmap-item roadmap-planned">
-                <div class="roadmap-badge roadmap-badge-planned">Planned</div>
-                <div class="roadmap-content">
-                    <h3>Army Cost Calculator for Multiple Factions &amp; Games</h3>
-                    <p>Expanding the Army Calculator beyond Space Marines to cover every 40K faction, Age of Sigmar, Horus Heresy, and other Warhammer game systems.</p>
+            {# Column 4 — Exploring #}
+            <div class="roadmap-col roadmap-col-exploring">
+                <div class="roadmap-col-header">
+                    <span class="roadmap-col-badge roadmap-badge-exploring">Exploring</span>
                 </div>
-            </div>
-
-            <div class="roadmap-item roadmap-exploring">
-                <div class="roadmap-badge roadmap-badge-exploring">Exploring</div>
-                <div class="roadmap-content">
-                    <h3>Promoting Local Retailers &amp; Your FLGS</h3>
-                    <p>
-                        Local game stores are the lifeblood of this hobby — the places where
-                        communities form, games get played, and new players find their first army.
-                        We want to find ways to shine a light on local retailers and support the
-                        FLGSs that make this hobby more than just a transaction. The details are
-                        still being worked out, but keeping the community strong is something we
-                        care deeply about.
-                    </p>
-                </div>
+                <ul class="roadmap-col-items">
+                    <li>
+                        <strong>Promoting Local Retailers &amp; Your FLGS</strong>
+                        <p>Local game stores are the lifeblood of this hobby — the places where communities form and new players find their first army. We want to find ways to support and shine a light on FLGSs, not compete with them.</p>
+                    </li>
+                    <li>
+                        <strong>Expanding the Blog</strong>
+                        <p>Growing the ThriftHammer blog with more buying guides, hobby tips, faction breakdowns, and content that helps every player get more value from the hobby.</p>
+                    </li>
+                </ul>
             </div>
 
         </div>

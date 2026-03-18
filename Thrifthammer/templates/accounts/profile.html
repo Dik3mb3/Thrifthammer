@@ -1,26 +1,95 @@
 {% extends "base.html" %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}Account Settings — {{ user.username }}{% endblock %}
 
 {% block content %}
-<h1>{{ user.username }}'s Profile</h1>
+<div class="page-content profile-page">
 
-<h2>Watchlist</h2>
-{% if watchlist %}
-<div class="card-grid">
-    {% for item in watchlist %}
-    <a href="{% url 'products:detail' item.product.slug %}" class="card">
-        <h3>{{ item.product.name }}</h3>
-        {% if item.target_price %}
-        <p>Target: ${{ item.target_price }}</p>
-        {% endif %}
+  <div style="margin-bottom:var(--sp-2);">
+    <h1 class="section-title">Account Settings</h1>
+    <div class="gold-rule"></div>
+  </div>
+
+  {# ── Account overview strip ── #}
+  <div class="profile-overview">
+    <div class="profile-avatar" aria-hidden="true">{{ user.username|slice:":1"|upper }}</div>
+    <div>
+      <div class="profile-username">{{ user.username }}</div>
+      <div class="profile-email-display">{{ user.email|default:"No email set" }}</div>
+    </div>
+    <a href="{% url 'accounts:watchlist' %}" class="btn btn-secondary btn-sm" style="margin-left:auto;">
+      My Watchlist
     </a>
-    {% endfor %}
-</div>
-{% else %}
-<p>Your watchlist is empty. <a href="{% url 'products:list' %}">Browse products</a> and add some!</p>
-{% endif %}
+  </div>
 
-<h2>Account</h2>
-<p><a href="{% url 'accounts:password_change' %}">Change password</a></p>
+  <div class="profile-sections">
+
+    {# ── Change username ── #}
+    <div class="profile-section">
+      <h2 class="profile-section-title">Change Username</h2>
+      <form method="post" action="{% url 'accounts:change_username' %}" class="profile-form">
+        {% csrf_token %}
+        {% if username_form.errors and open_section == 'username' %}
+        <div class="profile-form-errors">
+          {% for field in username_form %}{% for err in field.errors %}<p>{{ err }}</p>{% endfor %}{% endfor %}
+          {% for err in username_form.non_field_errors %}<p>{{ err }}</p>{% endfor %}
+        </div>
+        {% endif %}
+        <div class="profile-form-row">
+          <label>New username</label>
+          <input type="text" name="new_username" maxlength="150" required
+                 placeholder="New username"
+                 value="{% if username_form.new_username.value %}{{ username_form.new_username.value }}{% endif %}">
+        </div>
+        <div class="profile-form-row">
+          <label>Current password</label>
+          <input type="password" name="current_password" required placeholder="Your current password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">Update username</button>
+      </form>
+    </div>
+
+    {# ── Change email ── #}
+    <div class="profile-section">
+      <h2 class="profile-section-title">Change Email</h2>
+      <p class="profile-section-hint">Your email is used for watchlist price alerts.</p>
+      <form method="post" action="{% url 'accounts:change_email' %}" class="profile-form">
+        {% csrf_token %}
+        {% if email_form.errors and open_section == 'email' %}
+        <div class="profile-form-errors">
+          {% for field in email_form %}{% for err in field.errors %}<p>{{ err }}</p>{% endfor %}{% endfor %}
+          {% for err in email_form.non_field_errors %}<p>{{ err }}</p>{% endfor %}
+        </div>
+        {% endif %}
+        <div class="profile-form-row">
+          <label>New email address</label>
+          <input type="email" name="new_email" required placeholder="new@email.com"
+                 value="{% if email_form.new_email.value %}{{ email_form.new_email.value }}{% endif %}">
+        </div>
+        <div class="profile-form-row">
+          <label>Current password</label>
+          <input type="password" name="current_password" required placeholder="Your current password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">Update email</button>
+      </form>
+    </div>
+
+    {# ── Change password ── #}
+    <div class="profile-section">
+      <h2 class="profile-section-title">Change Password</h2>
+      <a href="{% url 'accounts:password_change' %}" class="btn btn-secondary btn-sm">Change password →</a>
+    </div>
+
+    {# ── Delete account ── #}
+    <div class="profile-section profile-section-danger">
+      <h2 class="profile-section-title profile-danger-title">Delete My Account</h2>
+      <p class="profile-section-hint">
+        Permanently deletes your account, watchlist, collection, and all stored data.
+        <strong>This cannot be undone.</strong>
+      </p>
+      <a href="{% url 'accounts:delete_account' %}" class="btn btn-danger btn-sm">Delete my account &amp; data →</a>
+    </div>
+
+  </div>
+</div>
 {% endblock %}

@@ -8,7 +8,11 @@ app_name = 'accounts'
 urlpatterns = [
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),
+    path('profile/change-email/', views.change_email, name='change_email'),
+    path('profile/change-username/', views.change_username, name='change_username'),
+    path('profile/delete/', views.delete_account, name='delete_account'),
     path('watchlist/', views.watchlist, name='watchlist'),
+    path('watchlist/<int:item_id>/alert/', views.update_watchlist_alert, name='update_watchlist_alert'),
     path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path(

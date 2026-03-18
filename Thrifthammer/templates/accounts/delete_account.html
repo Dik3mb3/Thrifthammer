@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Account — ThriftHammer{% endblock %}
+
+{% block content %}
+<div class="page-content" style="max-width:500px;margin:0 auto;">
+
+  <div style="margin-bottom:var(--sp-2);">
+    <h1 class="section-title" style="color:var(--accent-red);">Delete Account</h1>
+    <div style="width:40px;height:2px;background:var(--accent-red);margin-bottom:var(--sp-6);"></div>
+  </div>
+
+  <div class="card" style="border-color:rgb(180 30 30 / 0.4);padding:var(--sp-6);">
+    <div style="text-align:center;margin-bottom:var(--sp-6);">
+      <div style="font-size:2.5rem;margin-bottom:var(--sp-3);" aria-hidden="true">⚠</div>
+      <p style="font-size:1rem;color:var(--text-primary);font-weight:600;margin-bottom:var(--sp-2);">
+        This will permanently delete:
+      </p>
+      <ul style="list-style:none;padding:0;color:var(--text-secondary);font-size:0.9rem;line-height:1.9;">
+        <li>Your account and login credentials</li>
+        <li>Your entire watchlist and all alert settings</li>
+        <li>Your collection and army lists</li>
+        <li>All personal data we hold about you</li>
+      </ul>
+      <p style="margin-top:var(--sp-4);font-size:0.875rem;color:var(--text-muted);">
+        <strong style="color:var(--accent-red);">There is no undo.</strong>
+        Your data will be gone immediately.
+      </p>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      {% if form.errors %}
+      <div class="profile-form-errors" style="margin-bottom:var(--sp-4);">
+        {% for field in form %}{% for err in field.errors %}<p>{{ err }}</p>{% endfor %}{% endfor %}
+      </div>
+      {% endif %}
+      <div class="profile-form-row">
+        <label style="color:var(--text-primary);">Enter your password to confirm</label>
+        <input type="password" name="password" required
+               placeholder="Your current password"
+               autocomplete="current-password">
+      </div>
+      <div style="display:flex;gap:var(--sp-3);margin-top:var(--sp-4);">
+        <a href="{% url 'accounts:profile' %}" class="btn btn-secondary" style="flex:1;text-align:center;">
+          Cancel
+        </a>
+        <button type="submit" class="btn btn-danger" style="flex:1;">
+          Yes, delete everything
+        </button>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}
