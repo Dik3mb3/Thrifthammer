@@ -185,19 +185,20 @@ h3, h4, h5 {
 .navbar-brand {
   display: flex;
   align-items: center;
-  flex-shrink: 0;
-  text-decoration: none;
-  overflow: hidden; /* Prevent logo from clipping outside navbar on iOS */
+  /* flex-shrink: 1 lets the brand compress slightly on very narrow viewports
+     rather than pushing the hamburger button off-screen */
+  flex-shrink: 1;
   min-width: 0;
+  text-decoration: none;
 }
 .brand-logo {
   display: block;
   height: 43px;
   width: auto;
-  max-width: 160px; /* Safety cap so logo never pushes hamburger off-screen */
+  /* Ensure the full wordmark is always visible — never clip on any device */
+  max-width: none;
   filter: drop-shadow(0 0 8px rgb(200 146 42 / 0.3));
   transition: filter 200ms ease;
-  flex-shrink: 0;
 }
 .navbar-brand:hover .brand-logo {
   filter: drop-shadow(0 0 14px rgb(200 146 42 / 0.55));
@@ -521,6 +522,23 @@ h3, h4, h5 {
 .btn-blue:hover { background: var(--accent-blue-lt); color: var(--accent-gold-lt); text-decoration: none; }
 .btn-purple { background: var(--accent-purple); color: var(--accent-gold-lt); border-color: var(--accent-purple-lt); }
 .btn-purple:hover { background: var(--accent-purple-lt); color: var(--accent-gold-lt); text-decoration: none; }
+
+/* External-link indicator — clean CSS icon, no emoji (emoji renders as clipart on iOS) */
+.btn-ext::after {
+  content: '';
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  margin-left: 0.35em;
+  /* Crisp diagonal-arrow SVG — transparent background, current color stroke */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 1h6v6M9 1 1 9'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle;
+  opacity: 0.85;
+  flex-shrink: 0;
+}
 
 /* =============================================================================
    Cards
@@ -1770,10 +1788,9 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   .container { padding: 0 var(--sp-3); }
   .navbar-inner { padding: 0 var(--sp-3); }
 
-  /* ── Logo: clamp height so it never overflows the 64px navbar ── */
+  /* ── Logo: clamp height on small screens ── */
   .brand-logo {
-    height: 34px;        /* Slightly taller so text is legible */
-    max-width: 130px;    /* More room so the full wordmark is visible on iOS */
+    height: 34px;
     width: auto;
   }
 
@@ -1817,7 +1834,7 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
 /* Very small phones (≤380px) — single-column card grid */
 @media (max-width: 380px) {
   .card-grid { grid-template-columns: 1fr; }
-  .brand-logo { height: 30px; max-width: 110px; }
+  .brand-logo { height: 30px; }
   .navbar-inner { gap: var(--sp-2); }
   .product-detail { padding: var(--sp-3) var(--sp-3); }
   .product-image-wrap { max-width: 220px; }
