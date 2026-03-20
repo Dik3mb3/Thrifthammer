@@ -20,7 +20,7 @@ Changes applied (10th Edition):
     - Firestrike Servo-Turrets: fortification -> vehicle
 
   Black Templars
-    - Emperor's Champion: infantry -> character  (standard named character, not epic)
+    - Emperor's Champion: infantry -> character
     - High Marshal Helbrecht: infantry -> epic_hero
     - Company Heroes: character -> infantry
     - Inceptor Squad: mounted -> infantry
@@ -44,48 +44,53 @@ Changes applied (10th Edition):
   Dark Angels -- unique unit fixes
     - Azrael: infantry -> epic_hero
     - Lion El'Jonson: infantry -> epic_hero
-    - Asmodai: infantry -> character
-    - Belial: infantry -> character
-    - Ezekiel: infantry -> character
-    - Lazarus: infantry -> character
-    - Sammael: infantry -> character
-    - Ravenwing Command Squad: infantry -> character
-    - Nephilim Jetfighter: infantry -> vehicle
-    - Ravenwing Dark Talon: infantry -> vehicle
-    - Ravenwing Darkshroud: infantry -> vehicle
+    - Asmodai/Belial/Ezekiel/Lazarus/Sammael/Ravenwing Command Squad: infantry -> character
+    - Nephilim Jetfighter/Ravenwing Dark Talon/Ravenwing Darkshroud: infantry -> vehicle
     - Deathwing Knights: vehicle -> infantry
     - Ravenwing Black Knights: vehicle -> mounted
 
-  Craftworlds (Aeldari)
+  Death Guard
+    - Blightlord Terminators: character -> infantry
+    - Poxwalkers: vehicle -> infantry
+    - Foetid Bloat-drone: infantry -> vehicle
+
+  Deathwatch -- shared SM fixes
+    - Company Heroes: character -> infantry
+    - Infernus Squad: battleline -> infantry
+    - Tactical Squad: infantry -> battleline
+    - Inceptor Squad: mounted -> infantry
+    - Firestrike Servo-Turrets: fortification -> vehicle
+    - Watch Master: infantry -> character
+
+  Drukhari
+    - Archon: epic_hero -> character
+
+  Genestealer Cults
+    - Patriarch: epic_hero -> character
+
+  Grey Knights
+    - Strike Squad: vehicle -> battleline
+    - Terminators: vehicle -> infantry
+    - Grand Master Voldus: character -> epic_hero
+    - Chaplain (GK-specific UnitType): created if missing
+    - Librarian (GK-specific UnitType): created if missing
+    - parent_faction cleared (GK uses own datasheets only)
+
+  Aeldari (formerly Craftworlds)
     - Dire Avengers: battleline -> infantry
     - Guardians: infantry -> battleline
+  Craftworlds -> Aeldari rename (faction, products, units)
 
-  Craftworlds -> Aeldari rename
-    - Faction name + slug: Craftworlds -> Aeldari
-    - All product names: "Craftworlds X" -> "Aeldari X"
-    - All unit names: "Craftworlds X" -> "Aeldari X"
+  Leagues of Votann
+    - Hernkyn Pioneers: infantry -> mounted
+    - Kahl: infantry -> character
 
 Deactivations (confirmed duplicates -- same product as parent SM unit):
-  Black Templars
-    - Aggressor Squad         (keep Space Marine Aggressors via parent faction)
-    - Eradicator Squad        (keep Space Marine Eradicators via parent faction)
-    - Terminator Squad        (keep Space Marine Terminator Squad via parent faction)
-    - Assault Intercessor Squad
-  Blood Angels
-    - Aggressor Squad
-    - Eradicator Squad
-    - Terminator Squad
-    - Assault Intercessor Squad
-  Dark Angels
-    - Aggressor Squad
-    - Eradicator Squad
-    - Terminator Squad        (48-06, NOT Deathwing Terminator Squad 44-11 -- that's unique)
-    - Assault Intercessor Squad
-
-NOTE: Units kept for both factions (Hammerfall Bunker, Firestrike Servo-Turrets,
-      Company Heroes, Inceptor Squad, Tactical Squad) are handled by the
-      deduplication logic in calculators/views.py which prefers the sub-faction
-      unit over the parent SM unit when a parent_faction is set.
+  Black Templars, Blood Angels, Dark Angels, Deathwatch:
+    - Aggressor Squad, Eradicator Squad, Terminator Squad (48-06),
+      Assault Intercessor Squad
+  NOTE: DA Terminator Squad deactivation targets SKU 48-06 only --
+        Deathwing Terminator Squad (44-11) is preserved.
 
 Usage:
     python manage.py apply_unit_classification_fixes
@@ -160,16 +165,43 @@ RECLASSIFICATIONS = [
     ('Dark Angels', 'Dark Angels Deathwing Knights',       'infantry'),
     ('Dark Angels', 'Dark Angels Ravenwing Black Knights', 'mounted'),
 
+    # -- Death Guard ---------------------------------------------------------
+    ('Death Guard', 'Blightlord Terminators', 'infantry'),
+    ('Death Guard', 'Poxwalkers',             'infantry'),
+    ('Death Guard', 'Bloat-drone',            'vehicle'),
+
+    # -- Deathwatch -- shared SM fixes ---------------------------------------
+    ('Deathwatch', 'Company Heroes',           'infantry'),
+    ('Deathwatch', 'Infernus Squad',           'infantry'),
+    ('Deathwatch', 'Tactical Squad',           'battleline'),
+    ('Deathwatch', 'Inceptor Squad',           'infantry'),
+    ('Deathwatch', 'Firestrike Servo-Turrets', 'vehicle'),
+    ('Deathwatch', 'Watch Master',             'character'),
+
+    # -- Drukhari ------------------------------------------------------------
+    ('Drukhari', 'Archon', 'character'),
+
+    # -- Genestealer Cults ---------------------------------------------------
+    ('Genestealer Cults', 'Patriarch', 'character'),
+
+    # -- Grey Knights --------------------------------------------------------
+    ('Grey Knights', 'Strike Squad',        'battleline'),
+    ('Grey Knights', 'Terminators',         'infantry'),
+    ('Grey Knights', 'Grand Master Voldus', 'epic_hero'),
+
     # -- Craftworlds (Aeldari) -----------------------------------------------
     ('Craftworlds', 'Dire Avengers', 'infantry'),
     ('Craftworlds', 'Guardians',     'battleline'),
+
+    # -- Leagues of Votann ---------------------------------------------------
+    ('Leagues of Votann', 'Hernkyn Pioneers', 'mounted'),
+    ('Leagues of Votann', 'Kahl',             'character'),
 ]
 
 
 # ---------------------------------------------------------------------------
 # Duplicate deactivations -- units that share the same product as the
-# equivalent Space Marines parent unit. The sub-faction copy is redundant
-# because the SM unit already appears via the parent_faction union query.
+# equivalent Space Marines parent unit.
 # ---------------------------------------------------------------------------
 DUPLICATES_TO_DEACTIVATE = {
     'Black Templars': [
@@ -190,19 +222,34 @@ DUPLICATES_TO_DEACTIVATE = {
         'Terminator Squad',        # 48-06 SM kit only -- Deathwing Terminator Squad (44-11) is kept
         'Assault Intercessor Squad',
     ],
+    'Deathwatch': [
+        'Aggressor Squad',
+        'Eradicator Squad',
+        'Terminator Squad',        # 48-06 SM kit only -- Deathwatch Terminator Squad is kept
+        'Assault Intercessor Squad',
+    ],
 }
 
-# DA Terminator Squad must match the generic SM kit (48-06), not Deathwing (44-11).
-DA_TERMINATOR_SM_SKU = '48-06'
+# Generic SM Terminator Squad SKU -- used to target only the SM-kit duplicate,
+# not faction-specific terminator units (Deathwing 44-11, Deathwatch 39-xx).
+SM_TERMINATOR_SKU = '48-06'
+
+# SM Chaplain and Librarian SKUs used as stand-ins for GK until GK-specific
+# products (57-09 Brotherhood Chaplain, 57-10 Brotherhood Librarian) are added.
+GK_CHAPLAIN_SM_SKU = '48-32'
+GK_LIBRARIAN_SM_SKU = '48-30'
 
 
 class Command(BaseCommand):
     """Apply 10th Edition unit classification and deduplication fixes."""
 
-    help = 'Fix UnitType categories, deactivate confirmed duplicate units, rename Craftworlds to Aeldari.'
+    help = (
+        'Fix UnitType categories, deactivate confirmed duplicate units, '
+        'rename Craftworlds to Aeldari, set up Grey Knights standalone.'
+    )
 
     def handle(self, *args, **options):
-        """Apply all reclassifications, deactivations, and the Craftworlds rename."""
+        """Apply all reclassifications, deactivations, and structural fixes."""
         self.stdout.write('Applying unit classification fixes...\n')
         reclass_updated = 0
         reclass_skipped = 0
@@ -257,13 +304,14 @@ class Command(BaseCommand):
                 continue
 
             for unit_name in unit_names:
-                # DA Terminator Squad: match only the generic SM kit (48-06),
-                # not the unique Deathwing Terminator Squad (44-11).
-                if faction_name == 'Dark Angels' and unit_name == 'Terminator Squad':
-                    sm_product = Product.objects.filter(gw_sku=DA_TERMINATOR_SM_SKU).first()
+                # Terminator Squad: match only the generic SM kit (48-06) to
+                # avoid deactivating faction-unique terminator units.
+                if unit_name == 'Terminator Squad':
+                    sm_product = Product.objects.filter(gw_sku=SM_TERMINATOR_SKU).first()
                     if not sm_product:
                         self.stdout.write(self.style.WARNING(
-                            f'  [skip] DA Terminator Squad -- SKU {DA_TERMINATOR_SM_SKU} not found'
+                            f'  [skip] {faction_name} Terminator Squad -- '
+                            f'SKU {SM_TERMINATOR_SKU} not found'
                         ))
                         deact_skipped += 1
                         continue
@@ -287,7 +335,72 @@ class Command(BaseCommand):
                     self.stdout.write(f'  [ok]          {label} (already inactive or not found)')
                     deact_skipped += 1
 
-        # ---- 3. Craftworlds -> Aeldari rename -------------------------------
+        # ---- 3. Grey Knights: remove SM parent, add Chaplain + Librarian ---
+        self.stdout.write('\n-- Grey Knights standalone setup --')
+        gk_updated = 0
+        gk_faction = Faction.objects.filter(name='Grey Knights').first()
+
+        if not gk_faction:
+            self.stdout.write(self.style.WARNING('  [skip] Grey Knights faction not found'))
+        else:
+            # Remove Space Marines parent so GK doesn't inherit all SM units
+            if gk_faction.parent_faction_id:
+                gk_faction.parent_faction = None
+                gk_faction.save(update_fields=['parent_faction'])
+                self.stdout.write('  [cleared] Grey Knights parent_faction (was Space Marines)')
+                gk_updated += 1
+            else:
+                self.stdout.write('  [ok] Grey Knights parent_faction already clear')
+
+            # Add GK-specific Chaplain using SM product as stand-in (48-32)
+            # until GK product 57-09 Brotherhood Chaplain is added to catalog.
+            chaplain_product = Product.objects.filter(gw_sku=GK_CHAPLAIN_SM_SKU).first()
+            if chaplain_product:
+                _, created = UnitType.objects.get_or_create(
+                    faction=gk_faction,
+                    product=chaplain_product,
+                    defaults={
+                        'name': 'Brotherhood Chaplain',
+                        'category': 'character',
+                        'points_cost': 65,
+                        'is_active': True,
+                    },
+                )
+                if created:
+                    self.stdout.write('  [created] GK Brotherhood Chaplain (using SM product 48-32)')
+                    gk_updated += 1
+                else:
+                    self.stdout.write('  [ok] GK Brotherhood Chaplain already exists')
+            else:
+                self.stdout.write(self.style.WARNING(
+                    f'  [skip] SM Chaplain product {GK_CHAPLAIN_SM_SKU} not found'
+                ))
+
+            # Add GK-specific Librarian using SM product as stand-in (48-30)
+            # until GK product 57-10 Brotherhood Librarian is added to catalog.
+            librarian_product = Product.objects.filter(gw_sku=GK_LIBRARIAN_SM_SKU).first()
+            if librarian_product:
+                _, created = UnitType.objects.get_or_create(
+                    faction=gk_faction,
+                    product=librarian_product,
+                    defaults={
+                        'name': 'Brotherhood Librarian',
+                        'category': 'character',
+                        'points_cost': 80,
+                        'is_active': True,
+                    },
+                )
+                if created:
+                    self.stdout.write('  [created] GK Brotherhood Librarian (using SM product 48-30)')
+                    gk_updated += 1
+                else:
+                    self.stdout.write('  [ok] GK Brotherhood Librarian already exists')
+            else:
+                self.stdout.write(self.style.WARNING(
+                    f'  [skip] SM Librarian product {GK_LIBRARIAN_SM_SKU} not found'
+                ))
+
+        # ---- 4. Craftworlds -> Aeldari rename -------------------------------
         self.stdout.write('\n-- Craftworlds -> Aeldari rename --')
         rename_updated = 0
 
@@ -299,7 +412,6 @@ class Command(BaseCommand):
             self.stdout.write('  [renamed] Faction: Craftworlds -> Aeldari')
             rename_updated += 1
 
-            # Rename products: "Craftworlds X" -> "Aeldari X"
             for product in Product.objects.filter(faction=craftworlds, name__startswith='Craftworlds'):
                 new_name = product.name.replace('Craftworlds', 'Aeldari', 1)
                 product.name = new_name
@@ -307,7 +419,6 @@ class Command(BaseCommand):
                 self.stdout.write(f'  [renamed] Product: {new_name}')
                 rename_updated += 1
 
-            # Rename units: "Craftworlds X" -> "Aeldari X"
             for unit in UnitType.objects.filter(faction=craftworlds, name__startswith='Craftworlds'):
                 new_name = unit.name.replace('Craftworlds', 'Aeldari', 1)
                 unit.name = new_name
@@ -327,5 +438,6 @@ class Command(BaseCommand):
             f'  Reclassified: {reclass_updated}'
             f'  |  Already correct: {reclass_skipped}'
             f'  |  Deactivated: {deact_updated}'
+            f'  |  GK setup: {gk_updated}'
             f'  |  Renamed: {rename_updated}'
         ))

@@ -7,7 +7,9 @@ base-faction units in the Army Calculator.
 Current mappings (10th Edition):
   Space Marines sub-factions -> Space Marines base
     - Ultramarines, Blood Angels, Dark Angels, Black Templars,
-      Space Wolves, Deathwatch, Grey Knights
+      Space Wolves, Deathwatch
+  Excluded (use own datasheets only):
+    - Grey Knights (removed -- GK don't use generic SM datasheets)
 
 Idempotent — safe to re-run; only updates rows where parent_faction differs.
 
@@ -28,7 +30,9 @@ PARENT_FACTION_MAP = {
     'Black Templars': 'Space Marines',
     'Space Wolves':  'Space Marines',
     'Deathwatch':    'Space Marines',
-    'Grey Knights':  'Space Marines',
+    # Grey Knights intentionally excluded -- they use their own datasheets only.
+    # GK Brotherhood Chaplain and Librarian are added as explicit GK UnitType
+    # records by apply_unit_classification_fixes.
 }
 
 
