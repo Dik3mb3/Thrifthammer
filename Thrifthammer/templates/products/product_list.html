@@ -200,9 +200,9 @@
               <div class="product-card-price">${{ product.min_price|floatformat:"2" }}</div>
               {% if product.msrp and product.min_price < product.msrp %}
               <div style="display:flex;align-items:center;gap:var(--sp-1);flex-wrap:wrap;margin-top:var(--sp-1);">
-                <span class="product-card-msrp">GW ${{ product.msrp }}</span>
+                <span class="product-card-msrp">MSRP ${{ product.msrp }}</span>
                 {% if product.min_discount_pct and product.min_discount_pct > 0 %}
-                <span class="badge badge-green">{{ product.min_discount_pct|floatformat:"0" }}% off GW</span>
+                <span class="badge badge-green">{{ product.min_discount_pct|floatformat:"0" }}% off MSRP</span>
                 {% else %}
                 <span class="badge badge-green">Save</span>
                 {% endif %}

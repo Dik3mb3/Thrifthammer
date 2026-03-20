@@ -88,10 +88,18 @@ html {
   background-repeat: no-repeat;
 }
 
-/* Mobile: iOS Safari ignores background-attachment:fixed — fall back to scroll */
+/* Mobile: iOS Safari ignores background-attachment:fixed and renders it as scroll
+   with jarring snapping. Force scroll for smooth, consistent behaviour. */
 @media (max-width: 768px) {
   html {
     background-attachment: scroll;
+    /* Keep the image anchored at the top so it doesn't jump on navigation */
+    background-position: center top;
+  }
+  .hero {
+    /* Prevent the double-background fixed/scroll conflict on mobile */
+    background-attachment: scroll;
+    background-position: center 20%;
   }
 }
 
@@ -1680,24 +1688,43 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
 
 @media (max-width: 768px) {
   .navbar-search { display: none; }
+
+  /* ── Product layout: single column ── */
   .product-layout { grid-template-columns: 1fr; }
-  .product-image-wrap { max-width: 300px; margin: 0 auto; }
+  .product-image-wrap {
+    max-width: 280px;
+    margin: 0 auto var(--sp-4);
+  }
+  .product-detail { padding: var(--sp-4) 0; }
+  .product-info-header h1 { font-size: 1.3rem; }
+
+  /* ── Price table: horizontally scrollable ── */
+  .price-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .price-table { min-width: 480px; }
+
+  /* ── Hero ── */
   .hero { padding: var(--sp-12) 0; background-attachment: scroll; }
   .hero h1 { font-size: 1.75rem; }
   .hero-stats { gap: var(--sp-6); }
   .trust-bar { gap: var(--sp-6); }
+
+  /* ── Footer ── */
   .footer-grid { grid-template-columns: 1fr; }
   .footer-bottom { flex-direction: column; text-align: center; }
-  .card-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+
+  /* ── Card grid ── */
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+
+  /* ── Army calculator ── */
   .calc-layout { grid-template-columns: 1fr; }
 
-  /* Sidebar collapses on mobile */
+  /* ── Browse sidebar collapses on mobile ── */
   .browse-layout { grid-template-columns: 1fr; }
   .browse-sidebar { position: static; display: none; }
   .browse-sidebar.mobile-open { display: block; }
   .sidebar-hamburger { display: flex; }
 
-  /* Hamburger nav */
+  /* ── Hamburger nav ── */
   .nav-hamburger { display: flex; }
   .navbar-links {
     display: none;
@@ -1729,23 +1756,52 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
 }
 
 @media (max-width: 640px) {
-  .container { padding: 0 var(--sp-4); }
-  .navbar-inner { padding: 0 var(--sp-4); }
-  .brand-logo { height: 34px; }
+  .container { padding: 0 var(--sp-3); }
+  .navbar-inner { padding: 0 var(--sp-3); }
+
+  /* ── Logo: clamp height so it never overflows the 64px navbar ── */
+  .brand-logo {
+    height: 32px;
+    max-width: 120px;
+    width: auto;
+  }
+
+  /* ── Hero ── */
   .hero { padding: var(--sp-8) 0; }
   .hero p { font-size: 0.95rem; }
+  .hero h1 { font-size: 1.5rem; }
+
+  /* ── Sections ── */
   .section { padding: var(--sp-8) 0; }
+
+  /* ── Cards: 2-column on small phones, 1-column on very small ── */
   .card-grid { grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
-  .product-actions { flex-direction: column; }
-  .product-actions .btn { min-width: unset; }
+  .product-card-name { font-size: 0.82rem; }
+  .product-card-body { padding: var(--sp-3); }
+
+  /* ── Product detail ── */
+  .product-image-wrap { max-width: 240px; }
+  .product-info-header h1 { font-size: 1.2rem; }
+  .product-actions { flex-direction: column; gap: var(--sp-2); }
+  .product-actions .btn { min-width: unset; width: 100%; justify-content: center; }
+
+  /* ── Forms ── */
   .search-form { flex-direction: column; }
   .search-form input, .search-form select { min-width: unset; }
-  /* Auth forms fill the screen on mobile */
-  .auth-form { margin: var(--sp-6) var(--sp-4); }
-  /* About page hero subtitle smaller on mobile */
+  .auth-form { margin: var(--sp-6) var(--sp-3); }
+
+  /* ── Misc ── */
   .about-subtitle { font-size: 0.95rem; }
-  /* Roadmap items stack cleanly */
   .roadmap-item { padding: var(--sp-4); }
+  .best-price-card { padding: var(--sp-4); }
+  .breadcrumbs { font-size: 0.72rem; gap: var(--sp-1); }
+}
+
+/* Very small phones (≤380px) — single-column card grid */
+@media (max-width: 380px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .brand-logo { height: 28px; max-width: 100px; }
+  .navbar-inner { gap: var(--sp-2); }
 }
 
 /* =============================================================================

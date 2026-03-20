@@ -108,7 +108,7 @@
           {% if gw_ref_price %}
           {% with best_disc=best.price|discount_vs:gw_ref_price %}
           {% if best_disc > 0.5 %}
-          <span class="badge badge-green" style="font-size:0.95rem;padding:3px 8px;">−{{ best_disc|floatformat:"0" }}% vs RRP</span>
+          <span class="badge badge-green" style="font-size:0.95rem;padding:3px 8px;">−{{ best_disc|floatformat:"0" }}% vs MSRP</span>
           {% endif %}
           {% endwith %}
           {% endif %}
@@ -121,7 +121,7 @@
           {% endif %}
         </div>
         {% if gw_ref_price %}
-        <p style="font-size:0.8rem;color:var(--text-muted);">RRP: ${{ gw_ref_price }}</p>
+        <p style="font-size:0.8rem;color:var(--text-muted);">GW MSRP: ${{ gw_ref_price }}</p>
         {% endif %}
       </div>
       {% endwith %}
@@ -178,6 +178,7 @@
       {# Price comparison table #}
       <h2 style="font-size:1.1rem;margin-bottom:var(--sp-2);">Price Comparison</h2>
       {% if current_prices %}
+      <div class="price-table-wrap">
       <table class="price-table">
         <thead>
           <tr>
@@ -209,8 +210,6 @@
               {% with disc=cp.price|discount_vs:gw_ref_price %}
               {% if disc > 0.5 %}
               <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
-              {% elif disc < -0.5 %}
-              <span class="badge badge-red">+{{ disc|floatformat:"0"|cut:"-" }}%</span>
               {% else %}
               <span style="color:var(--text-muted);">—</span>
               {% endif %}
@@ -239,8 +238,9 @@
           {% endfor %}
         </tbody>
       </table>
-      <p style="font-size:0.72rem;color:var(--text-muted);margin-top:-1rem;">
-        Prices last updated: {{ current_prices.0.last_seen|date:"d M Y H:i" }}
+      </div>{# /price-table-wrap #}
+      <p style="font-size:0.72rem;color:var(--text-muted);margin-top:var(--sp-2);">
+        Prices last updated: {{ current_prices.0.last_seen|date:"d M Y" }}
       </p>
       {% else %}
       <p style="color:var(--text-muted);font-size:0.9rem;">
@@ -254,7 +254,9 @@
   {# ── Related products ── #}
   {% if related_products %}
   <div style="margin-top:var(--sp-12);">
-    <h2 style="font-size:1.1rem;margin-bottom:var(--sp-2);">Related Products</h2>
+    <h2 style="font-size:1.1rem;margin-bottom:var(--sp-2);">
+      {% if product.faction %}More {{ product.faction.name }} Products{% else %}Related Products{% endif %}
+    </h2>
     <div class="gold-rule"></div>
     <div class="card-grid">
       {% for rp in related_products %}

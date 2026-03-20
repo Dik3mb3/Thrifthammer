@@ -306,9 +306,19 @@ def product_detail(request, slug):
 
         savings = product.get_savings_vs_retail()
 
-        # Always use product.msrp as the discount reference so the homepage
-        # "Best Deals" percentage and the product detail percentage match.
-        gw_ref_price = product.msrp
+        # Use GW's own CurrentPrice as the MSRP reference when available —
+        # GW's live price is the most accurate benchmark.  Fall back to the
+        # stored msrp field if GW has no tracked price for this product.
+        gw_cp = next(
+            (
+                cp for cp in current_prices
+                if cp.retailer.slug == 'games-workshop'
+                and not cp.not_available
+                and cp.price
+            ),
+            None,
+        )
+        gw_ref_price = gw_cp.price if gw_cp else product.msrp
 
         cached_ctx = {
             'product':          product,
