@@ -993,22 +993,55 @@ class EbayBrowseAPI:
             #   "1 Shield Captain from the Custodes Wardens model kit."
             #   "Canoness and base from Adepta Sororitas Army Box Set / Combat Patrol."
             #   "Spare bits from the Blood Angels Assault Squad model kit."
-            # Any "from [the/a] X [model kit / box set / army box / army set /
+            # Any "from X [model kit / box set / army box / army set /
             # starter set / combat patrol]" phrase is an unambiguous extraction
             # signal — GW sealed retail listings never describe their product this
-            # way.
+            # way.  We do NOT require "the/a/an" after "from" because sellers
+            # also write e.g. "from Black Templar Primaris Grimaldus & Retinue
+            # model kit."  False positives are prevented by requiring the specific
+            # terminal phrase (model kit / box set / etc.) rather than the article.
             _EXTRACTION_RE = re.compile(
-                r'\bfrom (?:the|a|an)\b.{0,80}'
+                r'\bfrom\b.{0,80}'
                 r'\b(?:model kit|box set|army box|army set|starter set|combat patrol)\b',
                 re.IGNORECASE,
             )
             if _EXTRACTION_RE.search(short_desc):
                 logger.debug(
                     '[ebay] Rejected (single model extracted from set, '
-                    '"from the/a X [set/kit]" in description): "%s"',
+                    '"from X [set/kit]" in description): "%s"',
                     result['title'][:60],
                 )
                 return False
+
+            # Reject reseller/content-creator storefronts that sell non-standard
+            # listings (pre-assembled, display, or hobby-service models).
+            # Frontline Gaming (frontlinegaming.org) uses a boilerplate description
+            # containing "tabletop gaming blog" — their listings carry internal
+            # codes (HAA-xx, GZZ-xx, HAF-xx) and are not sealed retail boxes.
+            if re.search(r'\btabletop gaming blog\b', short_desc, re.IGNORECASE):
+                logger.debug(
+                    '[ebay] Rejected (reseller storefront, '
+                    '"tabletop gaming blog" in description): "%s"',
+                    result['title'][:60],
+                )
+                return False
+
+            # Apply product-specific negative keywords to the description.
+            # eBay's -keyword search operator filters listing TITLES only —
+            # descriptions are not filtered server-side.  A listing whose title
+            # passes all checks can still reveal the wrong product via its
+            # description (e.g. the Grimaldus Retinue set: title has no
+            # "cenobyte" but the description says "assemble one Chaplain
+            # Grimaldus and his three Cenobyte Servitors").
+            raw_negatives = getattr(product, 'ebay_negative_keywords', '') or ''
+            if raw_negatives:
+                for neg_kw in raw_negatives.lower().split():
+                    if neg_kw in short_desc:
+                        logger.debug(
+                            '[ebay] Rejected (negative keyword "%s" in description): "%s"',
+                            neg_kw, result['title'][:60],
+                        )
+                        return False
 
         # ── URL must link to eBay ─────────────────────────────────────────────
         if 'ebay.' not in result['url']:
@@ -1131,15 +1164,28 @@ class EbayBrowseAPI:
 
             # Single model/component extracted from a multi-model kit or set
             _EXTRACTION_RE = re.compile(
-                r'\bfrom (?:the|a|an)\b.{0,80}'
+                r'\bfrom\b.{0,80}'
                 r'\b(?:model kit|box set|army box|army set|starter set|combat patrol)\b',
                 re.IGNORECASE,
             )
             if _EXTRACTION_RE.search(short_desc):
                 reasons.append(
                     'single model extracted from set '
-                    '("from the/a X [set/kit]" in description)'
+                    '("from X [set/kit]" in description)'
                 )
+
+            if re.search(r'\btabletop gaming blog\b', short_desc, re.IGNORECASE):
+                reasons.append('reseller storefront ("tabletop gaming blog" in description)')
+
+            # Product-specific negative keywords applied to description
+            raw_negatives = getattr(product, 'ebay_negative_keywords', '') or ''
+            if raw_negatives:
+                for neg_kw in raw_negatives.lower().split():
+                    if neg_kw in short_desc:
+                        reasons.append(
+                            f'negative keyword "{neg_kw}" in description'
+                        )
+                        break
 
         # URL
         if 'ebay.' not in result.get('url', ''):
