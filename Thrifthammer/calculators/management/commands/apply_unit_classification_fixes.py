@@ -188,10 +188,10 @@ RECLASSIFICATIONS = [
 
     # -- Dark Angels -- unique named characters ------------------------------
     ('Dark Angels', 'Dark Angels Azrael',                  'epic_hero'),
-    ('Dark Angels', "Dark Angels Lion El'Jonson",          'epic_hero'),
+    ("Dark Angels", "Dark Angels Lion El'Jonson",          'epic_hero'),
+    ('Dark Angels', 'Dark Angels Ezekiel',                 'epic_hero'),
     ('Dark Angels', 'Dark Angels Asmodai',                 'character'),
     ('Dark Angels', 'Dark Angels Belial',                  'character'),
-    ('Dark Angels', 'Dark Angels Ezekiel',                 'character'),
     ('Dark Angels', 'Dark Angels Lazarus',                 'character'),
     ('Dark Angels', 'Dark Angels Sammael',                 'character'),
     ('Dark Angels', 'Dark Angels Ravenwing Command Squad', 'character'),
