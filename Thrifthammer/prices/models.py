@@ -30,6 +30,13 @@ class CurrentPrice(models.Model):
         default=False,
         help_text='True if this product is not carried by this retailer.',
     )
+    manual_url_override = models.BooleanField(
+        default=False,
+        help_text=(
+            'If True, the URL and stock status were set manually and must not be '
+            'overwritten by automated scrapers or stock checkers.'
+        ),
+    )
     last_seen = models.DateTimeField(auto_now=True)
 
     class Meta:
