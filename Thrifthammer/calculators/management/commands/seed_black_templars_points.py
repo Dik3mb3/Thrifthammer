@@ -47,6 +47,7 @@ BLACK_TEMPLARS_POINTS = [
     ('48-34',  50, 'Ancient'),
     ('48-33',  50, 'Apothecary'),
     ('48-32',  60, 'Chaplain'),          # 60pts BT | 75pts Space Marines
+    ('48-30',  65, 'Librarian'),
     ('48-36',  70, 'Judiciar'),
     ('48-61',  55, 'Lieutenant'),
     ('48-62',  80, 'Captain'),

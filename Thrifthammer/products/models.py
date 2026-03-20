@@ -55,6 +55,13 @@ class Faction(models.Model):
         Category, on_delete=models.CASCADE, related_name='factions',
     )
     description = models.TextField(blank=True)
+    parent_faction = models.ForeignKey(
+        'self',
+        null=True, blank=True,
+        on_delete=models.SET_NULL,
+        related_name='sub_factions',
+        help_text='Parent faction whose units this faction can also field (e.g. Space Marines for Ultramarines).',
+    )
 
     class Meta:
         ordering = ['category', 'name']

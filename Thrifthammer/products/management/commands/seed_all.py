@@ -167,3 +167,16 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(
                 'All faction points seeded successfully!'
             ))
+
+        # ── Step 4: parent faction relationships ──────────────────────────────
+        # Only run when seeding all factions (not on single-faction runs).
+        if not faction_filter:
+            self.stdout.write(self.style.MIGRATE_LABEL(
+                '\n▶ Setting parent faction relationships…\n'
+            ))
+            try:
+                call_command('set_parent_factions', verbosity=1)
+            except Exception as exc:  # noqa: BLE001
+                self.stdout.write(self.style.ERROR(
+                    f'  ERROR running set_parent_factions: {exc}'
+                ))

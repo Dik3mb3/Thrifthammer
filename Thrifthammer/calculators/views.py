@@ -13,7 +13,7 @@ import json
 import decimal
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
+from django.db.models import Max, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
@@ -75,13 +75,16 @@ class ArmyCalculatorView(TemplateView):
         )
 
         # Fetch units — only when a faction is selected.
-        # Always exclude units whose linked product has been deactivated/removed
-        # from the catalog (product__is_active=False), keeping units with no
-        # linked product (product__isnull=True) since those still have price data.
+        # Include units from the selected faction AND its parent faction (if any),
+        # so sub-factions like Ultramarines automatically show Space Marines units.
         if selected_faction:
+            faction_filter = Q(faction=selected_faction)
+            if selected_faction.parent_faction_id:
+                faction_filter |= Q(faction=selected_faction.parent_faction)
             unit_qs = (
                 UnitType.objects
-                .filter(is_active=True, faction=selected_faction)
+                .filter(is_active=True)
+                .filter(faction_filter)
                 .filter(Q(product__isnull=True) | Q(product__is_active=True))
                 .select_related('product', 'faction')
                 .prefetch_related('product__current_prices__retailer')
@@ -129,12 +132,18 @@ class ArmyCalculatorView(TemplateView):
                 .order_by('-created_at')[:10]
             )
 
+        # Timestamp of the most recently updated unit — auto-reflects every seed run
+        points_last_updated = UnitType.objects.aggregate(
+            latest=Max('updated_at')
+        )['latest']
+
         context.update({
             'ordered_categories': ordered_categories,
             'prebuilt_armies': prebuilt_armies,
             'saved_armies': saved_armies,
             'available_factions': available_factions,
             'selected_faction': selected_faction,
+            'points_last_updated': points_last_updated,
         })
         return context
 
