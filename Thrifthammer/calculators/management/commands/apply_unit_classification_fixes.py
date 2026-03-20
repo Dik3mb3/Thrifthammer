@@ -210,13 +210,16 @@ RECLASSIFICATIONS = [
     ('Death Guard', 'Poxwalkers',             'infantry'),
     ('Death Guard', 'Bloat-drone',            'vehicle'),
 
+    # -- Deathwatch -- unique characters ------------------------------------
+    ('Deathwatch', 'Watch Captain Artemis', 'epic_hero'),
+    ('Deathwatch', 'Watch Master',          'character'),
+
     # -- Deathwatch -- shared SM fixes ---------------------------------------
     ('Deathwatch', 'Company Heroes',           'infantry'),
     ('Deathwatch', 'Infernus Squad',           'infantry'),
     ('Deathwatch', 'Tactical Squad',           'battleline'),
     ('Deathwatch', 'Inceptor Squad',           'infantry'),
     ('Deathwatch', 'Firestrike Servo-Turrets', 'vehicle'),
-    ('Deathwatch', 'Watch Master',             'character'),
 
     # -- Drukhari ------------------------------------------------------------
     ('Drukhari', 'Archon', 'character'),
