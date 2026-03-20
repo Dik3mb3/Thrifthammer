@@ -195,8 +195,8 @@ h3, h4, h5 {
   display: block;
   height: 43px;
   width: auto;
-  /* Ensure the full wordmark is always visible — never clip on any device */
-  max-width: none;
+  /* Cap width so iOS Safari never clips the wordmark */
+  max-width: 160px;
   filter: drop-shadow(0 0 8px rgb(200 146 42 / 0.3));
   transition: filter 200ms ease;
 }
@@ -218,6 +218,7 @@ h3, h4, h5 {
   display: block;
   height: 39px;
   width: auto;
+  max-width: 160px;
   margin-bottom: var(--sp-3);
   filter: drop-shadow(0 0 6px rgb(200 146 42 / 0.25));
 }
@@ -1795,10 +1796,12 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   .container { padding: 0 var(--sp-3); }
   .navbar-inner { padding: 0 var(--sp-3); }
 
-  /* ── Logo: clamp height on small screens ── */
+  /* ── Logo: clamp height and width on small screens ── */
   .brand-logo {
     height: 34px;
     width: auto;
+    /* iOS Safari: explicit cap prevents wordmark from exceeding available space */
+    max-width: 120px;
   }
 
   /* ── Hero ── */
@@ -1841,7 +1844,7 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
 /* Very small phones (≤380px) — single-column card grid */
 @media (max-width: 380px) {
   .card-grid { grid-template-columns: 1fr; }
-  .brand-logo { height: 30px; }
+  .brand-logo { height: 30px; max-width: 100px; }
   .navbar-inner { gap: var(--sp-2); }
   .product-detail { padding: var(--sp-3) var(--sp-3); }
   .product-image-wrap { max-width: 220px; }
