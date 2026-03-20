@@ -523,18 +523,25 @@ h3, h4, h5 {
 .btn-purple { background: var(--accent-purple); color: var(--accent-gold-lt); border-color: var(--accent-purple-lt); }
 .btn-purple:hover { background: var(--accent-purple-lt); color: var(--accent-gold-lt); text-decoration: none; }
 
-/* External-link indicator — clean CSS icon, no emoji (emoji renders as clipart on iOS) */
+/* External-link indicator — clean CSS mask icon, no emoji (emoji = clipart on iOS).
+   Uses CSS mask so the icon inherits the button's text colour on all browsers/OS. */
 .btn-ext::after {
   content: '';
   display: inline-block;
-  width: 0.7em;
-  height: 0.7em;
-  margin-left: 0.35em;
-  /* Crisp diagonal-arrow SVG — transparent background, current color stroke */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 1h6v6M9 1 1 9'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  width: 0.65em;
+  height: 0.65em;
+  margin-left: 0.3em;
+  /* background-color:currentColor is what actually draws the colour */
+  background-color: currentColor;
+  /* The mask punches out an external-link arrow shape */
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 1h6v6M9 1 1 9'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 1h6v6M9 1 1 9'/%3E%3C/svg%3E");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
   vertical-align: middle;
   opacity: 0.85;
   flex-shrink: 0;
