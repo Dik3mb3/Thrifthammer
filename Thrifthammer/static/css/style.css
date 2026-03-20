@@ -112,6 +112,7 @@ body {
   display: flex;
   flex-direction: column;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden; /* Prevent horizontal scroll / background bleed-through on mobile */
   /* Subtle red/gold vignette overlays — sit on top of the bg image */
   background-image:
     radial-gradient(ellipse at 20% 0%, rgb(155 32 32 / 0.05) 0%, transparent 55%),
@@ -186,13 +187,17 @@ h3, h4, h5 {
   align-items: center;
   flex-shrink: 0;
   text-decoration: none;
+  overflow: hidden; /* Prevent logo from clipping outside navbar on iOS */
+  min-width: 0;
 }
 .brand-logo {
   display: block;
   height: 43px;
   width: auto;
+  max-width: 160px; /* Safety cap so logo never pushes hamburger off-screen */
   filter: drop-shadow(0 0 8px rgb(200 146 42 / 0.3));
   transition: filter 200ms ease;
+  flex-shrink: 0;
 }
 .navbar-brand:hover .brand-logo {
   filter: drop-shadow(0 0 14px rgb(200 146 42 / 0.55));
@@ -1195,7 +1200,11 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
 /* =============================================================================
    Product Detail
    ============================================================================= */
-.product-detail { padding: var(--sp-8) 0; }
+.product-detail {
+  padding: var(--sp-8) var(--sp-6);
+  max-width: 1200px;
+  margin: 0 auto;
+}
 .breadcrumbs {
   font-size: 0.78rem;
   color: var(--text-muted);
@@ -1244,6 +1253,7 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   object-fit: contain;
 }
 .product-image-placeholder { font-size: 4rem; color: var(--text-muted); text-align: center; }
+.product-image-col { display: flex; flex-direction: column; align-items: center; }
 
 .product-info-header { margin-bottom: var(--sp-6); }
 .product-info-header h1 {
@@ -1692,15 +1702,16 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   /* ── Product layout: single column ── */
   .product-layout { grid-template-columns: 1fr; }
   .product-image-wrap {
-    max-width: 280px;
+    max-width: 320px;
     margin: 0 auto var(--sp-4);
   }
-  .product-detail { padding: var(--sp-4) 0; }
+  .product-detail { padding: var(--sp-4) var(--sp-4); }
   .product-info-header h1 { font-size: 1.3rem; }
 
   /* ── Price table: horizontally scrollable ── */
   .price-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .price-table { min-width: 480px; }
+  .price-table { min-width: 440px; font-size: 0.8rem; }
+  .price-table th, .price-table td { padding: var(--sp-2) var(--sp-3); }
 
   /* ── Hero ── */
   .hero { padding: var(--sp-12) 0; background-attachment: scroll; }
@@ -1761,8 +1772,8 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
 
   /* ── Logo: clamp height so it never overflows the 64px navbar ── */
   .brand-logo {
-    height: 32px;
-    max-width: 120px;
+    height: 34px;        /* Slightly taller so text is legible */
+    max-width: 130px;    /* More room so the full wordmark is visible on iOS */
     width: auto;
   }
 
@@ -1780,10 +1791,12 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   .product-card-body { padding: var(--sp-3); }
 
   /* ── Product detail ── */
-  .product-image-wrap { max-width: 240px; }
+  .product-detail { padding: var(--sp-4) var(--sp-3); }
+  .product-image-wrap { max-width: 260px; }
   .product-info-header h1 { font-size: 1.2rem; }
   .product-actions { flex-direction: column; gap: var(--sp-2); }
   .product-actions .btn { min-width: unset; width: 100%; justify-content: center; }
+  .best-price-amount { font-size: 2rem; }  /* Scale down big $ number on small phones */
 
   /* ── Forms ── */
   .search-form { flex-direction: column; }
@@ -1794,14 +1807,21 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   .about-subtitle { font-size: 0.95rem; }
   .roadmap-item { padding: var(--sp-4); }
   .best-price-card { padding: var(--sp-4); }
-  .breadcrumbs { font-size: 0.72rem; gap: var(--sp-1); }
+  .breadcrumbs { font-size: 0.75rem; gap: var(--sp-2); }
+
+  /* ── Price table: tighter on small screens ── */
+  .price-table { min-width: 400px; font-size: 0.78rem; }
+  .price-table th, .price-table td { padding: var(--sp-2) var(--sp-2); }
 }
 
 /* Very small phones (≤380px) — single-column card grid */
 @media (max-width: 380px) {
   .card-grid { grid-template-columns: 1fr; }
-  .brand-logo { height: 28px; max-width: 100px; }
+  .brand-logo { height: 30px; max-width: 110px; }
   .navbar-inner { gap: var(--sp-2); }
+  .product-detail { padding: var(--sp-3) var(--sp-3); }
+  .product-image-wrap { max-width: 220px; }
+  .price-table { min-width: 360px; font-size: 0.74rem; }
 }
 
 /* =============================================================================
