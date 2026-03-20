@@ -427,7 +427,7 @@ MM_DATA = {
     'HA-040': ('100.99', BASE + 'gw-31-35.html'),       # HH Spartan Assault Tank (same kit as HA-013)
     'HA-041': ('71.99', BASE + 'gw-31-27.html'),        # HH Sicaran Battle Tank
     'HA-050': (None,    ''),                             # HH Praetor in Terminator Armour — NOT IN MM
-    'HA-051': ('37.99', BASE + 'warhammer-40k-space-marines-chaplain-terminator-armour-gw-48-91.html'), # Chaplain in Terminator Armour
+    'HA-051': ('37.99', BASE + 'warhammer-40k-space-marines-chaplain-terminator-armour-gw-48-91.html'), # Space Marine Chaplain in Terminator Armour (renamed from HH)
     'HH-001': ('267.99', BASE + 'gw-31-01.html'),       # Horus Heresy: Age of Darkness
 
     # ── Kill Team ─────────────────────────────────────────────────────────

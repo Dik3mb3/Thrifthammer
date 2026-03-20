@@ -243,7 +243,7 @@ AMAZON_DATA = {
     'HA-021': ('65.00',  'https://www.amazon.com/dp/B0B6W3RPPQ', True),  # Leviathan Dreadnought  ✓ FIXED (old B0B8ZMZ99L was Contemptor; price est.)
     'HA-040': ('101.30', 'https://www.amazon.com/dp/B0B8ZNSRXZ', True),  # Spartan Assault Tank  ✓ FIXED (old B0F29NXG8C wrong)
     'HA-041': ('75.65',  'https://www.amazon.com/dp/B0B8ZM7M3T', True),  # Sicaran Battle Tank   ✓ FIXED (old B0F29RQ8JH wrong)
-    'HA-051': ('39.95',  'https://www.amazon.com/dp/B0CJRZJPM9', True),  # Chaplain in Terminator Armour
+    'HA-051': ('39.95',  'https://www.amazon.com/dp/B0CJRZJPM9', True),  # Space Marine Chaplain in Terminator Armour (renamed from HH)
     # HH-001 Age of Darkness starter — Dice ASIN wrong; starter box not on Amazon; removed
 
     # ── Imperial Knights ──────────────────────────────────────────────────

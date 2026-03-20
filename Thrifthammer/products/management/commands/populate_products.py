@@ -565,6 +565,12 @@ _EBAY_SEARCH_OVERRIDES = {
     # matches listing 187763771467 ("Space Marines: Terminator Assault Squad
     # (2025 ver.)").
     '48-06': 'Space Marine Terminator Assault Squad',
+    # ── Horus Heresy ──────────────────────────────────────────────────────────
+    # HA-051 "Space Marine Chaplain in Terminator Armour" — previously a HH
+    # product renamed to SM.  eBay sellers list this model under the exact GW
+    # product title "Space Marines - Chaplain in Terminator Armour".  This
+    # search name matches that phrasing to surface the correct blister listing.
+    'HA-051': 'Space Marines Chaplain Terminator Armour',
 }
 
 # ── Per-product eBay "no box" exemptions ─────────────────────────────────────
@@ -2312,7 +2318,7 @@ class Command(BaseCommand):
              'HA-050', decimal.Decimal('35.00'),
              'A senior officer of a Space Marine Legion in Terminator armour, '
              'with interchangeable weapons and heraldry.'),
-            ('Horus Heresy Chaplain in Terminator Armour', 'Horus Heresy', None,
+            ('Space Marine Chaplain in Terminator Armour', 'Warhammer 40,000', 'Space Marines',
              'HA-051', decimal.Decimal('32.50'),
              'A Chaplain bearing a crozius arcanum and combi-weapon, inspiring '
              'legionaries to die for the primarch\'s glory.'),
