@@ -1,18 +1,7 @@
 [build]
 builder = "nixpacks"
 
-# ── Scheduled price refresh jobs ──────────────────────────────────────────────
-# eBay: daily at 03:00 UTC (~375 API calls, ~6 min)
-[crons.update-ebay-prices]
-command = "python manage.py update_ebay_prices"
-schedule = "0 3 * * *"
-
-# Miniature Market: weekly on Monday at 04:00 UTC (HTML scraper, ~2 min)
-[crons.scrape-miniature-market]
-command = "python manage.py run_scrapers miniature-market"
-schedule = "0 4 * * 1"
-
-# Amazon stock check: weekly on Monday at 05:00 UTC (~2 min, 50 listings × 0.8s)
-[crons.check-amazon-stock]
-command = "python manage.py check_amazon_stock --delay 0.8"
-schedule = "0 5 * * 1"
+# Note: Railway cron jobs must be configured as separate services in the
+# Railway dashboard (Settings → Cron Schedule), not in railway.toml.
+# Scheduled tasks are handled via GitHub Actions:
+#   .github/workflows/update-ebay-prices.yml  — daily 03:00 UTC
