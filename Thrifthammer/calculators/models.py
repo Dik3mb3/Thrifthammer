@@ -33,6 +33,7 @@ class UnitType(models.Model):
         ('battleline',    'Battleline'),
         ('infantry',      'Infantry'),
         ('mounted',       'Mounted'),
+        ('monster',       'Monster'),
         ('vehicle',       'Vehicle'),
         ('transport',     'Transport'),
         ('fortification', 'Fortification'),

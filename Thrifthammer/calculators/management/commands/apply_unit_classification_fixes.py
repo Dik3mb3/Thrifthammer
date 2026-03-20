@@ -85,6 +85,46 @@ Changes applied (10th Edition):
     - Hernkyn Pioneers: infantry -> mounted
     - Kahl: infantry -> character
 
+  Necrons
+    - C'tan Shard of the Void Dragon: infantry -> epic_hero
+    - Canoptek Spyder: infantry -> vehicle
+    - Doom Scythe: infantry -> vehicle
+    - Immortals: infantry -> battleline
+    - Psychomancer: infantry -> character
+    - Royal Warden: infantry -> character
+
+  Orks
+    - Warboss in Mega Armour: epic_hero -> character
+
+  Sisters of Battle (Adepta Sororitas)
+    - Morvenn Vahl: infantry -> epic_hero
+
+  Space Marines (base)
+    - Infernus Squad: battleline -> infantry
+    - Repulsor Executioner: transport -> vehicle
+
+  Space Wolves
+    - Ragnar Blackmane: infantry -> epic_hero
+    - Wolf Guard Terminators: infantry -> infantry (already correct, kept for dedup check)
+
+  T'au Empire
+    - Riptide Battlesuit: character -> vehicle
+    - Pathfinders: battleline -> infantry
+    - Broadside Battlesuit: infantry -> vehicle
+    - Crisis Battlesuits: infantry -> vehicle
+    - Hammerhead Gunship: infantry -> vehicle
+    - Stealth Battlesuits: infantry -> infantry (already correct)
+
+  Tyranids
+    - Hive Tyrant: epic_hero -> character
+    - Carnifex: infantry -> monster
+
+  Ultramarines
+    - Marneus Calgar: infantry -> epic_hero
+
+  World Eaters
+    - Eightbound: battleline -> infantry
+
 Deactivations (confirmed duplicates -- same product as parent SM unit):
   Black Templars, Blood Angels, Dark Angels, Deathwatch:
     - Aggressor Squad, Eradicator Squad, Terminator Squad (48-06),
@@ -196,6 +236,56 @@ RECLASSIFICATIONS = [
     # -- Leagues of Votann ---------------------------------------------------
     ('Leagues of Votann', 'Hernkyn Pioneers', 'mounted'),
     ('Leagues of Votann', 'Kahl',             'character'),
+
+    # -- Necrons -------------------------------------------------------------
+    ('Necrons', 'Void Dragon',                    'epic_hero'),  # C'tan Shard of the Void Dragon
+    ('Necrons', 'Canoptek Spyder',                'vehicle'),
+    ('Necrons', 'Doom Scythe',                    'vehicle'),
+    ('Necrons', 'Immortals',                      'battleline'),
+    ('Necrons', 'Psychomancer',                   'character'),
+    ('Necrons', 'Royal Warden',                   'character'),
+
+    # -- Orks ----------------------------------------------------------------
+    ('Orks', 'Warboss in Mega Armour', 'character'),
+
+    # -- Sisters of Battle (units stored under this faction name) ------------
+    ('Sisters of Battle', 'Morvenn Vahl', 'epic_hero'),
+
+    # -- Space Marines (base) ------------------------------------------------
+    ('Space Marines', 'Infernus Squad',          'infantry'),
+    ('Space Marines', 'Repulsor Executioner',     'vehicle'),
+
+    # -- Space Marines sub-factions: Infernus Squad + Repulsor Executioner --
+    ('Black Templars',  'Infernus Squad',          'infantry'),
+    ('Blood Angels',    'Repulsor Executioner',    'vehicle'),
+    ('Dark Angels',     'Infernus Squad',          'infantry'),
+    ('Dark Angels',     'Repulsor Executioner',    'vehicle'),
+    ('Deathwatch',      'Repulsor Executioner',    'vehicle'),
+    ('Space Wolves',    'Infernus Squad',          'infantry'),
+    ('Space Wolves',    'Repulsor Executioner',    'vehicle'),
+    ('Ultramarines',    'Infernus Squad',          'infantry'),
+    ('Ultramarines',    'Repulsor Executioner',    'vehicle'),
+
+    # -- Space Wolves unique characters --------------------------------------
+    ('Space Wolves', 'Ragnar Blackmane', 'epic_hero'),
+
+    # -- T'au Empire ---------------------------------------------------------
+    ("T'au Empire", 'Riptide Battlesuit',    'vehicle'),
+    ("T'au Empire", 'Pathfinders',           'infantry'),
+    ("T'au Empire", 'Broadside Battlesuit',  'vehicle'),
+    ("T'au Empire", 'Crisis Battlesuits',    'vehicle'),
+    ("T'au Empire", 'Hammerhead Gunship',    'vehicle'),
+    ("T'au Empire", 'Stealth Battlesuits',   'infantry'),
+
+    # -- Tyranids ------------------------------------------------------------
+    ('Tyranids', 'Hive Tyrant', 'character'),
+    ('Tyranids', 'Carnifex',    'monster'),
+
+    # -- Ultramarines --------------------------------------------------------
+    ('Ultramarines', 'Marneus Calgar', 'epic_hero'),
+
+    # -- World Eaters --------------------------------------------------------
+    ('World Eaters', 'Eightbound', 'infantry'),
 ]
 
 
@@ -203,31 +293,20 @@ RECLASSIFICATIONS = [
 # Duplicate deactivations -- units that share the same product as the
 # equivalent Space Marines parent unit.
 # ---------------------------------------------------------------------------
+SM_FACTION_DUPLICATES = [
+    'Aggressor Squad',
+    'Eradicator Squad',
+    'Terminator Squad',   # 48-06 SM kit only — faction-unique terminator units are kept
+    'Assault Intercessor Squad',
+]
+
 DUPLICATES_TO_DEACTIVATE = {
-    'Black Templars': [
-        'Aggressor Squad',
-        'Eradicator Squad',
-        'Terminator Squad',
-        'Assault Intercessor Squad',
-    ],
-    'Blood Angels': [
-        'Aggressor Squad',
-        'Eradicator Squad',
-        'Terminator Squad',
-        'Assault Intercessor Squad',
-    ],
-    'Dark Angels': [
-        'Aggressor Squad',
-        'Eradicator Squad',
-        'Terminator Squad',        # 48-06 SM kit only -- Deathwing Terminator Squad (44-11) is kept
-        'Assault Intercessor Squad',
-    ],
-    'Deathwatch': [
-        'Aggressor Squad',
-        'Eradicator Squad',
-        'Terminator Squad',        # 48-06 SM kit only -- Deathwatch Terminator Squad is kept
-        'Assault Intercessor Squad',
-    ],
+    'Black Templars': SM_FACTION_DUPLICATES,
+    'Blood Angels':   SM_FACTION_DUPLICATES,
+    'Dark Angels':    SM_FACTION_DUPLICATES,
+    'Deathwatch':     SM_FACTION_DUPLICATES,
+    'Space Wolves':   SM_FACTION_DUPLICATES,
+    'Ultramarines':   SM_FACTION_DUPLICATES,
 }
 
 # Generic SM Terminator Squad SKU -- used to target only the SM-kit duplicate,
