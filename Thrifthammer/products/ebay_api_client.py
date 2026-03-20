@@ -988,18 +988,24 @@ class EbayBrowseAPI:
                 )
                 return False
 
-            # Detect individual models extracted from multi-model kits.
+            # Detect individual models extracted from multi-model kits or sets.
             # Sellers who pull one model from a box often write descriptions like:
             #   "1 Shield Captain from the Custodes Wardens model kit."
+            #   "Canoness and base from Adepta Sororitas Army Box Set / Combat Patrol."
             #   "Spare bits from the Blood Angels Assault Squad model kit."
-            # The phrase "from the/a [X] model kit" is an unambiguous extraction
+            # Any "from [the/a] X [model kit / box set / army box / army set /
+            # starter set / combat patrol]" phrase is an unambiguous extraction
             # signal — GW sealed retail listings never describe their product this
-            # way.  We specifically require "model kit" (not just "kit") to avoid
-            # false positives from descriptions like "Ships from the UK. New sealed."
-            if re.search(r'\bfrom (?:the|a)\b.{0,60}\bmodel kit\b', short_desc):
+            # way.
+            _EXTRACTION_RE = re.compile(
+                r'\bfrom (?:the|a|an)\b.{0,80}'
+                r'\b(?:model kit|box set|army box|army set|starter set|combat patrol)\b',
+                re.IGNORECASE,
+            )
+            if _EXTRACTION_RE.search(short_desc):
                 logger.debug(
-                    '[ebay] Rejected (single model extracted from kit, '
-                    '"from the/a X model kit" in description): "%s"',
+                    '[ebay] Rejected (single model extracted from set, '
+                    '"from the/a X [set/kit]" in description): "%s"',
                     result['title'][:60],
                 )
                 return False
@@ -1123,11 +1129,16 @@ class EbayBrowseAPI:
             if desc_bits_hits:
                 reasons.append(f'description bits keywords: {desc_bits_hits}')
 
-            # Single model extracted from multi-model kit
-            if re.search(r'\bfrom (?:the|a)\b.{0,60}\bmodel kit\b', short_desc):
+            # Single model/component extracted from a multi-model kit or set
+            _EXTRACTION_RE = re.compile(
+                r'\bfrom (?:the|a|an)\b.{0,80}'
+                r'\b(?:model kit|box set|army box|army set|starter set|combat patrol)\b',
+                re.IGNORECASE,
+            )
+            if _EXTRACTION_RE.search(short_desc):
                 reasons.append(
-                    'single model extracted from kit '
-                    '("from the/a X model kit" in description)'
+                    'single model extracted from set '
+                    '("from the/a X [set/kit]" in description)'
                 )
 
         # URL
