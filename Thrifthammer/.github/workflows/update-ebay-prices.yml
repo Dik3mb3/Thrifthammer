@@ -1,0 +1,55 @@
+name: Update eBay Prices
+
+on:
+  schedule:
+    # Daily at 03:00 UTC (matches Railway cron as backup)
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    # Allow manual trigger from GitHub Actions tab
+    inputs:
+      dry_run:
+        description: 'Dry run (no DB changes)'
+        type: boolean
+        default: false
+      limit:
+        description: 'Max products to process (leave blank for all)'
+        type: string
+        default: ''
+
+jobs:
+  update-prices:
+    name: eBay Price Update
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run eBay price update
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_ALLOWED_HOSTS: thrifthammer.com,www.thrifthammer.com,web-production-b6056.up.railway.app
+          DJANGO_DEBUG: 'False'
+          RAILWAY_ENVIRONMENT: production
+          EBAY_APP_ID_PRODUCTION: ${{ secrets.EBAY_APP_ID_PRODUCTION }}
+          EBAY_CERT_ID_PRODUCTION: ${{ secrets.EBAY_CERT_ID_PRODUCTION }}
+        run: |
+          FLAGS=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            FLAGS="$FLAGS --dry-run"
+          fi
+          if [ -n "${{ github.event.inputs.limit }}" ]; then
+            FLAGS="$FLAGS --limit ${{ github.event.inputs.limit }}"
+          fi
+          python manage.py update_ebay_prices $FLAGS
