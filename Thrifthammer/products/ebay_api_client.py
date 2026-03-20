@@ -648,10 +648,12 @@ class EbayBrowseAPI:
         # different word and is not affected.
         'novel', 'paperback', 'hardback', 'hardcover', 'library',
         # Painted/assembled miniatures — not sealed retail kits.
-        #   'painted'   — "Pro Painted", "hand painted", "painted army builder";
-        #                 sealed kit listings never describe their contents as painted.
-        #   'assembled' — likewise; a kit that ships assembled was not bought sealed.
-        'painted', 'assembled',
+        #   'painted'     — "Pro Painted", "hand painted", "painted army builder";
+        #                   sealed kit listings never describe their contents as painted.
+        #   'assembled'   — likewise; a kit that ships assembled was not bought sealed.
+        #   'commission'  — commission painting service listings ("Ravager - Commission");
+        #                   a seller offering to paint to order, not selling a sealed kit.
+        'painted', 'assembled', 'commission',
         # Adeptus Titanicus — GW's 8mm-scale Titan/Knight game. Same unit names
         # (e.g. "Cerastus Knight Lancer") but ~1/6th the size and price of
         # the standard 40K/30K kits. "titanicus" is the unambiguous marker.

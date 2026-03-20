@@ -448,10 +448,7 @@ _EBAY_SEARCH_OVERRIDES = {
     # correctly against "Electro-Priests" in listing titles.
     '59-20': 'Adeptus Mechanicus Electro-Priests',
     # ── Genestealer Cults ─────────────────────────────────────────────────
-    # 51-42 "Genestealer Cults Patriarch" — GW sells the Patriarch as part of
-    # the "Broodcoven" multi-model kit (Patriarch + two Magi).  eBay sellers
-    # title it "Broodcoven", not "Patriarch", so 0 results with the display name.
-    '51-42': 'Genestealer Cults Broodcoven',
+    # (no overrides needed — product names now match eBay listing titles)
     # ── Craftworlds (Aeldari) ─────────────────────────────────────────────
     # GW rebranded "Craftworlds" / "Eldar" to "Aeldari" in 9th/10th edition.
     # eBay sellers now title kits under "Aeldari"; the old "Craftworlds" prefix
@@ -1976,7 +1973,7 @@ class Command(BaseCommand):
              '51-43', decimal.Decimal('22.50'),
              'A psyker infected with the Genestealer curse, channelling alien '
              'power through a staff and psychic gifts.'),
-            ('Genestealer Cults Patriarch', 'Warhammer 40,000', 'Genestealer Cults',
+            ('Genestealer Cults Broodcoven', 'Warhammer 40,000', 'Genestealer Cults',
              '51-42', decimal.Decimal('40.00'),
              'The ultimate evolution of the Genestealer infection — a monstrous '
              'beast surrounded by an aura of alien hypnosis.'),
