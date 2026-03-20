@@ -140,12 +140,16 @@ class Command(BaseCommand):
         """Entry point."""
         self.stdout.write('Seeding Aeldari points…\n')
 
-        craftworlds_faction = Faction.objects.filter(name='Craftworlds').first()
+        # Support both old 'Craftworlds' name and new 'Aeldari' name
+        craftworlds_faction = (
+            Faction.objects.filter(name='Aeldari').first()
+            or Faction.objects.filter(name='Craftworlds').first()
+        )
         harlequins_faction = Faction.objects.filter(name='Harlequins').first()
 
         if not craftworlds_faction:
             self.stdout.write(self.style.ERROR(
-                'Craftworlds faction not found. Run populate_products first.'
+                'Aeldari faction not found. Run populate_products first.'
             ))
             return
 

@@ -790,7 +790,7 @@ class Command(BaseCommand):
             ('Astra Militarum', 'Warhammer 40,000'),
             ('Adeptus Mechanicus', 'Warhammer 40,000'),
             ('Drukhari', 'Warhammer 40,000'),
-            ('Craftworlds', 'Warhammer 40,000'),
+            ('Aeldari', 'Warhammer 40,000'),
             ('Harlequins', 'Warhammer 40,000'),
             ('Leagues of Votann', 'Warhammer 40,000'),
             ('Custodes', 'Warhammer 40,000'),
@@ -1305,7 +1305,7 @@ class Command(BaseCommand):
 
         Covers: Space Marines (all chapters), Death Guard, Thousand Sons,
         World Eaters, Astra Militarum, Adeptus Mechanicus, Grey Knights,
-        Drukhari, Craftworlds, Leagues of Votann, Custodes, Sisters of Battle,
+        Drukhari, Aeldari, Leagues of Votann, Custodes, Sisters of Battle,
         Genestealer Cults, Age of Sigmar factions, Kill Team, Necromunda,
         Warcry, Horus Heresy infantry/vehicles, and Citadel paint ranges.
         """
@@ -2010,35 +2010,35 @@ class Command(BaseCommand):
              'Incubi, and a Raider.'),
 
             # ================================================================
-            # CRAFTWORLDS
+            # AELDARI (formerly Craftworlds)
             # ================================================================
-            ('Craftworlds Guardians', 'Warhammer 40,000', 'Craftworlds',
+            ('Aeldari Guardians', 'Warhammer 40,000', 'Aeldari',
              '46-09', decimal.Decimal('30.00'),
              'Ten Aeldari Guardians with shuriken catapults and a weapon platform '
              'armed with a bright lance, scatter laser, or starcannon.'),
-            ('Craftworlds Dire Avengers', 'Warhammer 40,000', 'Craftworlds',
+            ('Aeldari Dire Avengers', 'Warhammer 40,000', 'Aeldari',
              '46-06', decimal.Decimal('30.00'),
              'Five elite Aspect Warriors armed with avenger shuriken catapults '
              'and Exarch with diresword or power glaive.'),
-            ('Craftworlds Fire Dragons', 'Warhammer 40,000', 'Craftworlds',
+            ('Aeldari Fire Dragons', 'Warhammer 40,000', 'Aeldari',
              '46-14', decimal.Decimal('30.00'),
              'Five Fire Dragon Aspect Warriors bearing fusion guns, melta bombs, '
              'and tank-hunting equipment.'),
-            ('Craftworlds Wraithguard', 'Warhammer 40,000', 'Craftworlds',
+            ('Aeldari Wraithguard', 'Warhammer 40,000', 'Aeldari',
              '46-26', decimal.Decimal('45.00'),
              'Five towering constructs animated by Aeldari spirit stones, armed '
              'with wraithcannons or d-scythes.'),
-            ('Craftworlds Wave Serpent', 'Warhammer 40,000', 'Craftworlds',
+            ('Aeldari Wave Serpent', 'Warhammer 40,000', 'Aeldari',
              '46-29', decimal.Decimal('50.00'),
              'The premier Aeldari skimmer transport, bearing a twin turret weapon '
              'system and a wave serpent shield.'),
-            ('Craftworlds Farseer', 'Warhammer 40,000', 'Craftworlds',
+            ('Aeldari Farseer', 'Warhammer 40,000', 'Aeldari',
              '46-02', decimal.Decimal('22.50'),
              'An Aeldari seer of unparalleled psychic power, guiding their '
-             'craftworld\'s fate with witchblade and runes.'),
-            ('Craftworlds Combat Patrol', 'Warhammer 40,000', 'Craftworlds',
+             "craftworld's fate with witchblade and runes."),
+            ('Aeldari Combat Patrol', 'Warhammer 40,000', 'Aeldari',
              '46-25', decimal.Decimal('105.00'),
-             'A Craftworlds Combat Patrol: Farseer, Guardians, Dire Avengers, '
+             'An Aeldari Combat Patrol: Farseer, Guardians, Dire Avengers, '
              'Wraithblades, and a War Walker.'),
 
             # ================================================================
