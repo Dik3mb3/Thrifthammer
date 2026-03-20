@@ -810,6 +810,23 @@ class EbayBrowseAPI:
             )
             return False
 
+        # ── Product-specific negative keywords — title check ─────────────────
+        # eBay's -keyword search operator does not always filter hyphenated
+        # compounds: "-shirt" fails to block "T-shirts" because eBay treats the
+        # hyphenated token as a different word.  We apply the per-product negative
+        # keywords locally against the title (substring match, case-insensitive)
+        # to catch these escapes.  The description-level counterpart is applied
+        # later in the short_desc block.
+        _raw_neg = getattr(product, 'ebay_negative_keywords', '') or ''
+        if _raw_neg:
+            for _neg_kw in _raw_neg.lower().split():
+                if _neg_kw in title_lower:
+                    logger.debug(
+                        '[ebay] Rejected (negative keyword "%s" in title): "%s"',
+                        _neg_kw, result['title'][:60],
+                    )
+                    return False
+
         # ── Bits/parts filter ─────────────────────────────────────────────────
         # Split title into words and check against the bits keyword set.
         title_words = set(re.sub(r"[^\w\s]", ' ', title_lower).split())
@@ -1089,6 +1106,14 @@ class EbayBrowseAPI:
                 f'keyword mismatch ({matches}/{min_matches} needed, '
                 f'unit suffix: {unit_suffix_hit}) — keywords: {keywords}'
             )
+
+        # Product-specific negative keywords — title check
+        _raw_neg = getattr(product, 'ebay_negative_keywords', '') or ''
+        if _raw_neg:
+            for _neg_kw in _raw_neg.lower().split():
+                if _neg_kw in title_lower:
+                    reasons.append(f'negative keyword "{_neg_kw}" in title')
+                    break
 
         # Title bits filter
         title_words  = set(re.sub(r"[^\w\s]", ' ', title_lower).split())
