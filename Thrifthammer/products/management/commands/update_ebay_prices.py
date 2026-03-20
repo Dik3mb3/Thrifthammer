@@ -2,13 +2,17 @@
 Management command: update_ebay_prices
 
 Fetches live eBay prices for all active products using the official
-eBay Finding API v1.0.0. Saves results to the CurrentPrice model.
+eBay Browse API v1. Saves results to the CurrentPrice model.
 
 Compliance:
-  - Uses official eBay Finding API (not scraping)
+  - Uses official eBay Browse API (not scraping)
   - Respects 5,000 calls/day limit
   - Links to viewItemURL provided by eBay API
   - Attributes eBay as price source
+
+Rules:
+  - CurrentPrice entries with manual_url_override=True are NEVER touched.
+    (These are manually-curated URLs that must not be overwritten by the cron.)
 
 Usage:
     # Test with sandbox (fake data, confirms API works):
@@ -20,8 +24,14 @@ Usage:
     # Full production run (all products):
     python manage.py update_ebay_prices
 
-    # Single product by ID:
+    # Single product by DB ID:
     python manage.py update_ebay_prices --product 42
+
+    # Single product by GW SKU:
+    python manage.py update_ebay_prices --sku 01-07
+
+    # Diagnose a "Not found" product (shows all eBay candidates + rejection reasons):
+    python manage.py update_ebay_prices --sku 01-07 --debug --dry-run
 
     # Custom delay between calls:
     python manage.py update_ebay_prices --delay 1.0
@@ -158,6 +168,14 @@ class Command(BaseCommand):
             help='Print all products that have an ebay_search_name override set, '
                  'then exit.  No API calls are made.',
         )
+        parser.add_argument(
+            '--sku',
+            type=str,
+            default=None,
+            metavar='SKU',
+            help='Update a single product by its GW SKU (e.g. 01-07). '
+                 'Useful for diagnosing a specific listing with --debug --dry-run.',
+        )
 
     def handle(self, *args, **options):
         """Entry point — run the eBay price update."""
@@ -170,6 +188,7 @@ class Command(BaseCommand):
         category   = options['category']
         debug      = options['debug']
         list_overrides = options['list_overrides']
+        sku_filter = (options['sku'] or '').strip()
 
         # ── --list-overrides: print audit table and exit (no API calls) ──────
         if list_overrides:
@@ -211,6 +230,8 @@ class Command(BaseCommand):
             self.stdout.write(f'  Limit       : {limit} products')
         if product_id:
             self.stdout.write(f'  Product ID  : {product_id}')
+        if sku_filter:
+            self.stdout.write(f'  SKU filter  : {sku_filter}')
         self.stdout.write('=' * 50 + '\n')
 
         # ── Initialise API client ────────────────────────────────────────────
@@ -243,6 +264,13 @@ class Command(BaseCommand):
             if not products.exists():
                 self.stderr.write(
                     self.style.ERROR(f'No active product found with ID {product_id}.')
+                )
+                return
+        elif sku_filter:
+            products = Product.objects.filter(gw_sku=sku_filter, is_active=True)
+            if not products.exists():
+                self.stderr.write(
+                    self.style.ERROR(f'No active product found with SKU "{sku_filter}".')
                 )
                 return
         else:
@@ -287,6 +315,7 @@ class Command(BaseCommand):
         success = 0
         not_found = 0
         errors = 0
+        skipped_override = 0
         api_calls_start = ebay_api.api_calls_made
 
         # ── Main loop ────────────────────────────────────────────────────────
@@ -296,6 +325,25 @@ class Command(BaseCommand):
                 if product.ebay_search_name else ''
             )
             self.stdout.write(f'[{index}/{total}] {product.name}{override_label}')
+
+            # ── manual_url_override guard ─────────────────────────────────────
+            # If the existing eBay CurrentPrice entry was manually curated, skip it.
+            # This protects URLs set via the admin or shell from being overwritten
+            # by the daily automated cron (e.g. hard-to-find products, Celestian
+            # Sacresants Amazon URL, etc.).
+            try:
+                existing_cp = CurrentPrice.objects.get(
+                    product=product,
+                    retailer=ebay_retailer,
+                )
+                if existing_cp.manual_url_override:
+                    self.stdout.write(
+                        self.style.WARNING('  [manual override] URL is manually set — skipping.')
+                    )
+                    skipped_override += 1
+                    continue
+            except CurrentPrice.DoesNotExist:
+                pass  # No existing entry — proceed to create one
 
             # Check daily call limit before each request
             if ebay_api.api_calls_made >= 4500:
@@ -439,6 +487,10 @@ class Command(BaseCommand):
         self.stdout.write(
             self.style.WARNING(f'  Not found on eBay  : {not_found}')
         )
+        if skipped_override:
+            self.stdout.write(
+                self.style.WARNING(f'  Manual override    : {skipped_override} (skipped)')
+            )
         if errors:
             self.stdout.write(
                 self.style.ERROR(f'  Errors             : {errors}')
