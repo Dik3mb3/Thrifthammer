@@ -1,9 +1,6 @@
 [build]
 builder = "nixpacks"
 
-[deploy]
-startCommand = "python manage.py migrate && python manage.py createcachetable --no-color || true && python manage.py collectstatic --noinput && python manage.py populate_products --skip-if-current && python manage.py populate_units --skip-if-current && python manage.py seed_all --skip-products --skip-units && python manage.py seed_blog && python manage.py publish_roadmap_post && python manage.py stamp_price_date 2026-03-17 && gunicorn thrifthammer.wsgi --bind 0.0.0.0:$PORT"
-
 # ── Scheduled price refresh jobs ──────────────────────────────────────────────
 # eBay: daily at 03:00 UTC (~375 API calls, ~6 min)
 [crons.update-ebay-prices]
