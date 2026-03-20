@@ -988,6 +988,22 @@ class EbayBrowseAPI:
                 )
                 return False
 
+            # Detect individual models extracted from multi-model kits.
+            # Sellers who pull one model from a box often write descriptions like:
+            #   "1 Shield Captain from the Custodes Wardens model kit."
+            #   "Spare bits from the Blood Angels Assault Squad model kit."
+            # The phrase "from the/a [X] model kit" is an unambiguous extraction
+            # signal — GW sealed retail listings never describe their product this
+            # way.  We specifically require "model kit" (not just "kit") to avoid
+            # false positives from descriptions like "Ships from the UK. New sealed."
+            if re.search(r'\bfrom (?:the|a)\b.{0,60}\bmodel kit\b', short_desc):
+                logger.debug(
+                    '[ebay] Rejected (single model extracted from kit, '
+                    '"from the/a X model kit" in description): "%s"',
+                    result['title'][:60],
+                )
+                return False
+
         # ── URL must link to eBay ─────────────────────────────────────────────
         if 'ebay.' not in result['url']:
             return False
@@ -1106,6 +1122,13 @@ class EbayBrowseAPI:
             desc_bits_hits = desc_words & EbayBrowseAPI._DESC_BITS_KEYWORDS
             if desc_bits_hits:
                 reasons.append(f'description bits keywords: {desc_bits_hits}')
+
+            # Single model extracted from multi-model kit
+            if re.search(r'\bfrom (?:the|a)\b.{0,60}\bmodel kit\b', short_desc):
+                reasons.append(
+                    'single model extracted from kit '
+                    '("from the/a X model kit" in description)'
+                )
 
         # URL
         if 'ebay.' not in result.get('url', ''):
