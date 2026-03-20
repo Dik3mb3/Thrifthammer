@@ -910,6 +910,23 @@ class EbayBrowseAPI:
             )
             return False
 
+        # ── Individual model variant detection (#A / #B / #C pattern) ─────────
+        # eBay sellers who extract individual models from a multi-model kit
+        # commonly suffix the listing title with a hash + single letter/digit
+        # to denote which specific model variant they are selling:
+        #   "Inner Circle Companions #C Dark Angels Veterans"
+        #   "Custodian Guard #A"
+        # No GW sealed retail kit title ever contains "#" — official product
+        # names use letter suffixes only in product codes (e.g. "XV8"), and
+        # those appear inside a word token without a preceding space.
+        # A space-hash-word pattern is therefore an unambiguous extraction signal.
+        if re.search(r'\s#\w', result['title']):
+            logger.debug(
+                '[ebay] Rejected (individual model variant, "#X" in title): "%s"',
+                result['title'][:60],
+            )
+            return False
+
         # ── Blocked title phrases ─────────────────────────────────────────────
         # Multi-word phrases that cannot be caught by the single-word _BITS_KEYWORDS
         # word-set intersection.  Covers two categories:
@@ -1144,6 +1161,10 @@ class EbayBrowseAPI:
         # Bundle
         if ' & ' in result['title']:
             reasons.append('" & " (bundle) in title')
+
+        # Individual model variant (#A / #B / #C pattern)
+        if re.search(r'\s#\w', result['title']):
+            reasons.append('individual model variant ("#X" suffix in title)')
 
         # Blocked title phrases (incomplete kit markers + wrong product category)
         _MISSING_PHRASES = (
