@@ -152,19 +152,6 @@
       </div>
       {% endif %}
 
-      {# Prebuilt quick-starts #}
-      {% if prebuilt_armies %}
-      <div class="totals-card prebuilt-section">
-        <h4>Quick Start</h4>
-        {% for army in prebuilt_armies %}
-        <button type="button" class="prebuilt-btn"
-                data-units="{{ army.units_data|safe }}"
-                title="{{ army.description }}">
-          {{ army.name }}
-        </button>
-        {% endfor %}
-      </div>
-      {% endif %}
 
       {# User's saved armies #}
       {% if saved_armies %}
