@@ -11,3 +11,8 @@ schedule = "0 3 * * *"
 [crons.scrape-miniature-market]
 command = "python manage.py run_scrapers miniature-market"
 schedule = "0 4 * * 1"
+
+# Amazon stock check: weekly on Monday at 05:00 UTC (~2 min, 50 listings × 0.8s)
+[crons.check-amazon-stock]
+command = "python manage.py check_amazon_stock --delay 0.8"
+schedule = "0 5 * * 1"
