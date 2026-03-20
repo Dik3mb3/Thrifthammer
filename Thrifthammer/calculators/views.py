@@ -90,7 +90,34 @@ class ArmyCalculatorView(TemplateView):
                 .prefetch_related('product__current_prices__retailer')
                 .order_by('category', 'name')
             )
-            units = list(unit_qs)
+            raw_units = list(unit_qs)
+
+            # Deduplicate by product_id when parent faction units are included.
+            # If both a sub-faction unit and a parent-faction unit reference the
+            # same product, prefer the sub-faction unit (more specific category/
+            # naming). This prevents e.g. "Space Marine Aggressors" and
+            # "Aggressor Squad" both appearing when Ultramarines is selected.
+            if selected_faction.parent_faction_id:
+                seen_product_ids: set = set()
+                units = []
+                # First pass: add all sub-faction units, recording their product_ids
+                for u in raw_units:
+                    if u.faction_id == selected_faction.pk:
+                        units.append(u)
+                        if u.product_id is not None:
+                            seen_product_ids.add(u.product_id)
+                # Second pass: add parent-faction units only if their product
+                # hasn't already been claimed by a sub-faction unit
+                for u in raw_units:
+                    if u.faction_id != selected_faction.pk:
+                        if u.product_id is None or u.product_id not in seen_product_ids:
+                            units.append(u)
+                            if u.product_id is not None:
+                                seen_product_ids.add(u.product_id)
+                # Re-sort after manual assembly (mirrors DB order_by)
+                units.sort(key=lambda u: (u.category, u.name))
+            else:
+                units = raw_units
         else:
             units = []
 

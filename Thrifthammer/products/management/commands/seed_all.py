@@ -180,3 +180,14 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.ERROR(
                     f'  ERROR running set_parent_factions: {exc}'
                 ))
+
+            # ── Step 5: unit classification fixes ─────────────────────────
+            self.stdout.write(self.style.MIGRATE_LABEL(
+                '\n▶ Applying unit classification fixes…\n'
+            ))
+            try:
+                call_command('apply_unit_classification_fixes', verbosity=1)
+            except Exception as exc:  # noqa: BLE001
+                self.stdout.write(self.style.ERROR(
+                    f'  ERROR running apply_unit_classification_fixes: {exc}'
+                ))
