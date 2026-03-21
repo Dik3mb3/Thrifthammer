@@ -372,7 +372,7 @@ AMAZON_DATA = {
     '48-85': ('81.60',  'https://www.amazon.com/dp/B08HSVFY4N', True),   # Repulsor  ✓ FIXED
     '48-95': ('97.75',  'https://www.amazon.com/dp/B08J5NZ8RH', False),  # Repulsor Executioner
     '55-02': ('62.48',  'https://www.amazon.com/dp/B0795YC5J2', True),   # Roboute Guilliman
-    '55-12': ('69.29',  'https://www.amazon.com/dp/B0FX34N7PR', True),   # Marneus Calgar  ✓ FIXED (old B0F5GGH8LH wrong)
+    '55-12': ('47.18',  'https://www.amazon.com/dp/B0FX34N7PR', True),   # Marneus Calgar  ✓ PRICE UPDATED (was 69.29)
     '55-16': ('92.42',  'https://www.amazon.com/dp/B0FXNDT7XR', True),   # Ultramarines Honour Guard  ✓ FIXED wave J (old B0F9DPFMP3 $28.99 wrong)
     '48-29': ('69.70',  'https://www.amazon.com/dp/B0DH4Y2GJS', True),   # Scouts (Kill Team 2024)  ✓ FIXED wave G (old B0DH4W3XYK $28.90 wrong)
     '48-43': ('55.25',  'https://www.amazon.com/dp/B0CJS1VS6C', True),   # Sternguard Veteran Squad  ✓ FIXED

@@ -238,8 +238,8 @@ GW_IMAGES = {
     '59-25': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120116044_AMCombatPatrol01.jpg',
     # Imperial Knights (54-xx) and Cerastus / Horus Heresy Knights (31-xx)
     '54-15': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108055_KnightPreceptorCanisRex01.jpg',
-    '54-20': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108049_ArmigerWarglaivesNEW01.jpg',
-    '54-21': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108052_KnightDominus01.jpg',
+    '54-20': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108019_ImperialKnightsArmiger01.jpg',  # FIXED: old ArmigerWarglaivesNEW01 removed from CDN
+    '54-21': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108016_IKCastellan01.jpg',  # FIXED: old KnightDominus01 replaced
     '54-22': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108129_KnightQuestoris01.jpg',
     '31-06': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120308068_CerastusKnightLancer01.jpg',
     '31-66': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120308086_CerastusKnightCastigator01.jpg',
@@ -587,6 +587,29 @@ _EBAY_ALLOW_NO_BOX = {
     '97-08': True,
 }
 
+# ── Games Workshop product page URL overrides ────────────────────────────────
+#
+# By default populate_products seeds each product's GW URL as the generic
+# search fallback: https://www.games-workshop.com/en-US/search?query=<SKU>
+# For products whose direct warhammer.com product page has been confirmed, add
+# the full URL here.  populate_products will use this URL instead of the search
+# fallback, so the direct link is preserved across re-runs.
+#
+# Add entries here + re-run populate_products to apply.
+# ─────────────────────────────────────────────────────────────────────────────
+_GW_PRODUCT_PAGE_URLS = {
+    # 54-21 Imperial Knight Dominus (also builds Knight Castellan)
+    '54-21': 'https://www.warhammer.com/en-WW/shop/imperial-knights-knight-dominus-knight-castellan-2022',
+    # HA-021 Horus Heresy Leviathan Dreadnought
+    'HA-021': 'https://www.warhammer.com/en-WW/shop/leviathan-siege-dreadnought-with-claw-and-drill-weapons-2022',
+    # NM-010 Necromunda Escher Gang
+    'NM-010': 'https://www.warhammer.com/en-WW/shop/Necromunda-Escher-Gang-2017',
+    # NM-011 Necromunda Goliath Gang
+    'NM-011': 'https://www.warhammer.com/en-WW/shop/Necromunda-Goliath-Gang-2017',
+    # HA-051 Space Marine Chaplain in Terminator Armour (renamed from HH)
+    'HA-051': 'https://www.warhammer.com/en-WW/shop/horus-heresy-chaplain-in-terminator-armour',
+}
+
 # ── Per-product eBay negative keyword exclusions ──────────────────────────────
 #
 # Space-separated words that are appended to the eBay search query as -word
@@ -663,6 +686,14 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # (JoyToy and similar brands) that pass keyword matching.  Excluding
     # "Action Figure" narrows results to the correct plastic kit.
     '55-16': 'Action Figure',
+    # 54-21 "Imperial Knight Dominus" — eBay returns "magnetizing kit" listings
+    # (pre-drilled, magnet-fitted conversion models) that are NOT the sealed
+    # retail box.  Excluding "magnetizing" blocks these conversion listings.
+    '54-21': 'magnetizing',
+    # 49-17 "Necron Flayed Ones" — eBay returns the 2004-era metal model which
+    # sells much cheaper than the current plastic kit and is not comparable.
+    # Excluding "2004" keeps results to the modern plastic box only.
+    '49-17': '2004',
 }
 
 
@@ -2878,12 +2909,16 @@ class Command(BaseCommand):
             msrp = product.msrp
 
             # GW always sells at full price, always in stock
+            gw_url = _GW_PRODUCT_PAGE_URLS.get(
+                product.gw_sku,
+                f'https://www.games-workshop.com/en-US/search?query={product.gw_sku}',
+            )
             self._upsert_price(
                 product=product,
                 retailer=gw,
                 price=msrp,
                 in_stock=True,
-                url=f'https://www.games-workshop.com/en-US/search?query={product.gw_sku}',
+                url=gw_url,
             )
             price_count += 1
 
