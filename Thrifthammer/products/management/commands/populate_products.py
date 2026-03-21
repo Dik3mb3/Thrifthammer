@@ -127,7 +127,7 @@ GW_IMAGES = {
     '48-26': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102025_ChaosVindicatorNEW_01.jpg',
     '48-27': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101294_SMHammerfallBunkerLead.jpg',
     '48-28': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101272_PrimarisFirestrikeServoTurretLead.jpg',
-    '48-29': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60030101061_ENGSMCodex01.jpg',
+    '48-29': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101422_KTScoutSquad1.jpg',  # ✓ FIXED wave S (was codex cover image)
     '48-30': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101181_PrimarisLibrarian01.jpg',
     '48-32': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101399_SMChaplainTermArmour1.jpg',
     '48-33': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101178_PrimarisApothecary01.jpg',
@@ -577,6 +577,43 @@ _EBAY_SEARCH_OVERRIDES = {
     # phrase used by eBay sellers.  Dropping "Space Marine" prevents the generic
     # faction prefix diluting match specificity.
     '48-27': 'hammerfall bunker',
+    # 48-95 "Space Marine Repulsor Executioner" — default search was returning
+    # an overpriced BIN listing.  Removing "Space Marine" and adding "40k"
+    # shifts eBay Best Match toward the correct sealed-kit listing.
+    '48-95': 'repulsor executioner 40k',
+    # 48-43 "Space Marine Sternguard Veteran Squad" — eBay row was blank
+    # (scraper found no acceptable listing).  Adding "warhammer 40k" and
+    # dropping "Space Marine" helps surface listings sellers title without
+    # the faction prefix (e.g. "Sternguard Veterans Warhammer 40,000").
+    '48-43': 'Sternguard Veteran Squad warhammer 40k',
+    # 48-42 "Space Marine Invader ATV" — default search "Space Marine Invader ATV"
+    # was returning an overpriced BIN listing (136996707290) with high Best Match
+    # engagement.  Removing "Space Marine" and adding "warhammer 40k" shifts eBay
+    # Best Match toward the correct standalone-kit listing.
+    '48-42': 'invader atv warhammer 40k',
+    # 48-22 "Space Marine Land Raider Crusader" — default search with faction prefix
+    # was returning a ~$115 overpriced listing because the cheaper correct listing
+    # did not rank in eBay Best Match top N.  Removing "Space Marine" and adding
+    # "40k" shifts Best Match toward exact-kit standalone listings, giving the
+    # cheaper listing (389726995331) a better chance to surface in results.
+    '48-22': 'land raider crusader 40k',
+    # ── T'au Empire ───────────────────────────────────────────────────────────
+    # 56-19 "T'au Pathfinders" — apostrophe in "T'au" breaks eBay tokenisation;
+    # "pathfinders 40k" is cleaner and avoids overpriced BIN results that the
+    # full faction-name prefix attracts.
+    '56-19': 'pathfinders 40k',
+    # 56-14 "T'au Stealth Battlesuits" — same apostrophe issue as above;
+    # "stealth battlesuits" is specific and matches dominant seller convention.
+    '56-14': 'stealth battlesuits',
+    # ── Thousand Sons ─────────────────────────────────────────────────────────
+    # 43-30 "Thousand Sons Ahriman" — "ahriman 40k" avoids Horus Heresy / old-
+    # edition metal sculpt contamination from the full faction-name prefix.
+    '43-30': 'ahriman 40k',
+    # ── Age of Sigmar: Spearhead ───────────────────────────────────────────────
+    # 70-04 "Spearhead: Slaves to Darkness" — product name colon breaks URL
+    # encoding; "Age of Sigmar" prefix disambiguates from Old World / 40K Chaos
+    # products and matches how eBay sellers title the Spearhead box set.
+    '70-04': 'Age of Sigmar Spearhead Slaves to Darkness',
     # ── Horus Heresy ──────────────────────────────────────────────────────────
     # HA-051 "Space Marine Chaplain in Terminator Armour" — previously a HH
     # product renamed to SM.  eBay sellers list this model under the exact GW
@@ -635,6 +672,11 @@ _GW_PRODUCT_PAGE_URLS = {
 _NK_PRODUCT_PAGE_URLS = {
     # 90-10 Skaven Clanrats
     '90-10': 'https://www.nobleknight.com/P/2148050436/Clanrats',
+    # 48-61 Space Marine Primaris Lieutenant (2020 Edition w/ Power Sword)
+    # Old auto-URL pointed to the 500th-Store Anniversary exclusive ($129.95).
+    '48-61': 'https://www.nobleknight.com/P/2147831538/Primaris-Lieutenant-w-Power-Sword-2020-Edition',
+    # 43-30 Thousand Sons Ahriman
+    '43-30': 'https://www.nobleknight.com/P/2147936751/Ahriman-the-Sorcerer',
 }
 
 # ── Per-product eBay negative keyword exclusions ──────────────────────────────
@@ -756,6 +798,46 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # 71-02 "Space Marine Combat Patrol" — eBay returns Suppressors unit listings
     # that pass keyword matching.
     '71-02': 'suppressors',
+    # 48-98 "Space Marine Eliminators" — eBay returns:
+    #   vanguard: "Vanguard Space Marines" multi-unit set listings
+    #   task:     "Task Force" bundle box listings
+    #   force:    "Strike Force" / "Task Force" sets that include Eliminators
+    #             as a component alongside other units
+    '48-98': 'vanguard task force',
+    # 48-29 "Space Marine Scouts" — eBay returns "Needle Sniper Rifle"
+    # conversion variant listings (Scout models with a specific weapon swap)
+    # that pass keyword matching for the standard Scout Squad search.
+    '48-29': 'needle',
+    # 48-07 "Space Marine Tactical Squad" — eBay returns "Power Fist" weapon
+    # upgrade / conversion listings (partial kits advertising the Power Fist
+    # option) rather than the standard sealed retail box.
+    '48-07': 'power fist',
+    # 70-04 "Spearhead: Slaves to Darkness" — eBay returns:
+    #   sorcerer: Chaos Sorcerer Lord single-model blister listings
+    #   lord:     generic Chaos Lord single-model listings that share enough
+    #             Spearhead box keywords to pass match threshold
+    '70-04': 'sorcerer lord',
+    # 96-50 "Stormcast Eternals Vindictors" — eBay returns "Vindictors Paint
+    # Set" bundle listings which bundle the miniatures with paints and are
+    # priced higher.  "paint" is the distinctive word; "set" would be too
+    # broad.
+    '96-50': 'paint',
+    # 43-30 "Thousand Sons Ahriman" — eBay returns Horus Heresy era Ahriman
+    # clamp-pack listings that share all Ahriman keywords but are an older,
+    # different sculpt.
+    '43-30': 'horus',
+    # 43-38 "Thousand Sons Exalted Sorcerers" — eBay returns custom conversion
+    # listings where sellers replace the kit's hovering/flying-base poses with
+    # grounded "walking" poses.  These are conversions, not the sealed kit.
+    '43-38': 'walking',
+    # 43-36 "Thousand Sons Scarab Occult Terminators" — eBay returns
+    # partial-squad listings selling 4 models out of the standard 5-man kit
+    # (sellers advertising "4x Scarab Occult Terminators").
+    '43-36': '4x',
+    # 43-60 "World Eaters Berzerkers" — eBay returns "Kharn the Betrayer"
+    # special-character listings and "Berzerkers with Kharn" bundle listings
+    # that share enough Berzerker keywords to pass match threshold.
+    '43-60': 'kharn',
 }
 
 
@@ -1923,7 +2005,7 @@ class Command(BaseCommand):
              'Three massive warriors bound by eight daemons of Khorne, '
              'wielding eviscerators and exalted eviscerators.'),
             ('World Eaters Angron', 'Warhammer 40,000', 'World Eaters',
-             '43-04', decimal.Decimal('145.00'),
+             '43-04', decimal.Decimal('175.00'),  # ✓ FIXED wave U (GW raised price from $145)
              'The Daemon Primarch of the World Eaters, a monumental model '
              'covered in the Butcher\'s Nails and soaked in the blood of worlds.'),
             ('World Eaters Lord on Juggernaut', 'Warhammer 40,000', 'World Eaters',
