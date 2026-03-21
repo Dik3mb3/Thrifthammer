@@ -565,6 +565,18 @@ _EBAY_SEARCH_OVERRIDES = {
     # matches listing 187763771467 ("Space Marines: Terminator Assault Squad
     # (2025 ver.)").
     '48-06': 'Space Marine Terminator Assault Squad',
+    # ── Space Marines ─────────────────────────────────────────────────────────
+    # 48-37 "Space Marine Company Heroes" — default search "Space Marine Company
+    # Heroes" returns video-game "Company of Heroes" results.  Adding "warhammer
+    # 40k" disambiguates to the GW kit.
+    '48-37': 'company heroes warhammer 40k',
+    # 48-28 "Space Marine Firestrike Servo-Turrets" — the hyphen in "Servo-Turrets"
+    # breaks eBay search tokenisation.  Dropping it produces a cleaner query.
+    '48-28': 'Space Marine Firestrike Servo Turret',
+    # 48-27 "Space Marine Hammerfall Bunker" — "hammerfall bunker" is the exact
+    # phrase used by eBay sellers.  Dropping "Space Marine" prevents the generic
+    # faction prefix diluting match specificity.
+    '48-27': 'hammerfall bunker',
     # ── Horus Heresy ──────────────────────────────────────────────────────────
     # HA-051 "Space Marine Chaplain in Terminator Armour" — previously a HH
     # product renamed to SM.  eBay sellers list this model under the exact GW
@@ -726,6 +738,24 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # sells much cheaper than the current plastic kit and is not comparable.
     # Excluding "2004" keeps results to the modern plastic box only.
     '49-17': '2004',
+    # ── Space Marines ─────────────────────────────────────────────────────────
+    # 48-34 "Space Marine Ancient" — eBay returns:
+    #   barachus: "Brother Barachus" named-character listings (different product)
+    #   raven:    "Blood Ravens" chapter listings (different SM chapter)
+    #             Using "raven" not "blood" — "blood" false-positives on Blood
+    #             Angels faction listings.
+    '48-34': 'barachus raven',
+    # 48-38 "Space Marine Bladeguard Veterans" — eBay returns Indomitus starter
+    # set listings where Bladeguard Veterans appear as a component.
+    '48-38': 'indomitus',
+    # 48-32 "Space Marine Chaplain" — eBay returns:
+    #   1x:      single-model "1x Chaplain" individual resale listings
+    #   honoured: "Honoured of the Chapter" product variant listings
+    #             Storing only "honoured"; "of"/"the"/"chapter" too broad.
+    '48-32': '1x honoured',
+    # 71-02 "Space Marine Combat Patrol" — eBay returns Suppressors unit listings
+    # that pass keyword matching.
+    '71-02': 'suppressors',
 }
 
 
