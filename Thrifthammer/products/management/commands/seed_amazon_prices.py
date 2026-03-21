@@ -314,7 +314,7 @@ AMAZON_DATA = {
     # ── Orks ──────────────────────────────────────────────────────────────
     '50-22': ('',       'https://www.amazon.com/dp/B001O35G0G', False),  # Battlewagon
     '50-10': ('40.80',  'https://www.amazon.com/dp/B07JYGJ4JL', True),   # Boyz
-    # 50-16 Deff Dread — Lootas ASIN wrong; no Amazon listing; removed
+    '50-16': ('35.00',  'https://www.amazon.com/dp/B003B1V9D2', True),   # Deff Dread  ✓ ADDED wave P
     '50-20': ('55.25',  'https://www.amazon.com/dp/B09HJX1436', False),  # Flash Gitz
     '50-15': ('55.25',  'https://www.amazon.com/dp/B09FYQG7P3', False),  # Killa Kans
     '50-14': ('35.70',  'https://www.amazon.com/dp/B09HJBSNNW', True),   # Lootas

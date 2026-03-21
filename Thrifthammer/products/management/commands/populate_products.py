@@ -610,6 +610,21 @@ _GW_PRODUCT_PAGE_URLS = {
     'HA-051': 'https://www.warhammer.com/en-WW/shop/horus-heresy-chaplain-in-terminator-armour',
 }
 
+# ── Noble Knight Games product page URL overrides ────────────────────────────
+#
+# By default populate_products seeds each product's NK URL as the generic
+# search fallback: https://www.nobleknight.com/Products/Warhammer?q=<SKU>
+# For products whose direct nobleknight.com product page has been confirmed,
+# add the full URL here.  populate_products will use this URL instead of the
+# search fallback, so the direct link is preserved across re-runs.
+#
+# Add entries here + re-run populate_products to apply.
+# ─────────────────────────────────────────────────────────────────────────────
+_NK_PRODUCT_PAGE_URLS = {
+    # 90-10 Skaven Clanrats
+    '90-10': 'https://www.nobleknight.com/P/2148050436/Clanrats',
+}
+
 # ── Per-product eBay negative keyword exclusions ──────────────────────────────
 #
 # Space-separated words that are appended to the eBay search query as -word
@@ -665,6 +680,23 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # keyword matching because both units share the "Ork Boyz" label. Excluding
     # "lootas" at query level prevents false matches.
     '50-10': 'lootas',
+    # 71-18 "Ork Combat Patrol" — eBay returns listings for 10-model Ork unit
+    # bundles (e.g. "Ork Boyz x10") that share Combat Patrol keywords.  "(10)"
+    # appears in those listing titles and not in the full Combat Patrol box.
+    '71-18': '(10)',
+    # 50-20 "Ork Flash Gitz" — eBay returns:
+    #   meganobz: Meganobz unit listings (different Ork heavy infantry kit)
+    #   mek:      Mek Gunz unit listings
+    #   nookah:   Nookah brand 3D-print resin alternative Flash Gitz models
+    '50-20': 'meganobz mek nookah',
+    # 50-14 "Ork Lootas" — eBay returns:
+    #   DaBoom!: DaBoom! brand alternative model listings
+    #   Artel:   Artel W brand resin alternative model listings
+    '50-14': 'DaBoom! Artel',
+    # 50-11 "Ork Trukk" — eBay returns "No Driver" incomplete kit listings
+    # (missing the Trukk driver model).  "driver" blocks these; "no" is not
+    # used as a standalone filter because it matches too many other words.
+    '50-11': 'driver',
     # 53-02 "Ragnar Blackmane" and 53-10 "Thunderwolf Cavalry" — JoyToy
     # produces 1:18-scale action figures of Space Wolf characters that
     # contaminate eBay search results.  Excluding "JoyToy" at query level
@@ -2941,12 +2973,16 @@ class Command(BaseCommand):
                 discount = decimal.Decimal(str(round(random.uniform(0.10, 0.18), 2)))
                 nk_price = self._apply_discount(msrp, discount)
                 in_stock = random.random() > 0.15
+                nk_url = _NK_PRODUCT_PAGE_URLS.get(
+                    product.gw_sku,
+                    f'https://www.nobleknight.com/Products/Warhammer?q={product.gw_sku}',
+                )
                 self._upsert_price(
                     product=product,
                     retailer=nk,
                     price=nk_price,
                     in_stock=in_stock,
-                    url=f'https://www.nobleknight.com/Products/Warhammer?q={product.gw_sku}',
+                    url=nk_url,
                 )
                 price_count += 1
 
