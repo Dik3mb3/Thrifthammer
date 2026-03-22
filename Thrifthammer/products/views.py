@@ -155,9 +155,11 @@ def product_list(request):
     if sort not in SORT_OPTIONS:
         sort = 'name'
 
-    # Stable cache key covers every filter dimension
+    # Stable cache key covers every filter dimension.
+    # Bump the version suffix (v2, v3…) whenever sort_options or the card
+    # template change significantly — forces a cache miss on all existing entries.
     cache_key = (
-        f'product_list|q={query}|cat={category_slug}'
+        f'product_list_v2|q={query}|cat={category_slug}'
         f'|fac={faction_slug}|sort={sort}|page={page_number}'
     )
     cached = cache.get(cache_key)
