@@ -172,7 +172,14 @@
       {# Product grid #}
       <div class="card-grid">
         {% for product in products %}
-        <a href="{% url 'products:detail' product.slug %}" class="product-card">
+        <a href="{% url 'products:detail' product.slug %}" class="product-card{% if product.min_discount_pct and product.min_discount_pct >= 5 %} has-discount{% endif %}">
+
+          {# Discount ribbon — shown on cards with a meaningful saving #}
+          {% if product.min_discount_pct and product.min_discount_pct >= 5 %}
+          <div class="discount-ribbon" aria-label="{{ product.min_discount_pct|floatformat:'0' }}% off MSRP">
+            {{ product.min_discount_pct|floatformat:"0" }}% OFF
+          </div>
+          {% endif %}
 
           {% if product.image_url %}
           <img
@@ -198,14 +205,14 @@
               {% if product.min_price %}
               <div class="product-card-price-label">Best Price</div>
               <div class="product-card-price">${{ product.min_price|floatformat:"2" }}</div>
-              {% if product.msrp and product.min_price < product.msrp %}
-              <div style="display:flex;align-items:center;gap:var(--sp-1);flex-wrap:wrap;margin-top:var(--sp-1);">
+              {% if product.msrp and product.min_price < product.msrp and product.min_discount_pct and product.min_discount_pct > 0 %}
+              <div class="product-card-savings-row">
                 <span class="product-card-msrp">MSRP ${{ product.msrp }}</span>
-                {% if product.min_discount_pct and product.min_discount_pct > 0 %}
-                <span class="badge badge-green">{{ product.min_discount_pct|floatformat:"0" }}% off MSRP</span>
-                {% else %}
-                <span class="badge badge-green">Save</span>
-                {% endif %}
+                <span class="product-card-discount-pct">▼ {{ product.min_discount_pct|floatformat:"0" }}% off</span>
+              </div>
+              {% elif product.msrp and product.min_price < product.msrp %}
+              <div class="product-card-savings-row">
+                <span class="product-card-msrp">MSRP ${{ product.msrp }}</span>
               </div>
               {% endif %}
               {% elif product.msrp %}

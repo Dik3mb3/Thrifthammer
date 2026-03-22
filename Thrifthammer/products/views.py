@@ -98,9 +98,10 @@ PRODUCTS_PER_PAGE = 30
 SORT_OPTIONS = {
     'name':       'name',
     'name_desc':  '-name',
-    'price_asc':  'min_price',   # requires Min annotation (added below)
-    'price_desc': '-min_price',  # requires Min annotation (added below)
+    'price_asc':  'min_price',          # requires Min annotation (added below)
+    'price_desc': '-min_price',         # requires Min annotation (added below)
     'newest':     '-created_at',
+    'discount':   '-min_discount_pct',  # requires min_discount_pct annotation; NULLs sort last
 }
 
 
@@ -167,11 +168,21 @@ def product_list(request):
     # select_related covers category/faction (avoids N+1 for badges in template).
     # Annotate min_price in a single SQL JOIN so the template shows the best
     # price per card without any additional queries.
+    # Filter to in_stock=True, not_available=False so "Best Price" and discount %
+    # reflect only prices users can actually act on — not stale OOS figures.
     products = (
         Product.objects
         .filter(is_active=True)
         .select_related('category', 'faction')
-        .annotate(min_price=Min('current_prices__price'))
+        .annotate(
+            min_price=Min(
+                'current_prices__price',
+                filter=Q(
+                    current_prices__in_stock=True,
+                    current_prices__not_available=False,
+                ),
+            )
+        )
         .annotate(
             min_discount_pct=Case(
                 When(
@@ -199,7 +210,12 @@ def product_list(request):
     if faction_slug:
         products = products.filter(faction__slug=faction_slug)
 
-    products = products.order_by(SORT_OPTIONS[sort])
+    # Discount sort: NULLs (no live price) must go last, not first.
+    # F().desc(nulls_last=True) produces "ORDER BY col DESC NULLS LAST" in PostgreSQL.
+    if sort == 'discount':
+        products = products.order_by(F('min_discount_pct').desc(nulls_last=True))
+    else:
+        products = products.order_by(SORT_OPTIONS[sort])
 
     # Sidebar dropdowns — small tables, fetched once.
     # When a category is active, show only its factions (hierarchical filter).
@@ -235,6 +251,7 @@ def product_list(request):
         'selected_faction':  faction_slug,
         'sort':              sort,
         'sort_options': [
+            ('discount',   'Best Discount First'),
             ('name',       'Name (A–Z)'),
             ('name_desc',  'Name (Z–A)'),
             ('price_asc',  'Best Value First'),

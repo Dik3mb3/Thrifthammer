@@ -669,6 +669,51 @@ h3, h4, h5 {
 .product-card-msrp { font-size: 0.78rem; color: var(--text-muted); text-decoration: line-through; }
 .product-card-savings { font-size: 0.78rem; color: var(--accent-green-lt); font-weight: 600; }
 
+/* Savings row under the price: strikethrough MSRP + green discount % */
+.product-card-savings-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin-top: var(--sp-1);
+}
+.product-card-discount-pct {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-green-lt);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+/* Discount ribbon — corner badge on cards with ≥5% discount */
+.discount-ribbon {
+  position: absolute;
+  top: 10px;
+  left: -1px;
+  z-index: 2;
+  background: linear-gradient(135deg, #27783e, #1d5c30);
+  color: #fff;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.6rem 0.28rem 0.55rem;
+  border-radius: 0 var(--rounded) var(--rounded) 0;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+  line-height: 1;
+  /* subtle notch effect on the left edge */
+  clip-path: polygon(4px 0%, 100% 0%, 100% 100%, 4px 100%, 0% 50%);
+  pointer-events: none;
+  user-select: none;
+}
+/* Brighter ribbon on hover */
+.product-card:hover .discount-ribbon {
+  background: linear-gradient(135deg, #2d9147, #246638);
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+}
+
 /* =============================================================================
    Badges
    ============================================================================= */
