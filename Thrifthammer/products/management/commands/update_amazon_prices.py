@@ -43,6 +43,8 @@ Notes:
     - Daily call limits scale with your Associates activity
 """
 
+import math
+import re
 import time
 
 from django.core.management.base import BaseCommand
@@ -50,6 +52,41 @@ from django.core.management.base import BaseCommand
 from prices.models import CurrentPrice
 from products.models import Product, Retailer
 from products.amazon_api_client import AmazonPAAPI, AmazonAPIError
+
+
+def _amazon_title_matches_product(product_name, amazon_title):
+    """
+    Validate that an Amazon product title corresponds to the expected product.
+
+    Prevents wrong/remapped ASINs from polluting price data. Amazon occasionally
+    redirects old ASINs to new products — without this check the scraper would
+    save the wrong product's price against the wrong DB record.
+
+    Returns True if ≥60% of meaningful product name keywords (len >= 4) appear
+    in the Amazon title (case-insensitive substring match).  Falls back to
+    requiring at least 2 matches when the product has ≥2 such keywords.
+
+    Args:
+        product_name:  DB product name (e.g. "Ork Deff Dread").
+        amazon_title:  Title returned by PA-API (e.g. "Death Zkatola - Orks").
+
+    Returns:
+        bool — True if the title is a credible match, False if likely wrong ASIN.
+    """
+    if not amazon_title:
+        return True  # No title info — can't reject; give benefit of the doubt
+
+    keywords = [w for w in re.sub(r"[^\w\s]", ' ', product_name.lower()).split()
+                if len(w) >= 4]
+    if not keywords:
+        return True  # No meaningful keywords to check
+
+    title_lower = amazon_title.lower()
+    matches = sum(1 for kw in keywords if kw in title_lower)
+    min_matches = max(2, math.ceil(len(keywords) * 0.60))
+    min_matches = min(min_matches, len(keywords))  # Can't require more than exist
+
+    return matches >= min_matches
 
 
 class Command(BaseCommand):
@@ -193,9 +230,10 @@ class Command(BaseCommand):
         results = amazon_api.get_prices_for_asins(asins)
 
         # ── Process results ──────────────────────────────────────────────────
-        updated    = 0
-        not_found  = 0
-        errors     = 0
+        updated       = 0
+        not_found     = 0
+        errors        = 0
+        title_mismatch = 0
 
         for asin, record in asin_to_record.items():
             product = record.product
@@ -204,15 +242,30 @@ class Command(BaseCommand):
             if result:
                 price    = result['price']
                 in_stock = result['in_stock']
-                title    = result.get('title', '')[:60]
+                title    = result.get('title', '')
                 url      = result.get('url', record.url)  # Use affiliate URL from API
+
+                # ── Title validation: ensure ASIN still maps to correct product ──
+                # Amazon occasionally redirects old ASINs to different products.
+                # If the title doesn't share enough keywords with our product name,
+                # skip the update to prevent wrong prices being stored.
+                if not _amazon_title_matches_product(product.name, title):
+                    self.stdout.write(
+                        self.style.ERROR(
+                            f'  {product.gw_sku:8s}  TITLE MISMATCH — skipped.\n'
+                            f'           Expected keywords from: "{product.name}"\n'
+                            f'           Amazon title returned:  "{title[:80]}"'
+                        )
+                    )
+                    title_mismatch += 1
+                    continue
 
                 price_display = f'£{price:.2f}' if price else '(no price)'
                 stock_display = 'in stock' if in_stock else 'out of stock'
                 self.stdout.write(
                     self.style.SUCCESS(
                         f'  {product.gw_sku:8s}  {price_display:10s}  '
-                        f'{stock_display:12s}  {title}'
+                        f'{stock_display:12s}  {title[:60]}'
                     )
                 )
 
@@ -269,6 +322,10 @@ class Command(BaseCommand):
         if not_found:
             self.stdout.write(
                 self.style.WARNING(f'  Not found on Amazon: {not_found}')
+            )
+        if title_mismatch:
+            self.stdout.write(
+                self.style.ERROR(f'  Title mismatches    : {title_mismatch} (ASIN maps to wrong product — check these URLs!)')
             )
         if skipped_no_asin:
             self.stdout.write(

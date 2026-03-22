@@ -619,6 +619,12 @@ class EbayBrowseAPI:
         # kits — they are special event/store purchases, often multi-part resin
         # sets priced far above the standard retail equivalent.
         'commemorative',
+        # "Exclusive" — GW wargame-exclusive, store-exclusive, or event-exclusive
+        # limited-release items (e.g. "Ork Elektro Rokker Wargame Exclusive").
+        # These are NOT standard retail kits available at multiple retailers.
+        # Standard sealed retail box titles never use "exclusive" to describe
+        # the product itself.
+        'exclusive',
         # Third-party / non-GW manufacturer terms — not genuine GW kits.
         # These companies produce Warhammer-compatible alternative models that
         # appear in faction searches but are not GW products.

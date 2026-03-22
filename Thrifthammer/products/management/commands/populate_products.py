@@ -746,7 +746,9 @@ _EBAY_NEGATIVE_KEYWORDS = {
     #   meganobz: Meganobz unit listings (different Ork heavy infantry kit)
     #   mek:      Mek Gunz unit listings
     #   nookah:   Nookah brand 3D-print resin alternative Flash Gitz models
-    '50-20': 'meganobz mek nookah',
+    #   elektro:  "Ork Elektro Rokker Wargame Exclusive" — a GW wargame-
+    #   rokker:   exclusive limited release sharing Flash Gitz keywords
+    '50-20': 'meganobz mek nookah elektro rokker',
     # 50-14 "Ork Lootas" — eBay returns:
     #   DaBoom!: DaBoom! brand alternative model listings
     #   Artel:   Artel W brand resin alternative model listings
@@ -853,6 +855,12 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # special-character listings and "Berzerkers with Kharn" bundle listings
     # that share enough Berzerker keywords to pass match threshold.
     '43-60': 'kharn',
+    # ── Horus Heresy ──────────────────────────────────────────────────────────
+    # HA-012 "Legiones Astartes Predator" — eBay returns "Predator Squadron
+    # Legiones Astartes Imperialis Sealed" which is a Legiones Imperialis
+    # (6mm-scale) product that shares the "Legiones Astartes Predator" keywords.
+    # Excluding "imperialis" filters out all Legiones Imperialis listings.
+    'HA-012': 'imperialis',
 }
 
 
