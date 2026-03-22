@@ -1093,6 +1093,39 @@ class EbayBrowseAPI:
                         )
                         return False
 
+            # ── Description-mirrors-title bot detection ────────────────────
+            # Bot/spam storefronts generate listings whose descriptions simply
+            # repeat the listing title followed by generic shipping boilerplate,
+            # e.g.:
+            #   title:       "Astra Militarum Cadian Shock Troops Warhammer 40k"
+            #   description: "warhammer 40k astra militarum Cadian Shock Troops .
+            #                 Condition is New. Shipped with USPS Ground Advantage."
+            #
+            # Legitimate sellers write genuine descriptions about condition,
+            # contents, or provenance — they don't just echo the title.
+            #
+            # Detection: if ≥ 70% of meaningful title words (len ≥ 3) appear
+            # in the first 150 characters of the description, the description
+            # is mirroring the title — a reliable bot signal.  The 150-char
+            # window is large enough to catch all title words even when the
+            # description leads with them, and short enough to avoid false
+            # positives from genuine sellers who happen to mention the product
+            # name once near the start of a longer description.
+            title_kws = [
+                w for w in re.sub(r'[^\w\s]', ' ', title_lower).split()
+                if len(w) >= 3
+            ]
+            if len(title_kws) >= 3:
+                desc_prefix = short_desc[:150]
+                mirror_matches = sum(1 for w in title_kws if w in desc_prefix)
+                mirror_ratio = mirror_matches / len(title_kws)
+                if mirror_ratio >= 0.70:
+                    logger.debug(
+                        '[ebay] Rejected (description mirrors title, %.0f%% word overlap): "%s"',
+                        mirror_ratio * 100, result['title'][:60],
+                    )
+                    return False
+
         # ── URL must link to eBay ─────────────────────────────────────────────
         if 'ebay.' not in result['url']:
             return False
@@ -1248,6 +1281,20 @@ class EbayBrowseAPI:
                             f'negative keyword "{neg_kw}" in description'
                         )
                         break
+
+            # Description-mirrors-title bot detection
+            title_kws = [
+                w for w in re.sub(r'[^\w\s]', ' ', title_lower).split()
+                if len(w) >= 3
+            ]
+            if len(title_kws) >= 3:
+                desc_prefix = short_desc[:150]
+                mirror_matches = sum(1 for w in title_kws if w in desc_prefix)
+                mirror_ratio = mirror_matches / len(title_kws)
+                if mirror_ratio >= 0.70:
+                    reasons.append(
+                        f'description mirrors title ({mirror_ratio:.0%} word overlap)'
+                    )
 
         # URL
         if 'ebay.' not in result.get('url', ''):

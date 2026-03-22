@@ -514,10 +514,11 @@ _EBAY_SEARCH_OVERRIDES = {
     # matching because sellers rarely include "Blades" or "Khorne" in titles.
     '97-08': 'Bloodletters',
     # ── Astra Militarum ───────────────────────────────────────────────────
-    # 47-30 "Astra Militarum Cadian Shock Troops" — generic search "Cadian"
-    # returned "Cadian Command Squad" and other Cadian kits.  Adding
-    # "Warhammer" prefix with full kit name forces the correct listing.
-    '47-30': 'Warhammer Cadian Shock Troops',
+    # 47-30 "Astra Militarum Cadian Shock Troops" — no override needed;
+    # the full product name is specific enough.  An earlier override
+    # "Warhammer Cadian Shock Troops" was removed because the bot/spam
+    # detection in _is_valid_result now filters the keyword-stuffed
+    # "2ndarms" listings that previously ranked first.
     # 47-08 "Astra Militarum Commissar" — old search was too generic and
     # matched codex supplement listings titled "Commissar".  Faction prefix
     # "Astra Militarum" ensures we find the miniature, not rulebooks.
@@ -841,8 +842,10 @@ _EBAY_NEGATIVE_KEYWORDS = {
     '96-50': 'paint',
     # 43-30 "Thousand Sons Ahriman" — eBay returns Horus Heresy era Ahriman
     # clamp-pack listings that share all Ahriman keywords but are an older,
-    # different sculpt.
-    '43-30': 'horus',
+    # different sculpt.  "azhek"/"ahzek" is the HH-era character name spelling
+    # used exclusively in Horus Heresy listings; "horus" catches listings that
+    # explicitly name the game system.
+    '43-30': 'horus azhek ahzek',
     # 43-38 "Thousand Sons Exalted Sorcerers" — eBay returns custom conversion
     # listings where sellers replace the kit's hovering/flying-base poses with
     # grounded "walking" poses.  These are conversions, not the sealed kit.

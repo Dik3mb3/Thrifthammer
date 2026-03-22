@@ -73,6 +73,10 @@ _REQUESTED_RESOURCES = [
     'Offers.Listings.Availability.Message',
     'Offers.Listings.Availability.Type',
     'Offers.Listings.DeliveryInfo.IsFreeShippingEligible',
+    # Summaries gives LowestPrice even when no direct Amazon listing exists
+    # (e.g. third-party-only products where Listings is empty).
+    'Offers.Summaries.LowestPrice',
+    'Offers.Summaries.HighestPrice',
     'ItemInfo.Title',
 ]
 
@@ -373,6 +377,23 @@ class AmazonPAAPI:
             avail_type = availability.get('Type', '')
             # PA-API availability types: Now, 1-2 days, Usually ships in X days, etc.
             in_stock = avail_type in ('Now', 'Available')
+
+        # Fallback: when no direct Amazon listing exists (third-party sellers only),
+        # Listings is empty but Offers.Summaries.LowestPrice holds the lowest
+        # available price across all sellers.  Use it as the fallback price so
+        # products sold exclusively by third-party sellers still get a price.
+        if price is None:
+            summaries = offers.get('Summaries', [])
+            for summary in summaries:
+                lowest = summary.get('LowestPrice', {})
+                low_amount = lowest.get('Amount')
+                if low_amount is not None:
+                    try:
+                        price = Decimal(str(low_amount))
+                        in_stock = True  # A summary price means it's purchaseable
+                    except InvalidOperation:
+                        pass
+                    break  # Take first summary's lowest price
 
         if price is None and not in_stock:
             return None
