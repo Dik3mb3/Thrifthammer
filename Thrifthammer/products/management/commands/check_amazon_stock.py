@@ -1,13 +1,16 @@
 """
 Management command: check_amazon_stock
 =======================================
-Updates the in_stock flag for every Amazon CurrentPrice entry based purely
-on URL presence — no scraping, no page fetching.
+Updates the in_stock flag for every Amazon CurrentPrice entry based on URL
+presence AND a valid price — no scraping, no page fetching.
 
 Rules:
   - Entries with manual_url_override=True are NEVER touched.
-  - Entries with a non-empty Amazon URL  -> in_stock=True,  not_available=False
-  - Entries with an empty URL            -> no change (no URL = no listing found yet)
+  - Entries with a valid Amazon URL AND price > 0  -> in_stock=True, not_available=False
+  - Entries with a valid Amazon URL but price None/0 -> in_stock stays False, [no price] warning
+    (URL was set manually but price hasn't been populated yet; showing $0 to
+     users would be misleading — wait until a real price is known.)
+  - Entries with an empty URL -> no change (no listing found yet)
 
 This replaces the previous page-scraping approach, which was unreliable due
 to Amazon bot-detection returning inconsistent results.
@@ -78,13 +81,34 @@ class Command(BaseCommand):
         marked_in_stock = 0
         already_correct = 0
         no_url_count = 0
+        no_price_count = 0
 
         for cp in entries:
             name = cp.product.name
             sku = cp.product.gw_sku or '-'
             has_url = bool(cp.url and 'amazon.com' in cp.url)
+            has_price = cp.price is not None and cp.price > 0
 
-            if has_url:
+            if not has_url:
+                self.stdout.write(
+                    self.style.WARNING(f'  [no url]   {name} ({sku}) -- no Amazon URL')
+                )
+                no_url_count += 1
+
+            elif not has_price:
+                # URL present but price is missing or zero — a manually-set URL
+                # hasn't had its price populated yet.  Do NOT mark in_stock=True:
+                # showing $0.00 "in stock" on the site is worse than showing
+                # nothing.  Leave in_stock=False until a real price is known.
+                self.stdout.write(
+                    self.style.WARNING(
+                        f'  [no price] {name} ({sku}) -- URL set but price missing '
+                        f'(price={cp.price}); skipping in_stock update'
+                    )
+                )
+                no_price_count += 1
+
+            else:
                 if cp.in_stock and not cp.not_available:
                     self.stdout.write(f'  [ok]       {name} ({sku})')
                     already_correct += 1
@@ -98,16 +122,12 @@ class Command(BaseCommand):
                             in_stock=True,
                             not_available=False,
                         )
-            else:
-                self.stdout.write(
-                    self.style.WARNING(f'  [no url]   {name} ({sku}) -- no Amazon URL')
-                )
-                no_url_count += 1
 
         self.stdout.write(self.style.SUCCESS(
             f'\n{"[DRY-RUN] " if dry_run else ""}'
             f'Done -- '
             f'Marked in stock: {marked_in_stock}  |  '
             f'Already correct: {already_correct}  |  '
-            f'No URL: {no_url_count}'
+            f'No URL: {no_url_count}  |  '
+            f'No price (skipped): {no_price_count}'
         ))
