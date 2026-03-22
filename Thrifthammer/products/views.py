@@ -159,7 +159,7 @@ def product_list(request):
     # Bump the version suffix (v2, v3…) whenever sort_options or the card
     # template change significantly — forces a cache miss on all existing entries.
     cache_key = (
-        f'product_list_v2|q={query}|cat={category_slug}'
+        f'product_list_v3|q={query}|cat={category_slug}'
         f'|fac={faction_slug}|sort={sort}|page={page_number}'
     )
     cached = cache.get(cache_key)
@@ -168,10 +168,27 @@ def product_list(request):
 
     # --- Build queryset ---
     # select_related covers category/faction (avoids N+1 for badges in template).
-    # Annotate min_price in a single SQL JOIN so the template shows the best
-    # price per card without any additional queries.
-    # Filter to in_stock=True, not_available=False so "Best Price" and discount %
-    # reflect only prices users can actually act on — not stale OOS figures.
+    #
+    # min_price: cheapest available price (not_available=False), matching the
+    # same price pool that product_detail uses for current_prices.0.  We do NOT
+    # filter by in_stock so a temporarily-OOS listing still counts — identical
+    # to the detail page behaviour.
+    #
+    # gw_ref_price_sq: live GW price (if tracked), used as the discount reference
+    # exactly like gw_ref_price in product_detail — falls back to product.msrp.
+    # This ensures browse-page and detail-page discount percentages match.
+    gw_ref_price_sq = Subquery(
+        CurrentPrice.objects
+        .filter(
+            product=OuterRef('pk'),
+            retailer__slug='games-workshop',
+            not_available=False,
+            price__isnull=False,
+        )
+        .order_by('price')
+        .values('price')[:1]
+    )
+
     products = (
         Product.objects
         .filter(is_active=True)
@@ -179,19 +196,26 @@ def product_list(request):
         .annotate(
             min_price=Min(
                 'current_prices__price',
-                filter=Q(
-                    current_prices__in_stock=True,
-                    current_prices__not_available=False,
-                ),
+                filter=Q(current_prices__not_available=False),
+            )
+        )
+        .annotate(gw_ref_price=gw_ref_price_sq)
+        .annotate(
+            # ref_price: GW live price when available, else stored msrp —
+            # same logic as `gw_ref_price` in product_detail view.
+            ref_price=Case(
+                When(gw_ref_price__isnull=False, then=F('gw_ref_price')),
+                default=F('msrp'),
+                output_field=DecimalField(),
             )
         )
         .annotate(
             min_discount_pct=Case(
                 When(
-                    msrp__gt=0,
+                    ref_price__gt=0,
                     min_price__isnull=False,
                     then=ExpressionWrapper(
-                        (F('msrp') - F('min_price')) / F('msrp') * Value(100),
+                        (F('ref_price') - F('min_price')) / F('ref_price') * Value(100),
                         output_field=FloatField(),
                     ),
                 ),

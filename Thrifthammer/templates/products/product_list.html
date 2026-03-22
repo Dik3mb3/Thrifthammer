@@ -205,14 +205,15 @@
               {% if product.min_price %}
               <div class="product-card-price-label">Best Price</div>
               <div class="product-card-price">${{ product.min_price|floatformat:"2" }}</div>
-              {% if product.msrp and product.min_price < product.msrp and product.min_discount_pct and product.min_discount_pct > 0 %}
+              {# ref_price = GW live price (or msrp fallback) — same reference as detail page #}
+              {% if product.min_discount_pct and product.min_discount_pct > 0 %}
               <div class="product-card-savings-row">
-                <span class="product-card-msrp">MSRP ${{ product.msrp }}</span>
+                <span class="product-card-msrp">MSRP ${{ product.ref_price|default:product.msrp }}</span>
                 <span class="product-card-discount-pct">▼ {{ product.min_discount_pct|floatformat:"0" }}% off</span>
               </div>
-              {% elif product.msrp and product.min_price < product.msrp %}
+              {% elif product.ref_price or product.msrp %}
               <div class="product-card-savings-row">
-                <span class="product-card-msrp">MSRP ${{ product.msrp }}</span>
+                <span class="product-card-msrp">MSRP ${{ product.ref_price|default:product.msrp }}</span>
               </div>
               {% endif %}
               {% elif product.msrp %}
