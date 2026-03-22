@@ -2,8 +2,8 @@ name: Update Amazon Prices
 
 on:
   schedule:
-    # Every Monday at 06:00 UTC (after check-amazon-stock at 05:00)
-    - cron: '0 6 * * 1'
+    # Every 2 days at 06:00 UTC (after check-amazon-stock at 05:00)
+    - cron: '0 6 */2 * *'
   workflow_dispatch:
 
 jobs:
