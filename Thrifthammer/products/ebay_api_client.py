@@ -458,8 +458,11 @@ class EbayBrowseAPI:
         # Excluding them at the eBay query level stops bits listings from
         # filling the result window before the genuine full-kit listings appear.
         # Citadel hobby supplies don't suffer from this problem, so skip for them.
+        # "-decor" is included globally because "decor" / "wall decor" / "room decor"
+        # listings appear across all faction searches (GW-branded art prints, display
+        # pieces, room accessories) and are never sealed miniature kit retail products.
         if not is_citadel:
-            query = f'{query.strip()} -bits -bitz -sprue'
+            query = f'{query.strip()} -bits -bitz -sprue -decor'
 
         # Product-specific negative keywords: exclude similarly-named products
         # that our keyword validator cannot distinguish (e.g. Plastic Glue vs
@@ -667,6 +670,11 @@ class EbayBrowseAPI:
         # check below (tokenising would split it into 'forge'/'world' — neither
         # blockable alone without excessive false positives).
         'forgeworld',
+        # Decor / decorative merchandise — GW-branded art prints, wall decor,
+        # display pieces, room accessories, and similar non-miniature products.
+        # These appear across all faction searches but are never sealed retail kits.
+        # Globally blocked (also excluded at eBay query level via -decor above).
+        'decor', 'decors',
     }
 
     # Conservative bits keyword set used for shortDescription checks only.

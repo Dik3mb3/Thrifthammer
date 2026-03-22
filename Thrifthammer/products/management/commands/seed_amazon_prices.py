@@ -355,7 +355,7 @@ AMAZON_DATA = {
     '48-28': ('33.15',  'https://www.amazon.com/dp/B08KHQPW8M',  True),  # Firestrike Servo-Turrets  ✓ FIXED wave F (old B0FTZYXRQV $152.50 wrong)
     '48-27': ('58.65',  'https://www.amazon.com/dp/B08LB95FQ5', False),  # Hammerfall Bunker
     '48-97': ('51.00',  'https://www.amazon.com/dp/B074RJKKBP', True),   # Inceptors
-    # 48-96 Incursors — B07J3PG964 was wrong product; no Amazon listing; removed wave G
+    '48-96': ('55.25',  'https://www.amazon.com/dp/B08GC37WBR', True),   # Incursors (dual kit with Infiltrators 48-41)  ✓ FIXED wave R (old B07J3PG964 $24.97 wrong), price corrected wave V
     '48-45': ('51.00',  'https://www.amazon.com/dp/B0CVS2PN2X', True),   # Infernus Squad  ✓ FIXED
     '48-41': ('55.25',  'https://www.amazon.com/dp/B08GC37WBR', True),   # Infiltrators
     '48-75': ('55.25',  'https://www.amazon.com/dp/B074MCKC99', True),   # Intercessors

@@ -553,6 +553,10 @@ _EBAY_SEARCH_OVERRIDES = {
     # equivalent so the eBay scraper finds the correct listing.
     '49-20': 'Necron Ctan Shard Void Dragon',
     # ── Orks ──────────────────────────────────────────────────────────────────
+    # 50-14 "Ork Lootas" — "ork lootas" (short form, no extra tokens) improves
+    # eBay Best Match ranking over the default product name by avoiding faction
+    # prefix noise.  Per-SKU neg_kw covers remaining bad-match patterns.
+    '50-14': 'ork lootas',
     # 50-16 "Ork Deff Dread" — the broad search "Ork Deff Dread" was returning
     # Lootas listings with "Dread" in the seller description.  Using "40000"
     # (not "40K" which is too short to be a keyword) helps eBay surface only
@@ -746,7 +750,9 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # 50-14 "Ork Lootas" — eBay returns:
     #   DaBoom!: DaBoom! brand alternative model listings
     #   Artel:   Artel W brand resin alternative model listings
-    '50-14': 'DaBoom! Artel',
+    #   rokker, flash, elektro: musician/band-themed third-party conversion kits
+    #   wargame: generic hobby/gaming lot bundles (multi-product, not sealed single kit)
+    '50-14': 'DaBoom! Artel rokker flash elektro wargame',
     # 50-11 "Ork Trukk" — eBay returns "No Driver" incomplete kit listings
     # (missing the Trukk driver model).  "driver" blocks these; "no" is not
     # used as a standalone filter because it matches too many other words.
@@ -795,9 +801,18 @@ _EBAY_NEGATIVE_KEYWORDS = {
     #   honoured: "Honoured of the Chapter" product variant listings
     #             Storing only "honoured"; "of"/"the"/"chapter" too broad.
     '48-32': '1x honoured',
-    # 71-02 "Space Marine Combat Patrol" — eBay returns Suppressors unit listings
-    # that pass keyword matching.
-    '71-02': 'suppressors',
+    # 48-37 "Space Marine Company Heroes" — eBay returns conversion / weapon-loadout
+    # listings titled with specific equipment options from the sprue:
+    #   champion: custom Company Heroes Champion named-character listings
+    #   bolter:   single-model "Bolter" weapon-option conversion listings
+    #   fist:     "Power Fist" weapon-upgrade or conversion-only listings
+    '48-37': 'champion bolter fist',
+    # 71-02 "Space Marine Combat Patrol" — eBay returns:
+    #   suppressors: Suppressors unit listings that pass keyword matching
+    #   magazine:    listings bundling a White Dwarf or other GW magazine with the set
+    #   terminators: alternate Combat Patrol edition/variant boxes that explicitly
+    #                mention Terminators (different SKU from current retail)
+    '71-02': 'suppressors magazine terminators',
     # 48-98 "Space Marine Eliminators" — eBay returns:
     #   vanguard: "Vanguard Space Marines" multi-unit set listings
     #   task:     "Task Force" bundle box listings
