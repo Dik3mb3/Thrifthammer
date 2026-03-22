@@ -4,16 +4,19 @@ Management command: apply_batch_fixes_mar2026v
 Twenty-first wave of March 2026 batch corrections for ThriftHammer.
 Run after apply_batch_fixes_mar2026t.
 
+Strategy: eBay fixes use neg_kw only — no hardcoded item IDs.
+  Setting per-SKU negative keywords lets the daily update_ebay_prices cron
+  find the correct listing automatically on every run.  Hardcoded item IDs
+  become stale when listings end; neg_kw keeps matching fresh correctly.
+
 Changes covered:
   Fix 1  -- Space Marine Company Heroes (48-37):
-             - Correct eBay URL (old: 404556071773 at $23.50, new: 186099352635)
              - neg_kw "champion bolter fist" (SKU-specific only)
                "Champion", "Bolter", and "Fist" are upgrade/conversion listing
                terms sellers use to describe custom Company Heroes with specific
                weapon loadouts.  These are not the standard sealed retail kit.
 
   Fix 2  -- Space Marine Combat Patrol (71-02):
-             - Correct eBay URL (old: 317915483897 at $54.99, new: 405939586465)
              - neg_kw "magazine terminators" (SKU-specific only)
                "Magazine": blocks listings that include a White Dwarf or other
                GW magazine bundled with the set — a different product.
@@ -22,13 +25,11 @@ Changes covered:
                or variant box incompatible with the current retail SKU.
 
   Fix 3  -- Space Marine Land Raider Crusader (48-22):
-             - Correct eBay URL (old: 177786026337 at $54.99, new: 175379698427)
-               Note: the global "-decor" filter (added to ebay_api_client.py in
-               this wave) handles decor-art listings globally, so no per-SKU
-               neg_kw is required here.
+             - No action needed: the global "-decor" filter (added to
+               ebay_api_client.py in this wave) already handles decor-art
+               listings globally, and no per-SKU neg_kw is required.
 
   Fix 4  -- Ork Lootas (50-14):
-             - Correct eBay URL (old: 225321644414 at $23.99, new: 183199561434)
              - neg_kw "rokker flash elektro wargame" (SKU-specific, appended)
                Existing neg_kw already has "DaBoom! Artel"; these four words
                cover the remaining known bad-match patterns:
@@ -42,9 +43,14 @@ Changes covered:
   Fix 5  -- Space Marine Incursors (48-96):
              - Correct Amazon price ($24.97 → $55.25, stale from old ASIN
                B07J3PG964 which was replaced with B08GC37WBR in Wave R).
-               _set_url() was updated to detect ASIN changes and clear the stale
-               price.  This fix directly updates the CurrentPrice row price and
+               This fix directly updates the CurrentPrice row price and
                re-flags in_stock=True so the correct price is shown immediately.
+
+After running this command, run:
+    python manage.py update_ebay_prices --dry-run --debug --sku 71-02
+to verify the neg_kw for Combat Patrol correctly filters wrong listings,
+then run the full update:
+    python manage.py update_ebay_prices
 
 Usage:
     python manage.py apply_batch_fixes_mar2026v
@@ -65,8 +71,9 @@ class Command(BaseCommand):
 
     help = (
         'Apply Wave V batch corrections (March 2026) -- '
-        'SM Company Heroes/Combat Patrol/Land Raider Crusader eBay fixes, '
-        'Ork Lootas eBay fix + neg_kw, Incursors Amazon price correction.'
+        'SM Company Heroes/Combat Patrol neg_kw, '
+        'Ork Lootas neg_kw + search name, Incursors Amazon price correction. '
+        'Run update_ebay_prices afterwards to apply the new neg_kw to live URLs.'
     )
 
     def add_arguments(self, parser):
@@ -85,7 +92,6 @@ class Command(BaseCommand):
 
         self._fix_1_company_heroes(dry)
         self._fix_2_combat_patrol(dry)
-        self._fix_3_land_raider_crusader(dry)
         self._fix_4_ork_lootas(dry)
         self._fix_5_incursors_amazon_price(dry)
 
@@ -121,6 +127,9 @@ class Command(BaseCommand):
         old URL contains a different /dp/<ASIN> than the new URL), the old price is
         cleared to None and in_stock reset to False.  This prevents stale prices from
         a superseded ASIN being displayed against the new listing.
+
+        Note: manual_url_override is intentionally NOT set here. eBay URLs should be
+        found automatically by the update_ebay_prices cron using neg_kw matching.
         """
         try:
             retailer = Retailer.objects.get(name=retailer_name)
@@ -133,7 +142,11 @@ class Command(BaseCommand):
         cp, created = CurrentPrice.objects.get_or_create(
             product=product,
             retailer=retailer,
-            defaults={'price': None, 'in_stock': False, 'url': new_url},
+            defaults={
+                'price': None,
+                'in_stock': False,
+                'url': new_url,
+            },
         )
         if created:
             self.stdout.write(f'  [ok] Created {retailer_name} entry: {new_url[:70]}')
@@ -159,7 +172,7 @@ class Command(BaseCommand):
                 f'             -> {new_url[:55]}'
             )
             if asin_changed:
-                msg += f'\n  [dry] ASIN change detected ({old_asin} -> {new_asin}): price will be cleared'
+                msg += f'\n  [dry] ASIN change ({old_asin} -> {new_asin}): price will be cleared'
             self.stdout.write(msg)
             return
 
@@ -171,8 +184,10 @@ class Command(BaseCommand):
 
         CurrentPrice.objects.filter(pk=cp.pk).update(**update_fields)
 
-        suffix = f' [ASIN change: price cleared]' if asin_changed else ''
-        self.stdout.write(f'  [ok] {retailer_name}: {old_url[:50]} -> {new_url[:50]}{suffix}')
+        suffix = ' [ASIN change: price cleared]' if asin_changed else ''
+        self.stdout.write(
+            f'  [ok] {retailer_name}: {old_url[:50]} -> {new_url[:50]}{suffix}'
+        )
 
     def _add_neg_kw(self, product, new_kw, dry):
         """
@@ -217,47 +232,45 @@ class Command(BaseCommand):
     # -----------------------------------------------------------------------
 
     def _fix_1_company_heroes(self, dry):
-        """Fix 1: Space Marine Company Heroes -- eBay URL + neg_kw (48-37)."""
-        self.stdout.write('\nFix 1: Space Marine Company Heroes -- eBay URL + neg_kw')
+        """Fix 1: Space Marine Company Heroes -- neg_kw (48-37).
+
+        No URL is pinned. After this neg_kw is saved, update_ebay_prices will
+        automatically find the correct listing by excluding conversion titles.
+        """
+        self.stdout.write('\nFix 1: Space Marine Company Heroes -- neg_kw')
         p = self._get_product('48-37')
         if p is None:
             return
-        self._set_url(p, 'eBay', 'https://www.ebay.com/itm/186099352635', dry)
         # champion: blocks conversion listings with named Champion weapon load-outs
         # bolter:   blocks single-model "Bolter" weapon-option listings
         # fist:     blocks "Power Fist" or "Fist" weapon-upgrade conversion listings
         self._add_neg_kw(p, 'champion bolter fist', dry)
 
     def _fix_2_combat_patrol(self, dry):
-        """Fix 2: Space Marine Combat Patrol -- eBay URL + neg_kw (71-02)."""
-        self.stdout.write('\nFix 2: Space Marine Combat Patrol -- eBay URL + neg_kw')
+        """Fix 2: Space Marine Combat Patrol -- neg_kw (71-02).
+
+        No URL is pinned. After this neg_kw is saved, update_ebay_prices will
+        automatically find the correct listing by excluding wrong variant titles.
+        """
+        self.stdout.write('\nFix 2: Space Marine Combat Patrol -- neg_kw')
         p = self._get_product('71-02')
         if p is None:
             return
-        self._set_url(p, 'eBay', 'https://www.ebay.com/itm/405939586465', dry)
         # magazine:   blocks listings that bundle a White Dwarf or other GW magazine
         # terminators: blocks alternate Combat Patrol edition/variant box that
         #              explicitly mentions Terminators in the title (different SKU)
         self._add_neg_kw(p, 'magazine terminators', dry)
 
-    def _fix_3_land_raider_crusader(self, dry):
-        """Fix 3: Space Marine Land Raider Crusader -- eBay URL (48-22)."""
-        self.stdout.write('\nFix 3: Space Marine Land Raider Crusader -- eBay URL')
-        p = self._get_product('48-22')
-        if p is None:
-            return
-        # Note: decor/art listings are handled by the global "-decor" eBay query
-        # filter and the 'decor'/'decors' entry in _BITS_KEYWORDS (added to
-        # ebay_api_client.py in this wave) — no per-SKU neg_kw needed.
-        self._set_url(p, 'eBay', 'https://www.ebay.com/itm/175379698427', dry)
-
     def _fix_4_ork_lootas(self, dry):
-        """Fix 4: Ork Lootas -- eBay URL + neg_kw + search name (50-14)."""
-        self.stdout.write('\nFix 4: Ork Lootas -- eBay URL + neg_kw + search name')
+        """Fix 4: Ork Lootas -- neg_kw + search name (50-14).
+
+        No URL is pinned. After neg_kw and search_name are saved, update_ebay_prices
+        will automatically find the correct listing.
+        """
+        self.stdout.write('\nFix 4: Ork Lootas -- neg_kw + search name')
         p = self._get_product('50-14')
         if p is None:
             return
-        self._set_url(p, 'eBay', 'https://www.ebay.com/itm/183199561434', dry)
         # rokker, flash, elektro: musician/band-themed third-party conversion kit
         #   titles that share "Lootas" but are not the standard GW retail box.
         # wargame: generic hobby/gaming lot bundles; not a single sealed kit sale.
