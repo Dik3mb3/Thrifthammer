@@ -259,7 +259,11 @@ class Command(BaseCommand):
         # magazine:   blocks listings that bundle a White Dwarf or other GW magazine
         # terminators: blocks alternate Combat Patrol edition/variant box that
         #              explicitly mentions Terminators in the title (different SKU)
-        self._add_neg_kw(p, 'magazine terminators', dry)
+        # chaos:       blocks Chaos Space Marine faction Combat Patrol boxes
+        #              (Emperor's Children, World Eaters, etc.) whose titles
+        #              contain "Space Marine" + "Combat Patrol" and would
+        #              otherwise pass the keyword validator
+        self._add_neg_kw(p, 'magazine terminators chaos', dry)
 
     def _fix_4_ork_lootas(self, dry):
         """Fix 4: Ork Lootas -- neg_kw + search name (50-14).
