@@ -251,12 +251,12 @@ def product_list(request):
         'selected_faction':  faction_slug,
         'sort':              sort,
         'sort_options': [
-            ('discount',   'Best Discount First'),
-            ('name',       'Name (A–Z)'),
-            ('name_desc',  'Name (Z–A)'),
-            ('price_asc',  'Best Value First'),
-            ('price_desc', 'Price (high to low)'),
-            ('newest',     'Newest first'),
+            ('discount',   'Best Discount'),
+            ('price_asc',  'Price: Low to High'),
+            ('price_desc', 'Price: High to Low'),
+            ('name',       'Name: A to Z'),
+            ('name_desc',  'Name: Z to A'),
+            ('newest',     'Newest Arrivals'),
         ],
         'total_count': paginator.count,
     }
