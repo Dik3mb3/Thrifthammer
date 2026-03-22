@@ -2,8 +2,8 @@ name: Scrape Amazon Prices
 
 on:
   schedule:
-    # Every 2 days at 07:00 UTC (after check-amazon-stock at 05:00)
-    - cron: '0 7 */2 * *'
+    # Daily at 04:00 UTC (after eBay at 03:00, before check-amazon-stock at 05:00)
+    - cron: '0 4 * * *'
   workflow_dispatch:
 
 jobs:
