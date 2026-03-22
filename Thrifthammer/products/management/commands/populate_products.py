@@ -771,9 +771,10 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # level removes these from results.
     '56-25': 'spare parts',
     # 56-19 "T'au Pathfinders" — eBay returns T'au Pathfinder Datacards (a
-    # separate product) and "Apex" brand items.  Excluding both at query level
-    # narrows results to the correct miniature kit.
-    '56-19': 'datacards Apex',
+    # separate product), "Apex" brand items, and Mantic Games "Enforcers"
+    # (a sci-fi skirmish game with a unit called "Pathfinders" and
+    # "Deadzone Firefight" variants).  Excluding all filters to the GW kit.
+    '56-19': 'datacards Apex mantic enforcer firefight',
     # 43-02 "Magnus the Red" — JoyToy produces 1:18-scale action figures
     # including Magnus that contaminate eBay search results.
     '43-02': 'JoyToy',
@@ -789,6 +790,12 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # sells much cheaper than the current plastic kit and is not comparable.
     # Excluding "2004" keeps results to the modern plastic box only.
     '49-17': '2004',
+    # ── Adepta Sororitas ──────────────────────────────────────────────────────
+    # 52-20 "Adepta Sororitas Battle Sisters Squad" — eBay returns:
+    #   repentia: "Sisters of Repentance/Repentia" listings — a different
+    #             Sisters unit that shares enough keyword overlap with
+    #             "Battle Sisters" to pass the title match check.
+    '52-20': 'repentia',
     # ── Space Marines ─────────────────────────────────────────────────────────
     # 48-34 "Space Marine Ancient" — eBay returns:
     #   barachus: "Brother Barachus" named-character listings (different product)
