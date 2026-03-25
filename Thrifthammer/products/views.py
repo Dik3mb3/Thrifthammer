@@ -50,15 +50,29 @@ def _get_spotlight_deals(count=SPOTLIGHT_COUNT):
     Selection strategy:
     - Only active products with both a current price and an MSRP set.
     - Only in-stock, available entries.
+    - Excludes Games Workshop (buying from GW at MSRP is never a "deal").
     - Deduplicated by product — only the single best (lowest) price per product.
-    - Ranked by discount_pct descending — highest percentage off GW/MSRP first.
+    - Ranked by discount % vs GW live price (or MSRP fallback) — same reference
+      used by the browse page, so rankings are consistent.
     - Returns at most `count` results.
 
     Returns:
         list[CurrentPrice]: Evaluated list with .product and .retailer
-        pre-fetched and a .discount_pct attribute attached.
+        pre-fetched and a .discount_pct_vs_ref attribute (float) attached
+        for display.
     """
-    # Fetch all active priced in-stock entries that have an MSRP to compare
+    # Fetch the live GW price per product (used as discount reference when available)
+    gw_prices = dict(
+        CurrentPrice.objects
+        .filter(
+            retailer__slug='games-workshop',
+            not_available=False,
+            price__isnull=False,
+        )
+        .values_list('product_id', 'price')
+    )
+
+    # Fetch all active, priced, in-stock entries from non-GW retailers
     candidates = list(
         CurrentPrice.objects
         .select_related('product', 'retailer')
@@ -70,6 +84,7 @@ def _get_spotlight_deals(count=SPOTLIGHT_COUNT):
             in_stock=True,
             not_available=False,
         )
+        .exclude(retailer__slug='games-workshop')
         .order_by('product_id', 'price')  # cheapest first per product
     )
 
@@ -81,11 +96,19 @@ def _get_spotlight_deals(count=SPOTLIGHT_COUNT):
             seen_products.add(cp.product_id)
             unique.append(cp)
 
-    # Keep only deals with a positive discount percentage
-    discounted = [cp for cp in unique if cp.discount_pct and cp.discount_pct > 0]
+    # Compute discount % against GW live price (or MSRP fallback) and keep
+    # only entries with a positive discount — same ref_price logic as the list page.
+    discounted = []
+    for cp in unique:
+        ref = gw_prices.get(cp.product_id) or cp.product.msrp
+        if ref and ref > 0 and cp.price is not None:
+            pct = float((ref - cp.price) / ref * 100)
+            if pct > 0:
+                cp.discount_pct_vs_ref = round(pct, 1)
+                discounted.append(cp)
 
     # Sort by discount percentage — highest % off first
-    discounted.sort(key=lambda cp: cp.discount_pct, reverse=True)
+    discounted.sort(key=lambda cp: cp.discount_pct_vs_ref, reverse=True)
     return discounted[:count]
 
 
@@ -123,7 +146,7 @@ def home(request):
     The hot deals are selected by _get_spotlight_deals() — edit that
     function to change the selection strategy without touching this view.
     """
-    cache_key = 'home_page_data_v3'
+    cache_key = 'home_page_data_v4'
     ctx = cache.get(cache_key)
     if ctx is None:
         categories = list(Category.objects.all())

@@ -123,8 +123,8 @@
                         {% if cp.product.msrp %}
                         <div style="display:flex;align-items:center;gap:var(--sp-2);flex-wrap:wrap;margin-top:var(--sp-1);">
                             <span class="product-card-msrp">MSRP ${{ cp.product.msrp }}</span>
-                            {% if cp.discount_pct and cp.discount_pct > 0 %}
-                            <span class="badge badge-green">{{ cp.discount_pct }}% off</span>
+                            {% if cp.discount_pct_vs_ref and cp.discount_pct_vs_ref > 0 %}
+                            <span class="badge badge-green">{{ cp.discount_pct_vs_ref }}% off</span>
                             {% endif %}
                         </div>
                         {% endif %}

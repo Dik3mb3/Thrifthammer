@@ -69,7 +69,7 @@ GW_IMAGES = {
     '43-53': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102263_DeathGuardVileVectoriumBattleforce01.jpg',
     '43-54': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102150_LordFelthiusCohortLead.jpg',
     '43-55': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102077_BloatDrone01.jpg',
-    '43-56': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99590102139_DeathGuardDeathshroudTerminators01.jpg',
+    '43-56': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102073_DeathshroudBodyguard01.jpg',  # ✓ FIXED wave AB (was old Deathshroud Terminators image)
     '43-60': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99853002335_WEMkVIShouldersUpgradesLead.jpg',
     '43-62': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102154_ExhaltedEightbound2.jpg',
     '43-64': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102155_WELordInvocatus02.jpg',
@@ -602,6 +602,15 @@ _EBAY_SEARCH_OVERRIDES = {
     # "40k" shifts Best Match toward exact-kit standalone listings, giving the
     # cheaper listing (389726995331) a better chance to surface in results.
     '48-22': 'land raider crusader 40k',
+    # 48-25 "Space Marine Whirlwind" — the product name "Space Marine Whirlwind"
+    # is shared by vintage 1999 metal Whirlwinds and the current plastic kit.
+    # "whirlwind 40k" (2 keywords, min_matches=2) focuses eBay Best Match on
+    # modern-edition listings and pairs with neg_kw '1999 vintage' for coverage.
+    '48-25': 'whirlwind 40k',
+    # 48-29 "Space Marine Scouts" — "Warhammer 40k Space Marine Scouts"
+    # (4 keywords, min_matches=3) provides stronger specificity than the default
+    # product name and focuses eBay Best Match on the correct sealed kit.
+    '48-29': 'Warhammer 40k Space Marine Scouts',
     # 48-46 "Space Marine Ballistus Dreadnought" — most eBay listings omit
     # "Space Marine" from the title (sellers write "Ballistus Dreadnought 40K").
     # With the default 4-keyword product name, min_matches=3 (ceil(4×0.65)).
@@ -664,14 +673,32 @@ _EBAY_ALLOW_NO_BOX = {
 # Add entries here + re-run populate_products to apply.
 # ─────────────────────────────────────────────────────────────────────────────
 _GW_PRODUCT_PAGE_URLS = {
-    # 54-21 Imperial Knight Dominus (also builds Knight Castellan)
-    '54-21': 'https://www.warhammer.com/en-WW/shop/imperial-knights-knight-dominus-knight-castellan-2022',
+    # 54-21 Imperial Knight Dominus (also builds Knight Valiant)
+    '54-21': 'https://www.warhammer.com/en-US/shop/imperial-knights-knight-dominus-knight-valiant-2022',
     # HA-021 Horus Heresy Leviathan Dreadnought
-    'HA-021': 'https://www.warhammer.com/en-WW/shop/leviathan-siege-dreadnought-with-claw-and-drill-weapons-2022',
+    'HA-021': 'https://www.warhammer.com/en-US/shop/Night-Lords-Leviathan-Dreadnought-2019',
     # NM-010 Necromunda Escher Gang
-    'NM-010': 'https://www.warhammer.com/en-WW/shop/Necromunda-Escher-Gang-2017',
+    'NM-010': 'https://www.warhammer.com/en-US/shop/Necromunda-Escher-Gang-2017',
     # NM-011 Necromunda Goliath Gang
-    'NM-011': 'https://www.warhammer.com/en-WW/shop/Necromunda-Goliath-Gang-2017',
+    'NM-011': 'https://www.warhammer.com/en-US/shop/Necromunda-Goliath-Gang-2017',
+    # NM-012 Necromunda Van Saar Gang
+    'NM-012': 'https://www.warhammer.com/en-US/shop/Necromunda-Van-Saar-Gang-2018',
+    # 56-14 T'au Stealth Battlesuits (Kill Team XV26)
+    '56-14': 'https://www.warhammer.com/en-US/shop/kill-team-xv26-stealth-battlesuits-2026',
+    # 48-29 Space Marine Scouts (Kill Team Scout Squad 2024 edition)
+    '48-29': 'https://www.warhammer.com/en-US/shop/kill-team-scout-squad-2024',
+    # 96-12 Stormcast Eternals Knight-Judicator with Gryph-hounds
+    '96-12': 'https://www.warhammer.com/en-US/shop/stormcast-eternals-knight-judicator-with-gryph-hounds-2021',
+    # 48-61 Space Marine Primaris Lieutenant (2020 Power Sword edition)
+    '48-61': 'https://www.warhammer.com/en-US/shop/Space-Marine-Primaris-Lieutenant-With-Power-Sword-2020',
+    # 43-56 Death Guard Deathshroud Bodyguard
+    '43-56': 'https://www.warhammer.com/en-US/shop/Death-Guard-Deathshroud-Bodyguard-2020',
+    # 51-42 Genestealer Cults Broodcoven
+    '51-42': 'https://www.warhammer.com/en-US/shop/Genestealer-Cults-Broodcoven',
+    # 59-20 Adeptus Mechanicus Electropriests
+    '59-20': 'https://www.warhammer.com/en-US/shop/Ad-Mec-Corpuscarii-Electro-Priests',
+    # 44-09 Dark Angels Ravenwing Command Squad
+    '44-09': 'https://www.warhammer.com/en-US/shop/Ravenwing-Command-Squad-2020',
     # HA-051 Space Marine Chaplain in Terminator Armour (renamed from HH)
     'HA-051': 'https://www.warhammer.com/en-WW/shop/horus-heresy-chaplain-in-terminator-armour',
 }
@@ -792,9 +819,10 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # including Magnus that contaminate eBay search results.
     '43-02': 'JoyToy',
     # 55-16 "Ultramarines Honour Guard" — eBay returns action-figure listings
-    # (JoyToy and similar brands) that pass keyword matching.  Excluding
-    # "Action Figure" narrows results to the correct plastic kit.
-    '55-16': 'Action Figure',
+    # (JoyToy and similar brands) AND listings for "Marneus Calgar" bundles
+    # (e.g. the Marneus Calgar + Victrix Guard bundle).  "calgar" filters
+    # bundle listings; "Action Figure" filters third-party figures.
+    '55-16': 'calgar Action Figure',
     # 54-21 "Imperial Knight Dominus" — eBay returns "magnetizing kit" listings
     # (pre-drilled, magnet-fitted conversion models) that are NOT the sealed
     # retail box.  Excluding "magnetizing" blocks these conversion listings.
@@ -827,6 +855,19 @@ _EBAY_NEGATIVE_KEYWORDS = {
     #   product names.  Excluding "assault" narrows results to the standard
     #   bolter-armed Terminator Squad only.
     '48-06': 'assault',
+    # 48-62 "Space Marine Primaris Captain" — eBay returns "Primaris Captain
+    #   with Jump Pack" (a separate unit with a jump pack, different kit).
+    #   Excluding "jump" filters all jump-pack variant listings.
+    '48-62': 'jump',
+    # 48-25 "Space Marine Whirlwind" — eBay returns vintage 1999-era metal
+    #   Whirlwind listings priced well below the current plastic kit.
+    #   "1999" and "vintage" both appear in those listing titles.
+    '48-25': '1999 vintage',
+    # 55-24 "Black Templars Chaplain Grimaldus" — eBay returns:
+    #   champion: "Emperor's Champion" single-model blister (different BT hero)
+    #   marshal:  "High Marshal Helbrecht" and generic "Marshal" character
+    #             listings that share enough keywords with Grimaldus search.
+    '55-24': 'champion marshal',
     # 48-34 "Space Marine Ancient" — eBay returns:
     #   barachus: "Brother Barachus" named-character listings (different product)
     #   raven:    "Blood Ravens" chapter listings (different SM chapter)
@@ -859,10 +900,11 @@ _EBAY_NEGATIVE_KEYWORDS = {
     #   force:    "Strike Force" / "Task Force" sets that include Eliminators
     #             as a component alongside other units
     '48-98': 'vanguard task force',
-    # 48-29 "Space Marine Scouts" — eBay returns "Needle Sniper Rifle"
-    # conversion variant listings (Scout models with a specific weapon swap)
-    # that pass keyword matching for the standard Scout Squad search.
-    '48-29': 'needle',
+    # 48-29 "Space Marine Scouts" — eBay returns:
+    #   needle: "Needle Sniper Rifle" conversion variant listings (weapon swap)
+    #   mint:   "Mint in Box / MIMB" vintage collector listings for old-
+    #           edition Scout boxed sets — priced far above the current kit
+    '48-29': 'needle mint',
     # 48-07 "Space Marine Tactical Squad" — eBay returns "Power Fist" weapon
     # upgrade / conversion listings (partial kits advertising the Power Fist
     # option) rather than the standard sealed retail box.
@@ -901,6 +943,28 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # (6mm-scale) product that shares the "Legiones Astartes Predator" keywords.
     # Excluding "imperialis" filters out all Legiones Imperialis listings.
     'HA-012': 'imperialis',
+    # ── Necromunda ────────────────────────────────────────────────────────────
+    # Necromunda gangs are frequently sold as individual models, partial sets,
+    # or with supplementary card/dice accessories. The following exclusions
+    # apply to Van Saar (NM-012), Goliath (NM-011), and Escher (NM-010) gangs
+    # to filter out single-model lots, accessories, and faction-specific
+    # upgrade packs that pass keyword matching for the full gang box.
+    #
+    # NM-012 "Necromunda Van Saar Gang" — eBay returns:
+    #   1x:         single-model "1x Van Saar" individual resale listings
+    #   arachni-rig: Van Saar Arachni-rig conversion/add-on listings (different product)
+    #   weapons/upgrades/cards/tactic/dice: accessory-only listings
+    'NM-012': '1x arachni-rig weapons upgrades cards tactic dice',
+    # NM-011 "Necromunda Goliath Gang" — eBay returns:
+    #   1x:         single-model individual resale listings
+    #   stimmers:   Goliath Stimmers unit listing (separate add-on box)
+    #   weapons/upgrades/cards/tactic/dice: accessory-only listings
+    'NM-011': '1x weapons upgrades cards tactic stimmers dice',
+    # NM-010 "Necromunda Escher Gang" — eBay returns:
+    #   1x:         single-model individual resale listings
+    #   stimmers:   Escher faction-themed upgrade listings
+    #   weapons/upgrades/cards/tactic/dice: accessory-only listings
+    'NM-010': '1x weapons upgrades cards tactic stimmers dice',
 }
 
 
