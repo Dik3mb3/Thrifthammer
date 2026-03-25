@@ -771,10 +771,11 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # level removes these from results.
     '56-25': 'spare parts',
     # 56-19 "T'au Pathfinders" — eBay returns T'au Pathfinder Datacards (a
-    # separate product), "Apex" brand items, and Mantic Games "Enforcers"
+    # separate product), "Apex" brand items, Mantic Games "Enforcers"
     # (a sci-fi skirmish game with a unit called "Pathfinders" and
-    # "Deadzone Firefight" variants).  Excluding all filters to the GW kit.
-    '56-19': 'datacards Apex mantic enforcer firefight',
+    # "Deadzone Firefight" variants), and "Grav-inhibitor" drone conversion
+    # listings (a specific upgrade kit that shares Pathfinder keywords).
+    '56-19': 'datacards Apex mantic enforcer firefight grav-inhibitor',
     # 43-02 "Magnus the Red" — JoyToy produces 1:18-scale action figures
     # including Magnus that contaminate eBay search results.
     '43-02': 'JoyToy',
@@ -797,6 +798,23 @@ _EBAY_NEGATIVE_KEYWORDS = {
     #             "Battle Sisters" to pass the title match check.
     '52-20': 'repentia',
     # ── Space Marines ─────────────────────────────────────────────────────────
+    # 48-23 "Space Marine Predator" — eBay returns Kenner/NECA-brand vintage
+    #   "Predator" (Aliens franchise) toys and figures whose listing titles
+    #   contain "Space Marine Predator" as a product description phrase.
+    #   Excluding "kenner", "apone", and "aliens" filters all non-GW Predator
+    #   franchise items from results.
+    '48-23': 'kenner apone aliens',
+    # 48-75 "Space Marine Intercessors" — eBay returns "Assault Intercessors
+    #   with Jump Packs" listings (a different unit) that share "intercessors"
+    #   with the standard Intercessors box.  Excluding "jump pack" keeps
+    #   results to ground-based Intercessors only.
+    '48-75': 'jump pack',
+    # 48-06 "Space Marine Terminator Squad" — eBay returns "Terminator Assault
+    #   Squad" listings (a distinct kit with thunder hammers/storm shields)
+    #   that pass keyword overlap because "Terminator Squad" appears in both
+    #   product names.  Excluding "assault" narrows results to the standard
+    #   bolter-armed Terminator Squad only.
+    '48-06': 'assault',
     # 48-34 "Space Marine Ancient" — eBay returns:
     #   barachus: "Brother Barachus" named-character listings (different product)
     #   raven:    "Blood Ravens" chapter listings (different SM chapter)

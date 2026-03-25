@@ -198,19 +198,29 @@ class AmazonScraper:
                 result = self._fetch_price(url)
 
                 if result is None:
-                    # First attempt failed — wait a little longer and try once more.
+                    # First attempt failed — wait a little longer and try again.
                     retry_delay = self.delay * 2 + random.uniform(1, 3)
                     logger.debug(
-                        '[amazon] First attempt failed for %s — retrying in %.1fs',
+                        '[amazon] Attempt 1 failed for %s — retrying in %.1fs',
                         product.name, retry_delay,
                     )
                     time.sleep(retry_delay)
                     result = self._fetch_price(url)
 
                 if result is None:
-                    # Both attempts failed — leave existing price intact.
+                    # Second attempt failed — one more try with a longer back-off.
+                    retry_delay2 = self.delay * 3 + random.uniform(2, 5)
+                    logger.debug(
+                        '[amazon] Attempt 2 failed for %s — final retry in %.1fs',
+                        product.name, retry_delay2,
+                    )
+                    time.sleep(retry_delay2)
+                    result = self._fetch_price(url)
+
+                if result is None:
+                    # All 3 attempts failed — leave existing price intact.
                     logger.warning(
-                        '[amazon] [no price] %s (%s) — could not extract price after 2 attempts: %s',
+                        '[amazon] [no price] %s (%s) — could not extract price after 3 attempts: %s',
                         product.name, product.gw_sku, url[:80],
                     )
                 else:
