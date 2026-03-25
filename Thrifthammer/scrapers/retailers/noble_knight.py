@@ -180,7 +180,7 @@ class NoblekKnightScraper:
                     entry.not_available = False
                     entry.save(update_fields=['price', 'in_stock', 'not_available'])
                     logger.info(
-                        '[nk] [updated] %s — £%.2f  %s',
+                        '[nk] [updated] %s — $%.2f  %s',
                         product.name, price, 'in stock' if in_stock else 'OUT OF STOCK',
                     )
                     job.prices_updated += 1

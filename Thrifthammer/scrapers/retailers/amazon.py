@@ -294,7 +294,7 @@ class AmazonScraper:
                     entry.save(update_fields=['price', 'in_stock', 'not_available'])
                     stock_label = 'in stock' if in_stock else 'OUT OF STOCK'
                     logger.info(
-                        '[amazon] [updated]  %s (%s) — £%.2f  %s',
+                        '[amazon] [updated]  %s (%s) — $%.2f  %s',
                         product.name, product.gw_sku or '-', price, stock_label,
                     )
                     job.prices_updated += 1
@@ -436,7 +436,7 @@ class AmazonScraper:
 
         in_stock = self._extract_in_stock(soup)
         logger.info(
-            '[amazon] [fallback] [updated] %s — £%.2f  %s',
+            '[amazon] [fallback] [updated] %s — $%.2f  %s',
             url[:80], price, 'in stock' if in_stock else 'OUT OF STOCK',
         )
         return price, in_stock
