@@ -21,8 +21,11 @@ Usage:
 Notes:
   - Only processes products that already have an NK URL in CurrentPrice.
     Products without a URL are skipped (not marked not_available).
-  - If price extraction fails after 3 attempts: price is blanked and
-    in_stock is set to False (treat as out of stock on NK).
+  - Failure modes are treated differently to prevent over-blanking:
+      * Network error / non-200 response / bot detection → FETCH_ERROR sentinel
+        returned; existing price is PRESERVED (scrape failure ≠ out of stock).
+      * Successful 200 response but no price found → price blanked and
+        in_stock set to False (product genuinely unavailable on NK).
   - manual_url_override=True rows: URL is NOT changed; price IS updated.
   - Polite 1.5 s delay + 0–1 s jitter between requests.
 """
@@ -46,6 +49,17 @@ logger = logging.getLogger(__name__)
 NK_DOMAIN = 'nobleknight.com'
 DEFAULT_DELAY = 1.5
 JITTER_MAX = 1.0
+
+# Sentinel returned by _fetch_price when the page could not be retrieved
+# (network error, non-200 HTTP status, bot-detection redirect, etc.).
+# Distinct from None ("page loaded but no price found") so the run loop can
+# preserve the existing price instead of erroneously blanking it.
+_FETCH_ERROR = object()
+
+# Bot-detection pages are typically very short.  If the response body is
+# shorter than this threshold (bytes) we treat it as a blocked request rather
+# than a real product page.
+_MIN_PAGE_BYTES = 2_000
 
 
 class NoblekKnightScraper:
@@ -124,19 +138,36 @@ class NoblekKnightScraper:
             try:
                 result = self._fetch_price(url)
 
-                if result is None:
-                    # Retry once with back-off
+                # Retry on fetch errors (network/rate-limit) — back off longer
+                # between attempts.  Only retry None ("page loaded, no price")
+                # once in case of a transient rendering issue.
+                if result is _FETCH_ERROR:
                     time.sleep(self.delay * 2 + random.uniform(1, 3))
                     result = self._fetch_price(url)
 
-                if result is None:
-                    # Final retry
+                if result is _FETCH_ERROR:
                     time.sleep(self.delay * 3 + random.uniform(2, 5))
                     result = self._fetch_price(url)
 
                 if result is None:
+                    # Retry once: page loaded but price wasn't found (transient?)
+                    time.sleep(self.delay * 2 + random.uniform(1, 3))
+                    result = self._fetch_price(url)
+
+                if result is _FETCH_ERROR:
+                    # All retries hit network/bot-detection failures.
+                    # Preserve existing price — a scrape failure is NOT the
+                    # same as the product being out of stock.
                     logger.warning(
-                        '[nk] [no price] %s — blanking price (out of stock or fetch failed): %s',
+                        '[nk] [fetch-failed] %s — preserving existing price '
+                        '(network/bot-detection): %s',
+                        product.name, url[:80],
+                    )
+                elif result is None:
+                    # Page loaded successfully but no price found — product is
+                    # genuinely unavailable on NK (sold out or delisted).
+                    logger.warning(
+                        '[nk] [no price] %s — blanking price (confirmed unavailable): %s',
                         product.name, url[:80],
                     )
                     entry.price = None
@@ -149,7 +180,7 @@ class NoblekKnightScraper:
                     entry.not_available = False
                     entry.save(update_fields=['price', 'in_stock', 'not_available'])
                     logger.info(
-                        '[nk] [updated] %s — $%.2f  %s',
+                        '[nk] [updated] %s — £%.2f  %s',
                         product.name, price, 'in stock' if in_stock else 'OUT OF STOCK',
                     )
                     job.prices_updated += 1
@@ -175,25 +206,53 @@ class NoblekKnightScraper:
         """
         GET a Noble Knight product page and extract the price.
 
-        Returns (Decimal price, bool in_stock) or None if extraction fails.
+        Return values:
+            (Decimal price, bool in_stock)  — price extracted successfully
+            None                            — page loaded (200) but no price
+                                              found; product is confirmed
+                                              unavailable or delisted on NK
+            _FETCH_ERROR                    — could not load the page at all
+                                              (network error, non-200 status,
+                                              or bot-detection response);
+                                              caller should preserve existing
+                                              price rather than blanking it
         """
         try:
             response = self.session.get(url, timeout=15)
         except requests.RequestException as exc:
             logger.warning('[nk] Request failed for %s: %s', url[:80], exc)
-            return None
+            return _FETCH_ERROR
 
         if response.status_code == 404:
             logger.warning('[nk] 404 for %s — URL may be stale', url[:80])
-            return None
+            return _FETCH_ERROR
 
         if response.status_code != 200:
             logger.debug('[nk] HTTP %d for %s', response.status_code, url[:80])
-            return None
+            return _FETCH_ERROR
+
+        # Guard against bot-detection pages (e.g. Cloudflare CAPTCHA) that
+        # return HTTP 200 but contain no product content.  Real product pages
+        # are always much larger than the minimum threshold.
+        if len(response.content) < _MIN_PAGE_BYTES:
+            logger.warning(
+                '[nk] Suspiciously short response (%d bytes) for %s — '
+                'likely bot-detection; treating as fetch error',
+                len(response.content), url[:80],
+            )
+            return _FETCH_ERROR
 
         soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Secondary bot-detection check: known CAPTCHA / challenge page signals
+        page_text_lower = soup.get_text().lower()
+        if any(kw in page_text_lower for kw in ('captcha', 'access denied', 'checking your browser')):
+            logger.warning('[nk] Bot-detection challenge detected for %s', url[:80])
+            return _FETCH_ERROR
+
         price = self._extract_price(soup)
         if price is None:
+            # Page loaded cleanly but no price present — confirmed unavailable.
             return None
 
         in_stock = self._extract_in_stock(soup)
