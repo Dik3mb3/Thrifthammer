@@ -9,13 +9,30 @@ Changes covered:
              Correct Noble Knight URL — previous URL pointed to an Aeldari
              Rangers listing (wrong faction). Correct NK product ID is
              2147924590 (Skitarii Rangers, Adeptus Mechanicus).
+
+  Fix 2  -- Bust stale product detail caches for wave-AB gw_url updates:
+             Wave AB (Fix 15) set Product.gw_url for 13 SKUs but did not
+             invalidate the product detail page cache.  The "View on GW"
+             button was therefore invisible until the 30-min cache TTL
+             expired naturally.  This fix explicitly clears the cache for
+             every affected product slug so the button appears immediately.
+             SKUs: 54-21, HA-021, NM-010, NM-011, NM-012, 56-14, 48-29,
+                   96-12, 48-61, 43-56, 51-42, 59-20, 44-09.
 """
 
+from django.core.cache import cache
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from prices.models import CurrentPrice
 from products.models import Product, Retailer
+
+# SKUs whose gw_url was set in wave-AB Fix 15 — caches need busting.
+_WAVE_AB_GW_URL_SKUS = [
+    '54-21', 'HA-021', 'NM-010', 'NM-011', 'NM-012',
+    '56-14', '48-29', '96-12', '48-61', '43-56',
+    '51-42', '59-20', '44-09',
+]
 
 
 class Command(BaseCommand):
@@ -30,6 +47,9 @@ class Command(BaseCommand):
 
         with transaction.atomic():
             self._fix_1_skitarii_rangers_nk()
+
+        # Cache busting runs outside the transaction (cache is not DB-transactional).
+        self._fix_2_bust_gw_url_caches()
 
         self.stdout.write(self.style.SUCCESS('\nAll wave-AC fixes applied successfully.'))
 
@@ -71,3 +91,18 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(
                 f'  Fix 1: 59-10 Skitarii Rangers NK CurrentPrice created → {new_url}'
             ))
+
+    def _fix_2_bust_gw_url_caches(self):
+        """Clear stale product detail caches for products whose gw_url was set in wave AB."""
+        busted = 0
+        for gw_sku in _WAVE_AB_GW_URL_SKUS:
+            try:
+                product = Product.objects.get(gw_sku=gw_sku)
+            except Product.DoesNotExist:
+                continue
+            if product.slug:
+                cache.delete(f'product_detail|{product.slug}')
+                busted += 1
+        self.stdout.write(self.style.SUCCESS(
+            f'  Fix 2: Busted {busted} product detail caches for wave-AB gw_url updates.'
+        ))
