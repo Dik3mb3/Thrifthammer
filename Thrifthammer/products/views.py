@@ -421,15 +421,19 @@ def search_autocomplete(request):
     Returns up to 10 matching active products. Query must be at least
     2 characters. Results are cached for 5 minutes.
 
+    The price shown in the dropdown is the lowest live CurrentPrice
+    (same source as the browse page card) so the two always agree.
+
     Security: query is stripped and capped at 100 characters; only
-    name, slug, and msrp are returned — no sensitive fields.
+    name, slug, and min_price are returned — no sensitive fields.
     """
     query = request.GET.get('q', '').strip()[:100]
 
     if len(query) < 2:
         return JsonResponse({'results': []})
 
-    cache_key = f'autocomplete|{query.lower()}'
+    # v2 — bumped to bust old cached entries that stored msrp instead of min_price
+    cache_key = f'autocomplete_v2|{query.lower()}'
     cached    = cache.get(cache_key)
     if cached is not None:
         return JsonResponse({'results': cached})
@@ -438,15 +442,21 @@ def search_autocomplete(request):
         Product.objects
         .filter(is_active=True)
         .filter(Q(name__icontains=query) | Q(gw_sku__icontains=query))
-        .values('name', 'slug', 'msrp')
+        .annotate(
+            min_price=Min(
+                'current_prices__price',
+                filter=Q(current_prices__not_available=False),
+            )
+        )
+        .values('name', 'slug', 'min_price')
         .order_by('name')[:10]
     )
 
     results = [
         {
-            'name': p['name'],
-            'slug': p['slug'],
-            'msrp': str(p['msrp']) if p['msrp'] else None,
+            'name':      p['name'],
+            'slug':      p['slug'],
+            'min_price': str(p['min_price']) if p['min_price'] else None,
         }
         for p in matches
     ]
