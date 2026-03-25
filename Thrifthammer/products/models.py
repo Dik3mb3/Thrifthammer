@@ -125,6 +125,16 @@ class Product(models.Model):
     - slug and gw_sku are indexed for fast lookups
     - Use select_related('category', 'faction') when fetching product lists
     - Use prefetch_related('current_prices__retailer') for price comparison pages
+
+    IMPORTANT — cache invalidation:
+    products/signals.py registers a post_save handler that clears the product
+    detail cache and increments the list-page generation counter whenever a
+    record is saved via .save() or update_or_create().
+
+    DO NOT use QuerySet.update() to modify Product records in bulk.
+    QuerySet.update() bypasses Django signals, which means caches will NOT be
+    invalidated and the site will serve stale data.  Use .save() or
+    update_or_create() instead.
     """
 
     name = models.CharField(max_length=300)

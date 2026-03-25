@@ -2,7 +2,20 @@ from django.db import models
 
 
 class CurrentPrice(models.Model):
-    """The latest known price for a product at a specific retailer."""
+    """
+    The latest known price for a product at a specific retailer.
+
+    IMPORTANT — cache invalidation:
+    prices/signals.py registers post_save and pre_save handlers on this model
+    that bust the product detail cache, home page cache, and the list-page
+    generation counter automatically whenever a record is saved via .save() or
+    update_or_create().
+
+    DO NOT use QuerySet.update() to modify CurrentPrice records in bulk.
+    QuerySet.update() bypasses Django signals, which means caches will NOT be
+    invalidated and the site will serve stale prices.  Use .save() or
+    update_or_create() instead — both trigger the signals correctly.
+    """
     product = models.ForeignKey(
         'products.Product', on_delete=models.CASCADE, related_name='current_prices',
     )
