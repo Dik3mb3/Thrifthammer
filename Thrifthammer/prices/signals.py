@@ -102,6 +102,8 @@ def bust_price_caches(sender, instance, **kwargs):
         cache.delete(f'product_detail|{slug}')
     cache.delete('home_page_data_v4')
     # Bust all list-page caches by incrementing the shared generation counter.
-    # cache.add is a no-op if the key already exists; incr then bumps it.
-    cache.add('product_list_generation', 0)
+    # timeout=None → key never expires on its own; without this the default
+    # 5-minute TTL can cause the counter to reset to 0, allowing the list view
+    # to hit old gen=0 cache entries that are still within their 15-minute TTL.
+    cache.add('product_list_generation', 0, timeout=None)
     cache.incr('product_list_generation')
