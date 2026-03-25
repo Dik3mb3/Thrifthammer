@@ -602,6 +602,18 @@ _EBAY_SEARCH_OVERRIDES = {
     # "40k" shifts Best Match toward exact-kit standalone listings, giving the
     # cheaper listing (389726995331) a better chance to surface in results.
     '48-22': 'land raider crusader 40k',
+    # 48-46 "Space Marine Ballistus Dreadnought" — most eBay listings omit
+    # "Space Marine" from the title (sellers write "Ballistus Dreadnought 40K").
+    # With the default 4-keyword product name, min_matches=3 (ceil(4×0.65)).
+    # Listings scoring only "ballistus" + "dreadnought" come in at 2/3 — one
+    # short — and are rejected.  Dropping to 2 keywords sets min_matches=2,
+    # so standard listings now score 2/2 → PASS.
+    '48-46': 'ballistus dreadnought',
+    # 48-94 "Space Marine Impulsor" — sparse secondary market combined with
+    # the description-mirrors-title filter leaves the eBay slot blank.
+    # "impulsor warhammer" is a 2-keyword query (min_matches=2) that broadens
+    # eBay Best Match reach without adding ambiguous tokens.
+    '48-94': 'impulsor warhammer',
     # ── T'au Empire ───────────────────────────────────────────────────────────
     # 56-19 "T'au Pathfinders" — apostrophe in "T'au" breaks eBay tokenisation;
     # "pathfinders 40k" is cleaner and avoids overpriced BIN results that the
