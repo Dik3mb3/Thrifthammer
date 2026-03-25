@@ -83,6 +83,15 @@ DEFAULT_DELAY = 2.0
 # Extra random jitter added to each delay (0–JITTER_MAX seconds).
 JITTER_MAX = 1.0
 
+# User-Agent for the mobile-browser fallback attempt.
+# A different device fingerprint (iPhone Safari) gives the fallback its best
+# chance of bypassing bot detection that has already flagged the desktop session.
+_MOBILE_USER_AGENT = (
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) '
+    'AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 '
+    'Mobile/15E148 Safari/604.1'
+)
+
 # CSS selectors tried for price extraction, in priority order.
 # Each entry is (container_selector, whole_selector, fraction_selector).
 # If whole_selector is None, the container is expected to hold the full price.
@@ -122,6 +131,17 @@ _PRICE_STRATEGIES = [
         '.a-price-fraction',
     ),
 ]
+
+# Additional price selectors used only in the mobile fallback attempt.
+# Amazon's mobile pages surface price in different containers than desktop.
+# These are tried first, then _PRICE_STRATEGIES are tried as a secondary pass.
+_MOBILE_PRICE_STRATEGIES = [
+    ('#price_inside_buybox',              None, None),
+    ('#actualPriceValue',                 None, None),
+    ('.a-box-inner .a-color-price',       None, None),
+    ('#buyNewSection .a-color-price',     None, None),
+    ('#newBuyBoxPrice',                   None, None),
+] + _PRICE_STRATEGIES
 
 
 class AmazonScraper:
@@ -247,9 +267,23 @@ class AmazonScraper:
                     result = self._fetch_price(url)
 
                 if result is None:
-                    # All 3 attempts failed — leave existing price intact.
+                    # All 3 standard attempts failed — try the mobile fallback.
+                    # Wait 10 s then use a completely different browser fingerprint
+                    # (fresh session, iPhone Safari UA, Google referer, bare ASIN
+                    # URL) to bypass bot detection that blocked the desktop session.
+                    logger.debug(
+                        '[amazon] All 3 standard attempts failed for %s — '
+                        'mobile fallback in 10s',
+                        product.name,
+                    )
+                    time.sleep(10)
+                    result = self._fetch_price_fallback(url)
+
+                if result is None:
+                    # All 4 attempts failed — leave existing price intact.
                     logger.warning(
-                        '[amazon] [no price] %s (%s) — could not extract price after 3 attempts: %s',
+                        '[amazon] [no price] %s (%s) — could not extract price '
+                        'after 4 attempts (3 standard + 1 mobile fallback): %s',
                         product.name, product.gw_sku, url[:80],
                     )
                 else:
@@ -326,6 +360,85 @@ class AmazonScraper:
             return None
 
         in_stock = self._extract_in_stock(soup)
+        return price, in_stock
+
+    def _fetch_price_fallback(self, url):
+        """
+        Last-resort price fetch using a fresh mobile-browser session.
+
+        Called after all 3 standard attempts have failed.  Uses a completely
+        different HTTP fingerprint to avoid triggering the same bot-detection
+        rules that blocked the main session:
+
+          - Brand-new requests.Session (no cookies from the blocked session)
+          - iPhone Safari User-Agent instead of desktop Chrome
+          - Google search as Referer (looks like organic search traffic)
+          - Bare ASIN URL (strips tracking parameters that may fingerprint us)
+          - Mobile-specific price CSS selectors tried first
+
+        Returns (Decimal price, bool in_stock) or None if still blocked/failed.
+        """
+        # Strip to a clean bare ASIN URL — removes any tracking/affiliate params
+        # and ensures we hit the canonical product page.
+        asin_match = re.search(r'/dp/([A-Z0-9]{10})', url)
+        fetch_url = (
+            f'https://www.amazon.com/dp/{asin_match.group(1)}'
+            if asin_match else url
+        )
+
+        # Fresh session — no cookies or history that Amazon may have flagged.
+        session = requests.Session()
+        session.headers.update({
+            'User-Agent':              _MOBILE_USER_AGENT,
+            'Accept':                  'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language':         'en-US,en;q=0.5',
+            'Accept-Encoding':         'gzip, deflate, br',
+            'Referer':                 'https://www.google.com/search?q=warhammer+40k+miniatures',
+            'DNT':                     '1',
+            'Connection':              'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+        })
+
+        try:
+            response = session.get(fetch_url, timeout=15)
+        except requests.RequestException as exc:
+            logger.warning('[amazon] [fallback] Request failed for %s: %s', fetch_url[:80], exc)
+            return None
+
+        if response.status_code != 200:
+            logger.debug('[amazon] [fallback] HTTP %d for %s', response.status_code, fetch_url[:80])
+            return None
+
+        block_signals = (
+            'Type the characters you see',
+            'Robot Check',
+            '/ap/signin',
+            'validateCaptcha',
+        )
+        for signal in block_signals:
+            if signal in response.text:
+                logger.warning(
+                    '[amazon] [fallback] Blocked (%s) for %s', signal, fetch_url[:80],
+                )
+                return None
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Try mobile-specific selectors first, then fall through to standard ones.
+        price = None
+        for container_sel, whole_sel, fraction_sel in _MOBILE_PRICE_STRATEGIES:
+            price = self._try_strategy(soup, container_sel, whole_sel, fraction_sel)
+            if price is not None:
+                break
+
+        if price is None:
+            return None
+
+        in_stock = self._extract_in_stock(soup)
+        logger.info(
+            '[amazon] [fallback] [updated] %s — £%.2f  %s',
+            url[:80], price, 'in stock' if in_stock else 'OUT OF STOCK',
+        )
         return price, in_stock
 
     def _extract_price(self, soup):
