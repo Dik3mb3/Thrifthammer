@@ -2,7 +2,7 @@ name: Scrape Noble Knight Games
 
 on:
   schedule:
-    # Every Monday at 05:30 UTC (after eBay at 03:00, Amazon at 04:00, MM at 04:00)
+    # Every Monday at 05:30 UTC (after Amazon and MM runs)
     - cron: '30 5 * * 1'
   workflow_dispatch:
 
@@ -10,7 +10,7 @@ jobs:
   scrape:
     name: Noble Knight Scraper
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: ./Thrifthammer
