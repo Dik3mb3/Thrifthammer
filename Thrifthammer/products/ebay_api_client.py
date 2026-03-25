@@ -461,8 +461,13 @@ class EbayBrowseAPI:
         # "-decor" is included globally because "decor" / "wall decor" / "room decor"
         # listings appear across all faction searches (GW-branded art prints, display
         # pieces, room accessories) and are never sealed miniature kit retail products.
+        # "-cards -datacards" are included globally because GW publishes small cardboard
+        # reference card sets (e.g. "Space Marine Datacards") that share exact product
+        # names with miniature kits and are priced much cheaper — excluding them at the
+        # eBay query level prevents card sets from winning the best-price match over
+        # the actual miniature box.
         if not is_citadel:
-            query = f'{query.strip()} -bits -bitz -sprue -decor'
+            query = f'{query.strip()} -bits -bitz -sprue -decor -cards -datacards'
 
         # Product-specific negative keywords: exclude similarly-named products
         # that our keyword validator cannot distinguish (e.g. Plastic Glue vs
@@ -681,6 +686,13 @@ class EbayBrowseAPI:
         # These appear across all faction searches but are never sealed retail kits.
         # Globally blocked (also excluded at eBay query level via -decor above).
         'decor', 'decors',
+        # Reference card sets — GW publishes small cardboard datacards/command card
+        # sets (e.g. "Space Marine Datacards", "Chaos Space Marines Cards") that
+        # share exact faction/unit names with miniature kits but cost only ~$15–25.
+        # Without this exclusion, card sets win the best-price match over the actual
+        # miniature box because they are cheaper and pass all keyword checks.
+        # Globally blocked (also excluded at eBay query level via -cards -datacards).
+        'card', 'cards', 'datacard', 'datacards',
     }
 
     # Conservative bits keyword set used for shortDescription checks only.
