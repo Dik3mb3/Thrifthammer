@@ -1,0 +1,39 @@
+name: Scrape Noble Knight Games
+
+on:
+  schedule:
+    # Every Monday at 05:30 UTC (after eBay at 03:00, Amazon at 04:00, MM at 04:00)
+    - cron: '30 5 * * 1'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    name: Noble Knight Scraper
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: ./Thrifthammer
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: Thrifthammer/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Noble Knight scraper
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_ALLOWED_HOSTS: thrifthammer.com,www.thrifthammer.com,web-production-b6056.up.railway.app
+          DJANGO_DEBUG: 'False'
+          RAILWAY_ENVIRONMENT: production
+        run: python manage.py run_scrapers noble-knight-games
