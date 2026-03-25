@@ -28,10 +28,20 @@ product is sold by a third-party marketplace seller only), the product is
 skipped and the existing price is left unchanged.
 
 Anti-bot measures:
+  - Session warm-up: visits amazon.com home page first to acquire cookies
+    (session-id, ubid-main, etc.) that Amazon sets for real browsers
   - Realistic browser User-Agent string
-  - Accept / Accept-Language / Accept-Encoding headers
+  - Full Chrome header set including Cache-Control, Pragma, Connection,
+    Referer (set per-request) and all Sec-Fetch-* headers
+  - Redirect / auth-wall detection: checks response URL for sign-in or
+    robot-check pages in addition to the CAPTCHA text check
   - 2-second delay between requests (configurable via SCRAPER_REQUEST_DELAY)
   - Randomised extra jitter (0–1 s) to reduce fingerprinting
+
+Important — where to run this scraper:
+  Amazon blocks requests from GitHub Actions (AWS IP ranges).  This scraper
+  MUST be run from Railway (the production server) or a residential IP.
+  Trigger it via a Railway Cron service, not the GitHub Actions workflow.
 
 Usage:
     python manage.py run_scrapers amazon
@@ -125,7 +135,7 @@ class AmazonScraper:
     retailer_slug = 'amazon'
 
     def __init__(self):
-        """Initialise a requests session with browser-like headers."""
+        """Initialise a requests session with browser-like headers and warm up."""
         self.session = requests.Session()
         self.session.headers.update({
             'User-Agent': (
@@ -139,6 +149,9 @@ class AmazonScraper:
             ),
             'Accept-Language': 'en-US,en;q=0.9',
             'Accept-Encoding': 'gzip, deflate, br',
+            'Cache-Control': 'max-age=0',
+            'Pragma': 'no-cache',
+            'Connection': 'keep-alive',
             'DNT': '1',
             'Upgrade-Insecure-Requests': '1',
             'Sec-Fetch-Dest': 'document',
@@ -147,6 +160,22 @@ class AmazonScraper:
             'Sec-Fetch-User': '?1',
         })
         self.delay = DEFAULT_DELAY
+        self._warm_up()
+
+    def _warm_up(self):
+        """
+        Visit Amazon home page to acquire session cookies before scraping.
+
+        Real browsers accumulate cookies (session-id, ubid-main, etc.) from
+        the home page.  Sending these with product page requests makes the
+        session look more legitimate to Amazon's bot detection.
+        """
+        try:
+            self.session.get('https://www.amazon.com/', timeout=10)
+            logger.debug('[amazon] Session warmed up (home page visited)')
+            time.sleep(1 + random.uniform(0, 0.5))
+        except requests.RequestException as exc:
+            logger.debug('[amazon] Warm-up request failed (non-fatal): %s', exc)
 
     # -------------------------------------------------------------------------
     # Public entry point
@@ -265,7 +294,11 @@ class AmazonScraper:
             (Decimal price, bool in_stock) or None if price cannot be extracted.
         """
         try:
-            response = self.session.get(url, timeout=15)
+            response = self.session.get(
+                url,
+                timeout=15,
+                headers={'Referer': 'https://www.amazon.com/'},
+            )
         except requests.RequestException as exc:
             logger.warning('[amazon] Request failed for %s: %s', url[:80], exc)
             return None
@@ -274,11 +307,17 @@ class AmazonScraper:
             logger.debug('[amazon] HTTP %d for %s', response.status_code, url[:80])
             return None
 
-        # Quick bot-check detection: Amazon CAPTCHA pages contain the string
-        # "Type the characters you see" in the response body.
-        if 'Type the characters you see' in response.text:
-            logger.warning('[amazon] Bot-check page returned for %s', url[:80])
-            return None
+        # Bot / auth-wall detection — Amazon serves several types of block pages.
+        block_signals = (
+            'Type the characters you see',   # CAPTCHA
+            'Robot Check',                   # Robot check page
+            '/ap/signin',                    # Redirect to sign-in
+            'validateCaptcha',               # Inline CAPTCHA form
+        )
+        for signal in block_signals:
+            if signal in response.text:
+                logger.warning('[amazon] Blocked page (%s) for %s', signal, url[:80])
+                return None
 
         soup = BeautifulSoup(response.text, 'html.parser')
         price = self._extract_price(soup)
