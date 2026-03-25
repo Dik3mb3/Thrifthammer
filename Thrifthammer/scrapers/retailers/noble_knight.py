@@ -21,7 +21,8 @@ Usage:
 Notes:
   - Only processes products that already have an NK URL in CurrentPrice.
     Products without a URL are skipped (not marked not_available).
-  - If price extraction fails after 3 attempts the existing price is kept.
+  - If price extraction fails after 3 attempts: price is blanked and
+    in_stock is set to False (treat as out of stock on NK).
   - manual_url_override=True rows: URL is NOT changed; price IS updated.
   - Polite 1.5 s delay + 0–1 s jitter between requests.
 """
@@ -135,9 +136,12 @@ class NoblekKnightScraper:
 
                 if result is None:
                     logger.warning(
-                        '[nk] [no price] %s — could not extract price after 3 attempts: %s',
+                        '[nk] [no price] %s — blanking price (out of stock or fetch failed): %s',
                         product.name, url[:80],
                     )
+                    entry.price = None
+                    entry.in_stock = False
+                    entry.save(update_fields=['price', 'in_stock'])
                 else:
                     price, in_stock = result
                     entry.price = price

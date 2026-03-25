@@ -181,8 +181,11 @@ def product_list(request):
     # Stable cache key covers every filter dimension.
     # Bump the version suffix (v2, v3…) whenever sort_options or the card
     # template change significantly — forces a cache miss on all existing entries.
+    # product_list_generation is incremented by the bust_price_caches signal on
+    # every CurrentPrice save, invalidating all list page variants at once.
+    list_gen = cache.get('product_list_generation', 0)
     cache_key = (
-        f'product_list_v3|q={query}|cat={category_slug}'
+        f'product_list_v3|gen={list_gen}|q={query}|cat={category_slug}'
         f'|fac={faction_slug}|sort={sort}|page={page_number}'
     )
     cached = cache.get(cache_key)

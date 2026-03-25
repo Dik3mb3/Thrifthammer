@@ -22,10 +22,11 @@ Price signals for the prices app.
    and the 15-minute list/home caches can fall out of sync after a scraper run,
    causing the search card and the SKU page to show different prices.
 
-   The list-page cache (keyed by query/filter/sort) is intentionally left intact
-   because there are too many possible keys to enumerate.  The detail page is the
-   one users land on after clicking a search card, so busting it on every price
-   change is the highest-value invalidation target.
+   List-page caches use too many key variants (one per query/filter/sort combo)
+   to enumerate and delete individually.  Instead, a shared integer counter
+   ``product_list_generation`` is incremented on every price save.  The list
+   view includes this counter in its cache key, so a single increment
+   effectively invalidates every cached list page at once.
 """
 
 from django.core.cache import cache
@@ -87,14 +88,20 @@ def bust_price_caches(sender, instance, **kwargs):
     Invalidate cached pages whenever a CurrentPrice record is saved.
 
     Clears:
-      - product_detail|{slug}  — the product detail page cache (30 min TTL)
-      - home_page_data_v4      — the home page Top 10 deals cache (15 min TTL)
+      - product_detail|{slug}      — the product detail page cache (30 min TTL)
+      - home_page_data_v4          — the home page Top 10 deals cache (15 min TTL)
+      - product_list_generation    — counter included in list cache keys; incrementing
+                                     it makes every cached product list page stale at
+                                     once without needing to enumerate individual keys
 
-    This prevents the search card price (from the 15-min list cache) and the
-    SKU detail page (from the 30-min detail cache) from diverging after a
-    scraper run updates a CurrentPrice record.
+    This keeps the search card price (list cache) and the SKU detail page
+    (detail cache) in sync after a scraper run updates a CurrentPrice record.
     """
     slug = getattr(instance.product, 'slug', None)
     if slug:
         cache.delete(f'product_detail|{slug}')
     cache.delete('home_page_data_v4')
+    # Bust all list-page caches by incrementing the shared generation counter.
+    # cache.add is a no-op if the key already exists; incr then bumps it.
+    cache.add('product_list_generation', 0)
+    cache.incr('product_list_generation')
