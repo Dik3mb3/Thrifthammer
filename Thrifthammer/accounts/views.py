@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
+from products.models import NewsletterSignup
+
 from .forms import (
     ChangeEmailForm,
     ChangeUsernameForm,
@@ -37,13 +39,21 @@ def profile(request):
 
     Shows email/username/password change forms and the delete-account option.
     The watchlist lives on its own separate page.
+    Also shows a newsletter opt-in/out toggle based on whether the user's
+    email address is in the NewsletterSignup table.
     """
     email_form = ChangeEmailForm(request.user)
     username_form = ChangeUsernameForm(request.user)
 
+    newsletter_subscribed = (
+        bool(request.user.email)
+        and NewsletterSignup.objects.filter(email__iexact=request.user.email).exists()
+    )
+
     return render(request, 'accounts/profile.html', {
         'email_form': email_form,
         'username_form': username_form,
+        'newsletter_subscribed': newsletter_subscribed,
     })
 
 
@@ -157,6 +167,31 @@ def update_watchlist_alert(request, item_id):
         for error in form.errors.values():
             messages.error(request, error.as_text())
     return redirect('accounts:watchlist')
+
+
+@login_required
+@require_POST
+def toggle_newsletter(request):
+    """
+    POST-only: subscribe or unsubscribe the logged-in user from weekly deal emails.
+
+    Uses the user's account email as the key in NewsletterSignup. If they have
+    no email set we redirect back with an error asking them to add one first.
+    """
+    email = request.user.email.strip().lower() if request.user.email else ''
+    if not email:
+        messages.error(request, 'Add an email address to your account before subscribing to deal alerts.')
+        return redirect('accounts:profile')
+
+    existing = NewsletterSignup.objects.filter(email__iexact=email).first()
+    if existing:
+        existing.delete()
+        messages.success(request, 'You have been unsubscribed from weekly deal alerts.')
+    else:
+        NewsletterSignup.objects.create(email=email)
+        messages.success(request, "You're subscribed! We'll send you the best weekly deals every Monday.")
+
+    return redirect('accounts:profile')
 
 
 def forgot_password(request):

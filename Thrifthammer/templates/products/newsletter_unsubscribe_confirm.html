@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Unsubscribe from Deal Alerts | ThriftHammer{% endblock %}
+
+{% block content %}
+<div class="page-content" style="max-width:520px;margin:0 auto;text-align:center;padding:var(--sp-6) var(--sp-3);">
+  <div class="gold-rule" style="margin-bottom:var(--sp-4);"></div>
+
+  <h1 class="section-title" style="margin-bottom:var(--sp-2);">Unsubscribe</h1>
+
+  {% if email %}
+  <p style="color:var(--text-secondary);margin-bottom:var(--sp-4);">
+    Are you sure you want to stop receiving weekly deal alerts at<br>
+    <strong style="color:var(--text-primary);">{{ email }}</strong>?
+  </p>
+  {% else %}
+  <p style="color:var(--text-secondary);margin-bottom:var(--sp-4);">
+    This unsubscribe link has already been used or is no longer valid.
+  </p>
+  {% endif %}
+
+  {% if email %}
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="confirmed" value="1">
+    <button type="submit" class="btn btn-danger" style="margin-right:var(--sp-2);">
+      Yes, unsubscribe me
+    </button>
+    <a href="{% url 'home' %}" class="btn btn-secondary">Never mind</a>
+  </form>
+  {% else %}
+  <a href="{% url 'home' %}" class="btn btn-secondary">Back to ThriftHammer</a>
+  {% endif %}
+
+  <div class="gold-rule" style="margin-top:var(--sp-4);"></div>
+</div>
+{% endblock %}

@@ -583,3 +583,25 @@ def newsletter_signup(request):
     else:
         messages.info(request, "You're already signed up for deal alerts.")
     return redirect('home')
+
+
+def newsletter_unsubscribe(request, token):
+    """
+    One-click unsubscribe page.
+
+    GET  → show a confirmation page with the subscriber's email.
+    POST → delete the NewsletterSignup record and show a farewell message.
+    If the token is unknown we still show a neutral success page (prevents
+    probing for valid tokens).
+    """
+    signup = NewsletterSignup.objects.filter(token=token).first()
+
+    if request.method == 'POST':
+        if signup:
+            signup.delete()
+        return render(request, 'products/newsletter_unsubscribed.html')
+
+    return render(request, 'products/newsletter_unsubscribe_confirm.html', {
+        'email': signup.email if signup else None,
+        'token': token,
+    })

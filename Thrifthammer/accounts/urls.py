@@ -25,6 +25,8 @@ urlpatterns = [
         auth_views.PasswordChangeDoneView.as_view(template_name='accounts/password_change_done.html'),
         name='password_change_done',
     ),
+    # Newsletter opt-in / opt-out toggle (POST only)
+    path('profile/newsletter-toggle/', views.toggle_newsletter, name='newsletter_toggle'),
     # Self-service password reset via security question (no email required)
     path('forgot-password/', views.forgot_password, name='forgot_password'),
     path('forgot-password/verify/', views.forgot_password_verify, name='forgot_password_verify'),

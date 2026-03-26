@@ -5,6 +5,8 @@ Includes Category, Faction, Retailer, and Product models.
 Prices are stored in the separate `prices` app (CurrentPrice, PriceHistory).
 """
 
+import uuid
+
 from django.core.cache import cache
 from django.db import models
 from django.utils.text import slugify
@@ -309,6 +311,12 @@ class NewsletterSignup(models.Model):
         unique=True,
         help_text='Email address for weekly deal alert emails.',
     )
+    token = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
+        help_text='Unique token used to generate a one-click unsubscribe link.',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -318,3 +326,7 @@ class NewsletterSignup(models.Model):
 
     def __str__(self):
         return self.email
+
+    def get_unsubscribe_url(self):
+        """Return the absolute unsubscribe URL for this subscriber."""
+        return f'https://www.thrifthammer.com/newsletter/unsubscribe/{self.token}/'

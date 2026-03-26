@@ -80,6 +80,30 @@
       <a href="{% url 'accounts:password_change' %}" class="btn btn-secondary btn-sm">Change password →</a>
     </div>
 
+    {# ── Weekly deal alerts newsletter ── #}
+    <div class="profile-section">
+      <h2 class="profile-section-title">Weekly Deal Alerts</h2>
+      <p class="profile-section-hint">
+        Get the top 10 biggest Warhammer discounts sent to your inbox every Monday morning.
+      </p>
+      {% if not user.email %}
+      <p class="profile-section-hint" style="color:var(--accent-red-lt);">
+        You need an email address on your account to receive deal alerts. Add one above.
+      </p>
+      {% else %}
+      <form method="post" action="{% url 'accounts:newsletter_toggle' %}" style="display:flex;align-items:center;gap:var(--sp-2);">
+        {% csrf_token %}
+        {% if newsletter_subscribed %}
+        <span style="font-size:0.85rem;color:var(--accent-green-lt);">&#10003; Subscribed — emails go to {{ user.email }}</span>
+        <button type="submit" class="btn btn-secondary btn-sm">Unsubscribe</button>
+        {% else %}
+        <span style="font-size:0.85rem;color:var(--text-muted);">Not subscribed</span>
+        <button type="submit" class="btn btn-primary btn-sm">Subscribe to deal alerts</button>
+        {% endif %}
+      </form>
+      {% endif %}
+    </div>
+
     {# ── Delete account ── #}
     <div class="profile-section profile-section-danger">
       <h2 class="profile-section-title profile-danger-title">Delete My Account</h2>

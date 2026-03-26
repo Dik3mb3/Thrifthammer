@@ -17,7 +17,9 @@ from django.core.mail import EmailMultiAlternatives
 from django.core.management.base import BaseCommand
 from django.db.models import DecimalField, ExpressionWrapper, F, Min, Q
 from django.template.loader import render_to_string
+from django.utils import timezone
 
+from blog.models import Post
 from prices.models import CurrentPrice
 from products.models import NewsletterSignup, Product
 
@@ -63,30 +65,30 @@ class Command(BaseCommand):
             )
 
         # ── 2. Gather subscribers ────────────────────────────────────────────
-        subscribers = list(NewsletterSignup.objects.values_list('email', flat=True))
+        subscribers = list(NewsletterSignup.objects.all())
         if not subscribers:
             self.stdout.write(self.style.WARNING('No newsletter subscribers — nothing to send.'))
             return
 
         self.stdout.write(f'\n{len(subscribers)} subscriber(s) found.')
 
+        # ── 3. Fetch latest published blog post ──────────────────────────────
+        latest_post = (
+            Post.objects
+            .filter(status=Post.STATUS_PUBLISHED, published_at__lte=timezone.now())
+            .order_by('-published_at')
+            .first()
+        )
+        if latest_post:
+            self.stdout.write(f'Latest blog post: "{latest_post.title}"')
+        else:
+            self.stdout.write('No published blog post found — blog section will be hidden.')
+
         if dry_run:
-            for email in subscribers:
-                self.stdout.write(f'  [dry-run] Would send to: {email}')
+            for sub in subscribers:
+                self.stdout.write(f'  [dry-run] Would send to: {sub.email}')
             self.stdout.write('\nDry run complete — no emails sent.')
             return
-
-        # ── 3. Render templates ──────────────────────────────────────────────
-        context = {
-            'deals': deals,
-            'today': today,
-            'site_url': 'https://www.thrifthammer.com',
-            'browse_url': 'https://www.thrifthammer.com/products/',
-            'register_url': 'https://www.thrifthammer.com/accounts/register/',
-            'top_pct': int(deals[0]['pct_off']) if deals else 0,
-        }
-        html_body = render_to_string('emails/weekly_deals.html', context)
-        text_body = self._build_text_body(deals, today)
 
         # Dynamic subject — mentions the top saving to hook the reader
         top_saving = int(deals[0]['pct_off']) if deals else 0
@@ -95,23 +97,36 @@ class Command(BaseCommand):
             f" ({today.strftime('%b %-d')})"
         )
 
-        # ── 4. Send ──────────────────────────────────────────────────────────
+        # ── 4. Send (per-subscriber so each gets their own unsubscribe link) ─
         sent = errors = 0
-        for email in subscribers:
+        for sub in subscribers:
             try:
+                context = {
+                    'deals': deals,
+                    'today': today,
+                    'site_url': 'https://www.thrifthammer.com',
+                    'browse_url': 'https://www.thrifthammer.com/products/',
+                    'register_url': 'https://www.thrifthammer.com/accounts/register/',
+                    'top_pct': top_saving,
+                    'latest_post': latest_post,
+                    'unsubscribe_url': sub.get_unsubscribe_url(),
+                }
+                html_body = render_to_string('emails/weekly_deals.html', context)
+                text_body = self._build_text_body(deals, today, sub.get_unsubscribe_url(), latest_post)
+
                 msg = EmailMultiAlternatives(
                     subject=subject,
                     body=text_body,
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    to=[email],
+                    to=[sub.email],
                 )
                 msg.attach_alternative(html_body, 'text/html')
                 msg.send(fail_silently=False)
                 sent += 1
-                self.stdout.write(self.style.SUCCESS(f'  [sent] {email}'))
+                self.stdout.write(self.style.SUCCESS(f'  [sent] {sub.email}'))
             except Exception as exc:
                 errors += 1
-                self.stderr.write(f'  [error] {email} — {exc}')
+                self.stderr.write(f'  [error] {sub.email} — {exc}')
 
         self.stdout.write(
             f'\nDone -- sent: {sent} | errors: {errors}'
@@ -182,20 +197,18 @@ class Command(BaseCommand):
 
         return deals
 
-    def _build_text_body(self, deals, today):
+    def _build_text_body(self, deals, today, unsubscribe_url, latest_post=None):
         """Build a clean plain-text fallback email body."""
         lines = [
-            'THRIFTHAMMER — WEEKLY DEAL DIGEST',
+            'THRIFTHAMMER -- WEEKLY DEAL DIGEST',
             f'{today.strftime("%B %-d, %Y")}',
             'https://www.thrifthammer.com',
             '',
-            'This week\'s top Warhammer discounts:',
+            "This week's top Warhammer discounts:",
             '',
         ]
         for i, d in enumerate(deals, 1):
-            lines.append(
-                f'{i:>2}. {d["name"]}'
-            )
+            lines.append(f'{i:>2}. {d["name"]}')
             lines.append(
                 f'    ${d["price"]:.2f}  (save {d["pct_off"]:.0f}% off ${d["msrp"]:.2f} MSRP at {d["retailer"]})'
             )
@@ -203,15 +216,31 @@ class Command(BaseCommand):
             lines.append('')
 
         lines += [
-            '─' * 60,
+            '-' * 60,
             'CREATE A FREE ACCOUNT',
             'Track prices, build wishlists, and get personal alerts',
             'when your target price drops.',
             'https://www.thrifthammer.com/accounts/register/',
             '',
-            '─' * 60,
-            'You\'re receiving this because you signed up at thrifthammer.com.',
+        ]
+
+        if latest_post:
+            lines += [
+                '-' * 60,
+                'LATEST FROM THE BLOG',
+                latest_post.title,
+            ]
+            if latest_post.excerpt:
+                lines.append(latest_post.excerpt)
+            lines.append(f'https://www.thrifthammer.com/blog/{latest_post.slug}/')
+            lines.append('')
+
+        lines += [
+            '-' * 60,
+            "You're receiving this because you signed up at thrifthammer.com.",
             'Stop overpaying for plastic.',
-            '— ThriftHammer',
+            '-- ThriftHammer',
+            '',
+            f'Unsubscribe: {unsubscribe_url}',
         ]
         return '\n'.join(lines)
