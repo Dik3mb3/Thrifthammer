@@ -187,16 +187,17 @@ h3, h4, h5 {
   align-items: center;
   /* flex-shrink: 1 lets the brand compress slightly on very narrow viewports
      rather than pushing the hamburger button off-screen */
-  flex-shrink: 1;
+  flex-shrink: 0;
   min-width: 0;
   text-decoration: none;
+  margin-right: var(--sp-2);
 }
 .brand-logo {
   display: block;
-  height: 48px;
+  height: 40px;
   width: auto;
   /* Cap width so iOS Safari never clips the wordmark */
-  max-width: 175px;
+  max-width: 148px;
   filter: drop-shadow(0 0 8px rgb(200 146 42 / 0.3));
   transition: filter 200ms ease;
 }
@@ -285,7 +286,8 @@ h3, h4, h5 {
 
 /* Navbar search */
 .navbar-search {
-  flex: 1;
+  flex: 1 1 220px;
+  min-width: 160px;
   max-width: 400px;
   position: relative;
 }
@@ -323,17 +325,17 @@ h3, h4, h5 {
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: var(--sp-1);
+  gap: 0;
   flex-shrink: 0;
 }
 .navbar-links a {
   font-family: 'Oswald', sans-serif;
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text-secondary);
-  font-size: 0.8rem;
-  padding: var(--sp-2) var(--sp-3);
+  font-size: 0.78rem;
+  padding: var(--sp-2) var(--sp-2);
   border-radius: var(--rounded);
   transition: var(--transition-fast);
   white-space: nowrap;

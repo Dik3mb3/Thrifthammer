@@ -39,10 +39,10 @@
     {# Price Paid — optional #}
     <div class="form-group" style="margin-bottom:var(--sp-4);">
       <label for="{{ form.price_paid.id_for_label }}" class="form-label">
-        Price Paid <span style="color:var(--text-muted);font-weight:400;">(optional)</span>
+        Price Paid <span style="color:var(--text-muted);font-weight:400;">(per unit, optional)</span>
       </label>
       {{ form.price_paid }}
-      <p style="font-size:0.78rem;color:var(--text-muted);margin-top:var(--sp-1);">What you actually paid. Leave blank if you don't know or don't want to track it.</p>
+      <p style="font-size:0.78rem;color:var(--text-muted);margin-top:var(--sp-1);">Price per individual unit. Total spent = this × quantity. Leave blank if you don't want to track it.</p>
       {% if form.price_paid.errors %}
       <p class="form-error">{{ form.price_paid.errors|join:", " }}</p>
       {% endif %}

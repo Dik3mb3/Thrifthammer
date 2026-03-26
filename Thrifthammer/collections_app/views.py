@@ -1,8 +1,10 @@
+from decimal import Decimal
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import DecimalField, ExpressionWrapper, F, Sum
 from django.shortcuts import get_object_or_404, redirect, render
 
+from prices.models import CurrentPrice
 from products.models import Product
 
 from .forms import CollectionItemForm
@@ -11,34 +13,67 @@ from .models import CollectionItem
 
 @login_required
 def my_collection(request):
-    """Show the user's full collection with stats."""
-    items = CollectionItem.objects.filter(user=request.user).select_related('product')
+    """
+    Show the user's full collection with stats.
 
-    # Collection stats
-    total_items = items.exclude(status='wishlist').aggregate(total=Sum('quantity'))['total'] or 0
-    total_spent = items.exclude(status='wishlist').aggregate(
-        total=Sum(F('price_paid') * F('quantity'))
-    )['total'] or 0
-    total_msrp = items.exclude(status='wishlist').aggregate(
-        total=Sum(
-            ExpressionWrapper(F('product__msrp') * F('quantity'), output_field=DecimalField()),
-        )
-    )['total'] or 0
+    MSRP reference: GW's live CurrentPrice for each product (retailer_id=1).
+    Falls back to product.msrp when GW has no listed price.
+    price_paid is stored per-unit; total_spent = price_paid × quantity.
+    """
+    items = list(
+        CollectionItem.objects
+        .filter(user=request.user)
+        .select_related('product')
+    )
 
-    owned = items.filter(status='owned')
-    building = items.filter(status='building')
-    painted = items.filter(status='painted')
-    wishlist = items.filter(status='wishlist')
+    # Collect product IDs (non-wishlist) for the GW price lookup
+    non_wishlist = [i for i in items if i.status != 'wishlist']
+    product_ids = list({i.product_id for i in non_wishlist})
+
+    # GW live prices keyed by product_id (retailer_id=1 = Games Workshop)
+    gw_price_map = {}
+    if product_ids:
+        for row in CurrentPrice.objects.filter(
+            product_id__in=product_ids,
+            retailer_id=1,
+        ).values('product_id', 'price'):
+            if row['price'] is not None:
+                gw_price_map[row['product_id']] = row['price']
+
+    def _msrp_ref(item):
+        """Return the best MSRP reference: GW live price, else product.msrp."""
+        return gw_price_map.get(item.product_id) or item.product.msrp
+
+    # Compute stats in Python — avoids ORM Decimal/Integer type-inference bugs
+    total_items = sum(i.quantity for i in non_wishlist)
+    total_spent = sum(
+        (i.price_paid or Decimal('0')) * i.quantity
+        for i in non_wishlist
+    )
+    total_msrp = sum(
+        (_msrp_ref(i) or Decimal('0')) * i.quantity
+        for i in non_wishlist
+    )
+    total_saved = total_msrp - total_spent if total_msrp else Decimal('0')
+
+    # Annotate each item with its per-unit MSRP reference for the table
+    for item in items:
+        item.msrp_ref = _msrp_ref(item)
+
+    owned    = [i for i in items if i.status == 'owned']
+    building = [i for i in items if i.status == 'building']
+    painted  = [i for i in items if i.status == 'painted']
+    wishlist = [i for i in items if i.status == 'wishlist']
 
     return render(request, 'collections/my_collection.html', {
-        'owned': owned,
-        'building': building,
-        'painted': painted,
-        'wishlist': wishlist,
+        'owned':       owned,
+        'building':    building,
+        'painted':     painted,
+        'wishlist':    wishlist,
         'total_items': total_items,
         'total_spent': total_spent,
-        'total_msrp': total_msrp,
-        'total_saved': total_msrp - total_spent if total_msrp else 0,
+        'total_msrp':  total_msrp,
+        'total_saved': total_saved,
     })
 
 

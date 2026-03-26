@@ -34,7 +34,14 @@
           </p>
         </div>
 
-        <a href="{{ army.get_absolute_url }}" class="btn btn-secondary btn-sm">View List</a>
+        <div style="display:flex;gap:var(--sp-2);align-items:center;">
+          <a href="{{ army.get_absolute_url }}" class="btn btn-secondary btn-sm">View List</a>
+          <form method="post" action="{% url 'calculators:delete_army' army.slug %}"
+                onsubmit="return confirm('Delete \'{{ army.name|escapejs }}\'? This cannot be undone.');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </div>
       </div>
     </div>
     {% endfor %}

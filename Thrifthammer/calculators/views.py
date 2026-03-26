@@ -12,10 +12,11 @@ Provides:
 import json
 import decimal
 
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Max, Q
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import DetailView, ListView, TemplateView
 
@@ -396,18 +397,6 @@ class ViewSavedArmyView(DetailView):
             if len(lst) < 3:
                 lst.append(cp)
 
-        # GW's own price per product — used as the discount reference so the
-        # "Discount" column shows savings vs buying direct from Games Workshop.
-        # Falls back to product.msrp if GW has no live price for that product.
-        gw_prices_by_product: dict = {}
-        gw_price_rows = (
-            CurrentPrice.objects
-            .filter(product_id__in=product_ids, retailer_id=1)
-            .values('product_id', 'price')
-        )
-        for row in gw_price_rows:
-            if row['price'] is not None:
-                gw_prices_by_product[row['product_id']] = row['price']
 
         # Watchlist / collection membership for authenticated users
         watchlist_pids: set = set()
@@ -430,8 +419,6 @@ class ViewSavedArmyView(DetailView):
             ut = unit_map.get(entry['unit_type_id'])
             product = ut.product if ut else None
             pid = product.pk if product else None
-            # Prefer GW's live price as the discount reference; fall back to MSRP
-            gw_ref = gw_prices_by_product.get(pid) or (product.msrp if product else None)
             unit_details.append({
                 **entry,
                 'product_slug': product.slug if product else None,
@@ -439,7 +426,6 @@ class ViewSavedArmyView(DetailView):
                 'on_watchlist': pid in watchlist_pids,
                 'in_collection': pid in collection_pids,
                 'gw_msrp': product.msrp if product else None,
-                'gw_ref_price': gw_ref,
             })
 
         context['unit_details'] = unit_details
@@ -466,3 +452,19 @@ class UserArmiesListView(LoginRequiredMixin, ListView):
             .select_related('faction')
             .order_by('-created_at')
         )
+
+
+class DeleteArmyView(LoginRequiredMixin, View):
+    """
+    POST-only view to delete a saved army list.
+
+    Only the army's owner may delete it. Redirects to My Armies on success.
+    """
+
+    def post(self, request, slug):
+        """Delete the army if it belongs to the current user."""
+        army = get_object_or_404(SavedArmy, slug=slug, user=request.user)
+        army_name = army.name
+        army.delete()
+        messages.success(request, f'"{army_name}" has been deleted.')
+        return redirect('calculators:my_armies')

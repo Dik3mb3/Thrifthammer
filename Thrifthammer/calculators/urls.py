@@ -17,4 +17,6 @@ urlpatterns = [
     path('api/calculate/', views.CalculateArmyCostView.as_view(), name='api_calculate'),
     # User dashboard: list of saved armies
     path('my-armies/', views.UserArmiesListView.as_view(), name='my_armies'),
+    # Delete a saved army (POST only, owner only)
+    path('share/<slug:slug>/delete/', views.DeleteArmyView.as_view(), name='delete_army'),
 ]

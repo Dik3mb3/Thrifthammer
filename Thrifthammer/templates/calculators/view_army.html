@@ -169,8 +169,8 @@
               <td>{{ cp.retailer.name }}</td>
               <td style="color:var(--accent-green-lt);font-weight:600;">${{ cp.price|floatformat:"2" }}</td>
               <td>
-                {% if unit.gw_ref_price and cp.price %}
-                {% with disc=cp.price|discount_vs:unit.gw_ref_price %}
+                {% if unit.gw_msrp and cp.price %}
+                {% with disc=cp.price|discount_vs:unit.gw_msrp %}
                 {% if disc > 0.5 %}
                 <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
                 {% else %}—{% endif %}
@@ -230,6 +230,11 @@
   <a href="{% url 'calculators:my_armies' %}" class="btn btn-secondary">
     My Saved Lists
   </a>
+  <form method="post" action="{% url 'calculators:delete_army' army.slug %}" style="display:inline;"
+        onsubmit="return confirm('Delete \'{{ army.name|escapejs }}\'? This cannot be undone.');">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete This List</button>
+  </form>
   {% endif %}
 </div>
 {% endblock %}
