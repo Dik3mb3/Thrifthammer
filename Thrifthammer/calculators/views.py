@@ -428,7 +428,25 @@ class ViewSavedArmyView(DetailView):
                 'gw_msrp': product.msrp if product else None,
             })
 
+        # Recalculate totals using live product.msrp so the stat cards and
+        # MSRP column are never stale from an old snapshot.  The snapshot's
+        # 'msrp' value is overridden in-place so the template column is correct.
+        live_retail = decimal.Decimal('0')
+        live_cost = decimal.Decimal('0')
+        for ud in unit_details:
+            qty = ud.get('quantity', 1)
+            # Prefer live product.msrp; fall back to snapshot value if product gone
+            live_msrp = ud.get('gw_msrp') or decimal.Decimal(str(ud.get('msrp') or 0))
+            live_price = decimal.Decimal(str(ud.get('price') or 0))
+            live_retail += live_msrp * qty
+            live_cost += live_price * qty
+            # Override so {{ unit.msrp }} in the template shows the live value
+            ud['msrp'] = live_msrp
+
+        live_savings = live_retail - live_cost
         context['unit_details'] = unit_details
+        context['live_total_retail'] = live_retail.quantize(decimal.Decimal('0.01'))
+        context['live_total_savings'] = live_savings.quantize(decimal.Decimal('0.01'))
         return context
 
 
