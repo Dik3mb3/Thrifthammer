@@ -95,7 +95,7 @@ class Command(BaseCommand):
         top_saving = int(deals[0]['pct_off']) if deals else 0
         subject = (
             f"This Week's Top 10 Warhammer Deals -- Save Up to {top_saving}% Off"
-            f" ({today.strftime('%b %-d')})"
+            f" ({today.strftime('%b')} {today.day})"
         )
 
         # ── 4. Send (per-subscriber so each gets their own unsubscribe link) ─
@@ -205,7 +205,7 @@ class Command(BaseCommand):
         """Build a clean plain-text fallback email body."""
         lines = [
             'THRIFTHAMMER -- WEEKLY DEAL DIGEST',
-            f'{today.strftime("%B %-d, %Y")}',
+            f'{today.strftime("%B")} {today.day}, {today.year}',
             'https://www.thrifthammer.com',
             '',
             "This week's top Warhammer discounts:",
