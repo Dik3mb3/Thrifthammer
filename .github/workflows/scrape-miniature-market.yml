@@ -2,8 +2,8 @@ name: Scrape Miniature Market
 
 on:
   schedule:
-    # Every Monday at 04:00 UTC
-    - cron: '0 4 * * 1'
+    # Every day at 04:00 UTC
+    - cron: '0 4 * * *'
   workflow_dispatch:
 
 jobs:

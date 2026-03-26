@@ -244,8 +244,67 @@ class MiniatureMarketScraper:
             'MATCH "%s" score=%.2f | MM="%s" | $%.2f | %s',
             name, best_score, best_hit['title'][:60], price, best_hit['url'],
         )
-        # Products appearing in MM's suggest results are generally in stock.
-        return price, True, best_hit['url']
+        # Fetch the product page to get accurate stock status.
+        # The suggest endpoint always shows items regardless of stock, so we
+        # must check the actual page — otherwise out-of-stock items are wrongly
+        # marked as in-stock (e.g. T'au Stealth Battlesuits showed $31.99 in
+        # stock when MM had it listed but unavailable).
+        in_stock = self._check_stock(best_hit['url'])
+        return price, in_stock, best_hit['url']
+
+    # -------------------------------------------------------------------------
+    # Stock check
+    # -------------------------------------------------------------------------
+
+    def _check_stock(self, url):
+        """
+        Fetch the MM product page and return True if the item is in stock.
+
+        MM product pages use one of two patterns:
+          - In stock:     an "Add to Cart" button is present
+          - Out of stock: "Out of Stock", "Notify Me", or no add-to-cart button
+
+        Falls back to True on any fetch/parse error so a network blip doesn't
+        incorrectly mark a product as unavailable.
+        """
+        try:
+            # Ensure absolute URL
+            full_url = url if url.startswith('http') else f'https://www.miniaturemarket.com{url}'
+            resp = self.session.get(full_url, timeout=15)
+            if resp.status_code != 200:
+                logger.debug('Stock check HTTP %d for %s — assuming in stock', resp.status_code, url)
+                return True
+
+            text_lower = resp.text.lower()
+
+            # Definitive out-of-stock signals
+            out_of_stock_signals = [
+                'out of stock',
+                'notify me when available',
+                'notify me when this product',
+                'email me when available',
+                'currently unavailable',
+                'soldout',
+                'sold-out',
+                '"is_saleable":false',
+                '"stock_status":"out_of_stock"',
+            ]
+            for signal in out_of_stock_signals:
+                if signal in text_lower:
+                    logger.debug('Stock check: OOS signal "%s" found for %s', signal, url)
+                    return False
+
+            # If "add to cart" is present, definitely in stock
+            if 'add to cart' in text_lower or 'addtocart' in text_lower:
+                return True
+
+            # No clear signal either way — default to in stock to avoid false negatives
+            logger.debug('Stock check: no clear signal for %s — assuming in stock', url)
+            return True
+
+        except Exception as exc:
+            logger.warning('Stock check failed for %s: %s — assuming in stock', url, exc)
+            return True
 
     # -------------------------------------------------------------------------
     # Suggest endpoint
