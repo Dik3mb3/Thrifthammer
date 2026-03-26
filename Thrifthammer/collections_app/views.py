@@ -26,15 +26,16 @@ def my_collection(request):
         .select_related('product')
     )
 
-    # Collect product IDs (non-wishlist) for the GW price lookup
+    # Collect all product IDs for the GW price lookup (including wishlist so
+    # the MSRP column is populated on every row, not just non-wishlist).
+    all_product_ids = list({i.product_id for i in items})
     non_wishlist = [i for i in items if i.status != 'wishlist']
-    product_ids = list({i.product_id for i in non_wishlist})
 
     # GW live prices keyed by product_id (retailer_id=1 = Games Workshop)
     gw_price_map = {}
-    if product_ids:
+    if all_product_ids:
         for row in CurrentPrice.objects.filter(
-            product_id__in=product_ids,
+            product_id__in=all_product_ids,
             retailer_id=1,
         ).values('product_id', 'price'):
             if row['price'] is not None:
@@ -45,6 +46,7 @@ def my_collection(request):
         return gw_price_map.get(item.product_id) or item.product.msrp
 
     # Compute stats in Python — avoids ORM Decimal/Integer type-inference bugs
+    # Stats only count non-wishlist items (wishlist = aspirational, not owned).
     total_items = sum(i.quantity for i in non_wishlist)
     total_spent = sum(
         (i.price_paid or Decimal('0')) * i.quantity
@@ -56,7 +58,7 @@ def my_collection(request):
     )
     total_saved = total_msrp - total_spent if total_msrp else Decimal('0')
 
-    # Annotate each item with its per-unit MSRP reference for the table
+    # Annotate every item (including wishlist) with its live per-unit MSRP
     for item in items:
         item.msrp_ref = _msrp_ref(item)
 

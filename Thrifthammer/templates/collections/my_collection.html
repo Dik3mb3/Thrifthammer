@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load price_filters %}
 
 {% block title %}My Collection | ThriftHammer{% endblock %}
 
@@ -44,12 +45,15 @@
   {% if painted %}
   <h2 style="font-size:1rem;margin-bottom:var(--sp-2);">🎨 Painted</h2>
   <div class="gold-rule"></div>
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
   <table class="collection-table" style="margin-top:var(--sp-3);">
     <thead>
       <tr>
         <th>Product</th>
         <th>Qty</th>
-        <th>Paid</th>
+        <th>Paid / unit</th>
+        <th>GW MSRP</th>
+        <th>Disc.</th>
         <th>Notes</th>
         <th></th>
       </tr>
@@ -59,7 +63,31 @@
       <tr>
         <td><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></td>
         <td>{{ item.quantity }}</td>
-        <td>{% if item.price_paid %}<span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>{% else %}<span style="color:var(--text-muted);">—</span>{% endif %}</td>
+        <td>
+          {% if item.price_paid %}
+            <span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>
+          {% else %}
+            <span style="color:var(--text-muted);">—</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if item.msrp_ref %}
+            <span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
+          {% else %}
+            <span style="color:var(--text-muted);">—</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if item.price_paid and item.msrp_ref %}
+            {% with disc=item.price_paid|discount_vs:item.msrp_ref %}
+              {% if disc and disc > 0 %}
+                <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
+              {% elif disc and disc < 0 %}
+                <span class="badge" style="background:#5a1a1a;color:#d44040;">+{{ disc|floatformat:"0"|slice:"1:" }}% over</span>
+              {% else %}—{% endif %}
+            {% endwith %}
+          {% else %}—{% endif %}
+        </td>
         <td style="max-width:220px;font-size:0.82rem;color:var(--text-muted);">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
           <a href="{% url 'collections:add' item.product.slug %}" class="btn btn-secondary btn-sm">Edit</a>
@@ -69,18 +97,22 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
   {% endif %}
 
   {# ── Building ── #}
   {% if building %}
   <h2 style="font-size:1rem;margin-bottom:var(--sp-2);">🔧 Building</h2>
   <div class="gold-rule"></div>
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
   <table class="collection-table" style="margin-top:var(--sp-3);">
     <thead>
       <tr>
         <th>Product</th>
         <th>Qty</th>
-        <th>Paid</th>
+        <th>Paid / unit</th>
+        <th>GW MSRP</th>
+        <th>Disc.</th>
         <th>Notes</th>
         <th></th>
       </tr>
@@ -90,7 +122,31 @@
       <tr>
         <td><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></td>
         <td>{{ item.quantity }}</td>
-        <td>{% if item.price_paid %}<span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>{% else %}<span style="color:var(--text-muted);">—</span>{% endif %}</td>
+        <td>
+          {% if item.price_paid %}
+            <span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>
+          {% else %}
+            <span style="color:var(--text-muted);">—</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if item.msrp_ref %}
+            <span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
+          {% else %}
+            <span style="color:var(--text-muted);">—</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if item.price_paid and item.msrp_ref %}
+            {% with disc=item.price_paid|discount_vs:item.msrp_ref %}
+              {% if disc and disc > 0 %}
+                <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
+              {% elif disc and disc < 0 %}
+                <span class="badge" style="background:#5a1a1a;color:#d44040;">+{{ disc|floatformat:"0"|slice:"1:" }}% over</span>
+              {% else %}—{% endif %}
+            {% endwith %}
+          {% else %}—{% endif %}
+        </td>
         <td style="max-width:220px;font-size:0.82rem;color:var(--text-muted);">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
           <a href="{% url 'collections:add' item.product.slug %}" class="btn btn-secondary btn-sm">Edit</a>
@@ -100,18 +156,22 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
   {% endif %}
 
   {# ── Owned ── #}
   {% if owned %}
   <h2 style="font-size:1rem;margin-bottom:var(--sp-2);">📦 Owned</h2>
   <div class="gold-rule"></div>
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
   <table class="collection-table" style="margin-top:var(--sp-3);">
     <thead>
       <tr>
         <th>Product</th>
         <th>Qty</th>
-        <th>Paid</th>
+        <th>Paid / unit</th>
+        <th>GW MSRP</th>
+        <th>Disc.</th>
         <th>Notes</th>
         <th></th>
       </tr>
@@ -121,7 +181,31 @@
       <tr>
         <td><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></td>
         <td>{{ item.quantity }}</td>
-        <td>{% if item.price_paid %}<span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>{% else %}<span style="color:var(--text-muted);">—</span>{% endif %}</td>
+        <td>
+          {% if item.price_paid %}
+            <span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>
+          {% else %}
+            <span style="color:var(--text-muted);">—</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if item.msrp_ref %}
+            <span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
+          {% else %}
+            <span style="color:var(--text-muted);">—</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if item.price_paid and item.msrp_ref %}
+            {% with disc=item.price_paid|discount_vs:item.msrp_ref %}
+              {% if disc and disc > 0 %}
+                <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
+              {% elif disc and disc < 0 %}
+                <span class="badge" style="background:#5a1a1a;color:#d44040;">+{{ disc|floatformat:"0"|slice:"1:" }}% over</span>
+              {% else %}—{% endif %}
+            {% endwith %}
+          {% else %}—{% endif %}
+        </td>
         <td style="max-width:220px;font-size:0.82rem;color:var(--text-muted);">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
           <a href="{% url 'collections:add' item.product.slug %}" class="btn btn-secondary btn-sm">Edit</a>
@@ -131,17 +215,20 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
   {% endif %}
 
   {# ── Wishlist ── #}
   {% if wishlist %}
   <h2 style="font-size:1rem;margin-bottom:var(--sp-2);">⭐ Wishlist</h2>
   <div class="gold-rule"></div>
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
   <table class="collection-table" style="margin-top:var(--sp-3);">
     <thead>
       <tr>
         <th>Product</th>
         <th>Qty</th>
+        <th>GW MSRP</th>
         <th>Notes</th>
         <th></th>
       </tr>
@@ -151,6 +238,13 @@
       <tr>
         <td><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></td>
         <td>{{ item.quantity }}</td>
+        <td>
+          {% if item.msrp_ref %}
+            <span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
+          {% else %}
+            <span style="color:var(--text-muted);">—</span>
+          {% endif %}
+        </td>
         <td style="max-width:220px;font-size:0.82rem;color:var(--text-muted);">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
           <a href="{% url 'collections:add' item.product.slug %}" class="btn btn-secondary btn-sm">Edit</a>
@@ -160,6 +254,7 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
   {% endif %}
 
 </div>
