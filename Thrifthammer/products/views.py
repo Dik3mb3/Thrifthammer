@@ -104,7 +104,7 @@ def _get_spotlight_deals(count=SPOTLIGHT_COUNT):
         if ref and ref > 0 and cp.price is not None:
             pct = float((ref - cp.price) / ref * 100)
             if pct > 0:
-                cp.discount_pct_vs_ref = round(pct, 1)
+                cp.discount_pct_vs_ref = int(round(pct))
                 discounted.append(cp)
 
     # Sort by discount percentage — highest % off first

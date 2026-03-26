@@ -29,6 +29,6 @@ def discount_vs(price, reference):
         r = Decimal(str(reference))
         if r <= 0:
             return None
-        return round(float((1 - p / r) * 100), 1)
+        return int(round(float((1 - p / r) * 100)))
     except (TypeError, ValueError, InvalidOperation):
         return None
