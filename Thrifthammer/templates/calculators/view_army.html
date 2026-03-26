@@ -169,8 +169,8 @@
               <td>{{ cp.retailer.name }}</td>
               <td style="color:var(--accent-green-lt);font-weight:600;">${{ cp.price|floatformat:"2" }}</td>
               <td>
-                {% if unit.gw_msrp and cp.price %}
-                {% with disc=cp.price|discount_vs:unit.gw_msrp %}
+                {% if unit.gw_ref_price and cp.price %}
+                {% with disc=cp.price|discount_vs:unit.gw_ref_price %}
                 {% if disc > 0.5 %}
                 <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
                 {% else %}—{% endif %}

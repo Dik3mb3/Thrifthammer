@@ -396,6 +396,19 @@ class ViewSavedArmyView(DetailView):
             if len(lst) < 3:
                 lst.append(cp)
 
+        # GW's own price per product — used as the discount reference so the
+        # "Discount" column shows savings vs buying direct from Games Workshop.
+        # Falls back to product.msrp if GW has no live price for that product.
+        gw_prices_by_product: dict = {}
+        gw_price_rows = (
+            CurrentPrice.objects
+            .filter(product_id__in=product_ids, retailer_id=1)
+            .values('product_id', 'price')
+        )
+        for row in gw_price_rows:
+            if row['price'] is not None:
+                gw_prices_by_product[row['product_id']] = row['price']
+
         # Watchlist / collection membership for authenticated users
         watchlist_pids: set = set()
         collection_pids: set = set()
@@ -417,6 +430,8 @@ class ViewSavedArmyView(DetailView):
             ut = unit_map.get(entry['unit_type_id'])
             product = ut.product if ut else None
             pid = product.pk if product else None
+            # Prefer GW's live price as the discount reference; fall back to MSRP
+            gw_ref = gw_prices_by_product.get(pid) or (product.msrp if product else None)
             unit_details.append({
                 **entry,
                 'product_slug': product.slug if product else None,
@@ -424,6 +439,7 @@ class ViewSavedArmyView(DetailView):
                 'on_watchlist': pid in watchlist_pids,
                 'in_collection': pid in collection_pids,
                 'gw_msrp': product.msrp if product else None,
+                'gw_ref_price': gw_ref,
             })
 
         context['unit_details'] = unit_details
