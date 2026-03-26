@@ -20,7 +20,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.core.paginator import InvalidPage, Paginator
-from django.db.models import Case, DecimalField, ExpressionWrapper, F, FloatField, Min, OuterRef, Q, Subquery, Value, When
+from django.db.models import Case, Count, DecimalField, ExpressionWrapper, F, FloatField, Min, OuterRef, Q, Subquery, Value, When
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.core.exceptions import ValidationError
@@ -270,13 +270,18 @@ def product_list(request):
         products = products.order_by(SORT_OPTIONS[sort])
 
     # Sidebar dropdowns — small tables, fetched once.
-    # When a category is active, show only its factions (hierarchical filter).
+    # When a category is active, show only its factions that have active products.
+    # Filtering by product count prevents empty stubs (renamed/deprecated factions)
+    # from appearing as dead-end filter options.
     categories = list(Category.objects.all())
     if category_slug:
         factions = list(
             Faction.objects
             .filter(category__slug=category_slug)
+            .annotate(active_product_count=Count('products', filter=Q(products__is_active=True)))
+            .filter(active_product_count__gt=0)
             .select_related('category')
+            .order_by('name')
         )
     else:
         factions = []  # Only show factions once a category is chosen

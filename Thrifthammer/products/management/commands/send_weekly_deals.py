@@ -11,11 +11,12 @@ Usage:
 """
 
 import datetime
+from decimal import Decimal
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.core.management.base import BaseCommand
-from django.db.models import DecimalField, ExpressionWrapper, F, Min, Q
+from django.db.models import F, Min, Q
 from django.template.loader import render_to_string
 from django.utils import timezone
 
@@ -141,8 +142,10 @@ class Command(BaseCommand):
         A deal is an active product with an MSRP where the cheapest in-stock
         CurrentPrice gives the largest percentage saving vs MSRP.
         """
-        # Annotate each active product with its cheapest in-stock price
-        qs = (
+        # Annotate each active product with its cheapest in-stock price.
+        # We calculate pct_saving in Python to avoid ORM type-inference
+        # issues with mixed Decimal/Float arithmetic across DB backends.
+        candidates = (
             Product.objects
             .filter(is_active=True, msrp__isnull=False)
             .annotate(
@@ -155,20 +158,21 @@ class Command(BaseCommand):
                 )
             )
             .filter(min_price__isnull=False, min_price__gt=0)
-            # Only show meaningful discounts (at least 5%)
-            .filter(min_price__lt=F('msrp') * 0.95)
-            .annotate(
-                pct_saving=ExpressionWrapper(
-                    (F('msrp') - F('min_price')) / F('msrp') * 100,
-                    output_field=DecimalField(max_digits=5, decimal_places=2),
-                )
-            )
+            # Only show products cheaper than MSRP by at least 5%
+            .filter(min_price__lt=F('msrp') * Decimal('0.95'))
             .select_related('category', 'faction')
-            .order_by('-pct_saving')[:limit]
         )
 
+        # Sort by % discount descending in Python, then take top N
+        def _pct(p):
+            """Calculate % discount vs MSRP."""
+            return float(p.msrp - p.min_price) / float(p.msrp) * 100
+
+        sorted_candidates = sorted(candidates, key=_pct, reverse=True)[:limit]
+
         deals = []
-        for product in qs:
+        for product in sorted_candidates:
+            pct_off = _pct(product)
             # Fetch the cheapest retailer name for this product
             best_cp = (
                 CurrentPrice.objects
@@ -189,7 +193,7 @@ class Command(BaseCommand):
                 'url': f'https://www.thrifthammer.com/products/{product.slug}/',
                 'price': float(product.min_price),
                 'msrp': float(product.msrp),
-                'pct_off': float(product.pct_saving),
+                'pct_off': pct_off,
                 'savings': float(product.msrp - product.min_price),
                 'retailer': retailer_name,
                 'image_url': product.image_url or '',
