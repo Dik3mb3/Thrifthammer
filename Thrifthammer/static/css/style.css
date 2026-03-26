@@ -2689,15 +2689,30 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 }
 
 /* ── Collection list table ──────────────────────────────────────────────── */
-.collection-table { width: 100%; border-collapse: collapse; margin-bottom: var(--sp-8); }
+.collection-table { width: 100%; border-collapse: collapse; margin-bottom: var(--sp-8); table-layout: fixed; }
 .collection-table th {
   text-align: left; padding: 0.5rem 0.75rem;
   border-bottom: 1px solid var(--border-mid);
   color: var(--text-muted); font-size: 0.82rem;
   text-transform: uppercase; letter-spacing: 0.05em;
 }
-.collection-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border-dark); vertical-align: middle; }
+.collection-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border-dark); vertical-align: middle; }
 .collection-table tr:last-child td { border-bottom: none; }
 .collection-table a { color: var(--text-primary); }
 .collection-table a:hover { color: var(--accent-gold-lt); }
-.collection-table .col-actions { white-space: nowrap; }
+.collection-table .col-actions { white-space: nowrap; text-align: right; }
+
+/* Column widths & alignment — centre all numeric columns */
+.collection-table .col-product  { width: 35%; }
+.collection-table .col-qty      { width: 6%;  text-align: center; }
+.collection-table .col-paid     { width: 12%; text-align: center; }
+.collection-table .col-msrp     { width: 12%; text-align: center; }
+.collection-table .col-disc     { width: 9%;  text-align: center; }
+.collection-table .col-notes    { width: 18%; color: var(--text-muted); font-size: 0.82rem; }
+.collection-table .col-actions  { width: 14%; }
+
+/* Centre the corresponding header cells too */
+.collection-table th.col-qty,
+.collection-table th.col-paid,
+.collection-table th.col-msrp,
+.collection-table th.col-disc  { text-align: center; }

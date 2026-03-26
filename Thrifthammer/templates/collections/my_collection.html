@@ -34,12 +34,13 @@
   {% if not owned and not building and not painted and not wishlist %}
   <div style="text-align:center;padding:var(--sp-16) 0;color:var(--text-muted);">
     <div style="font-size:3rem;margin-bottom:var(--sp-4);" aria-hidden="true">📦</div>
-    <p style="font-size:1rem;margin-bottom:var(--sp-6);">
-      Your collection is empty.
-    </p>
+    <p style="font-size:1rem;margin-bottom:var(--sp-6);">Your collection is empty.</p>
     <a href="{% url 'products:list' %}" class="btn btn-primary">Browse Products</a>
   </div>
   {% endif %}
+
+  {# ── Shared macro: non-wishlist table rows ── #}
+  {# Used for Painted, Building, Owned #}
 
   {# ── Painted ── #}
   {% if painted %}
@@ -49,46 +50,38 @@
   <table class="collection-table" style="margin-top:var(--sp-3);">
     <thead>
       <tr>
-        <th>Product</th>
-        <th>Qty</th>
-        <th>Paid / unit</th>
-        <th>GW MSRP</th>
-        <th>Disc.</th>
-        <th>Notes</th>
-        <th></th>
+        <th class="col-product">Product</th>
+        <th class="col-qty">Qty</th>
+        <th class="col-paid">Paid / unit</th>
+        <th class="col-msrp">GW MSRP</th>
+        <th class="col-disc">Disc.</th>
+        <th class="col-notes">Notes</th>
+        <th class="col-actions"></th>
       </tr>
     </thead>
     <tbody>
       {% for item in painted %}
       <tr>
-        <td><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></td>
-        <td>{{ item.quantity }}</td>
-        <td>
-          {% if item.price_paid %}
-            <span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>
-          {% else %}
-            <span style="color:var(--text-muted);">—</span>
-          {% endif %}
+        <td class="col-product"><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></td>
+        <td class="col-qty">{{ item.quantity }}</td>
+        <td class="col-paid">
+          {% if item.price_paid %}<span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>
+          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
         </td>
-        <td>
-          {% if item.msrp_ref %}
-            <span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
-          {% else %}
-            <span style="color:var(--text-muted);">—</span>
-          {% endif %}
+        <td class="col-msrp">
+          {% if item.msrp_ref %}<span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
+          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
         </td>
-        <td>
+        <td class="col-disc">
           {% if item.price_paid and item.msrp_ref %}
             {% with disc=item.price_paid|discount_vs:item.msrp_ref %}
-              {% if disc and disc > 0 %}
-                <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
-              {% elif disc and disc < 0 %}
-                <span class="badge" style="background:#5a1a1a;color:#d44040;">+{{ disc|floatformat:"0"|slice:"1:" }}% over</span>
+              {% if disc and disc > 0 %}<span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
+              {% elif disc and disc < 0 %}<span class="badge" style="background:#5a1a1a;color:#d44040;">+{{ disc|floatformat:"0"|slice:"1:" }}% over</span>
               {% else %}—{% endif %}
             {% endwith %}
           {% else %}—{% endif %}
         </td>
-        <td style="max-width:220px;font-size:0.82rem;color:var(--text-muted);">{{ item.notes|default:"" }}</td>
+        <td class="col-notes">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
           <a href="{% url 'collections:add' item.product.slug %}" class="btn btn-secondary btn-sm">Edit</a>
           <form method="post" action="{% url 'collections:remove' item.product.slug %}" style="display:inline;">{% csrf_token %}<button type="submit" class="btn btn-danger btn-sm">Remove</button></form>
@@ -108,46 +101,38 @@
   <table class="collection-table" style="margin-top:var(--sp-3);">
     <thead>
       <tr>
-        <th>Product</th>
-        <th>Qty</th>
-        <th>Paid / unit</th>
-        <th>GW MSRP</th>
-        <th>Disc.</th>
-        <th>Notes</th>
-        <th></th>
+        <th class="col-product">Product</th>
+        <th class="col-qty">Qty</th>
+        <th class="col-paid">Paid / unit</th>
+        <th class="col-msrp">GW MSRP</th>
+        <th class="col-disc">Disc.</th>
+        <th class="col-notes">Notes</th>
+        <th class="col-actions"></th>
       </tr>
     </thead>
     <tbody>
       {% for item in building %}
       <tr>
-        <td><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></td>
-        <td>{{ item.quantity }}</td>
-        <td>
-          {% if item.price_paid %}
-            <span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>
-          {% else %}
-            <span style="color:var(--text-muted);">—</span>
-          {% endif %}
+        <td class="col-product"><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></td>
+        <td class="col-qty">{{ item.quantity }}</td>
+        <td class="col-paid">
+          {% if item.price_paid %}<span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>
+          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
         </td>
-        <td>
-          {% if item.msrp_ref %}
-            <span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
-          {% else %}
-            <span style="color:var(--text-muted);">—</span>
-          {% endif %}
+        <td class="col-msrp">
+          {% if item.msrp_ref %}<span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
+          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
         </td>
-        <td>
+        <td class="col-disc">
           {% if item.price_paid and item.msrp_ref %}
             {% with disc=item.price_paid|discount_vs:item.msrp_ref %}
-              {% if disc and disc > 0 %}
-                <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
-              {% elif disc and disc < 0 %}
-                <span class="badge" style="background:#5a1a1a;color:#d44040;">+{{ disc|floatformat:"0"|slice:"1:" }}% over</span>
+              {% if disc and disc > 0 %}<span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
+              {% elif disc and disc < 0 %}<span class="badge" style="background:#5a1a1a;color:#d44040;">+{{ disc|floatformat:"0"|slice:"1:" }}% over</span>
               {% else %}—{% endif %}
             {% endwith %}
           {% else %}—{% endif %}
         </td>
-        <td style="max-width:220px;font-size:0.82rem;color:var(--text-muted);">{{ item.notes|default:"" }}</td>
+        <td class="col-notes">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
           <a href="{% url 'collections:add' item.product.slug %}" class="btn btn-secondary btn-sm">Edit</a>
           <form method="post" action="{% url 'collections:remove' item.product.slug %}" style="display:inline;">{% csrf_token %}<button type="submit" class="btn btn-danger btn-sm">Remove</button></form>
@@ -167,46 +152,38 @@
   <table class="collection-table" style="margin-top:var(--sp-3);">
     <thead>
       <tr>
-        <th>Product</th>
-        <th>Qty</th>
-        <th>Paid / unit</th>
-        <th>GW MSRP</th>
-        <th>Disc.</th>
-        <th>Notes</th>
-        <th></th>
+        <th class="col-product">Product</th>
+        <th class="col-qty">Qty</th>
+        <th class="col-paid">Paid / unit</th>
+        <th class="col-msrp">GW MSRP</th>
+        <th class="col-disc">Disc.</th>
+        <th class="col-notes">Notes</th>
+        <th class="col-actions"></th>
       </tr>
     </thead>
     <tbody>
       {% for item in owned %}
       <tr>
-        <td><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></td>
-        <td>{{ item.quantity }}</td>
-        <td>
-          {% if item.price_paid %}
-            <span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>
-          {% else %}
-            <span style="color:var(--text-muted);">—</span>
-          {% endif %}
+        <td class="col-product"><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></td>
+        <td class="col-qty">{{ item.quantity }}</td>
+        <td class="col-paid">
+          {% if item.price_paid %}<span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>
+          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
         </td>
-        <td>
-          {% if item.msrp_ref %}
-            <span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
-          {% else %}
-            <span style="color:var(--text-muted);">—</span>
-          {% endif %}
+        <td class="col-msrp">
+          {% if item.msrp_ref %}<span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
+          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
         </td>
-        <td>
+        <td class="col-disc">
           {% if item.price_paid and item.msrp_ref %}
             {% with disc=item.price_paid|discount_vs:item.msrp_ref %}
-              {% if disc and disc > 0 %}
-                <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
-              {% elif disc and disc < 0 %}
-                <span class="badge" style="background:#5a1a1a;color:#d44040;">+{{ disc|floatformat:"0"|slice:"1:" }}% over</span>
+              {% if disc and disc > 0 %}<span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
+              {% elif disc and disc < 0 %}<span class="badge" style="background:#5a1a1a;color:#d44040;">+{{ disc|floatformat:"0"|slice:"1:" }}% over</span>
               {% else %}—{% endif %}
             {% endwith %}
           {% else %}—{% endif %}
         </td>
-        <td style="max-width:220px;font-size:0.82rem;color:var(--text-muted);">{{ item.notes|default:"" }}</td>
+        <td class="col-notes">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
           <a href="{% url 'collections:add' item.product.slug %}" class="btn btn-secondary btn-sm">Edit</a>
           <form method="post" action="{% url 'collections:remove' item.product.slug %}" style="display:inline;">{% csrf_token %}<button type="submit" class="btn btn-danger btn-sm">Remove</button></form>
@@ -226,26 +203,23 @@
   <table class="collection-table" style="margin-top:var(--sp-3);">
     <thead>
       <tr>
-        <th>Product</th>
-        <th>Qty</th>
-        <th>GW MSRP</th>
-        <th>Notes</th>
-        <th></th>
+        <th class="col-product">Product</th>
+        <th class="col-qty">Qty</th>
+        <th class="col-msrp" style="width:18%;">GW MSRP</th>
+        <th class="col-notes" style="width:35%;">Notes</th>
+        <th class="col-actions"></th>
       </tr>
     </thead>
     <tbody>
       {% for item in wishlist %}
       <tr>
-        <td><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></td>
-        <td>{{ item.quantity }}</td>
-        <td>
-          {% if item.msrp_ref %}
-            <span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
-          {% else %}
-            <span style="color:var(--text-muted);">—</span>
-          {% endif %}
+        <td class="col-product"><a href="{% url 'products:detail' item.product.slug %}">{{ item.product.name }}</a></td>
+        <td class="col-qty">{{ item.quantity }}</td>
+        <td class="col-msrp">
+          {% if item.msrp_ref %}<span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
+          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
         </td>
-        <td style="max-width:220px;font-size:0.82rem;color:var(--text-muted);">{{ item.notes|default:"" }}</td>
+        <td class="col-notes">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
           <a href="{% url 'collections:add' item.product.slug %}" class="btn btn-secondary btn-sm">Edit</a>
           <form method="post" action="{% url 'collections:remove' item.product.slug %}" style="display:inline;">{% csrf_token %}<button type="submit" class="btn btn-danger btn-sm">Remove</button></form>
