@@ -130,11 +130,10 @@
   <thead>
     <tr>
       <th>Unit</th>
-      <th>Role</th>
       <th>Qty</th>
-      <th>Pts (total)</th>
-      <th>Price × Qty</th>
-      <th>MSRP × Qty</th>
+      <th>Pts</th>
+      <th>Best Price</th>
+      <th>GW MSRP</th>
       <th style="width:40px;"></th>
     </tr>
   </thead>
@@ -143,23 +142,15 @@
     {# Main unit row #}
     <tr>
       <td style="font-weight:600;">{{ unit.name }}</td>
-      <td><span class="cat-badge">{{ unit.category }}</span></td>
       <td>{{ unit.quantity }}</td>
       <td class="pts-col">
-        {% if unit.points %}
-          {% widthratio unit.points 1 unit.quantity as total_pts %}
-          {{ total_pts }}
-        {% else %}—{% endif %}
+        {% if unit.points %}{{ unit.points }}{% else %}—{% endif %}
       </td>
       <td class="price-col">
-        {% if unit.price %}
-          ${{ unit.price }} × {{ unit.quantity }}
-        {% else %}—{% endif %}
+        {% if unit.price_total %}${{ unit.price_total }}{% else %}—{% endif %}
       </td>
       <td>
-        {% if unit.msrp %}
-          ${{ unit.msrp }} × {{ unit.quantity }}
-        {% else %}—{% endif %}
+        {% if unit.msrp_total %}${{ unit.msrp_total }}{% else %}—{% endif %}
       </td>
       <td>
         {# Only show expand button if there are live prices or action buttons #}
@@ -177,7 +168,7 @@
     {# Expandable detail row: live top-3 prices + action buttons #}
     {% if unit.top_prices or unit.product_slug %}
     <tr id="army-detail-{{ forloop.counter }}" class="army-detail-row">
-      <td colspan="7" class="army-detail-cell">
+      <td colspan="6" class="army-detail-cell">
 
         {% if unit.top_prices %}
         <table class="army-prices-table">

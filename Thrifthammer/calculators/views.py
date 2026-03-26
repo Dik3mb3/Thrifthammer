@@ -442,6 +442,9 @@ class ViewSavedArmyView(DetailView):
             live_cost += live_price * qty
             # Override so {{ unit.msrp }} in the template shows the live value
             ud['msrp'] = live_msrp
+            # Pre-calculated line totals for the table (price × qty, msrp × qty)
+            ud['price_total'] = (live_price * qty).quantize(decimal.Decimal('0.01')) if live_price else None
+            ud['msrp_total'] = (live_msrp * qty).quantize(decimal.Decimal('0.01')) if live_msrp else None
 
         live_savings = live_retail - live_cost
         context['unit_details'] = unit_details
