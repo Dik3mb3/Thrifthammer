@@ -1081,9 +1081,6 @@ class EbayBrowseAPI:
             # retail plastic boxes we track.  Sellers of these items consistently
             # use phrases like "resin miniature", "3d printed", "resin print",
             # "fdm printed", "fan sculpt", or "proxy" in their descriptions.
-            # "Primaris scale" is a specific tell — aftermarket sellers use this
-            # phrase to describe their sculpt compatibility; GW never uses it.
-            #
             # Note: "resin" alone is NOT blocked at the title level to avoid
             # rejecting Forge World (official GW resin subsidiary) listings when
             # they appear in eBay search results.  The description phrases below
@@ -1102,7 +1099,6 @@ class EbayBrowseAPI:
                 'proxy mini',
                 'not gw',
                 'not official',
-                'primaris scale',
             )
             for _phrase in _PRINT_PHRASES:
                 if _phrase in short_desc:
