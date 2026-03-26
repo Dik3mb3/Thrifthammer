@@ -105,9 +105,9 @@ class Command(BaseCommand):
                 context = {
                     'deals': deals,
                     'today': today,
-                    'site_url': 'https://www.thrifthammer.com',
-                    'browse_url': 'https://www.thrifthammer.com/products/',
-                    'register_url': 'https://www.thrifthammer.com/accounts/register/',
+                    'site_url': 'https://thrifthammer.com',
+                    'browse_url': 'https://thrifthammer.com/products/',
+                    'register_url': 'https://thrifthammer.com/accounts/register/',
                     'top_pct': top_saving,
                     'latest_post': latest_post,
                     'unsubscribe_url': sub.get_unsubscribe_url(),
@@ -190,7 +190,7 @@ class Command(BaseCommand):
             deals.append({
                 'name': product.name,
                 'slug': product.slug,
-                'url': f'https://www.thrifthammer.com/products/{product.slug}/',
+                'url': f'https://thrifthammer.com/products/{product.slug}/',
                 'price': float(product.min_price),
                 'msrp': float(product.msrp),
                 'pct_off': pct_off,
@@ -206,7 +206,7 @@ class Command(BaseCommand):
         lines = [
             'THRIFTHAMMER -- WEEKLY DEAL DIGEST',
             f'{today.strftime("%B")} {today.day}, {today.year}',
-            'https://www.thrifthammer.com',
+            'https://thrifthammer.com',
             '',
             "This week's top Warhammer discounts:",
             '',
@@ -224,7 +224,7 @@ class Command(BaseCommand):
             'CREATE A FREE ACCOUNT',
             'Track prices, build wishlists, and get personal alerts',
             'when your target price drops.',
-            'https://www.thrifthammer.com/accounts/register/',
+            'https://thrifthammer.com/accounts/register/',
             '',
         ]
 
@@ -236,7 +236,7 @@ class Command(BaseCommand):
             ]
             if latest_post.excerpt:
                 lines.append(latest_post.excerpt)
-            lines.append(f'https://www.thrifthammer.com/blog/{latest_post.slug}/')
+            lines.append(f'https://thrifthammer.com/blog/{latest_post.slug}/')
             lines.append('')
 
         lines += [
