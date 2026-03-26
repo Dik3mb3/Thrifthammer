@@ -92,7 +92,7 @@ class Command(BaseCommand):
                 self.stdout.write(
                     self.style.SUCCESS(
                         f'Added keywords: {to_add}\n'
-                        f'  → Now: "{product.ebay_negative_keywords}"'
+                        f'  Now: "{product.ebay_negative_keywords}"'
                     )
                 )
             else:
@@ -113,7 +113,7 @@ class Command(BaseCommand):
 
         self.stdout.write(
             self.style.SUCCESS(
-                f'\n✓ Done — {product.name} eBay price updated live. '
+                f'\nDone -- {product.name} eBay price updated live. '
                 f'Cache busted. Website will reflect the new listing immediately.'
             )
         )
