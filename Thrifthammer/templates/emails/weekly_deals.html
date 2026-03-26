@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>ThriftHammer — This Week's Top Deals</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Oswald:wght@600&family=Inter:wght@400;500;600;700&display=swap');
+  </style>
   <!--[if mso]>
   <noscript>
     <xml>
@@ -15,7 +18,7 @@
   </noscript>
   <![endif]-->
 </head>
-<body style="margin:0;padding:0;background-color:#0d0f14;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#e8e0d0;">
+<body style="margin:0;padding:0;background-color:#0d0f14;font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;color:#e8e0d0;">
 
   <!-- Preheader text (hidden, shows in inbox preview) -->
   <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
@@ -32,24 +35,21 @@
 
           <!-- ── HEADER ── -->
           <tr>
-            <td style="background-color:#0d0f14;padding:20px 24px 16px;border-bottom:2px solid #c8922a;">
+            <td style="background-color:#0d0f14;padding:22px 24px 18px;border-bottom:2px solid #c8922a;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <!-- Brand name (left) -->
                   <td style="vertical-align:middle;">
                     <a href="{{ site_url }}" style="text-decoration:none;">
-                      <div style="font-family:Georgia,'Times New Roman',serif;font-size:26px;font-weight:700;letter-spacing:0.12em;color:#f0c060;line-height:1;">
+                      <div style="font-family:'Cinzel',Georgia,'Times New Roman',serif;font-size:30px;font-weight:900;letter-spacing:0.1em;color:#f0c060;line-height:1;">
                         THRIFTHAMMER
-                      </div>
-                      <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.22em;color:#a09880;text-transform:uppercase;margin-top:3px;">
-                        Stop Overpaying for Plastic
                       </div>
                     </a>
                   </td>
                   <!-- Unsubscribe (top right, small) -->
-                  <td style="vertical-align:top;text-align:right;padding-top:2px;">
+                  <td style="vertical-align:top;text-align:right;padding-top:4px;">
                     {% if unsubscribe_url %}
-                    <a href="{{ unsubscribe_url }}" style="font-size:10px;color:#5c5648;text-decoration:underline;">Unsubscribe</a>
+                    <a href="{{ unsubscribe_url }}" style="font-size:10px;color:#5c5648;text-decoration:underline;font-family:'Inter','Helvetica Neue',Arial,sans-serif;">Unsubscribe</a>
                     {% endif %}
                   </td>
                 </tr>
@@ -60,11 +60,8 @@
           <!-- ── HEADLINE BANNER ── -->
           <tr>
             <td style="background:linear-gradient(135deg,#1c2230 0%,#0d0f14 100%);padding:22px 32px;text-align:center;border-bottom:1px solid #2a2f3a;">
-              <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:700;color:#f0c060;letter-spacing:0.05em;margin-bottom:6px;">
+              <div style="font-family:'Cinzel',Georgia,'Times New Roman',serif;font-size:20px;font-weight:700;color:#f0c060;letter-spacing:0.05em;">
                 This Week's Top {{ deals|length }} Warhammer Deals
-              </div>
-              <div style="font-size:13px;color:#a09880;">
-                {{ today|date:"F j, Y" }} &mdash; Updated after all price scrapers have run
               </div>
             </td>
           </tr>
@@ -80,31 +77,28 @@
                 <tr>
                   <!-- Rank badge -->
                   <td width="42" style="background-color:{% if forloop.first %}#c8922a{% else %}#1c2230{% endif %};padding:12px 0;text-align:center;vertical-align:middle;">
-                    <span style="font-family:Georgia,serif;font-size:{% if forloop.first %}18px{% else %}14px{% endif %};font-weight:700;color:{% if forloop.first %}#0d0f14{% else %}#5c5648{% endif %};">
+                    <span style="font-family:'Cinzel',Georgia,serif;font-size:{% if forloop.first %}18px{% else %}14px{% endif %};font-weight:700;color:{% if forloop.first %}#0d0f14{% else %}#5c5648{% endif %};">
                       {{ forloop.counter }}
                     </span>
                   </td>
                   <!-- Deal info -->
                   <td style="padding:10px 12px;vertical-align:middle;">
                     <div style="margin-bottom:2px;">
-                      <a href="{{ deal.url }}" style="font-size:14px;font-weight:600;color:#e8e0d0;text-decoration:none;line-height:1.3;">{{ deal.name }}</a>
-                    </div>
-                    <div style="font-size:12px;color:#a09880;">
-                      at {{ deal.retailer }}
+                      <a href="{{ deal.url }}" style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:14px;font-weight:600;color:#e8e0d0;text-decoration:none;line-height:1.3;">{{ deal.name }}</a>
                     </div>
                   </td>
                   <!-- Pricing -->
                   <td style="padding:10px 12px;text-align:right;vertical-align:middle;white-space:nowrap;">
-                    <div style="font-size:18px;font-weight:700;color:#4aab72;line-height:1;">${{ deal.price|floatformat:2 }}</div>
-                    <div style="font-size:11px;color:#5c5648;text-decoration:line-through;margin-top:2px;">${{ deal.msrp|floatformat:2 }} MSRP</div>
-                    <div style="display:inline-block;background-color:#2d7a4f;color:#e8e0d0;font-size:11px;font-weight:700;padding:2px 7px;border-radius:3px;margin-top:4px;">
+                    <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:18px;font-weight:700;color:#4aab72;line-height:1;">${{ deal.price|floatformat:2 }}</div>
+                    <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;color:#5c5648;text-decoration:line-through;margin-top:2px;">${{ deal.msrp|floatformat:2 }} MSRP</div>
+                    <div style="display:inline-block;background-color:#2d7a4f;color:#e8e0d0;font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:700;padding:2px 7px;border-radius:3px;margin-top:4px;">
                       SAVE {{ deal.pct_off|floatformat:0 }}%
                     </div>
                   </td>
                   <!-- CTA button -->
                   <td width="90" style="padding:10px 12px;text-align:center;vertical-align:middle;">
                     <a href="{{ deal.url }}"
-                       style="display:inline-block;background-color:#c8922a;color:#0d0f14;font-size:11px;font-weight:700;text-decoration:none;padding:7px 12px;border-radius:3px;letter-spacing:0.05em;text-transform:uppercase;">
+                       style="display:inline-block;background-color:#9b2020;color:#e8e0d0;font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:700;text-decoration:none;padding:7px 12px;border-radius:3px;letter-spacing:0.05em;text-transform:uppercase;">
                       View Deal
                     </a>
                   </td>
@@ -119,41 +113,9 @@
           <tr>
             <td style="padding:4px 24px 24px;text-align:center;">
               <a href="{{ browse_url }}"
-                 style="display:inline-block;background-color:#13171f;color:#f0c060;font-size:13px;font-weight:600;text-decoration:none;padding:11px 28px;border-radius:4px;border:1px solid #c8922a;letter-spacing:0.06em;text-transform:uppercase;">
+                 style="display:inline-block;background-color:#13171f;color:#f0c060;font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:13px;font-weight:600;text-decoration:none;padding:11px 28px;border-radius:4px;border:1px solid #c8922a;letter-spacing:0.06em;text-transform:uppercase;">
                 Browse All Deals &rarr;
               </a>
-            </td>
-          </tr>
-
-          <!-- ── DIVIDER ── -->
-          <tr>
-            <td style="padding:0 24px;">
-              <div style="border-top:1px solid #2a2f3a;"></div>
-            </td>
-          </tr>
-
-          <!-- ── CREATE AN ACCOUNT CTA ── -->
-          <tr>
-            <td style="padding:24px;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0"
-                     style="background:linear-gradient(135deg,#1c2230 0%,#13171f 100%);border-radius:6px;border:1px solid #c8922a;overflow:hidden;">
-                <tr>
-                  <td style="padding:22px 24px;text-align:center;">
-                    <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;color:#f0c060;letter-spacing:0.06em;margin-bottom:8px;">
-                      NEVER MISS A DEAL
-                    </div>
-                    <div style="font-size:13px;color:#a09880;line-height:1.6;margin-bottom:16px;">
-                      Create a free account to set personal price alerts,<br>
-                      build your wishlist, and track your collection.<br>
-                      Get notified the moment a price drops to your target.
-                    </div>
-                    <a href="{{ register_url }}"
-                       style="display:inline-block;background-color:#c8922a;color:#0d0f14;font-size:13px;font-weight:700;text-decoration:none;padding:12px 32px;border-radius:4px;letter-spacing:0.08em;text-transform:uppercase;">
-                      Create a Free Account
-                    </a>
-                  </td>
-                </tr>
-              </table>
             </td>
           </tr>
 
@@ -172,22 +134,22 @@
                      style="background-color:#1c2230;border-radius:4px;border:1px solid #2a2f3a;overflow:hidden;">
                 <tr>
                   <td style="padding:16px 20px;">
-                    <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#a09880;margin-bottom:6px;">
+                    <div style="font-family:'Oswald','Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#a09880;margin-bottom:6px;">
                       Latest from the Blog
                     </div>
                     <div style="margin-bottom:6px;">
                       <a href="{{ site_url }}/blog/{{ latest_post.slug }}/"
-                         style="font-family:Georgia,serif;font-size:15px;font-weight:700;color:#f0c060;text-decoration:none;line-height:1.3;">
+                         style="font-family:'Cinzel',Georgia,serif;font-size:15px;font-weight:700;color:#f0c060;text-decoration:none;line-height:1.3;">
                         {{ latest_post.title }}
                       </a>
                     </div>
                     {% if latest_post.excerpt %}
-                    <div style="font-size:12px;color:#a09880;line-height:1.6;margin-bottom:10px;">
+                    <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:12px;color:#a09880;line-height:1.6;margin-bottom:10px;">
                       {{ latest_post.excerpt|truncatechars:140 }}
                     </div>
                     {% endif %}
                     <a href="{{ site_url }}/blog/{{ latest_post.slug }}/"
-                       style="font-size:12px;color:#c8922a;text-decoration:underline;">
+                       style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:12px;color:#c8922a;text-decoration:underline;">
                       Read the full article &rarr;
                     </a>
                   </td>
@@ -204,15 +166,40 @@
           </tr>
           {% endif %}
 
+          <!-- ── CREATE AN ACCOUNT CTA ── -->
+          <tr>
+            <td style="padding:24px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                     style="background:linear-gradient(135deg,#1c2230 0%,#13171f 100%);border-radius:6px;border:1px solid #c8922a;overflow:hidden;">
+                <tr>
+                  <td style="padding:22px 24px;text-align:center;">
+                    <div style="font-family:'Cinzel',Georgia,serif;font-size:16px;font-weight:700;color:#f0c060;letter-spacing:0.06em;margin-bottom:8px;">
+                      NEVER MISS A DEAL
+                    </div>
+                    <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:13px;color:#a09880;line-height:1.6;margin-bottom:16px;">
+                      Create a free account to set personal price alerts,<br>
+                      build your wishlist, and track your collection.<br>
+                      Get notified the moment a price drops to your target.
+                    </div>
+                    <a href="{{ register_url }}"
+                       style="display:inline-block;background-color:#c8922a;color:#0d0f14;font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:13px;font-weight:700;text-decoration:none;padding:12px 32px;border-radius:4px;letter-spacing:0.08em;text-transform:uppercase;">
+                      Create a Free Account
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
           <!-- ── FOOTER ── -->
           <tr>
-            <td style="padding:18px 24px;text-align:center;">
+            <td style="padding:18px 24px;text-align:center;border-top:1px solid #2a2f3a;">
               <div style="margin-bottom:10px;">
-                <a href="{{ site_url }}" style="font-size:12px;color:#a09880;text-decoration:none;margin:0 8px;">Home</a>
-                <a href="{{ browse_url }}" style="font-size:12px;color:#a09880;text-decoration:none;margin:0 8px;">Browse</a>
-                <a href="{{ register_url }}" style="font-size:12px;color:#a09880;text-decoration:none;margin:0 8px;">Register</a>
+                <a href="{{ site_url }}" style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:12px;color:#a09880;text-decoration:none;margin:0 8px;">Home</a>
+                <a href="{{ browse_url }}" style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:12px;color:#a09880;text-decoration:none;margin:0 8px;">Browse</a>
+                <a href="{{ register_url }}" style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:12px;color:#a09880;text-decoration:none;margin:0 8px;">Register</a>
               </div>
-              <div style="font-size:11px;color:#5c5648;line-height:1.8;">
+              <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;color:#5c5648;line-height:1.8;">
                 You're receiving this because you signed up at thrifthammer.com.<br>
                 Prices are updated daily. ThriftHammer is not affiliated with Games Workshop.<br>
                 &copy; {{ today|date:"Y" }} ThriftHammer &mdash;

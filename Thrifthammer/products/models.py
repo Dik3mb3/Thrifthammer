@@ -329,4 +329,4 @@ class NewsletterSignup(models.Model):
 
     def get_unsubscribe_url(self):
         """Return the absolute unsubscribe URL for this subscriber."""
-        return f'https://www.thrifthammer.com/newsletter/unsubscribe/{self.token}/'
+        return f'https://www.thrifthammer.com/products/newsletter/unsubscribe/{self.token}/'
