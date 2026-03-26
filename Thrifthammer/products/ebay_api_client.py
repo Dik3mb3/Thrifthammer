@@ -842,13 +842,13 @@ class EbayBrowseAPI:
         # eBay's -keyword search operator does not always filter hyphenated
         # compounds: "-shirt" fails to block "T-shirts" because eBay treats the
         # hyphenated token as a different word.  We apply the per-product negative
-        # keywords locally against the title (substring match, case-insensitive)
-        # to catch these escapes.  The description-level counterpart is applied
-        # later in the short_desc block.
+        # keywords locally against the title using word-boundary matching so that
+        # e.g. blocking "special" does not accidentally reject listings whose
+        # titles contain "specialists" or "especially".
         _raw_neg = getattr(product, 'ebay_negative_keywords', '') or ''
         if _raw_neg:
             for _neg_kw in _raw_neg.lower().split():
-                if _neg_kw in title_lower:
+                if re.search(r'\b' + re.escape(_neg_kw) + r'\b', title_lower):
                     logger.debug(
                         '[ebay] Rejected (negative keyword "%s" in title): "%s"',
                         _neg_kw, result['title'][:60],
@@ -1132,7 +1132,7 @@ class EbayBrowseAPI:
             raw_negatives = getattr(product, 'ebay_negative_keywords', '') or ''
             if raw_negatives:
                 for neg_kw in raw_negatives.lower().split():
-                    if neg_kw in short_desc:
+                    if re.search(r'\b' + re.escape(neg_kw) + r'\b', short_desc):
                         logger.debug(
                             '[ebay] Rejected (negative keyword "%s" in description): "%s"',
                             neg_kw, result['title'][:60],
@@ -1219,11 +1219,11 @@ class EbayBrowseAPI:
                 f'unit suffix: {unit_suffix_hit}) — keywords: {keywords}'
             )
 
-        # Product-specific negative keywords — title check
+        # Product-specific negative keywords — title check (word-boundary match)
         _raw_neg = getattr(product, 'ebay_negative_keywords', '') or ''
         if _raw_neg:
             for _neg_kw in _raw_neg.lower().split():
-                if _neg_kw in title_lower:
+                if re.search(r'\b' + re.escape(_neg_kw) + r'\b', title_lower):
                     reasons.append(f'negative keyword "{_neg_kw}" in title')
                     break
 
@@ -1318,11 +1318,11 @@ class EbayBrowseAPI:
             if re.search(r'\btabletop gaming blog\b', short_desc, re.IGNORECASE):
                 reasons.append('reseller storefront ("tabletop gaming blog" in description)')
 
-            # Product-specific negative keywords applied to description
+            # Product-specific negative keywords applied to description (word-boundary)
             raw_negatives = getattr(product, 'ebay_negative_keywords', '') or ''
             if raw_negatives:
                 for neg_kw in raw_negatives.lower().split():
-                    if neg_kw in short_desc:
+                    if re.search(r'\b' + re.escape(neg_kw) + r'\b', short_desc):
                         reasons.append(
                             f'negative keyword "{neg_kw}" in description'
                         )
