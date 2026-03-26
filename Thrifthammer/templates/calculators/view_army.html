@@ -59,6 +59,31 @@
   .army-unit-actions { display: flex; gap: var(--sp-2); flex-wrap: wrap; padding-top: var(--sp-2); }
 
   .share-section { margin-top: 1.5rem; }
+
+  /* Mobile: give the detail cell an explicit opaque background so the
+     background image never bleeds through on small screens. */
+  .army-detail-cell { background: var(--bg-secondary); }
+  .army-prices-table td, .army-prices-table th { background: var(--bg-secondary); }
+
+  /* Mobile: horizontally scroll wide tables rather than overflowing the viewport */
+  .units-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1.5rem;
+    /* Opaque backing so the bg image never shows through on scroll */
+    background: var(--bg-primary);
+    border-radius: 4px;
+  }
+  /* When wrapped, remove the table's own margin-bottom so the wrapper controls spacing */
+  .units-table-wrap .units-table { margin-bottom: 0; }
+
+  @media (max-width: 640px) {
+    .units-table { min-width: 520px; font-size: 0.78rem; }
+    .units-table th, .units-table td { padding: 0.35rem 0.5rem; }
+    .stat-card { padding: 0.6rem 0.9rem; }
+    .stat-card .stat-value { font-size: 1.1rem; }
+    .army-stats { gap: 0.5rem; }
+  }
 </style>
 {% endblock %}
 
@@ -100,6 +125,7 @@
 <!-- Unit list -->
 <h2>Units</h2>
 {% if unit_details %}
+<div class="units-table-wrap">
 <table class="units-table">
   <thead>
     <tr>
@@ -212,6 +238,7 @@
     {% endfor %}
   </tbody>
 </table>
+</div>{# /units-table-wrap #}
 {% else %}
 <p style="color:#888;">No units in this army.</p>
 {% endif %}

@@ -172,6 +172,7 @@ class Command(BaseCommand):
         matched_pks = set()
         imported = 0
         image_updated = 0
+        msrp_updated = 0
 
         for product in products:
             # Use gw_search_name for exact lookup when set; fall back to fuzzy.
@@ -228,7 +229,7 @@ class Command(BaseCommand):
                             'not_available': False,
                         },
                     )
-                    # Update product image and GW direct link
+                    # Update product image, GW direct link, and MSRP
                     update_fields = []
                     if url and product.gw_url != url:
                         product.gw_url = url
@@ -237,6 +238,13 @@ class Command(BaseCommand):
                         product.image_url = image_url
                         update_fields.append('image_url')
                         image_updated += 1
+                    # Keep product.msrp in sync with GW's live price so all
+                    # MSRP references across the site (army calculator, collection
+                    # stats, discount columns) always reflect the current GW price.
+                    if price is not None and product.msrp != price:
+                        product.msrp = price
+                        update_fields.append('msrp')
+                        msrp_updated += 1
                     if update_fields:
                         product.save(update_fields=update_fields)
 
@@ -266,6 +274,7 @@ class Command(BaseCommand):
         self.stdout.write('=' * 60)
         self.stdout.write(self.style.SUCCESS(f'  Matched  : {imported}'))
         self.stdout.write(f'  Images   : {image_updated} updated')
+        self.stdout.write(f'  MSRP     : {msrp_updated} synced from GW price')
         self.stdout.write(f'  Not avail: {not_available_count} marked not available')
         if dry_run:
             self.stdout.write(self.style.WARNING('\n  DRY RUN — no changes saved.'))

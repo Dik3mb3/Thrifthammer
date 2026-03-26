@@ -1802,6 +1802,11 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   /* ── Army calculator ── */
   .calc-layout { grid-template-columns: 1fr; }
 
+  /* ── Ensure page content areas have fully opaque dark background on mobile
+     so the background image never bleeds through table cells or cards ── */
+  .page-content { background-color: rgb(13, 15, 20); }
+  .card { background: var(--bg-secondary) !important; }
+
   /* ── Browse sidebar collapses on mobile ── */
   .browse-layout { grid-template-columns: 1fr; }
   .browse-sidebar { position: static; display: none; }
