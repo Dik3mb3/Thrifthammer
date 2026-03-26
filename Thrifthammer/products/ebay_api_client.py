@@ -1075,6 +1075,44 @@ class EbayBrowseAPI:
                 )
                 return False
 
+            # ── 3D print / aftermarket resin detection ────────────────────────
+            # Aftermarket 3D-printed miniatures and non-GW resin casts share
+            # exact unit names with official GW kits but are not the sealed
+            # retail plastic boxes we track.  Sellers of these items consistently
+            # use phrases like "resin miniature", "3d printed", "resin print",
+            # "fdm printed", "fan sculpt", or "proxy" in their descriptions.
+            # "Primaris scale" is a specific tell — aftermarket sellers use this
+            # phrase to describe their sculpt compatibility; GW never uses it.
+            #
+            # Note: "resin" alone is NOT blocked at the title level to avoid
+            # rejecting Forge World (official GW resin subsidiary) listings when
+            # they appear in eBay search results.  The description phrases below
+            # are specific enough to identify aftermarket prints without false
+            # positives from genuine Forge World items.
+            _PRINT_PHRASES = (
+                'resin miniature',
+                'resin mini',
+                'resin print',
+                '3d printed',
+                '3d print',
+                'fdm printed',
+                'fan sculpt',
+                'fan-sculpt',
+                'proxy miniature',
+                'proxy mini',
+                'not gw',
+                'not official',
+                'primaris scale',
+            )
+            for _phrase in _PRINT_PHRASES:
+                if _phrase in short_desc:
+                    logger.debug(
+                        '[ebay] Rejected (3D print/aftermarket resin, '
+                        '"%s" in description): "%s"',
+                        _phrase, result['title'][:60],
+                    )
+                    return False
+
             # Reject reseller/content-creator storefronts that sell non-standard
             # listings (pre-assembled, display, or hobby-service models).
             # Frontline Gaming (frontlinegaming.org) uses a boilerplate description
