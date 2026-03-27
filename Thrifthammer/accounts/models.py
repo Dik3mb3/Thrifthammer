@@ -47,7 +47,11 @@ class WatchlistItem(models.Model):
     )
     last_alerted_price = models.DecimalField(
         max_digits=8, decimal_places=2, null=True, blank=True,
-        help_text='The price at which we last sent an alert — prevents repeat spam.',
+        help_text='The price at which we last sent an alert (kept for backwards compat).',
+    )
+    last_alerted_at = models.DateTimeField(
+        null=True, blank=True,
+        help_text='Timestamp of the last alert email sent — drives weekly re-alert logic.',
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
