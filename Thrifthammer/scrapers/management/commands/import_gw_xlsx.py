@@ -280,6 +280,12 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING('\n  DRY RUN — no changes saved.'))
         self.stdout.write('=' * 60 + '\n')
 
+        # Auto-create UnitType entries for any new products added in this import
+        if not dry_run:
+            from django.core.management import call_command
+            self.stdout.write('Syncing Army Calculator unit types...')
+            call_command('sync_unit_types', verbosity=0)
+
     # ── Name matching ──────────────────────────────────────────────────────────
 
     @staticmethod

@@ -82,7 +82,7 @@ class Command(BaseCommand):
             if dry_run:
                 self.stdout.write(
                     f'  [dry-run] Would alert {item.user.email} — '
-                    f'{item.product.name} @ £{current_price}'
+                    f'{item.product.name} @ ${current_price}'
                 )
                 sent += 1
                 continue
@@ -96,7 +96,7 @@ class Command(BaseCommand):
                 sent += 1
                 self.stdout.write(
                     self.style.SUCCESS(
-                        f'  [sent] {item.user.email} — {item.product.name} @ £{current_price}'
+                        f'  [sent] {item.user.email} — {item.product.name} @ ${current_price}'
                     )
                 )
             except Exception as exc:
@@ -158,14 +158,14 @@ class Command(BaseCommand):
             '',
             f'{product.name} just hit your watchlist target.',
             '',
-            f'  Best Price : £{price}' + (f' at {retailer.name}' if retailer else ''),
+            f'  Best Price : ${price}' + (f' at {retailer.name}' if retailer else ''),
         ]
         if msrp:
-            lines.append(f'  GW MSRP   : £{msrp}')
+            lines.append(f'  GW MSRP   : ${msrp}')
         if pct_off:
             lines.append(f'  Savings   : {pct_off}% off MSRP')
         if item.alert_type == WatchlistItem.ALERT_PRICE and item.target_price:
-            lines.append(f'  Your target: £{item.target_price}')
+            lines.append(f'  Your target: ${item.target_price}')
         elif item.alert_type == WatchlistItem.ALERT_PCT_OFF and item.alert_percent:
             lines.append(f'  Your target: {item.alert_percent}% off MSRP')
         lines += [

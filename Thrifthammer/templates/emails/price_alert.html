@@ -109,7 +109,7 @@
 
                           <!-- Best price (big) -->
                           <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:32px;font-weight:700;color:#4aab72;line-height:1;margin-bottom:4px;">
-                            &pound;{{ best_price|floatformat:2 }}
+                            ${{ best_price|floatformat:2 }}
                           </div>
 
                           {% if retailer_name %}
@@ -120,7 +120,7 @@
 
                           {% if msrp %}
                           <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:12px;color:#5c5648;text-decoration:line-through;margin-bottom:4px;">
-                            &pound;{{ msrp|floatformat:2 }} GW MSRP
+                            ${{ msrp|floatformat:2 }} GW MSRP
                           </div>
                           {% endif %}
 
@@ -138,7 +138,7 @@
                           <div style="background-color:#0d0f14;border:1px solid #2a2f3a;border-radius:4px;padding:10px 14px;display:inline-block;">
                             <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:10px;color:#5c5648;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Your target</div>
                             {% if alert_type == 'price' and target_price %}
-                            <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:700;color:#f0c060;">&pound;{{ target_price|floatformat:2 }}</div>
+                            <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:700;color:#f0c060;">${{ target_price|floatformat:2 }}</div>
                             {% elif alert_type == 'pct_off' and alert_percent %}
                             <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:16px;font-weight:700;color:#f0c060;">{{ alert_percent|floatformat:0 }}% off</div>
                             {% elif alert_type == 'site_low' %}

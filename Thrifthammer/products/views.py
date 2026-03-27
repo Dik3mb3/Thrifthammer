@@ -171,12 +171,12 @@ def product_list(request):
     query        = request.GET.get('q', '').strip()
     category_slug = request.GET.get('category', '').strip()
     faction_slug  = request.GET.get('faction', '').strip()
-    sort          = request.GET.get('sort', 'name').strip()
+    sort          = request.GET.get('sort', 'discount').strip()
     page_number   = request.GET.get('page', '1').strip()
 
     # Whitelist sort to prevent ORM injection
     if sort not in SORT_OPTIONS:
-        sort = 'name'
+        sort = 'discount'
 
     # Stable cache key covers every filter dimension.
     # Bump the version suffix (v2, v3…) whenever sort_options or the card
