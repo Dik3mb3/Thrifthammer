@@ -2508,15 +2508,6 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   border-left: none;
   border-right: none;
 }
-.blog-post-cta-label {
-  display: block;
-  font-family: 'Oswald', sans-serif;
-  font-size: 0.68rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--accent-gold);
-  margin-bottom: var(--sp-3);
-}
 .blog-post-cta-title {
   font-family: 'Cinzel', serif;
   font-size: 1.3rem;
