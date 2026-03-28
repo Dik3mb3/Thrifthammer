@@ -1,19 +1,16 @@
 """
 Data migration: populate Adeptus Custodes faction page content.
 
-Sets the slug, synopsis, quick stats, hero tagline, and blog tag link
-for the Custodes faction so the faction page is live at
-/factions/adeptus-custodes/ in production.
-
-The matching blog tag (Adeptus Custodes) is created if it does not exist,
-and the starter armies blog post is tagged with it.
+Keeps the existing slug ('custodes') to avoid conflicts with the
+separate 'Adeptus Custodes' faction that populate_products seeds.
+Faction page is live at /factions/custodes/.
 """
 
 from django.db import migrations
 
 
 def populate_custodes_faction(apps, schema_editor):
-    """Set all faction page fields for Adeptus Custodes."""
+    """Set all faction page fields for the Custodes faction."""
     Faction = apps.get_model('products', 'Faction')
     Tag = apps.get_model('blog', 'Tag')
     Post = apps.get_model('blog', 'Post')
@@ -31,9 +28,8 @@ def populate_custodes_faction(apps, schema_editor):
     except Post.DoesNotExist:
         pass
 
-    # Update the Custodes faction
+    # Update the Custodes faction — slug stays as 'custodes'
     Faction.objects.filter(name='Custodes').update(
-        slug='adeptus-custodes',
         hero_tagline="The Emperor's Elite. Find the Best Prices on Every Kit.",
         difficulty='Beginner Friendly',
         model_count_rating='Low (20-40 models)',
@@ -64,10 +60,9 @@ def populate_custodes_faction(apps, schema_editor):
 
 
 def reverse_custodes_faction(apps, schema_editor):
-    """Revert slug back to custodes and clear page fields."""
+    """Clear faction page fields."""
     Faction = apps.get_model('products', 'Faction')
     Faction.objects.filter(name='Custodes').update(
-        slug='custodes',
         hero_tagline='',
         difficulty='',
         model_count_rating='',
