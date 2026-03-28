@@ -26,7 +26,7 @@
       All Posts
     </a>
     {% for tag in all_tags %}
-    <a href="?tag={{ tag.slug }}"
+    <a href="{% url 'blog:tag_list' tag_slug=tag.slug %}"
        class="calc-faction-btn{% if active_tag.slug == tag.slug %} active{% endif %}">
       {{ tag.name }}
     </a>
@@ -80,8 +80,7 @@
   {% if is_paginated %}
   <nav class="pagination" style="margin-top:var(--sp-8);" aria-label="Blog page navigation">
     {% if page_obj.has_previous %}
-    <a href="?{% if active_tag %}tag={{ active_tag.slug }}&{% endif %}page={{ page_obj.previous_page_number }}"
-       aria-label="Previous page">&laquo; Prev</a>
+    <a href="?page={{ page_obj.previous_page_number }}" aria-label="Previous page">&laquo; Prev</a>
     {% else %}
     <span class="disabled" aria-disabled="true">&laquo; Prev</span>
     {% endif %}
@@ -90,13 +89,12 @@
       {% if num == page_obj.number %}
       <span class="current" aria-current="page">{{ num }}</span>
       {% elif num >= page_obj.number|add:"-3" and num <= page_obj.number|add:"3" %}
-      <a href="?{% if active_tag %}tag={{ active_tag.slug }}&{% endif %}page={{ num }}">{{ num }}</a>
+      <a href="?page={{ num }}">{{ num }}</a>
       {% endif %}
     {% endfor %}
 
     {% if page_obj.has_next %}
-    <a href="?{% if active_tag %}tag={{ active_tag.slug }}&{% endif %}page={{ page_obj.next_page_number }}"
-       aria-label="Next page">Next &raquo;</a>
+    <a href="?page={{ page_obj.next_page_number }}" aria-label="Next page">Next &raquo;</a>
     {% else %}
     <span class="disabled" aria-disabled="true">Next &raquo;</span>
     {% endif %}

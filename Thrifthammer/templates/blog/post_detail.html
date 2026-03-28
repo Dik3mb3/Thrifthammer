@@ -40,7 +40,7 @@
         {% if post.tags.all %}
         <div class="blog-card-tags" style="margin-bottom:var(--sp-3);">
           {% for tag in post.tags.all %}
-          <a href="{% url 'blog:post_list' %}?tag={{ tag.slug }}" class="badge badge-default">{{ tag.name }}</a>
+          <a href="{% url 'blog:tag_list' tag_slug=tag.slug %}" class="badge badge-default">{{ tag.name }}</a>
           {% endfor %}
         </div>
         {% endif %}

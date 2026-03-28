@@ -5,12 +5,14 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 
 from products.views import about, home, newsletter_signup, privacy_policy
-from thrifthammer.sitemaps import BlogPostSitemap, ProductSitemap, StaticViewSitemap
+from thrifthammer.sitemaps import BlogPostSitemap, BlogTagSitemap, FactionSitemap, ProductSitemap, StaticViewSitemap
 
 SITEMAPS = {
     'static': StaticViewSitemap,
     'products': ProductSitemap,
     'blog': BlogPostSitemap,
+    'blog_tags': BlogTagSitemap,
+    'factions': FactionSitemap,
 }
 
 urlpatterns = [
@@ -27,6 +29,7 @@ urlpatterns = [
     path('collection/', include('collections_app.urls')),
     path('army-calculator/', include('calculators.urls')),
     path('blog/', include('blog.urls')),
+    path('factions/', include('factions.urls')),
 ]
 
 if settings.DEBUG:

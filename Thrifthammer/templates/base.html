@@ -14,7 +14,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ThriftHammer — Warhammer Price Tracker{% endblock %}</title>
     {% block meta_description %}<meta name="description" content="ThriftHammer tracks Warhammer 40,000 prices across US retailers. Compare prices on every kit and find the best deal before you buy.">{% endblock %}
-    <meta name="robots" content="index, follow">
+    {% block robots %}<meta name="robots" content="index, follow">{% endblock %}
+    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
     <meta name="impact-site-verification" content="531f6b3b-fdd6-4d3a-bd01-96bbde75381d">
     {# ── Open Graph sitewide defaults (overridden per-page in extra_head) ── #}
     <meta property="og:site_name" content="ThriftHammer">

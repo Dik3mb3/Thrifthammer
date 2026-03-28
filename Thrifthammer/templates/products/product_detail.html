@@ -89,7 +89,11 @@
           <span class="badge badge-default">{{ product.category.name }}</span>
           {% endif %}
           {% if product.faction %}
+          {% if product.faction.synopsis %}
+          <a href="{% url 'factions:detail' slug=product.faction.slug %}" class="badge badge-purple">{{ product.faction.name }}</a>
+          {% else %}
           <span class="badge badge-purple">{{ product.faction.name }}</span>
+          {% endif %}
           {% endif %}
           {% if product.gw_sku %}
           <span class="badge badge-muted">SKU: {{ product.gw_sku }}</span>

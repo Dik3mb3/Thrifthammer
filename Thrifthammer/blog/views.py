@@ -8,6 +8,7 @@ Provides:
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import DetailView, ListView
 
@@ -21,7 +22,8 @@ class PostListView(ListView):
     """
     Paginated list of published blog posts.
 
-    Supports optional tag filtering via ?tag=<slug>.
+    Supports tag filtering via clean path (/blog/tag/<slug>/) or legacy
+    query string (?tag=<slug>, which 301-redirects to the clean path).
     Only posts whose status is published AND published_at is in the past
     are shown to site visitors.
     """
@@ -30,6 +32,17 @@ class PostListView(ListView):
     template_name = 'blog/post_list.html'
     context_object_name = 'posts'
     paginate_by = POSTS_PER_PAGE
+
+    def _get_tag_slug(self):
+        """Return tag slug from URL path kwarg (preferred) or GET param (legacy)."""
+        return self.kwargs.get('tag_slug') or self.request.GET.get('tag', '').strip()
+
+    def get(self, request, *args, **kwargs):
+        """301-redirect legacy ?tag= query-string URLs to clean /blog/tag/<slug>/."""
+        legacy_tag = request.GET.get('tag', '').strip()
+        if legacy_tag and 'tag_slug' not in self.kwargs:
+            return redirect(reverse('blog:tag_list', kwargs={'tag_slug': legacy_tag}), permanent=True)
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         """Return published posts; filter by tag if provided."""
@@ -43,7 +56,7 @@ class PostListView(ListView):
             .order_by('-published_at')
         )
 
-        tag_slug = self.request.GET.get('tag', '').strip()
+        tag_slug = self._get_tag_slug()
         if tag_slug:
             qs = qs.filter(tags__slug=tag_slug)
 
@@ -52,13 +65,13 @@ class PostListView(ListView):
     def get_context_data(self, **kwargs):
         """Add tag list and active tag to context."""
         context = super().get_context_data(**kwargs)
-        tag_slug = self.request.GET.get('tag', '').strip()
-        active_tag = None
-        if tag_slug:
-            active_tag = Tag.objects.filter(slug=tag_slug).first()
+        tag_slug = self._get_tag_slug()
+        active_tag = Tag.objects.filter(slug=tag_slug).first() if tag_slug else None
 
         context['all_tags'] = list(Tag.objects.filter(posts__isnull=False).distinct().order_by('name'))
         context['active_tag'] = active_tag
+        # True when the tag is expressed as a URL path segment (not a query param)
+        context['tag_in_path'] = bool(self.kwargs.get('tag_slug'))
         return context
 
 

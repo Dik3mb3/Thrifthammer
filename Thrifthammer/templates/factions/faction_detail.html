@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}{{ faction.name }}: Best Prices &amp; Deals | ThriftHammer{% endblock %}
+
+{% block meta_description %}
+<meta name="description" content="{% if faction.synopsis %}{{ faction.synopsis|truncatechars:155 }}{% else %}Compare prices on every {{ faction.name }} kit across US retailers. Find the best deal before you buy.{% endif %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+
+  {# ══ 1. HERO ══════════════════════════════════════════════════════════════ #}
+  <div class="faction-hero">
+    {% if faction.hero_image_url %}
+    <div class="faction-hero-img-wrap">
+      <img
+        src="{{ faction.hero_image_url }}"
+        alt="{{ faction.name }}, Warhammer 40,000"
+        class="faction-hero-img"
+        loading="eager"
+      >
+      <div class="faction-hero-overlay"></div>
+    </div>
+    {% else %}
+    <div class="faction-hero-img-placeholder" aria-hidden="true"></div>
+    {% endif %}
+
+    <div class="faction-hero-content">
+      <p class="faction-hero-eyebrow">Warhammer 40,000</p>
+      <h1 class="faction-hero-title">{{ faction.name }}</h1>
+      {% if faction.hero_tagline %}
+      <p class="faction-hero-tagline">{{ faction.hero_tagline }}</p>
+      {% endif %}
+      <a href="#deals" class="btn btn-primary" style="margin-top:var(--sp-5);">See Best Deals &darr;</a>
+    </div>
+  </div>
+
+  {# ══ 2. QUICK STATS ═══════════════════════════════════════════════════════ #}
+  {% if faction.model_count_rating or faction.difficulty or faction.painting_complexity or faction.playstyle or faction.price_range_display %}
+  <div class="faction-stats-bar" role="region" aria-label="Faction quick stats">
+    {% if faction.model_count_rating %}
+    <div class="faction-stat">
+      <span class="faction-stat-label">Model Count</span>
+      <span class="faction-stat-value">{{ faction.model_count_rating }}</span>
+    </div>
+    {% endif %}
+    {% if faction.difficulty %}
+    <div class="faction-stat">
+      <span class="faction-stat-label">Difficulty</span>
+      <span class="faction-stat-value">{{ faction.difficulty }}</span>
+    </div>
+    {% endif %}
+    {% if faction.painting_complexity %}
+    <div class="faction-stat">
+      <span class="faction-stat-label">Painting</span>
+      <span class="faction-stat-value">{{ faction.painting_complexity }}</span>
+    </div>
+    {% endif %}
+    {% if faction.playstyle %}
+    <div class="faction-stat">
+      <span class="faction-stat-label">Playstyle</span>
+      <span class="faction-stat-value">{{ faction.playstyle }}</span>
+    </div>
+    {% endif %}
+    {% if faction.price_range_display %}
+    <div class="faction-stat">
+      <span class="faction-stat-label">Price Range</span>
+      <span class="faction-stat-value">{{ faction.price_range_display }}</span>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {# ══ 3. ABOUT ═════════════════════════════════════════════════════════════ #}
+  {% if faction.synopsis %}
+  <div class="faction-section">
+    <div class="faction-section-header">
+      <h2 class="faction-section-title">About {{ faction.name }}</h2>
+      <div class="gold-rule"></div>
+    </div>
+    <div class="faction-synopsis">
+      {{ faction.synopsis|linebreaksbr }}
+    </div>
+  </div>
+  {% endif %}
+
+  {# ══ 4. TOP DEALS ═════════════════════════════════════════════════════════ #}
+  <div id="deals" class="faction-section">
+    <div class="faction-section-header">
+      <h2 class="faction-section-title">Best {{ faction.name }} Deals Right Now</h2>
+      <div class="gold-rule"></div>
+    </div>
+
+    {% if deals %}
+    <div class="faction-deals-list">
+      {% for deal in deals %}
+      <div class="faction-deal-row">
+
+        <div class="faction-deal-row-img">
+          {% if deal.product.image_url %}
+          <img src="{{ deal.product.image_url }}" alt="{{ deal.product.name }}" loading="lazy">
+          {% else %}
+          <div class="faction-deal-row-img-placeholder" aria-hidden="true"></div>
+          {% endif %}
+        </div>
+
+        <div class="faction-deal-row-info">
+          <a href="{% url 'products:detail' slug=deal.product.slug %}" class="faction-deal-row-name">
+            {{ deal.product.name }}
+          </a>
+          <span class="faction-deal-row-retailer">{{ deal.retailer.name }}</span>
+        </div>
+
+        <div class="faction-deal-row-pricing">
+          <span class="faction-deal-row-price">${{ deal.min_price|floatformat:"2" }}</span>
+          {% if deal.discount_pct > 0.5 %}
+          <span class="badge badge-green">Save {{ deal.discount_pct|floatformat:"0" }}%</span>
+          {% endif %}
+        </div>
+
+        <div class="faction-deal-row-actions">
+          <a href="{{ deal.buy_url }}" class="btn btn-primary btn-sm" target="_blank" rel="noopener nofollow">
+            See Deal &rarr;
+          </a>
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="color:var(--text-muted);">No deals tracked yet for {{ faction.name }}. Check back soon.</p>
+    {% endif %}
+  </div>
+
+  {# ══ 5. FROM THE BLOG ═════════════════════════════════════════════════════ #}
+  {% if related_posts %}
+  <div class="faction-section faction-blog-section">
+    <p class="faction-blog-label">From the Blog</p>
+    <div class="faction-blog-grid">
+      {% for post in related_posts %}
+      <a href="{{ post.get_absolute_url }}" class="faction-blog-card">
+        <div class="faction-blog-card-body">
+          <h3 class="faction-blog-card-title">{{ post.title }}</h3>
+          {% if post.excerpt %}
+          <p class="faction-blog-card-excerpt">{{ post.excerpt|truncatechars:90 }}</p>
+          {% endif %}
+          <span class="faction-blog-card-read">Read &rarr;</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {# ══ CTA ══════════════════════════════════════════════════════════════════ #}
+  <div class="faction-cta">
+    <p>ThriftHammer tracks prices daily across US retailers so you never overpay.</p>
+    <div class="faction-cta-btns">
+      <a href="{% url 'products:list' %}" class="btn btn-secondary">Browse All Products</a>
+      <a href="{% url 'blog:post_list' %}" class="btn btn-secondary">Read the Blog</a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

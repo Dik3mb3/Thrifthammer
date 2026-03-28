@@ -65,6 +65,47 @@ class Faction(models.Model):
         help_text='Parent faction whose units this faction can also field (e.g. Space Marines for Ultramarines).',
     )
 
+    # ── Faction page content ────────────────────────────────────────────────
+    hero_tagline = models.CharField(
+        max_length=200, blank=True, default='',
+        help_text='Short hero strapline shown on the faction page (e.g. "The Emperor\'s Elite").',
+    )
+    hero_image_url = models.URLField(
+        blank=True, default='',
+        help_text='URL to faction hero banner image.',
+    )
+    synopsis = models.TextField(
+        blank=True, default='',
+        help_text='SEO-optimised faction description (~150-200 words) shown on the faction page.',
+    )
+    difficulty = models.CharField(
+        max_length=50, blank=True, default='',
+        help_text='Difficulty rating shown in the Quick Stats bar (e.g. "Beginner Friendly").',
+    )
+    model_count_rating = models.CharField(
+        max_length=50, blank=True, default='',
+        help_text='Model count shown in the Quick Stats bar (e.g. "Low (20-40 models)").',
+    )
+    painting_complexity = models.CharField(
+        max_length=50, blank=True, default='',
+        help_text='Painting complexity shown in the Quick Stats bar (e.g. "Easy-Medium").',
+    )
+    playstyle = models.CharField(
+        max_length=100, blank=True, default='',
+        help_text='Playstyle summary shown in the Quick Stats bar (e.g. "Melee Elite").',
+    )
+    price_range_display = models.CharField(
+        max_length=50, blank=True, default='',
+        help_text='Price range shown in the Quick Stats bar (e.g. "£-££").',
+    )
+    blog_tag = models.ForeignKey(
+        'blog.Tag',
+        null=True, blank=True,
+        on_delete=models.SET_NULL,
+        related_name='factions',
+        help_text='Blog tag whose posts appear in the Related Posts section of the faction page.',
+    )
+
     class Meta:
         ordering = ['category', 'name']
 
@@ -223,7 +264,7 @@ class Product(models.Model):
         Invalidate cached price data when product is saved.
         """
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify(self.name).replace('warhammer-40000', 'warhammer-40k')
         super().save(*args, **kwargs)
         # Bust any cached price data for this product
         cache.delete(f'cheapest_price_{self.pk}')

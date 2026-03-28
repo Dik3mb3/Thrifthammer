@@ -2803,3 +2803,230 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 .collection-table th.col-paid,
 .collection-table th.col-msrp,
 .collection-table th.col-disc  { text-align: center; }
+
+/* ==========================================================================
+   FACTION PAGES
+   ========================================================================== */
+
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
+.faction-hero {
+  position: relative;
+  min-height: 260px;
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: var(--sp-6);
+  border-radius: var(--rounded-lg);
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-mid);
+}
+.faction-hero-img-wrap { position: absolute; inset: 0; }
+.faction-hero-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.faction-hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.85) 0%, rgba(0,0,0,.35) 60%, transparent 100%);
+}
+.faction-hero-img-placeholder {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-secondary) 100%);
+}
+.faction-hero-content {
+  position: relative;
+  z-index: 1;
+  padding: var(--sp-7) var(--sp-8);
+  width: 100%;
+}
+.faction-hero-eyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin: 0 0 var(--sp-2);
+}
+.faction-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: var(--text-primary);
+  margin: 0 0 var(--sp-2);
+  text-shadow: 0 2px 8px rgba(0,0,0,.6);
+}
+.faction-hero-tagline {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0;
+  max-width: 480px;
+}
+
+/* ── Quick Stats Bar ──────────────────────────────────────────────────────── */
+.faction-stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded-lg);
+  margin-bottom: var(--sp-8);
+  overflow: hidden;
+}
+.faction-stat {
+  flex: 1 1 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: var(--sp-4) var(--sp-5);
+  border-right: 1px solid var(--border-subtle);
+  text-align: center;
+}
+.faction-stat:last-child { border-right: none; }
+.faction-stat-label {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.faction-stat-value {
+  font-family: var(--font-ui);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--accent-gold-lt);
+}
+
+/* ── Section structure ────────────────────────────────────────────────────── */
+.faction-section { margin-bottom: var(--sp-10); }
+.faction-section-header { margin-bottom: var(--sp-5); }
+.faction-section-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin: 0 0 var(--sp-3);
+  letter-spacing: 0.03em;
+}
+
+/* ── Synopsis ─────────────────────────────────────────────────────────────── */
+.faction-synopsis {
+  color: var(--text-secondary);
+  font-size: 0.93rem;
+  line-height: 1.75;
+  max-width: 700px;
+}
+
+/* ── Compact deals list ───────────────────────────────────────────────────── */
+.faction-deals-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded-lg);
+  overflow: hidden;
+}
+.faction-deal-row {
+  display: grid;
+  grid-template-columns: 48px 1fr auto auto;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background var(--transition);
+}
+.faction-deal-row:last-child { border-bottom: none; }
+.faction-deal-row:hover { background: var(--bg-secondary); }
+.faction-deal-row-img {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  background: var(--bg-secondary);
+  border-radius: var(--rounded-sm);
+  overflow: hidden;
+}
+.faction-deal-row-img img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  padding: 3px;
+}
+.faction-deal-row-img-placeholder { width: 100%; height: 100%; background: var(--bg-secondary); }
+.faction-deal-row-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.faction-deal-row-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.faction-deal-row-name:hover { color: var(--accent-gold-lt); }
+.faction-deal-row-retailer { font-size: 0.75rem; color: var(--text-muted); }
+.faction-deal-row-pricing {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  white-space: nowrap;
+}
+.faction-deal-row-price {
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent-gold-lt);
+}
+.faction-deal-row-actions { white-space: nowrap; }
+
+/* ── Blog section (blended) ───────────────────────────────────────────────── */
+.faction-blog-section {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--sp-7);
+}
+.faction-blog-label {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 var(--sp-4);
+}
+.faction-blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--sp-4);
+}
+.faction-blog-card {
+  display: block;
+  text-decoration: none;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded);
+  padding: var(--sp-4) var(--sp-5);
+  transition: border-color var(--transition);
+}
+.faction-blog-card:hover { border-color: var(--accent-gold); }
+.faction-blog-card-body { display: flex; flex-direction: column; gap: var(--sp-2); }
+.faction-blog-card-title {
+  font-family: var(--font-ui);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.4;
+}
+.faction-blog-card-excerpt { font-size: 0.8rem; color: var(--text-muted); margin: 0; line-height: 1.5; }
+.faction-blog-card-read { font-size: 0.78rem; color: var(--accent-gold); margin-top: var(--sp-1); }
+
+/* ── CTA strip ────────────────────────────────────────────────────────────── */
+.faction-cta {
+  text-align: center;
+  padding: var(--sp-8) 0 var(--sp-4);
+  border-top: 1px solid var(--border-subtle);
+  margin-top: var(--sp-4);
+}
+.faction-cta p { color: var(--text-muted); font-size: 0.88rem; margin: 0 0 var(--sp-4); }
+.faction-cta-btns { display: flex; gap: var(--sp-3); justify-content: center; flex-wrap: wrap; }
+
+/* ── Mobile ───────────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .faction-hero-content { padding: var(--sp-5); }
+  .faction-stats-bar { flex-direction: column; }
+  .faction-stat { border-right: none; border-bottom: 1px solid var(--border-subtle); text-align: left; }
+  .faction-stat:last-child { border-bottom: none; }
+  .faction-deal-row { grid-template-columns: 40px 1fr auto; }
+  .faction-deal-row-actions { display: none; }
+}

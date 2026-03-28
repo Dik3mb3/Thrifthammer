@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'collections_app',
     'calculators',
     'blog',
+    'factions',
 ]
 
 if DEBUG:

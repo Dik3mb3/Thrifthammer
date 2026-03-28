@@ -1,12 +1,31 @@
 """URL configuration for the products app."""
 
 from django.urls import path
+from django.views.generic import RedirectView
 
 from . import views
 
 app_name = 'products'
 
+# 301 redirects for old warhammer-40000 product slugs → warhammer-40k
+_40k_redirects = [
+    'chapter-approved-leviathan',
+    'core-rules',
+    'dice-set',
+    'measuring-tape',
+    'starter-set',
+]
+
 urlpatterns = [
+    # Permanent redirects: warhammer-40000-* → warhammer-40k-*
+    *[
+        path(
+            f'warhammer-40000-{suffix}/',
+            RedirectView.as_view(url=f'/products/warhammer-40k-{suffix}/', permanent=True),
+        )
+        for suffix in _40k_redirects
+    ],
+
     # Product catalog list with search/filter/sort/pagination
     path('', views.product_list, name='list'),
     # JSON autocomplete endpoint for the search bar

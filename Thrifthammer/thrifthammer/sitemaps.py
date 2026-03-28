@@ -8,8 +8,8 @@ for search engine crawling.
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
-from blog.models import Post
-from products.models import Product
+from blog.models import Post, Tag
+from products.models import Faction, Product
 
 
 class StaticViewSitemap(Sitemap):
@@ -51,6 +51,34 @@ class ProductSitemap(Sitemap):
     def lastmod(self, obj):
         """Use the product's updated_at timestamp if available."""
         return getattr(obj, 'updated_at', None) or getattr(obj, 'created_at', None)
+
+
+class FactionSitemap(Sitemap):
+    """Sitemap entry for each faction page that has a synopsis (i.e. is live)."""
+
+    priority = 0.7
+    changefreq = 'weekly'
+
+    def items(self):
+        """Return factions that have faction page content populated."""
+        return Faction.objects.exclude(synopsis='').order_by('slug')
+
+    def location(self, obj):
+        return f'/factions/{obj.slug}/'
+
+
+class BlogTagSitemap(Sitemap):
+    """Sitemap entry for each blog tag's clean URL (/blog/tag/<slug>/)."""
+
+    priority = 0.5
+    changefreq = 'weekly'
+
+    def items(self):
+        """Return tags that have at least one published post."""
+        return Tag.objects.filter(posts__status='published').distinct().order_by('slug')
+
+    def location(self, obj):
+        return f'/blog/tag/{obj.slug}/'
 
 
 class BlogPostSitemap(Sitemap):
