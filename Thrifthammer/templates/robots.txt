@@ -1,10 +1,15 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.thrifthammer.com/sitemap.xml
+# Canonical sitemap — non-www is the authoritative domain.
+# If www support is added later, append a second line:
+#   Sitemap: https://www.thrifthammer.com/sitemap.xml
+Sitemap: https://thrifthammer.com/sitemap.xml
 
-# Block admin and private areas
+# Block admin and private user areas
 Disallow: /admin/
 Disallow: /accounts/
 Disallow: /collection/
 Disallow: /army-calculator/my-armies/
+Disallow: /army-calculator/save/
+Disallow: /army-calculator/api/
