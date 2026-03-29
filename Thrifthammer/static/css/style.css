@@ -2817,8 +2817,7 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   margin-bottom: var(--sp-6);
   border-radius: var(--rounded-lg);
   overflow: hidden;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-mid);
+  background: transparent;
 }
 .faction-hero-img-wrap { position: absolute; inset: 0; }
 .faction-hero-img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -2828,7 +2827,7 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 }
 .faction-hero-img-placeholder {
   position: absolute; inset: 0;
-  background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-secondary) 100%);
+  background: transparent;
 }
 .faction-hero-content {
   position: relative;
@@ -2866,19 +2865,19 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   display: flex;
   flex-wrap: wrap;
   background: transparent;
-  border-bottom: 1px solid var(--border-subtle);
-  margin-bottom: var(--sp-8);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--rounded-lg);
+  margin-top: var(--sp-6);
+  margin-bottom: var(--sp-10);
 }
 .faction-stat {
   flex: 1 1 120px;
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: var(--sp-4) var(--sp-5);
-  border-right: 1px solid var(--border-subtle);
+  padding: var(--sp-5) var(--sp-5);
   text-align: center;
 }
-.faction-stat:last-child { border-right: none; }
 .faction-stat-label {
   font-family: var(--font-ui);
   font-size: 0.7rem;
@@ -2920,9 +2919,7 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 .faction-deals-list {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--rounded-lg);
-  overflow: hidden;
+  gap: var(--sp-2);
 }
 .faction-deal-row {
   display: grid;
@@ -2930,11 +2927,10 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   align-items: center;
   gap: var(--sp-4);
   padding: var(--sp-3) var(--sp-4);
-  background: var(--bg-elevated);
-  border-bottom: 1px solid var(--border-subtle);
+  background: transparent;
+  border-radius: var(--rounded);
   transition: background var(--transition);
 }
-.faction-deal-row:last-child { border-bottom: none; }
 .faction-deal-row:hover { background: var(--bg-secondary); }
 .faction-deal-row-img {
   width: 48px;
@@ -2979,7 +2975,8 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 /* ── Blog section (blended) ───────────────────────────────────────────────── */
 .faction-blog-section {
   border-top: 1px solid var(--border-subtle);
-  padding-top: var(--sp-7);
+  margin-top: var(--sp-8);
+  padding-top: var(--sp-8);
 }
 .faction-blog-grid {
   display: grid;
@@ -3022,8 +3019,7 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 @media (max-width: 600px) {
   .faction-hero-content { padding: var(--sp-5); }
   .faction-stats-bar { flex-direction: column; }
-  .faction-stat { border-right: none; border-bottom: 1px solid var(--border-subtle); text-align: left; }
-  .faction-stat:last-child { border-bottom: none; }
+  .faction-stat { text-align: left; }
   .faction-deal-row { grid-template-columns: 40px 1fr auto; }
   .faction-deal-row-actions { display: none; }
 }
