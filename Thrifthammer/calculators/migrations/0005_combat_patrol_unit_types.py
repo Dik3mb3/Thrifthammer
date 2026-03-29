@@ -43,24 +43,28 @@ def create_combat_patrol_units(apps, schema_editor):
     Faction  = apps.get_model('products',    'Faction')
 
     for product_name, faction_name in COMBAT_PATROLS:
-        product = Product.objects.filter(name=product_name, is_active=True).first()
-        faction = Faction.objects.filter(name=faction_name).first()
+        try:
+            product = Product.objects.filter(name=product_name, is_active=True).first()
+            faction = Faction.objects.filter(name=faction_name).first()
 
-        if not product or not faction:
+            if not product or not faction:
+                continue
+
+            UnitType.objects.update_or_create(
+                product=product,
+                faction=faction,
+                defaults={
+                    'name':             product.name,
+                    'category':         'combo_box',
+                    'points_cost':      0,
+                    'typical_quantity': 1,
+                    'description':      '',
+                    'is_active':        True,
+                },
+            )
+        except Exception:
+            # Skip any individual entry that fails — do not abort the whole migration
             continue
-
-        UnitType.objects.update_or_create(
-            product=product,
-            faction=faction,
-            defaults={
-                'name':             product.name,
-                'category':         'combo_box',
-                'points_cost':      0,
-                'typical_quantity': 1,
-                'description':      '',
-                'is_active':        True,
-            },
-        )
 
 
 def remove_combat_patrol_units(apps, schema_editor):
@@ -70,5 +74,9 @@ def remove_combat_patrol_units(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-    dependencies = [('calculators', '0004_add_combo_box_category')]
+    dependencies = [
+        ('calculators', '0004_add_combo_box_category'),
+        # Ensure all product/faction data migrations have run first
+        ('products',    '0026_faction_stats_corrections6'),
+    ]
     operations = [migrations.RunPython(create_combat_patrol_units, remove_combat_patrol_units)]
