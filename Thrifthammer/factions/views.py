@@ -7,10 +7,70 @@ a quick-stats snapshot, an SEO synopsis, and related blog posts.
 
 from django.db.models import Min
 from django.utils import timezone
-from django.views.generic import DetailView
+from django.views.generic import DetailView, TemplateView
 
 from blog.models import Post
-from products.models import Faction
+from products.models import Category, Faction
+
+# Grand alliance groupings for the Warhammer 40K factions index page.
+# Factions not listed here appear under whichever group matches their name,
+# or are omitted if the category is not 40K.
+_IMPERIUM = {
+    'Adeptus Mechanicus', 'Astra Militarum', 'Black Templars', 'Blood Angels',
+    'Custodes', 'Dark Angels', 'Deathwatch', 'Grey Knights', 'Imperial Knights',
+    'Sisters of Battle', 'Space Marines', 'Space Wolves', 'Ultramarines',
+}
+_CHAOS = {
+    'Chaos Space Marines', 'Death Guard', 'Thousand Sons', 'World Eaters',
+    'Chaos Daemons',
+}
+_XENOS = {
+    'Aeldari', 'Drukhari', 'Genestealer Cults', 'Leagues of Votann',
+    'Necrons', 'Orks', "T'au Empire", 'Tyranids',
+}
+
+
+class FactionIndexView(TemplateView):
+    """
+    Warhammer 40K faction directory.
+
+    Groups all 40K factions under Imperium, Chaos, and Xenos headings.
+    Live factions (synopsis set) link to their landing page; others
+    display a 'Coming Soon' state.
+    """
+
+    template_name = 'factions/faction_index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        category_40k = Category.objects.filter(name='Warhammer 40,000').first()
+        all_factions = list(
+            Faction.objects
+            .filter(category=category_40k)
+            .order_by('name')
+        )
+
+        imperium, chaos, xenos, other = [], [], [], []
+        for f in all_factions:
+            if f.name in _IMPERIUM:
+                imperium.append(f)
+            elif f.name in _CHAOS:
+                chaos.append(f)
+            elif f.name in _XENOS:
+                xenos.append(f)
+            else:
+                other.append(f)
+
+        context['groups'] = [
+            {'title': 'Imperium', 'factions': imperium},
+            {'title': 'Chaos',    'factions': chaos},
+            {'title': 'Xenos',    'factions': xenos},
+        ]
+        if other:
+            context['groups'].append({'title': 'Other', 'factions': other})
+
+        return context
 
 
 class FactionDetailView(DetailView):
@@ -40,8 +100,6 @@ class FactionDetailView(DetailView):
         faction = self.object
 
         # ── Top Deals ────────────────────────────────────────────────────────
-        # Annotate each product with its lowest current price, then calculate
-        # discount vs MSRP in Python so we can sort without a complex DB expr.
         products_qs = (
             faction.products
             .filter(is_active=True, msrp__isnull=False, msrp__gt=0)

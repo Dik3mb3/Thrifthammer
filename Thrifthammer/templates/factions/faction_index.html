@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Warhammer 40K Factions — Best Deals by Army | ThriftHammer{% endblock %}
+
+{% block meta_description %}
+<meta name="description" content="Browse every Warhammer 40K faction. Compare prices on Space Marines, Aeldari, Necrons, Orks, Death Guard, and more across US retailers.">
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+
+  <div class="faction-index-hero">
+    <p class="faction-hero-eyebrow">Warhammer 40,000</p>
+    <h1 class="faction-index-title">Choose Your Faction</h1>
+    <p class="faction-index-subtitle">
+      Compare prices, check army costs, and find the best deals on every kit across US retailers.
+    </p>
+  </div>
+
+  {% for group in groups %}
+  {% if group.factions %}
+  <section class="faction-index-group">
+
+    <div class="faction-index-group-header">
+      <h2 class="faction-index-group-title">{{ group.title }}</h2>
+      <div class="gold-rule"></div>
+    </div>
+
+    <div class="faction-index-grid">
+      {% for f in group.factions %}
+        {% if f.synopsis %}
+        <a href="{% url 'factions:detail' slug=f.slug %}" class="faction-index-card faction-index-card--live">
+          <div class="faction-index-card-name">{{ f.display_name|default:f.name }}</div>
+          {% if f.hero_tagline %}
+          <div class="faction-index-card-tagline">{{ f.hero_tagline }}</div>
+          {% endif %}
+          <div class="faction-index-card-stats">
+            {% if f.difficulty %}<span>{{ f.difficulty }}</span>{% endif %}
+            {% if f.playstyle %}<span>{{ f.playstyle }}</span>{% endif %}
+          </div>
+          <span class="faction-index-card-cta">See Deals &rarr;</span>
+        </a>
+        {% else %}
+        <div class="faction-index-card faction-index-card--soon">
+          <div class="faction-index-card-name">{{ f.display_name|default:f.name }}</div>
+          <span class="faction-index-card-soon-badge">Coming Soon</span>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+  </section>
+  {% endif %}
+  {% endfor %}
+
+</div>
+{% endblock %}

@@ -7,6 +7,6 @@ from . import views
 app_name = 'factions'
 
 urlpatterns = [
-    # Faction landing page — /factions/<slug>/
+    path('', views.FactionIndexView.as_view(), name='index'),
     path('<slug:slug>/', views.FactionDetailView.as_view(), name='detail'),
 ]

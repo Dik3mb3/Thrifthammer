@@ -146,22 +146,12 @@ def home(request):
     The hot deals are selected by _get_spotlight_deals() — edit that
     function to change the selection strategy without touching this view.
     """
-    cache_key = 'home_page_data_v5'
+    cache_key = 'home_page_data_v6'
     ctx = cache.get(cache_key)
     if ctx is None:
         categories = list(Category.objects.all())
         recent_drops = _get_spotlight_deals()
-        live_factions = list(
-            Faction.objects
-            .exclude(synopsis='')
-            .select_related('category')
-            .order_by('name')
-        )
-        ctx = {
-            'categories': categories,
-            'recent_drops': recent_drops,
-            'live_factions': live_factions,
-        }
+        ctx = {'categories': categories, 'recent_drops': recent_drops}
         cache.set(cache_key, ctx, timeout=900)  # 15 minutes
 
     return render(request, 'home.html', ctx)
