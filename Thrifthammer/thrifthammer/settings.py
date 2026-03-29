@@ -89,11 +89,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'thrifthammer.wsgi.application'
 
-# Database — Railway provides DATABASE_URL; falls back to SQLite locally
+# Database — Railway provides DATABASE_URL; falls back to SQLite locally.
+# conn_max_age=0 closes connections immediately after each request so that
+# Railway's PostgreSQL connection limit is never exhausted by idle workers.
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
+        conn_max_age=0,
     )
 }
 
