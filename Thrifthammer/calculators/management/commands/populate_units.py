@@ -435,8 +435,9 @@ class Command(BaseCommand):
     help = 'Populate the Army Calculator from all active 40K product SKUs.'
 
     # Expected minimum number of unit types after a full seed run.
-    # Includes base SM UnitTypes (~145) + BT (~40) + BA (~40) + DA (~40) + DW (~40) cross-faction rows.
-    EXPECTED_UNITS = 310
+    # Includes base SM UnitTypes (~145) + BT (~40) + BA (~40) + DA (~40) + DW (~40) cross-faction rows
+    # + 22 Combat Patrol combo_box entries.
+    EXPECTED_UNITS = 332
 
     def add_arguments(self, parser):
         """Register command-line arguments."""
