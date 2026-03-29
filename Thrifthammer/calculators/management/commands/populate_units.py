@@ -28,7 +28,6 @@ from products.models import Category, Faction, Product
 # Products to skip — box sets containing multiple different units
 # ---------------------------------------------------------------------------
 SKIP_KEYWORDS = [
-    'combat patrol',
     'army set',
     'battleforce',
     'vanguard: ',     # e.g. "Vanguard: Space Marines" mega-sets (NOT "Vanguard Veteran Squad")
@@ -39,6 +38,9 @@ SKIP_KEYWORDS = [
     'start collecting',
     'getting started',
 ]
+
+# Combat Patrol products get their own 'combo_box' category instead of being skipped
+COMBO_BOX_KEYWORDS = ['combat patrol']
 
 # ---------------------------------------------------------------------------
 # 10th Edition battlefield role assignment rules
@@ -411,9 +413,15 @@ def _assign_role(product_name: str) -> str:
 
 
 def _should_skip(product_name: str) -> bool:
-    """Return True if this product should be excluded from the calculator."""
+    """Return True if this product should be excluded from the calculator entirely."""
     name_lower = product_name.lower()
     return any(kw in name_lower for kw in SKIP_KEYWORDS)
+
+
+def _is_combo_box(product_name: str) -> bool:
+    """Return True if this product is a Combat Patrol / combo box."""
+    name_lower = product_name.lower()
+    return any(kw in name_lower for kw in COMBO_BOX_KEYWORDS)
 
 
 class Command(BaseCommand):
@@ -507,7 +515,11 @@ class Command(BaseCommand):
                 skipped_count += 1
                 continue
 
-            role = _assign_role(product.name)
+            # Combat Patrols get their own 'combo_box' category
+            if _is_combo_box(product.name):
+                role = 'combo_box'
+            else:
+                role = _assign_role(product.name)
 
             unit, created = UnitType.objects.update_or_create(
                 product=product,

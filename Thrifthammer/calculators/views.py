@@ -37,6 +37,7 @@ CATEGORY_ORDER = [
     'vehicle',
     'transport',
     'fortification',
+    'combo_box',
 ]
 
 

@@ -6,6 +6,7 @@ SavedArmy (user-saved army lists), and PrebuiltArmy (staff-curated sample lists)
 
 Unit categories follow the 10th Edition / New Recruit battlefield role system:
   Epic Hero, Character, Battleline, Infantry, Mounted, Vehicle, Transport, Fortification
+  Plus: Combo Boxes (Combat Patrol box sets)
 """
 
 import json
@@ -37,6 +38,7 @@ class UnitType(models.Model):
         ('vehicle',       'Vehicle'),
         ('transport',     'Transport'),
         ('fortification', 'Fortification'),
+        ('combo_box',     'Combo Boxes'),
     ]
 
     name = models.CharField(max_length=200, help_text='Unit name as it appears in the army rules.')
