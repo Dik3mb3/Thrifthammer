@@ -66,6 +66,11 @@ class Faction(models.Model):
     )
 
     # ── Faction page content ────────────────────────────────────────────────
+    display_name = models.CharField(
+        max_length=100, blank=True, default='',
+        help_text='Override the display name shown on the faction page (e.g. "Adeptus Custodes"). '
+                  'Defaults to the faction name if blank.',
+    )
     hero_tagline = models.CharField(
         max_length=200, blank=True, default='',
         help_text='Short hero strapline shown on the faction page (e.g. "The Emperor\'s Elite").',

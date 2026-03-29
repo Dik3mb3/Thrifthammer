@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}{{ faction.name }}: Best Prices &amp; Deals | ThriftHammer{% endblock %}
+{% block title %}{{ faction.display_name|default:faction.name }}: Best Prices &amp; Deals | ThriftHammer{% endblock %}
 
 {% block meta_description %}
-<meta name="description" content="{% if faction.synopsis %}{{ faction.synopsis|truncatechars:155 }}{% else %}Compare prices on every {{ faction.name }} kit across US retailers. Find the best deal before you buy.{% endif %}">
+<meta name="description" content="{% if faction.synopsis %}{{ faction.synopsis|truncatechars:155 }}{% else %}Compare prices on every {{ faction.display_name|default:faction.name }} kit across US retailers. Find the best deal before you buy.{% endif %}">
 {% endblock %}
 
 {% block content %}
@@ -15,7 +15,7 @@
     <div class="faction-hero-img-wrap">
       <img
         src="{{ faction.hero_image_url }}"
-        alt="{{ faction.name }}, Warhammer 40,000"
+        alt="{{ faction.display_name|default:faction.name }}, Warhammer 40,000"
         class="faction-hero-img"
         loading="eager"
       >
@@ -27,7 +27,7 @@
 
     <div class="faction-hero-content">
       <p class="faction-hero-eyebrow">Warhammer 40,000</p>
-      <h1 class="faction-hero-title">{{ faction.name }}</h1>
+      <h1 class="faction-hero-title">{{ faction.display_name|default:faction.name }}</h1>
       {% if faction.hero_tagline %}
       <p class="faction-hero-tagline">{{ faction.hero_tagline }}</p>
       {% endif %}
@@ -75,7 +75,7 @@
   {% if faction.synopsis %}
   <div class="faction-section">
     <div class="faction-section-header">
-      <h2 class="faction-section-title">About {{ faction.name }}</h2>
+      <h2 class="faction-section-title">About {{ faction.display_name|default:faction.name }}</h2>
       <div class="gold-rule"></div>
     </div>
     <div class="faction-synopsis">
@@ -85,9 +85,9 @@
   {% endif %}
 
   {# ══ 4. TOP DEALS ═════════════════════════════════════════════════════════ #}
-  <div id="deals" class="faction-section">
+  <div id="deals" class="faction-section faction-deals-section">
     <div class="faction-section-header">
-      <h2 class="faction-section-title">Best {{ faction.name }} Deals Right Now</h2>
+      <h2 class="faction-section-title">Best {{ faction.display_name|default:faction.name }} Deals Right Now</h2>
       <div class="gold-rule"></div>
     </div>
 
@@ -128,14 +128,17 @@
       {% endfor %}
     </div>
     {% else %}
-    <p style="color:var(--text-muted);">No deals tracked yet for {{ faction.name }}. Check back soon.</p>
+    <p style="color:var(--text-muted);">No deals tracked yet for {{ faction.display_name|default:faction.name }}. Check back soon.</p>
     {% endif %}
   </div>
 
   {# ══ 5. FROM THE BLOG ═════════════════════════════════════════════════════ #}
   {% if related_posts %}
   <div class="faction-section faction-blog-section">
-    <p class="faction-blog-label">From the Blog</p>
+    <div class="faction-section-header">
+      <h2 class="faction-section-title">From the Blog</h2>
+      <div class="gold-rule"></div>
+    </div>
     <div class="faction-blog-grid">
       {% for post in related_posts %}
       <a href="{{ post.get_absolute_url }}" class="faction-blog-card">
