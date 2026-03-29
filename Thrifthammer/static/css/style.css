@@ -2878,12 +2878,12 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   text-align: center;
 }
 .faction-stat-label {
-  font-family: var(--font-ui);
-  font-size: 0.72rem;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: #ffffff;
 }
 .faction-stat-value {
   font-family: var(--font-display);
