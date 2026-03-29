@@ -270,16 +270,11 @@ def product_list(request):
         products = products.order_by(SORT_OPTIONS[sort])
 
     # Sidebar dropdowns — small tables, fetched once.
-    # When a category is active, show only its factions that have active products.
-    # Filtering by product count prevents empty stubs (renamed/deprecated factions)
-    # from appearing as dead-end filter options.
     categories = list(Category.objects.all())
     if category_slug:
         factions = list(
             Faction.objects
             .filter(category__slug=category_slug)
-            .annotate(active_product_count=Count('products', filter=Q(products__is_active=True)))
-            .filter(active_product_count__gt=0)
             .select_related('category')
             .order_by('name')
         )

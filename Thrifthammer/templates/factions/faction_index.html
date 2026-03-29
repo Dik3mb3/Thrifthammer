@@ -23,7 +23,6 @@
 
     <div class="faction-index-group-header">
       <h2 class="faction-index-group-title">{{ group.title }}</h2>
-      <div class="gold-rule"></div>
     </div>
 
     <div class="faction-index-grid">
@@ -31,12 +30,9 @@
         {% if f.synopsis %}
         <a href="{% url 'factions:detail' slug=f.slug %}" class="faction-index-card faction-index-card--live">
           <div class="faction-index-card-name">{{ f.display_name|default:f.name }}</div>
-          {% if f.hero_tagline %}
-          <div class="faction-index-card-tagline">{{ f.hero_tagline }}</div>
-          {% endif %}
-          <div class="faction-index-card-stats">
-            {% if f.difficulty %}<span>{{ f.difficulty }}</span>{% endif %}
-            {% if f.playstyle %}<span>{{ f.playstyle }}</span>{% endif %}
+          <div class="faction-index-card-tags">
+            {% if f.difficulty %}<span class="fi-tag fi-tag--diff">{{ f.difficulty }}</span>{% endif %}
+            {% if f.playstyle %}<span class="fi-tag fi-tag--play">{{ f.playstyle }}</span>{% endif %}
           </div>
           <span class="faction-index-card-cta">See Deals &rarr;</span>
         </a>

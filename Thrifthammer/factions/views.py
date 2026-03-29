@@ -21,8 +21,8 @@ _IMPERIUM = {
     'Sisters of Battle', 'Space Marines', 'Space Wolves', 'Ultramarines',
 }
 _CHAOS = {
-    'Chaos Space Marines', 'Death Guard', 'Thousand Sons', 'World Eaters',
-    'Chaos Daemons',
+    'Chaos Space Marines', 'Chaos Knights', 'Death Guard', 'Thousand Sons',
+    'World Eaters', 'Chaos Daemons',
 }
 _XENOS = {
     'Aeldari', 'Drukhari', 'Genestealer Cults', 'Leagues of Votann',
