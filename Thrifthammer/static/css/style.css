@@ -2865,37 +2865,40 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   display: flex;
   flex-wrap: wrap;
   background: transparent;
-  border: 1px solid var(--border-mid);
-  border-radius: var(--rounded-lg);
-  margin-top: var(--sp-6);
-  margin-bottom: var(--sp-10);
+  margin-top: var(--sp-8);
+  margin-bottom: var(--sp-12);
+  gap: var(--sp-2);
 }
 .faction-stat {
-  flex: 1 1 120px;
+  flex: 1 1 130px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: var(--sp-5) var(--sp-5);
+  gap: var(--sp-1);
+  padding: var(--sp-5) var(--sp-4);
   text-align: center;
 }
 .faction-stat-label {
   font-family: var(--font-ui);
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 .faction-stat-value {
-  font-family: var(--font-ui);
-  font-size: 0.95rem;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--accent-gold-lt);
+  line-height: 1.2;
 }
 
 /* ── Section structure ────────────────────────────────────────────────────── */
-.faction-section { margin-bottom: var(--sp-10); }
-.faction-section-header { margin-bottom: var(--sp-5); }
+.faction-section {
+  margin-top: var(--sp-10);
+  margin-bottom: var(--sp-10);
+}
+.faction-section-header { margin-bottom: var(--sp-6); }
 .faction-section-title {
   font-family: var(--font-display);
   font-size: 1.35rem;
@@ -2904,8 +2907,6 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   margin: 0 0 var(--sp-3);
   letter-spacing: 0.03em;
 }
-/* Extra breathing room above the deals section */
-.faction-deals-section { margin-top: var(--sp-4); }
 
 /* ── Synopsis ─────────────────────────────────────────────────────────────── */
 .faction-synopsis {
@@ -3015,10 +3016,75 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 .faction-cta p { color: var(--text-muted); font-size: 0.88rem; margin: 0 0 var(--sp-4); }
 .faction-cta-btns { display: flex; gap: var(--sp-3); justify-content: center; flex-wrap: wrap; }
 
+/* ── Home page faction cards ──────────────────────────────────────────────── */
+.faction-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--sp-5);
+}
+.faction-home-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-6) var(--sp-6);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded-lg);
+  text-decoration: none;
+  transition: border-color var(--transition), background var(--transition);
+}
+.faction-home-card:hover {
+  border-color: var(--accent-gold);
+  background: var(--bg-secondary);
+}
+.faction-home-card-eyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+}
+.faction-home-card-name {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+.faction-home-card-tagline {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+.faction-home-card-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-top: var(--sp-1);
+}
+.faction-home-card-stats span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  padding: 2px 8px;
+  border-radius: var(--rounded-sm);
+}
+.faction-home-card-cta {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-gold-lt);
+  margin-top: auto;
+  padding-top: var(--sp-3);
+}
+
 /* ── Mobile ───────────────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .faction-hero-content { padding: var(--sp-5); }
-  .faction-stats-bar { flex-direction: column; }
+  .faction-stats-bar { flex-direction: column; gap: 0; }
   .faction-stat { text-align: left; }
   .faction-deal-row { grid-template-columns: 40px 1fr auto; }
   .faction-deal-row-actions { display: none; }

@@ -138,6 +138,34 @@
 </section>
 {% endif %}
 
+{# ─── BROWSE BY FACTION ───────────────────────────────────────────────── #}
+{% if live_factions %}
+<section class="section" aria-labelledby="factions-heading">
+    <div class="container">
+        <div class="section-header">
+            <h2 id="factions-heading">Browse by Faction</h2>
+            <p>Deep dives on army costs, best deals, and what to buy first</p>
+        </div>
+        <div class="faction-cards-grid">
+            {% for f in live_factions %}
+            <a href="{% url 'factions:detail' slug=f.slug %}" class="faction-home-card">
+                <div class="faction-home-card-eyebrow">{{ f.category.name }}</div>
+                <h3 class="faction-home-card-name">{{ f.display_name|default:f.name }}</h3>
+                {% if f.hero_tagline %}
+                <p class="faction-home-card-tagline">{{ f.hero_tagline }}</p>
+                {% endif %}
+                <div class="faction-home-card-stats">
+                    {% if f.difficulty %}<span>{{ f.difficulty }}</span>{% endif %}
+                    {% if f.playstyle %}<span>{{ f.playstyle }}</span>{% endif %}
+                </div>
+                <span class="faction-home-card-cta">See Deals &rarr;</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
 {# ─── ARMY CALCULATOR CTA ─────────────────────────────────────────────── #}
 <section class="section section-alt" aria-labelledby="calc-heading">
     <div class="container">
