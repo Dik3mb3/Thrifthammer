@@ -2879,6 +2879,27 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
    FACTION PAGES
    ========================================================================== */
 
+/* ── Breadcrumb ───────────────────────────────────────────────────────────── */
+.faction-breadcrumb {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: var(--sp-4);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  flex-wrap: wrap;
+}
+.faction-breadcrumb a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.faction-breadcrumb a:hover {
+  color: var(--accent-gold-lt);
+}
+.faction-breadcrumb span:last-child {
+  color: var(--text-secondary);
+}
+
 /* ── Hero ─────────────────────────────────────────────────────────────────── */
 .faction-hero {
   position: relative;

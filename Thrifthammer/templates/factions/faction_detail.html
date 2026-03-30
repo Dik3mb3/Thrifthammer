@@ -1,13 +1,85 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}{{ faction.display_name|default:faction.name }}: Best Prices &amp; Deals | ThriftHammer{% endblock %}
+{% block title %}{{ faction.display_name|default:faction.name }} — Best Prices &amp; Deals on Every Kit | ThriftHammer{% endblock %}
 
 {% block meta_description %}
-<meta name="description" content="{% if faction.synopsis %}{{ faction.synopsis|truncatechars:155 }}{% else %}Compare prices on every {{ faction.display_name|default:faction.name }} kit across US retailers. Find the best deal before you buy.{% endif %}">
+<meta name="description" content="Compare prices on every {{ faction.display_name|default:faction.name }} kit across US retailers. Find the cheapest deal on boxes, units, and Combat Patrols — updated daily.">
+{% endblock %}
+
+{% block extra_head %}
+{# ── Canonical ── #}
+<link rel="canonical" href="https://thrifthammer.com/factions/{{ faction.slug }}/">
+
+{# ── Open Graph ── #}
+<meta property="og:type"        content="website">
+<meta property="og:title"       content="{{ faction.display_name|default:faction.name }} — Best Prices &amp; Deals | ThriftHammer">
+<meta property="og:description" content="Compare prices on every {{ faction.display_name|default:faction.name }} kit across US Warhammer retailers. Updated daily.">
+<meta property="og:url"         content="https://thrifthammer.com/factions/{{ faction.slug }}/">
+<meta property="og:image"       content="https://thrifthammer.com/static/images/bg-grimdark.jpg">
+<meta property="og:site_name"   content="ThriftHammer">
+
+{# ── Twitter Card ── #}
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="{{ faction.display_name|default:faction.name }} — Best Prices | ThriftHammer">
+<meta name="twitter:description" content="Compare prices on every {{ faction.display_name|default:faction.name }} kit across US Warhammer retailers.">
+<meta name="twitter:image"       content="https://thrifthammer.com/static/images/bg-grimdark.jpg">
+
+{# ── JSON-LD: Breadcrumb + WebPage ── #}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://thrifthammer.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Factions",
+          "item": "https://thrifthammer.com/factions/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "{{ faction.display_name|default:faction.name }}",
+          "item": "https://thrifthammer.com/factions/{{ faction.slug }}/"
+        }
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "name": "{{ faction.display_name|default:faction.name }} — Best Prices & Deals | ThriftHammer",
+      "description": "Compare prices on every {{ faction.display_name|default:faction.name }} kit across US Warhammer retailers. Updated daily.",
+      "url": "https://thrifthammer.com/factions/{{ faction.slug }}/",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "ThriftHammer",
+        "url": "https://thrifthammer.com"
+      }
+    }
+  ]
+}
+</script>
 {% endblock %}
 
 {% block content %}
 <div class="page-content">
+
+  {# ══ 0. BREADCRUMB ════════════════════════════════════════════════════════ #}
+  <nav class="faction-breadcrumb" aria-label="Breadcrumb">
+    <a href="{% url 'home' %}">Home</a>
+    <span aria-hidden="true"> › </span>
+    <a href="{% url 'factions:index' %}">Factions</a>
+    <span aria-hidden="true"> › </span>
+    <span>{{ faction.display_name|default:faction.name }}</span>
+  </nav>
 
   {# ══ 1. HERO ══════════════════════════════════════════════════════════════ #}
   <div class="faction-hero">
