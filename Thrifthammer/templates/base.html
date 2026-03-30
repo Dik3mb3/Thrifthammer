@@ -15,7 +15,7 @@
     <title>{% block title %}ThriftHammer — Warhammer Price Tracker{% endblock %}</title>
     {% block meta_description %}<meta name="description" content="ThriftHammer tracks Warhammer 40,000 prices across US retailers. Compare prices on every kit and find the best deal before you buy.">{% endblock %}
     {% block robots %}<meta name="robots" content="index, follow">{% endblock %}
-    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+    <link rel="canonical" href="https://thrifthammer.com{{ request.path }}">
     <meta name="impact-site-verification" content="531f6b3b-fdd6-4d3a-bd01-96bbde75381d">
     <meta name="google-site-verification" content="0rc6dAId0s09V_xl0qEwDaSCtKHTd5ajxDl0_yqJpNo" />
     {# ── Open Graph sitewide defaults (overridden per-page in extra_head) ── #}
@@ -30,8 +30,8 @@
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "ThriftHammer",
-      "url": "https://www.thrifthammer.com",
-      "logo": "https://www.thrifthammer.com/static/images/logo.svg",
+      "url": "https://thrifthammer.com",
+      "logo": "https://thrifthammer.com/static/images/logo.svg",
       "description": "ThriftHammer compares Warhammer prices across US retailers so you always find the best deal.",
       "sameAs": []
     }
