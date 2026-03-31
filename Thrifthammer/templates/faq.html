@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}Warhammer Price Comparison FAQ — ThriftHammer{% endblock %}
+
+{% block meta_description %}<meta name="description" content="Frequently asked questions about ThriftHammer — the free Warhammer price comparison tool. Learn how to save money on 40K kits, compare retailers, and plan your army budget.">{% endblock %}
+
+{% block extra_head %}
+<meta property="og:title" content="Warhammer Price Comparison FAQ — ThriftHammer">
+<meta property="og:description" content="Answers to common questions about finding the best Warhammer prices, comparing retailers, and getting the most out of ThriftHammer's free tools.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thrifthammer.com/faq/">
+<link rel="canonical" href="https://thrifthammer.com/faq/">
+
+{# ── JSON-LD: FAQPage structured data — helps Google show FAQ rich results ── #}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How often are Warhammer prices updated on ThriftHammer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ThriftHammer strives to update Warhammer prices daily across multiple retailers to help users find the best deals. Prices may change frequently depending on availability, sales, and secondary market listings."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do Warhammer prices vary between retailers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Warhammer prices vary based on retailer discounts, inventory levels, regional pricing, and secondary market listings. ThriftHammer helps users quickly compare these differences to find the best value."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does ThriftHammer show both new and discounted Warhammer models?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. ThriftHammer highlights discounted listings and competitive pricing to help users identify the best value options available."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can I save money when buying Warhammer models?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Comparing prices across multiple retailers, watching for discounts, and planning army purchases ahead of time can help reduce costs. ThriftHammer simplifies this by showing price comparisons in one place, along with the ability to set up price alerts, weekly pricing update emails, and much more."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it cheaper to buy Warhammer armies all at once or over time?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Prices can fluctuate over time and deals may appear unpredictably. Many hobbyists save money by tracking deals and purchasing units when deals arise. We will always recommend buying an army over time to make sure you love the army you choose before investing your money and time."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why are some Warhammer kits more expensive than others?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pricing differences often depend on model size, number of models in the box, and production factors. ThriftHammer helps identify which kits offer the best value for their price."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does ThriftHammer help budget Warhammer purchases?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ThriftHammer helps users compare prices, identify discounts, and evaluate army costs so hobbyists can plan purchases more efficiently."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can ThriftHammer help new Warhammer players?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "New players can use ThriftHammer to understand typical pricing, find deals, and plan purchases more efficiently. ThriftHammer offers an Army Calculator to estimate the cost to build your dream Warhammer army. You can also visit the ThriftHammer blog for articles exploring various Warhammer topics that help you better understand the hobby."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is ThriftHammer free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. ThriftHammer is free to use and designed to help hobbyists find better prices without any additional cost. Registering for a free account gives you access to the watchlist and My Collection feature, along with the ability to create and save Army Cost Calculator lists for long-term tracking."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why use ThriftHammer instead of checking retailers manually?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Checking multiple retailers individually can be time consuming and inefficient. ThriftHammer consolidates price comparisons, price drop alerts, and army budgeting all in one place. Currently ThriftHammer tracks prices across five online retailers: Amazon, eBay, Games Workshop, Noble Knight, and Miniature Market."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can I support ThriftHammer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The best way to support ThriftHammer is by registering a free account and testing all features and tools. You can also follow ThriftHammer on social media and provide constructive feedback via email at Thrifthammer.com@gmail.com. All feedback is appreciated as ThriftHammer continues to improve over time."
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-content">
+
+  {# ── Breadcrumb ── #}
+  <nav class="faction-breadcrumb" aria-label="Breadcrumb">
+    <a href="{% url 'home' %}">Home</a>
+    <span aria-hidden="true"> › </span>
+    <span>FAQ</span>
+  </nav>
+
+  {# ── Page header ── #}
+  <div style="margin-bottom: var(--sp-6);">
+    <h1 class="section-title">Frequently Asked Questions</h1>
+    <div class="gold-rule"></div>
+    <p style="color: var(--text-secondary); max-width: 680px; line-height: 1.7; margin-top: var(--sp-3);">
+      Everything you need to know about finding the best Warhammer prices, comparing retailers,
+      and getting the most out of ThriftHammer's free tools.
+    </p>
+  </div>
+
+  {# ── FAQ items ── #}
+  <div class="faq-list">
+
+    {# Q1 #}
+    <div class="faq-item">
+      <h2 class="faq-question">How often are Warhammer prices updated on ThriftHammer?</h2>
+      <div class="faq-answer">
+        <p>
+          ThriftHammer strives to update Warhammer prices daily across multiple retailers to help users
+          find the best deals. Prices may change frequently depending on availability, sales, and secondary
+          market listings, so checking back regularly ensures you catch the lowest price at the right time.
+        </p>
+      </div>
+    </div>
+
+    {# Q2 #}
+    <div class="faq-item">
+      <h2 class="faq-question">Why do Warhammer prices vary between retailers?</h2>
+      <div class="faq-answer">
+        <p>
+          Warhammer prices vary based on retailer discounts, inventory levels, regional pricing, and
+          secondary market listings. Stores like Miniature Market and Noble Knight often run independent
+          sales that differ from Games Workshop's retail price. ThriftHammer helps users quickly compare
+          these differences to find the best value without visiting each site individually.
+        </p>
+      </div>
+    </div>
+
+    {# Q3 #}
+    <div class="faq-item">
+      <h2 class="faq-question">Does ThriftHammer show both new and discounted Warhammer models?</h2>
+      <div class="faq-answer">
+        <p>
+          Yes. ThriftHammer tracks pricing across all active listings and highlights discounted listings
+          and competitive pricing so users can immediately identify the best value options available.
+          You can sort our <a href="{% url 'products:list' %}?sort=discount" class="faq-link">browse page</a>
+          by discount percentage to see which kits have the biggest price drops right now.
+        </p>
+      </div>
+    </div>
+
+    {# Q4 #}
+    <div class="faq-item">
+      <h2 class="faq-question">How can I save money when buying Warhammer models?</h2>
+      <div class="faq-answer">
+        <p>
+          Comparing prices across multiple retailers, watching for discounts, and planning army purchases
+          ahead of time are the most reliable ways to reduce costs. ThriftHammer simplifies this by
+          showing <a href="{% url 'products:list' %}" class="faq-link">price comparisons</a> in one place,
+          with the ability to set up price alerts, weekly pricing update emails, and much more to keep
+          you ahead of every deal.
+        </p>
+      </div>
+    </div>
+
+    {# Q5 #}
+    <div class="faq-item">
+      <h2 class="faq-question">Is it cheaper to buy Warhammer armies all at once or over time?</h2>
+      <div class="faq-answer">
+        <p>
+          Prices can fluctuate over time and deals may appear unpredictably. Many hobbyists save money
+          by tracking deals and purchasing units when deals arise. We will always recommend buying an army
+          over time to make sure you love the army you choose before investing your money and time into
+          painting and assembling it.
+        </p>
+      </div>
+    </div>
+
+    {# Q6 #}
+    <div class="faq-item">
+      <h2 class="faq-question">Why are some Warhammer kits more expensive than others?</h2>
+      <div class="faq-answer">
+        <p>
+          Pricing differences often depend on model size, the number of models included in the box,
+          and production factors. Large centerpiece models and multi-part plastic kits with many components
+          naturally carry a higher retail price. ThriftHammer helps you identify which kits offer the
+          best value relative to their price so your hobby budget goes further.
+        </p>
+      </div>
+    </div>
+
+    {# Q7 #}
+    <div class="faq-item">
+      <h2 class="faq-question">How does ThriftHammer help budget Warhammer purchases?</h2>
+      <div class="faq-answer">
+        <p>
+          ThriftHammer helps users compare prices, identify discounts, and evaluate army costs so
+          hobbyists can plan purchases more efficiently. Our
+          <a href="{% url 'calculators:space_marines' %}" class="faq-link">Army Cost Calculator</a>
+          lets you build a complete roster unit by unit and see exactly what it costs across every
+          tracked retailer before you spend a single dollar.
+        </p>
+      </div>
+    </div>
+
+    {# Q8 #}
+    <div class="faq-item">
+      <h2 class="faq-question">How can ThriftHammer help new Warhammer players?</h2>
+      <div class="faq-answer">
+        <p>
+          New players can use ThriftHammer to understand typical pricing, find deals, and plan purchases
+          more efficiently. We offer tools such as our
+          <a href="{% url 'calculators:space_marines' %}" class="faq-link">Army Calculator</a>
+          to estimate the full cost of building your dream Warhammer army before you commit. You can also
+          visit our <a href="{% url 'blog:post_list' %}" class="faq-link">blog</a> for articles exploring
+          various Warhammer topics that help you better understand the hobby, choose the right faction,
+          and make smarter purchasing decisions.
+        </p>
+      </div>
+    </div>
+
+    {# Q9 #}
+    <div class="faq-item">
+      <h2 class="faq-question">Is ThriftHammer free to use?</h2>
+      <div class="faq-answer">
+        <p>
+          Yes. ThriftHammer is completely free to use and designed to help hobbyists find better prices
+          without any added cost. If you
+          <a href="{% url 'accounts:register' %}" class="faq-link">register for a free account</a>
+          you gain access to our watchlist and My Collection feature, along with the ability to create
+          and save any
+          <a href="{% url 'calculators:space_marines' %}" class="faq-link">Army Cost Calculator</a>
+          list you have built for long-term tracking.
+        </p>
+      </div>
+    </div>
+
+    {# Q10 #}
+    <div class="faq-item">
+      <h2 class="faq-question">Why use ThriftHammer instead of checking retailers manually?</h2>
+      <div class="faq-answer">
+        <p>
+          Checking multiple retailers individually can be time consuming and inefficient. ThriftHammer
+          consolidates <a href="{% url 'products:list' %}" class="faq-link">price comparisons</a>,
+          price drop alerts, and army budgeting all in one place. Currently ThriftHammer tracks prices
+          across five online retailers: Amazon, eBay, Games Workshop, Noble Knight, and Miniature Market.
+          ThriftHammer aims to be the most trustworthy source for the best prices in hobby gaming.
+        </p>
+      </div>
+    </div>
+
+    {# Q11 #}
+    <div class="faq-item">
+      <h2 class="faq-question">How can I support ThriftHammer?</h2>
+      <div class="faq-answer">
+        <p>
+          The best way to support ThriftHammer is by
+          <a href="{% url 'accounts:register' %}" class="faq-link">registering a free account</a>
+          and putting all our features and tools through their paces. You can follow us on our social
+          media accounts —
+          <a href="https://www.reddit.com/r/DealHammer/" class="faq-link" target="_blank" rel="noopener">Reddit</a>,
+          <a href="https://twitter.com/Thrifthammer" class="faq-link" target="_blank" rel="noopener">Twitter</a>,
+          <a href="https://www.instagram.com/Thrifthammer_Official/" class="faq-link" target="_blank" rel="noopener">Instagram</a>, and
+          <a href="https://www.tiktok.com/@thrifthammer" class="faq-link" target="_blank" rel="noopener">TikTok</a>
+          — and send us your feedback at
+          <a href="mailto:Thrifthammer.com@gmail.com" class="faq-link">Thrifthammer.com@gmail.com</a>.
+          Every piece of feedback helps us improve the site for the whole community.
+        </p>
+      </div>
+    </div>
+
+  </div>{# end .faq-list #}
+
+  {# ── CTA strip ── #}
+  <div class="faq-cta-strip">
+    <h2 class="faq-cta-title">Ready to find your best deal?</h2>
+    <p class="faq-cta-sub">
+      Browse hundreds of Warhammer kits, plan your army budget, or sign up free — all in one place.
+    </p>
+    <div class="faq-cta-actions">
+      <a href="{% url 'products:list' %}" class="btn btn-primary btn-lg">Browse Warhammer Deals</a>
+      <a href="{% url 'calculators:space_marines' %}" class="btn btn-blue btn-lg">Army Calculator</a>
+      {% if not user.is_authenticated %}
+      <a href="{% url 'accounts:register' %}" class="btn btn-secondary btn-lg">Create Free Account</a>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

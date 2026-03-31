@@ -133,6 +133,11 @@ def privacy_policy(request):
     return render(request, 'privacy_policy.html')
 
 
+def faq(request):
+    """FAQ page — answers common questions about ThriftHammer and Warhammer pricing."""
+    return render(request, 'faq.html')
+
+
 def about(request):
     """About page — who built ThriftHammer and what it does."""
     return render(request, 'about.html')

@@ -15,6 +15,26 @@
 <meta name="twitter:title" content="ThriftHammer — Warhammer Price Tracker">
 <meta name="twitter:description" content="Compare Warhammer 40,000 prices across US retailers. Never overpay for plastic again.">
 <link rel="canonical" href="https://thrifthammer.com/">
+
+{# ── JSON-LD: WebSite + SearchAction ── #}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "ThriftHammer",
+  "url": "https://thrifthammer.com",
+  "description": "Compare Warhammer 40,000 prices across US retailers. Find the cheapest deal on every kit, updated daily.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://thrifthammer.com/products/?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
 <style>
   /* Hero search autocomplete inherits global .hero-search-results styles */
   #hero-search-results { display: none; }

@@ -4,7 +4,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
 from django.views.generic import TemplateView
 
-from products.views import about, home, newsletter_signup, privacy_policy
+from products.views import about, faq, home, newsletter_signup, privacy_policy
 from thrifthammer.sitemaps import BlogPostSitemap, BlogTagSitemap, FactionSitemap, ProductSitemap, StaticViewSitemap
 
 SITEMAPS = {
@@ -20,6 +20,7 @@ urlpatterns = [
     path('', home, name='home'),
     path('about/', about, name='about'),
     path('privacy-policy/', privacy_policy, name='privacy_policy'),
+    path('faq/', faq, name='faq'),
     path('newsletter/signup/', newsletter_signup, name='newsletter_signup'),
     path('sitemap.xml', sitemap, {'sitemaps': SITEMAPS}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),

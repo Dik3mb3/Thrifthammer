@@ -35,6 +35,7 @@ _STATIC_PAGE_CONFIG = {
     'factions:index':            {'priority': 0.8, 'changefreq': 'weekly'},
     'blog:post_list':            {'priority': 0.7, 'changefreq': 'weekly'},
     'about':                     {'priority': 0.6, 'changefreq': 'monthly'},
+    'faq':                       {'priority': 0.6, 'changefreq': 'monthly'},
     'privacy_policy':            {'priority': 0.4, 'changefreq': 'monthly'},
 }
 
