@@ -43,11 +43,18 @@ class Command(BaseCommand):
             default="",
             help="Limit update to a single product by GW SKU.",
         )
+        parser.add_argument(
+            "--retailer",
+            type=str,
+            default="",
+            help="Limit update to a single retailer by slug (e.g. amazon, noble-knight-games).",
+        )
 
     def handle(self, *args, **options):
         raw_date = options["date"]
         dry_run = options["dry_run"]
         sku_filter = options["sku"].strip()
+        retailer_filter = options["retailer"].strip()
 
         try:
             target_date = datetime.date.fromisoformat(raw_date)
@@ -63,6 +70,8 @@ class Command(BaseCommand):
         qs = CurrentPrice.objects.all()
         if sku_filter:
             qs = qs.filter(product__gw_sku=sku_filter)
+        if retailer_filter:
+            qs = qs.filter(retailer__slug=retailer_filter)
 
         count = qs.count()
 

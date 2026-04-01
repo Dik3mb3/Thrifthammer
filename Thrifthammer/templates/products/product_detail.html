@@ -249,6 +249,7 @@
       </div>{# /price-table-wrap #}
       <p style="font-size:0.72rem;color:var(--text-muted);margin-top:var(--sp-2);">
         Prices last updated: {{ current_prices.0.last_seen|date:"d M Y" }}
+        {% for cp in current_prices %}{% if 'amazon' in cp.retailer.slug %} &mdash; <em>Amazon links are affiliate links. We may earn a commission if you buy.</em>{% endif %}{% endfor %}
       </p>
       {% else %}
       <p style="color:var(--text-muted);font-size:0.9rem;">
