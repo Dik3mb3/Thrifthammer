@@ -2,8 +2,8 @@ name: Scrape Noble Knight Games
 
 on:
   schedule:
-    # Every Monday at 05:30 UTC (after Amazon and MM runs)
-    - cron: '30 5 * * 1'
+    # Daily at 05:30 UTC (after Amazon and MM runs at 04:00)
+    - cron: '30 5 * * *'
   workflow_dispatch:
 
 jobs:
