@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 
-{% block title %}Warhammer Price Comparison — Find the Best Deals on 40K Kits{% endblock %}
+{% block title %}Warhammer Price Comparison — Stop Overpaying for 40K Kits | ThriftHammer{% endblock %}
 
-{% block meta_description %}<meta name="description" content="ThriftHammer tracks Warhammer 40,000 prices across US retailers. Compare prices on Space Marines, Necrons, Orks and more — always find the cheapest deal before you buy.">{% endblock %}
+{% block meta_description %}<meta name="description" content="ThriftHammer tracks Warhammer 40,000 prices across US retailers. Save 20–25% on Space Marines, Necrons, Orks and more — compare prices instantly and find the cheapest deal before you buy.">{% endblock %}
 
 {% block extra_head %}
-<meta name="keywords" content="Warhammer 40K price comparison, cheap Warhammer, best price Warhammer 40000, Games Workshop deals, Warhammer discount, buy Warhammer online USA">
-<meta property="og:title" content="ThriftHammer — Warhammer Price Tracker">
-<meta property="og:description" content="Compare Warhammer 40,000 prices across US retailers. Find the cheapest deal on every kit, every day.">
+<meta name="keywords" content="Warhammer 40K price comparison, cheap Warhammer, best price Warhammer 40000, Games Workshop deals, Warhammer discount, buy Warhammer online USA, save on Warhammer kits, Warhammer price tracker">
+<meta property="og:title" content="ThriftHammer — Stop Overpaying for Warhammer 40K">
+<meta property="og:description" content="Compare Warhammer 40,000 prices across US retailers. Save 20–25% on every kit, every day.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://thrifthammer.com/">
 <meta property="og:image" content="https://thrifthammer.com/static/images/bg-grimdark.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ThriftHammer — Warhammer Price Tracker">
-<meta name="twitter:description" content="Compare Warhammer 40,000 prices across US retailers. Never overpay for plastic again.">
+<meta name="twitter:description" content="Compare Warhammer 40,000 prices across US retailers. Save 20–25% on plastic. Updated daily.">
 <link rel="canonical" href="https://thrifthammer.com/">
 
 {# ── JSON-LD: WebSite + SearchAction ── #}
@@ -23,7 +23,7 @@
   "@type": "WebSite",
   "name": "ThriftHammer",
   "url": "https://thrifthammer.com",
-  "description": "Compare Warhammer 40,000 prices across US retailers. Find the cheapest deal on every kit, updated daily.",
+  "description": "Compare Warhammer 40,000 prices across US retailers. Save 20–25% on every kit, updated daily.",
   "potentialAction": {
     "@type": "SearchAction",
     "target": {
@@ -36,25 +36,245 @@
 </script>
 
 <style>
-  /* Hero search autocomplete inherits global .hero-search-results styles */
   #hero-search-results { display: none; }
+
+  /* ── Email bar at very top ─────────────────────────── */
+  .email-topbar {
+    background: linear-gradient(90deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-bottom: 1px solid var(--accent-gold);
+    padding: var(--sp-5) 0;
+  }
+  .email-topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-5);
+    flex-wrap: wrap;
+  }
+  .email-topbar-copy { flex: 1 1 260px; }
+  .email-topbar-copy h2 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+    color: var(--accent-gold-lt);
+    margin: 0 0 var(--sp-1);
+  }
+  .email-topbar-copy p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+  .email-topbar-form {
+    display: flex;
+    gap: var(--sp-2);
+    flex-wrap: wrap;
+    flex: 1 1 340px;
+    justify-content: flex-end;
+  }
+  .email-topbar-form input[type="email"] {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.6rem 1rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-mid);
+    border-radius: var(--rounded);
+    color: var(--text-primary);
+    font-size: 0.93rem;
+  }
+
+  /* ── Who Is This For ───────────────────────────────── */
+  .audience-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--sp-4);
+  }
+  .audience-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-mid);
+    border-radius: 10px;
+    padding: var(--sp-5) var(--sp-4);
+    text-align: center;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+  .audience-card:hover {
+    border-color: var(--accent-gold);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+    text-decoration: none;
+  }
+  .audience-icon {
+    font-size: 2rem;
+    line-height: 1;
+    margin-bottom: var(--sp-1);
+  }
+  .audience-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .audience-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* ── Why ThriftHammer ──────────────────────────────── */
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--sp-4);
+  }
+  .why-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: var(--sp-5) var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .why-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+  .why-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-gold-lt);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .why-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* ── Faction strip ─────────────────────────────────── */
+  .faction-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--sp-3);
+  }
+  .faction-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-2);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-mid);
+    border-radius: 8px;
+    padding: var(--sp-3) var(--sp-2);
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+    transition: border-color 0.18s, transform 0.15s;
+    overflow: hidden;
+    position: relative;
+  }
+  .faction-chip::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--faction-img, none) center/cover no-repeat;
+    opacity: 0.12;
+    transition: opacity 0.2s;
+  }
+  .faction-chip:hover {
+    border-color: var(--accent-gold);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+  .faction-chip:hover::before { opacity: 0.22; }
+  .faction-chip-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+    position: relative;
+    z-index: 1;
+  }
+  .faction-chip-tag {
+    font-size: 0.68rem;
+    color: var(--accent-gold);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── SEO content block ─────────────────────────────── */
+  .seo-block {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    columns: 2;
+    column-gap: var(--sp-8);
+  }
+  .seo-block h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-gold-lt);
+    margin: 0 0 var(--sp-2);
+    break-after: avoid;
+  }
+  .seo-block p { margin-bottom: var(--sp-3); break-inside: avoid; }
+  .seo-block a { color: var(--accent-gold-lt); text-decoration: underline; }
+  .seo-block a:hover { color: var(--accent-gold); }
+
+  @media (max-width: 720px) {
+    .seo-block { columns: 1; }
+    .email-topbar-form { justify-content: flex-start; }
+    .email-topbar-inner { flex-direction: column; align-items: flex-start; }
+  }
 </style>
 {% endblock %}
 
 {% block content %}
+
+{# ─── EMAIL SIGNUP — TOP OF PAGE (most prominent) ───────────────────────── #}
+<div class="email-topbar">
+    <div class="container">
+        <div class="email-topbar-inner">
+            <div class="email-topbar-copy">
+                <h2>📬 Get Weekly Warhammer Deal Alerts</h2>
+                <p>We'll email you the biggest price drops across US retailers every week. No spam. Unsubscribe any time.</p>
+            </div>
+            <form class="email-topbar-form" method="post" action="{% url 'newsletter_signup' %}">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="your@email.com" required
+                       aria-label="Email address for weekly deal alerts">
+                <button type="submit" class="btn btn-primary">Get Deal Alerts</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 {# ─── HERO ──────────────────────────────────────────────────────────────── #}
 <section class="hero" aria-labelledby="hero-heading">
     <div class="container" style="position:relative;z-index:1;">
 
         <h1 id="hero-heading">
-            Find the Best Deals on<br>
-            <span style="color:var(--accent-gold-lt);">Warhammer Kits</span> Online
+            Stop Overpaying for Warhammer.<br>
+            <span style="color:var(--accent-gold-lt);">Save 20%–25% on Your Dream Army.</span>
         </h1>
         <div class="hero-rule"></div>
         <p>
-            We track prices across US retailers so you always know
-            where to get the best deal. No more overpaying for plastic.
+            Find the cheapest Warhammer 40K kits instantly — we track prices across
+            US retailers so you always know where to buy before you spend.
         </p>
 
         {# Hero search bar #}
@@ -74,37 +294,41 @@
             <a href="{% url 'products:list' %}" class="btn btn-primary btn-lg btn-hero">Browse All Products</a>
             <a href="{% url 'calculators:space_marines' %}" class="btn btn-blue btn-lg btn-hero">Army Calculator</a>
             {% if not user.is_authenticated %}
-            <a href="{% url 'accounts:register' %}" class="btn btn-purple btn-lg btn-hero">Sign Up Now</a>
+            <a href="{% url 'accounts:register' %}" class="btn btn-purple btn-lg btn-hero">Sign Up Free</a>
             {% endif %}
         </div>
 
-        {# Hero stats bar #}
+        {# Hero stats bar — 4 stats #}
         <div class="hero-stats">
             <div class="hero-stat">
                 <span class="hero-stat-value">{{ product_count_display }}</span>
                 <span class="hero-stat-label">Kits tracked</span>
             </div>
             <div class="hero-stat">
-                <span class="hero-stat-value">4</span>
-                <span class="hero-stat-label">US Retailers</span>
+                <span class="hero-stat-value">Daily</span>
+                <span class="hero-stat-label">Price updates</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-value">15–25%</span>
+                <span class="hero-stat-label">Average savings</span>
             </div>
             <div class="hero-stat">
                 <span class="hero-stat-value">Free</span>
-                <span class="hero-stat-label">Always</span>
+                <span class="hero-stat-label">Forever</span>
             </div>
         </div>
 
     </div>
 </section>
 
-{# ─── FEATURED DEALS ──────────────────────────────────────────────────── #}
+{# ─── BIGGEST DISCOUNTS RIGHT NOW ─────────────────────────────────────── #}
 {% if recent_drops %}
 <section class="section" aria-labelledby="deals-heading">
     <div class="container">
         <div class="section-header" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-4);">
             <div>
-                <h2 id="deals-heading">Top 10 Best Deals</h2>
-                <p>The biggest discounts available right now across US retailers</p>
+                <h2 id="deals-heading">Biggest Discounts Right Now</h2>
+                <p>The best prices available today across US Warhammer retailers</p>
             </div>
             <a href="{% url 'products:list' %}?sort=discount" class="btn btn-ghost">See all deals →</a>
         </div>
@@ -158,101 +382,88 @@
 </section>
 {% endif %}
 
-{# ─── ARMY CALCULATOR CTA ─────────────────────────────────────────────── #}
-<section class="section section-alt" aria-labelledby="calc-heading">
-    <div class="container">
-        <div class="calc-cta-grid">
-
-            {# Left: copy #}
-            <div>
-                <span class="badge badge-gold" style="margin-bottom:var(--sp-4);">New Feature</span>
-                <h2 id="calc-heading" style="font-size:clamp(1.5rem,4vw,2rem);margin-bottom:var(--sp-4);">
-                    Plan Your Army.<br>
-                    <span style="color:var(--accent-green);">See the Real Cost.</span>
-                </h2>
-                <p style="font-size:1rem;line-height:1.7;margin-bottom:var(--sp-6);color:var(--text-secondary);">
-                    Build your Warhammer army unit by unit, and instantly see
-                    the best-value way to assemble your army across all tracked retailers.
-                    Save big before you buy.
-                </p>
-                <div style="display:flex;gap:var(--sp-3);flex-wrap:wrap;">
-                    <a href="{% url 'calculators:space_marines' %}" class="btn btn-primary btn-lg">Build My Army</a>
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'calculators:my_armies' %}" class="btn btn-secondary">View Saved Armies</a>
-                    {% else %}
-                    <a href="{% url 'accounts:register' %}" class="btn btn-secondary">Sign Up Free</a>
-                    {% endif %}
-                </div>
-            </div>
-
-            {# Right: preview widget #}
-            <div class="calc-cta-preview" aria-hidden="true">
-                <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:var(--sp-4);">
-                    Example: 2,000pt Space Marine List
-                </div>
-                <div class="calc-preview-row">
-                    <span class="calc-preview-label">Intercessor Squad (x2)</span>
-                    <span class="calc-preview-price">$72.00</span>
-                </div>
-                <div class="calc-preview-row">
-                    <span class="calc-preview-label">Bladeguard Veterans</span>
-                    <span class="calc-preview-price">$45.00</span>
-                </div>
-                <div class="calc-preview-row">
-                    <span class="calc-preview-label">Repulsor Executioner</span>
-                    <span class="calc-preview-price">$110.00</span>
-                </div>
-                <div class="calc-preview-row">
-                    <span class="calc-preview-label">Captain in Phobos Armour</span>
-                    <span class="calc-preview-price">$38.00</span>
-                </div>
-                <div class="calc-preview-total">
-                    <span class="calc-preview-total-label">Total (best prices)</span>
-                    <span class="calc-preview-total-price">$265.00</span>
-                </div>
-                <p style="font-size:0.72rem;color:var(--text-muted);margin-top:var(--sp-3);text-align:center;">
-                    vs. $310+ at GW retail. Save ~$45.
-                </p>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-{# ─── HOW IT WORKS ────────────────────────────────────────────────────── #}
-<section class="section" aria-labelledby="how-heading">
+{# ─── WHO IS THIS FOR? ────────────────────────────────────────────────── #}
+<section class="section section-alt" aria-labelledby="audience-heading">
     <div class="container">
         <div class="section-header" style="text-align:center;">
-            <h2 id="how-heading">How ThriftHammer Works</h2>
-            <p>Three steps to always getting the best price on your hobby</p>
+            <h2 id="audience-heading">Who Is ThriftHammer For?</h2>
+            <p>Built for every Warhammer player who wants to spend less and hobby more</p>
         </div>
 
-        <div class="steps-grid">
+        <div class="audience-grid">
 
-            <div class="step-card">
-                <div class="step-number-large" aria-hidden="true">01</div>
-                <h3>Search Your Kit</h3>
-                <p>
-                    Find any Warhammer 40,000, Age of Sigmar, Kill Team, or
-                    paints from our catalogue of {{ product_count_display }} tracked products.
+            <a href="{% url 'products:list' %}?sort=discount" class="audience-card">
+                <div class="audience-icon">💰</div>
+                <div class="audience-title">Budget Players</div>
+                <p class="audience-desc">Stretch every dollar further. Find the cheapest kits to build your army without breaking the bank.</p>
+            </a>
+
+            <a href="{% url 'blog:tag_list' 'beginner-guide' %}" class="audience-card">
+                <div class="audience-icon">🎮</div>
+                <div class="audience-title">New Players</div>
+                <p class="audience-desc">Just starting out? Find beginner guides, starter set price comparisons, and the best value first purchases.</p>
+            </a>
+
+            <a href="{% url 'calculators:space_marines' %}" class="audience-card">
+                <div class="audience-icon">⚔️</div>
+                <div class="audience-title">Competitive Players</div>
+                <p class="audience-desc">Building a tournament list? Use the Army Calculator to price out your exact list across every retailer.</p>
+            </a>
+
+            <a href="{% url 'products:list' %}" class="audience-card">
+                <div class="audience-icon">🎨</div>
+                <div class="audience-title">Collectors</div>
+                <p class="audience-desc">Track prices on limited kits, boxed sets, and collector items. Never miss a deal on your wishlist.</p>
+            </a>
+
+        </div>
+    </div>
+</section>
+
+{# ─── WHY THRIFTHAMMER? ───────────────────────────────────────────────── #}
+<section class="section" aria-labelledby="why-heading">
+    <div class="container">
+        <div class="section-header" style="text-align:center;">
+            <h2 id="why-heading">Why ThriftHammer?</h2>
+            <p>Everything you need to buy Warhammer smarter</p>
+        </div>
+
+        <div class="why-grid">
+
+            <div class="why-card">
+                <div class="why-icon">🔍</div>
+                <div class="why-title">Compare Prices Instantly</div>
+                <p class="why-desc">
+                    Search any kit and see live prices from Miniature Market, Noble Knight,
+                    eBay, Amazon and more — all on one page. No tab-switching.
                 </p>
             </div>
 
-            <div class="step-card">
-                <div class="step-number-large" aria-hidden="true">02</div>
-                <h3>Compare Prices</h3>
-                <p>
-                    See live prices from Miniature Market, Noble Knight,
-                    eBay, Amazon, and more, side by side.
-                </p>
-            </div>
-
-            <div class="step-card">
-                <div class="step-number-large" aria-hidden="true">03</div>
-                <h3>Watch &amp; Save</h3>
-                <p>
+            <div class="why-card">
+                <div class="why-icon">📉</div>
+                <div class="why-title">Track Price Drops</div>
+                <p class="why-desc">
                     Add products to your watchlist with a target price.
-                    We'll flag it when the price drops below your threshold.
+                    We'll flag it the moment a price drops below your threshold.
+                </p>
+            </div>
+
+            <div class="why-card">
+                <div class="why-icon">🧮</div>
+                <div class="why-title">Build Army Budgets</div>
+                <p class="why-desc">
+                    Use the <a href="{% url 'calculators:space_marines' %}">Army Calculator</a>
+                    to build your full list unit by unit and see the cheapest total price
+                    before you spend a single dollar.
+                </p>
+            </div>
+
+            <div class="why-card">
+                <div class="why-icon">💸</div>
+                <div class="why-title">Save Hundreds Over Time</div>
+                <p class="why-desc">
+                    Consistent 15–25% savings across a full army adds up fast.
+                    A 2,000pt list at MSRP might cost $600 — ThriftHammer users typically pay $450–$500.
                 </p>
             </div>
 
@@ -260,31 +471,106 @@
     </div>
 </section>
 
-{# Categories moved to sidebar on the browse page #}
+{# ─── FACTION PAGES ───────────────────────────────────────────────────── #}
+{% if live_factions %}
+<section class="section section-alt" aria-labelledby="factions-heading">
+    <div class="container">
+        <div class="section-header" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-4);">
+            <div>
+                <h2 id="factions-heading">Browse by Faction</h2>
+                <p>Faction-specific price guides, deal tracking, and army cost breakdowns</p>
+            </div>
+            <a href="{% url 'factions:index' %}" class="btn btn-ghost">All factions →</a>
+        </div>
 
-{# ─── DEAL ALERT EMAIL CAPTURE ────────────────────────────────────────── #}
-<section class="section section-alt" aria-label="Weekly deal alerts signup">
-    <div class="container" style="max-width:580px;text-align:center;">
-        <h2 style="font-family:'Cinzel',serif;font-size:clamp(1.2rem,3vw,1.6rem);margin-bottom:var(--sp-2);">
-            Get Weekly Deal Alerts
-        </h2>
-        <p style="color:var(--text-secondary);margin-bottom:var(--sp-5);">
-            We'll email you the best price drops across US Warhammer retailers every week.
-            No spam. Unsubscribe any time.
-        </p>
-        <form method="post" action="{% url 'newsletter_signup' %}"
-              style="display:flex;gap:var(--sp-3);flex-wrap:wrap;justify-content:center;">
-            {% csrf_token %}
-            <input type="email" name="email" placeholder="your@email.com" required
-                   style="flex:1;min-width:220px;padding:0.65rem 1rem;background:var(--bg-elevated);border:1px solid var(--border-mid);border-radius:var(--rounded);color:var(--text-primary);font-size:0.95rem;"
-                   aria-label="Email address for weekly deal alerts">
-            <button type="submit" class="btn btn-primary">Get Deal Alerts</button>
-        </form>
+        <div class="faction-strip">
+            {% for f in live_factions %}
+            <a href="{% url 'factions:detail' f.slug %}"
+               class="faction-chip"
+               {% if f.hero_image_url %}style="--faction-img:url('{{ f.hero_image_url }}')"{% endif %}
+               title="{{ f.hero_tagline|default:f.name }}">
+                <span class="faction-chip-name">{{ f.display_name|default:f.name }}</span>
+                {% if f.difficulty %}
+                <span class="faction-chip-tag">{{ f.difficulty }}</span>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ─── SEO CONTENT BLOCK ───────────────────────────────────────────────── #}
+<section class="section" aria-label="About ThriftHammer Warhammer price comparison">
+    <div class="container">
+        <div class="section-header" style="text-align:center;margin-bottom:var(--sp-6);">
+            <h2>The Smarter Way to Buy Warhammer 40,000</h2>
+        </div>
+
+        <div class="seo-block">
+
+            <h3>Why Warhammer Prices Vary So Much</h3>
+            <p>
+                Games Workshop sells Warhammer 40,000 kits at full MSRP — but authorised retailers,
+                independent stores, and marketplace sellers regularly offer the same kits for 15% to 25%
+                less. That gap exists because different retailers have different margins, buy in bulk,
+                and compete for your business. The problem is that tracking all of them manually is a
+                full-time job.
+            </p>
+            <p>
+                ThriftHammer solves this by automatically tracking prices across the major US Warhammer
+                retailers every day, so you always know where to buy for the best price — without
+                spending hours checking each site individually.
+            </p>
+
+            <h3>How Much Can You Actually Save?</h3>
+            <p>
+                The savings add up fast when you're building a full army. A single Space Marine
+                Intercessor Squad retails at $55 MSRP, but regularly sells for $40–$47 at third-party
+                retailers — that's up to $15 saved on one kit. A typical 2,000-point army requires
+                10–15 kits. At average ThriftHammer discounts, that's $150–$250 saved on a single army.
+            </p>
+            <p>
+                <a href="{% url 'products:list' %}?sort=discount">Browse our biggest discounts today</a>
+                to see exactly how much you can save on the kits you want.
+            </p>
+
+            <h3>Which Retailers Does ThriftHammer Track?</h3>
+            <p>
+                We currently track prices from <strong>Miniature Market</strong>, <strong>Noble Knight Games</strong>,
+                <strong>eBay</strong>, and <strong>Amazon</strong> across
+                {{ product_count_display }} Warhammer products. Prices are updated daily for most retailers
+                so the deals you see are current. Amazon prices may show a last-checked date given
+                the nature of their marketplace.
+            </p>
+
+            <h3>Warhammer 40K Faction Price Guides</h3>
+            <p>
+                Looking for deals on a specific army? ThriftHammer has dedicated
+                <a href="{% url 'factions:index' %}">faction price guides</a> for the most popular
+                40K armies including Space Marines, Necrons, Chaos Space Marines, and more. Each
+                faction page shows the best current prices on every kit for that army, so you can
+                shop your exact faction without browsing the full catalogue.
+            </p>
+
+            <h3>The Free Army Cost Calculator</h3>
+            <p>
+                Not sure what your army will cost? Use the free
+                <a href="{% url 'calculators:space_marines' %}">Warhammer Army Cost Calculator</a>
+                to build your list unit by unit. The calculator automatically finds the cheapest
+                current price for each unit across all tracked retailers, so you see the true
+                minimum cost for your army before you buy a single kit.
+            </p>
+            <p>
+                <a href="{% url 'products:list' %}">Start comparing prices →</a>
+            </p>
+
+        </div>
     </div>
 </section>
 
 {# ─── TRUST BAR ───────────────────────────────────────────────────────── #}
-<section class="section" aria-label="Site statistics">
+<section class="section section-alt" aria-label="Site statistics">
     <div class="container">
         <div class="trust-bar">
             <div class="trust-item">
@@ -294,6 +580,10 @@
             <div class="trust-item">
                 <span class="trust-value">4</span>
                 <span class="trust-label">US retailers</span>
+            </div>
+            <div class="trust-item">
+                <span class="trust-value">15–25%</span>
+                <span class="trust-label">Average savings</span>
             </div>
             <div class="trust-item">
                 <span class="trust-value">Free</span>
