@@ -1,14 +1,32 @@
 name: Scrape Amazon Prices
 
+# ─────────────────────────────────────────────────────────────────────────────
+# IMPORTANT: The scheduled cron trigger is intentionally DISABLED.
+#
+# Amazon blocks HTTP requests originating from AWS IP ranges (which is where
+# GitHub Actions runners operate). Every scheduled run was silently failing —
+# all 375 Amazon prices went stale because no price could ever be extracted.
+#
+# Amazon scraping MUST run from Railway directly (Google Cloud, not AWS).
+# Set up a Railway Cron service in the Railway dashboard with:
+#   Schedule: 0 4 * * *  (daily 04:00 UTC)
+#   Command:  python manage.py run_scrapers amazon && python manage.py clear_cache
+#
+# This workflow is kept for manual testing only (workflow_dispatch).
+# To test from here: run with a single product URL to verify selectors work.
+# ─────────────────────────────────────────────────────────────────────────────
+
 on:
-  schedule:
-    # Daily at 04:00 UTC (after eBay at 03:00, before check-amazon-stock at 05:00)
-    - cron: '0 4 * * *'
   workflow_dispatch:
+    inputs:
+      note:
+        description: 'NOTE: Amazon scraping must run from Railway, not GitHub Actions (AWS IPs are blocked by Amazon). Use this only for debugging selector issues.'
+        required: false
+        default: ''
 
 jobs:
   scrape:
-    name: Amazon Price Scraper
+    name: Amazon Price Scraper (manual/debug only)
     runs-on: ubuntu-latest
     timeout-minutes: 30
     defaults:
@@ -28,6 +46,12 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Warn about AWS IP blocking
+        run: |
+          echo "WARNING: This run is originating from GitHub Actions (AWS infrastructure)."
+          echo "Amazon actively blocks AWS IP ranges. Price extraction will likely fail."
+          echo "For production use, run from Railway Cron instead."
 
       - name: Run Amazon price scraper
         env:
