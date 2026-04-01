@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 
-{% block title %}Warhammer Price Comparison — Stop Overpaying for 40K Kits | ThriftHammer{% endblock %}
+{% block title %}Warhammer Price Comparison: Find the Best Deals on 40K Kits | ThriftHammer{% endblock %}
 
-{% block meta_description %}<meta name="description" content="ThriftHammer tracks Warhammer 40,000 prices across US retailers. Save 20–25% on Space Marines, Necrons, Orks and more — compare prices instantly and find the cheapest deal before you buy.">{% endblock %}
+{% block meta_description %}<meta name="description" content="ThriftHammer tracks Warhammer 40,000 prices across US retailers. Save 20 to 25% on Space Marines, Necrons, Orks and more. Compare prices instantly and find the cheapest deal before you buy.">{% endblock %}
 
 {% block extra_head %}
 <meta name="keywords" content="Warhammer 40K price comparison, cheap Warhammer, best price Warhammer 40000, Games Workshop deals, Warhammer discount, buy Warhammer online USA, save on Warhammer kits, Warhammer price tracker">
-<meta property="og:title" content="ThriftHammer — Stop Overpaying for Warhammer 40K">
-<meta property="og:description" content="Compare Warhammer 40,000 prices across US retailers. Save 20–25% on every kit, every day.">
+<meta property="og:title" content="ThriftHammer: Warhammer Price Comparison">
+<meta property="og:description" content="Compare Warhammer 40,000 prices across US retailers. Save 20 to 25% on every kit, every day.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://thrifthammer.com/">
 <meta property="og:image" content="https://thrifthammer.com/static/images/bg-grimdark.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="ThriftHammer — Warhammer Price Tracker">
-<meta name="twitter:description" content="Compare Warhammer 40,000 prices across US retailers. Save 20–25% on plastic. Updated daily.">
+<meta name="twitter:title" content="ThriftHammer: Warhammer Price Tracker">
+<meta name="twitter:description" content="Compare Warhammer 40,000 prices across US retailers. Save 20 to 25% on plastic. Updated daily.">
 <link rel="canonical" href="https://thrifthammer.com/">
 
 {# ── JSON-LD: WebSite + SearchAction ── #}
@@ -23,7 +23,7 @@
   "@type": "WebSite",
   "name": "ThriftHammer",
   "url": "https://thrifthammer.com",
-  "description": "Compare Warhammer 40,000 prices across US retailers. Save 20–25% on every kit, updated daily.",
+  "description": "Compare Warhammer 40,000 prices across US retailers. Save 20 to 25% on every kit, updated daily.",
   "potentialAction": {
     "@type": "SearchAction",
     "target": {
@@ -40,9 +40,9 @@
 
   /* ── Email bar at very top ─────────────────────────── */
   .email-topbar {
-    background: linear-gradient(90deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    border-bottom: 1px solid var(--accent-gold);
-    padding: var(--sp-5) 0;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: var(--sp-4) 0;
   }
   .email-topbar-inner {
     display: flex;
@@ -54,13 +54,13 @@
   .email-topbar-copy { flex: 1 1 260px; }
   .email-topbar-copy h2 {
     font-family: 'Cinzel', serif;
-    font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+    font-size: clamp(0.95rem, 2vw, 1.2rem);
     color: var(--accent-gold-lt);
     margin: 0 0 var(--sp-1);
   }
   .email-topbar-copy p {
-    font-size: 0.88rem;
-    color: var(--text-secondary);
+    font-size: 0.83rem;
+    color: var(--text-muted);
     margin: 0;
   }
   .email-topbar-form {
@@ -90,26 +90,21 @@
   .audience-card {
     background: var(--bg-secondary);
     border: 1px solid var(--border-mid);
+    border-left: 3px solid var(--accent-gold);
     border-radius: 10px;
     padding: var(--sp-5) var(--sp-4);
-    text-align: center;
+    text-align: left;
     transition: border-color 0.18s, box-shadow 0.18s;
     text-decoration: none;
     color: inherit;
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: var(--sp-2);
   }
   .audience-card:hover {
     border-color: var(--accent-gold);
     box-shadow: 0 2px 16px rgba(0,0,0,0.25);
     text-decoration: none;
-  }
-  .audience-icon {
-    font-size: 2rem;
-    line-height: 1;
-    margin-bottom: var(--sp-1);
   }
   .audience-title {
     font-family: 'Oswald', sans-serif;
@@ -140,10 +135,6 @@
     display: flex;
     flex-direction: column;
     gap: var(--sp-2);
-  }
-  .why-icon {
-    font-size: 1.6rem;
-    line-height: 1;
   }
   .why-title {
     font-family: 'Oswald', sans-serif;
@@ -250,7 +241,7 @@
     <div class="container">
         <div class="email-topbar-inner">
             <div class="email-topbar-copy">
-                <h2>📬 Get Weekly Warhammer Deal Alerts</h2>
+                <h2>Get Weekly Warhammer Deal Alerts</h2>
                 <p>We'll email you the biggest price drops across US retailers every week. No spam. Unsubscribe any time.</p>
             </div>
             <form class="email-topbar-form" method="post" action="{% url 'newsletter_signup' %}">
@@ -273,7 +264,7 @@
         </h1>
         <div class="hero-rule"></div>
         <p>
-            Find the cheapest Warhammer 40K kits instantly — we track prices across
+            Find the cheapest Warhammer 40K kits instantly. We track prices across
             US retailers so you always know where to buy before you spend.
         </p>
 
@@ -298,7 +289,7 @@
             {% endif %}
         </div>
 
-        {# Hero stats bar — 4 stats #}
+        {# Hero stats bar #}
         <div class="hero-stats">
             <div class="hero-stat">
                 <span class="hero-stat-value">{{ product_count_display }}</span>
@@ -330,7 +321,7 @@
                 <h2 id="deals-heading">Biggest Discounts Right Now</h2>
                 <p>The best prices available today across US Warhammer retailers</p>
             </div>
-            <a href="{% url 'products:list' %}?sort=discount" class="btn btn-ghost">See all deals →</a>
+            <a href="{% url 'products:list' %}?sort=discount" class="btn btn-ghost">See all deals &rarr;</a>
         </div>
 
         <div class="card-grid">
@@ -393,25 +384,21 @@
         <div class="audience-grid">
 
             <a href="{% url 'products:list' %}?sort=discount" class="audience-card">
-                <div class="audience-icon">💰</div>
                 <div class="audience-title">Budget Players</div>
                 <p class="audience-desc">Stretch every dollar further. Find the cheapest kits to build your army without breaking the bank.</p>
             </a>
 
             <a href="{% url 'blog:tag_list' 'beginner-guide' %}" class="audience-card">
-                <div class="audience-icon">🎮</div>
                 <div class="audience-title">New Players</div>
                 <p class="audience-desc">Just starting out? Find beginner guides, starter set price comparisons, and the best value first purchases.</p>
             </a>
 
             <a href="{% url 'calculators:space_marines' %}" class="audience-card">
-                <div class="audience-icon">⚔️</div>
                 <div class="audience-title">Competitive Players</div>
                 <p class="audience-desc">Building a tournament list? Use the Army Calculator to price out your exact list across every retailer.</p>
             </a>
 
             <a href="{% url 'products:list' %}" class="audience-card">
-                <div class="audience-icon">🎨</div>
                 <div class="audience-title">Collectors</div>
                 <p class="audience-desc">Track prices on limited kits, boxed sets, and collector items. Never miss a deal on your wishlist.</p>
             </a>
@@ -431,16 +418,14 @@
         <div class="why-grid">
 
             <div class="why-card">
-                <div class="why-icon">🔍</div>
                 <div class="why-title">Compare Prices Instantly</div>
                 <p class="why-desc">
                     Search any kit and see live prices from Miniature Market, Noble Knight,
-                    eBay, Amazon and more — all on one page. No tab-switching.
+                    eBay, Amazon and more. All on one page. No tab-switching.
                 </p>
             </div>
 
             <div class="why-card">
-                <div class="why-icon">📉</div>
                 <div class="why-title">Track Price Drops</div>
                 <p class="why-desc">
                     Add products to your watchlist with a target price.
@@ -449,7 +434,6 @@
             </div>
 
             <div class="why-card">
-                <div class="why-icon">🧮</div>
                 <div class="why-title">Build Army Budgets</div>
                 <p class="why-desc">
                     Use the <a href="{% url 'calculators:space_marines' %}">Army Calculator</a>
@@ -459,11 +443,10 @@
             </div>
 
             <div class="why-card">
-                <div class="why-icon">💸</div>
                 <div class="why-title">Save Hundreds Over Time</div>
                 <p class="why-desc">
                     Consistent 15–25% savings across a full army adds up fast.
-                    A 2,000pt list at MSRP might cost $600 — ThriftHammer users typically pay $450–$500.
+                    A 2,000pt list at MSRP might cost $600. ThriftHammer users typically pay $450–$500.
                 </p>
             </div>
 
@@ -480,7 +463,7 @@
                 <h2 id="factions-heading">Browse by Faction</h2>
                 <p>Faction-specific price guides, deal tracking, and army cost breakdowns</p>
             </div>
-            <a href="{% url 'factions:index' %}" class="btn btn-ghost">All factions →</a>
+            <a href="{% url 'factions:index' %}" class="btn btn-ghost">All factions &rarr;</a>
         </div>
 
         <div class="faction-strip">
@@ -511,23 +494,23 @@
 
             <h3>Why Warhammer Prices Vary So Much</h3>
             <p>
-                Games Workshop sells Warhammer 40,000 kits at full MSRP — but authorised retailers,
+                Games Workshop sells Warhammer 40,000 kits at full MSRP, but authorised retailers,
                 independent stores, and marketplace sellers regularly offer the same kits for 15% to 25%
                 less. That gap exists because different retailers have different margins, buy in bulk,
                 and compete for your business. The problem is that tracking all of them manually is a
                 full-time job.
             </p>
             <p>
-                ThriftHammer solves this by automatically tracking prices across the major US Warhammer
-                retailers every day, so you always know where to buy for the best price — without
+                ThriftHammer automatically tracks prices across the major US Warhammer
+                retailers every day, so you always know where to buy for the best price without
                 spending hours checking each site individually.
             </p>
 
             <h3>How Much Can You Actually Save?</h3>
             <p>
                 The savings add up fast when you're building a full army. A single Space Marine
-                Intercessor Squad retails at $55 MSRP, but regularly sells for $40–$47 at third-party
-                retailers — that's up to $15 saved on one kit. A typical 2,000-point army requires
+                Intercessor Squad retails at $55 MSRP but regularly sells for $40–$47 at third-party
+                retailers. That's up to $15 saved on one kit. A typical 2,000-point army requires
                 10–15 kits. At average ThriftHammer discounts, that's $150–$250 saved on a single army.
             </p>
             <p>
@@ -546,10 +529,10 @@
 
             <h3>Warhammer 40K Faction Price Guides</h3>
             <p>
-                Looking for deals on a specific army? ThriftHammer has dedicated
+                Looking for the best deals on kits for your army? ThriftHammer has dedicated
                 <a href="{% url 'factions:index' %}">faction price guides</a> for the most popular
-                40K armies including Space Marines, Necrons, Chaos Space Marines, and more. Each
-                faction page shows the best current prices on every kit for that army, so you can
+                40K armies including Space Marines, Necrons, Orks, and more. Each
+                faction page shows the best deals on kits for that army, so you can
                 shop your exact faction without browsing the full catalogue.
             </p>
 
@@ -562,7 +545,7 @@
                 minimum cost for your army before you buy a single kit.
             </p>
             <p>
-                <a href="{% url 'products:list' %}">Start comparing prices →</a>
+                <a href="{% url 'products:list' %}">Start comparing prices &rarr;</a>
             </p>
 
         </div>
