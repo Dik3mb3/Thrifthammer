@@ -6,11 +6,12 @@ live prices directly from product pages.  No Amazon API account required.
 
 Approach:
   For each active product that has an Amazon URL in CurrentPrice:
-    1. GET the stored Amazon product page URL
-    2. Extract price from multiple CSS selector strategies (newest Amazon
+    1. Strip URL to a clean bare ASIN (/dp/XXXXXXXXXX) to remove tracking params
+    2. GET the Amazon product page
+    3. Extract price from multiple CSS selector strategies (newest Amazon
        HTML structure first, older fallbacks after)
-    3. Determine in_stock from the #availability element
-    4. Update CurrentPrice.price and in_stock if a price is found
+    4. Determine in_stock from the #availability element
+    5. Update CurrentPrice.price and in_stock if a price is found
 
 Price extraction cascade (tried in order):
   1. span.a-offscreen inside the core price block — Amazon's accessibility
@@ -28,34 +29,38 @@ product is sold by a third-party marketplace seller only), the product is
 skipped and the existing price is left unchanged.
 
 Anti-bot measures:
-  - Session warm-up: visits amazon.com home page first to acquire cookies
-    (session-id, ubid-main, etc.) that Amazon sets for real browsers
-  - Realistic browser User-Agent string
-  - Full Chrome header set including Cache-Control, Pragma, Connection,
-    Referer (set per-request) and all Sec-Fetch-* headers
-  - Redirect / auth-wall detection: checks response URL for sign-in or
-    robot-check pages in addition to the CAPTCHA text check
-  - 2-second delay between requests (configurable via SCRAPER_REQUEST_DELAY)
-  - Randomised extra jitter (0–1 s) to reduce fingerprinting
+  - Rotate through 5 browser fingerprints (Chrome Win/Mac, Firefox, Edge,
+    Safari) — different User-Agents, Sec-CH-UA headers, and Accept strings
+  - Fresh session every 15 products — each batch looks like a new visitor
+    rather than one session scraping hundreds of pages in sequence
+  - Session warm-up: visits amazon.com home page to acquire session cookies
+    (session-id, ubid-main, etc.) that real browsers accumulate
+  - Always strips URLs to bare ASIN (/dp/ASIN) before fetching — removes
+    affiliate/tracking parameters that fingerprint automated scrapers
+  - Randomised product order — avoids the predictable sequential pattern
+    of automated scraping
+  - Expanded block-page detection — catches all known Amazon bot-detection
+    page variants (CAPTCHA, robot check, auth-redirect, etc.)
+  - 2-second delay between requests (configurable via DEFAULT_DELAY)
+  - Randomised extra jitter (0–1 s) to reduce timing fingerprints
 
 Important — where to run this scraper:
-  Amazon blocks requests from GitHub Actions (AWS IP ranges).  This scraper
-  MUST be run from Railway (the production server) or a residential IP.
-  Trigger it via a Railway Cron service, not the GitHub Actions workflow.
+  Amazon blocks requests from GitHub Actions (AWS IP ranges). For best
+  results run from Railway (Google Cloud) via a Railway Cron service:
+    Schedule: 0 4 * * *
+    Command:  python manage.py run_scrapers amazon && python manage.py clear_cache
 
 Usage:
     python manage.py run_scrapers amazon
 
 Notes:
-  - Only processes products whose CurrentPrice.manual_url_override is False.
-    Manually-curated URLs are respected and prices are updated normally —
-    manual_url_override only prevents the URL itself from being overwritten.
-  - Products with no Amazon URL are skipped (not marked not_available).
+  - Only processes products whose CurrentPrice entries have a stored URL.
+    Products with no Amazon URL are skipped (not marked not_available).
   - A failed price extraction (blocked/CAPTCHA) logs a warning and skips
     that product, leaving the existing price unchanged.
   - Amazon may block some requests. This scraper will succeed for the
-    majority of products in a given run; any that are blocked will retain
-    their previous price until the next scheduled run.
+    majority of products in a given run; blocked products retain their
+    previous price until the next scheduled run.
 """
 
 import logging
@@ -83,28 +88,117 @@ DEFAULT_DELAY = 2.0
 # Extra random jitter added to each delay (0–JITTER_MAX seconds).
 JITTER_MAX = 1.0
 
+# Rotate to a fresh session after this many products.
+# Shorter batches look more like distinct organic browsing sessions.
+_SESSION_ROTATE_EVERY = 15
+
+# ---------------------------------------------------------------------------
+# Browser fingerprint pool — rotated across sessions.
+# Each entry is (user_agent_string, extra_headers_dict).
+# Extra headers must match the UA (e.g. Sec-CH-UA for Chromium-based only).
+# ---------------------------------------------------------------------------
+_BROWSER_PROFILES = [
+    # Chrome 124 on Windows
+    (
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+        'AppleWebKit/537.36 (KHTML, like Gecko) '
+        'Chrome/124.0.0.0 Safari/537.36',
+        {
+            'Sec-CH-UA': '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+            'Sec-CH-UA-Mobile': '?0',
+            'Sec-CH-UA-Platform': '"Windows"',
+            'Accept': (
+                'text/html,application/xhtml+xml,application/xml;'
+                'q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8'
+            ),
+        },
+    ),
+    # Chrome 122 on macOS
+    (
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
+        'AppleWebKit/537.36 (KHTML, like Gecko) '
+        'Chrome/122.0.0.0 Safari/537.36',
+        {
+            'Sec-CH-UA': '"Chromium";v="122", "Google Chrome";v="122", "Not-A.Brand";v="99"',
+            'Sec-CH-UA-Mobile': '?0',
+            'Sec-CH-UA-Platform': '"macOS"',
+            'Accept': (
+                'text/html,application/xhtml+xml,application/xml;'
+                'q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8'
+            ),
+        },
+    ),
+    # Firefox 125 on Windows — different Accept header, no Sec-CH-UA
+    (
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) '
+        'Gecko/20100101 Firefox/125.0',
+        {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.5',
+        },
+    ),
+    # Microsoft Edge 124 on Windows
+    (
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+        'AppleWebKit/537.36 (KHTML, like Gecko) '
+        'Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0',
+        {
+            'Sec-CH-UA': '"Chromium";v="124", "Microsoft Edge";v="124", "Not-A.Brand";v="99"',
+            'Sec-CH-UA-Mobile': '?0',
+            'Sec-CH-UA-Platform': '"Windows"',
+            'Accept': (
+                'text/html,application/xhtml+xml,application/xml;'
+                'q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,'
+                'application/signed-exchange;v=b3;q=0.7'
+            ),
+        },
+    ),
+    # Safari 17 on macOS — no Sec-CH-UA, no Sec-Fetch-* headers
+    (
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) '
+        'AppleWebKit/605.1.15 (KHTML, like Gecko) '
+        'Version/17.4.1 Safari/605.1.15',
+        {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+        },
+    ),
+]
+
 # User-Agent for the mobile-browser fallback attempt.
-# A different device fingerprint (iPhone Safari) gives the fallback its best
-# chance of bypassing bot detection that has already flagged the desktop session.
 _MOBILE_USER_AGENT = (
     'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) '
     'AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 '
     'Mobile/15E148 Safari/604.1'
 )
 
+# All known strings that indicate Amazon served a block/bot-detection page.
+# Any match means we should treat the response as blocked and return None.
+_BLOCK_SIGNALS = (
+    'Type the characters you see',    # CAPTCHA
+    'Enter the characters you see',   # CAPTCHA variant
+    'Robot Check',                    # Robot check page
+    '/ap/signin',                     # Redirect to sign-in
+    'validateCaptcha',                # Inline CAPTCHA form
+    'Sorry, we just need to make sure',  # Auth challenge
+    'To discuss automated access to Amazon data',  # Automated-access block
+    'api-services-support@amazon.com',             # Automated-access block
+    'auth-redirected',                             # Auth redirect signal
+    'gcx-auth-challenge',                          # New auth challenge (2024+)
+)
+
 # CSS selectors tried for price extraction, in priority order.
 # Each entry is (container_selector, whole_selector, fraction_selector).
 # If whole_selector is None, the container is expected to hold the full price.
 _PRICE_STRATEGIES = [
-    # Strategy 1: a-offscreen accessibility span — full "$39.99" string in one element.
-    # Exists inside the primary price block on modern Amazon pages.
+    # Strategy 1: a-offscreen accessibility span — full "$39.99" in one element.
     (
         '#corePrice_feature_div .a-price .a-offscreen,'
         '#corePriceDisplay_desktop_feature_div .a-price .a-offscreen,'
         '.priceToPay .a-price .a-offscreen',
         None, None,
     ),
-    # Strategy 2: whole + fraction split inside corePrice containers (2022+ layout).
+    # Strategy 2: whole + fraction split inside corePrice containers (2022+).
     (
         '#corePrice_feature_div',
         '.a-price-whole',
@@ -115,7 +209,7 @@ _PRICE_STRATEGIES = [
         '.a-price-whole',
         '.a-price-fraction',
     ),
-    # Strategy 3: classic priceblock elements (pre-2022 layout, still live on some pages).
+    # Strategy 3: classic priceblock elements (pre-2022, still live on some pages).
     (
         '#priceblock_ourprice',
         None, None,
@@ -133,8 +227,6 @@ _PRICE_STRATEGIES = [
 ]
 
 # Additional price selectors used only in the mobile fallback attempt.
-# Amazon's mobile pages surface price in different containers than desktop.
-# These are tried first, then _PRICE_STRATEGIES are tried as a secondary pass.
 _MOBILE_PRICE_STRATEGIES = [
     ('#price_inside_buybox',              None, None),
     ('#actualPriceValue',                 None, None),
@@ -144,29 +236,69 @@ _MOBILE_PRICE_STRATEGIES = [
 ] + _PRICE_STRATEGIES
 
 
+def _strip_to_asin_url(url):
+    """
+    Strip an Amazon URL down to the bare ASIN product page.
+
+    Removes affiliate tags, search parameters, and tracking tokens that
+    can fingerprint an automated scraper.  Returns the cleaned URL, or the
+    original URL unchanged if no ASIN can be found.
+
+    Args:
+        url: Any Amazon product URL.
+
+    Returns:
+        Bare ASIN URL (https://www.amazon.com/dp/XXXXXXXXXX) or original url.
+    """
+    asin_match = re.search(r'/dp/([A-Z0-9]{10})', url)
+    if asin_match:
+        return f'https://www.amazon.com/dp/{asin_match.group(1)}'
+    return url
+
+
 class AmazonScraper:
     """
     Scraper for Amazon (amazon.com).
 
     Fetches live prices from stored Amazon product page URLs and updates
     CurrentPrice records.  Works without an Amazon API account.
+
+    Uses session rotation and browser fingerprint diversity to reduce the
+    chance of bot detection on consecutive requests.
     """
 
     retailer_slug = 'amazon'
 
     def __init__(self):
-        """Initialise a requests session with browser-like headers and warm up."""
-        self.session = requests.Session()
-        self.session.headers.update({
-            'User-Agent': (
-                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                'AppleWebKit/537.36 (KHTML, like Gecko) '
-                'Chrome/124.0.0.0 Safari/537.36'
-            ),
-            'Accept': (
-                'text/html,application/xhtml+xml,application/xml;'
-                'q=0.9,image/avif,image/webp,*/*;q=0.8'
-            ),
+        """Initialise state and create the first browser session."""
+        self._ua_index = 0
+        self._products_since_rotation = 0
+        self.delay = DEFAULT_DELAY
+        self.session = None
+        self._make_fresh_session()
+
+    # -------------------------------------------------------------------------
+    # Session management
+    # -------------------------------------------------------------------------
+
+    def _make_fresh_session(self):
+        """
+        Create a new requests.Session with the next browser profile from the pool.
+
+        Rotates through _BROWSER_PROFILES in order (wrapping around) so that
+        each batch of _SESSION_ROTATE_EVERY products uses a different browser
+        fingerprint.  Warms up the session by visiting the Amazon home page
+        to acquire session cookies.
+        """
+        ua, extra_headers = _BROWSER_PROFILES[self._ua_index % len(_BROWSER_PROFILES)]
+        self._ua_index += 1
+        self._products_since_rotation = 0
+
+        session = requests.Session()
+
+        # Base headers present for all browser types
+        base_headers = {
+            'User-Agent': ua,
             'Accept-Language': 'en-US,en;q=0.9',
             'Accept-Encoding': 'gzip, deflate, br',
             'Cache-Control': 'max-age=0',
@@ -174,13 +306,30 @@ class AmazonScraper:
             'Connection': 'keep-alive',
             'DNT': '1',
             'Upgrade-Insecure-Requests': '1',
-            'Sec-Fetch-Dest': 'document',
-            'Sec-Fetch-Mode': 'navigate',
-            'Sec-Fetch-Site': 'none',
-            'Sec-Fetch-User': '?1',
-        })
-        self.delay = DEFAULT_DELAY
+        }
+
+        # Chromium-based browsers send Sec-Fetch-* headers; Safari/Firefox do not
+        is_chromium = 'Chrome' in ua or 'Edg/' in ua
+        if is_chromium:
+            base_headers.update({
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'none',
+                'Sec-Fetch-User': '?1',
+            })
+
+        # Merge base headers with browser-specific extras (UA-matched Accept, Sec-CH-UA, etc.)
+        base_headers.update(extra_headers)
+        session.headers.update(base_headers)
+
+        self.session = session
         self._warm_up()
+
+        logger.debug(
+            '[amazon] Fresh session — profile %d (%s)',
+            self._ua_index,
+            ua[:60],
+        )
 
     def _warm_up(self):
         """
@@ -193,7 +342,7 @@ class AmazonScraper:
         try:
             self.session.get('https://www.amazon.com/', timeout=10)
             logger.debug('[amazon] Session warmed up (home page visited)')
-            time.sleep(1 + random.uniform(0, 0.5))
+            time.sleep(1.5 + random.uniform(0, 1.0))
         except requests.RequestException as exc:
             logger.debug('[amazon] Warm-up request failed (non-fatal): %s', exc)
 
@@ -204,6 +353,9 @@ class AmazonScraper:
     def run(self):
         """
         Scrape Amazon prices for all products with a stored Amazon URL.
+
+        Processes products in randomised order and rotates to a fresh browser
+        session every _SESSION_ROTATE_EVERY products.
 
         Returns the ScrapeJob record.
         """
@@ -220,10 +372,8 @@ class AmazonScraper:
         )
         errors = []
 
-        # Only fetch products that already have an Amazon URL stored.
-        # Skip manual_url_override — the URL is correct by design; we still
-        # update the price (price staleness is independent of URL correctness).
-        entries = (
+        # Fetch all entries that have an Amazon URL stored.
+        entries = list(
             CurrentPrice.objects
             .filter(retailer=retailer)
             .exclude(url='')
@@ -231,23 +381,39 @@ class AmazonScraper:
             .select_related('product')
         )
 
+        # Randomise order — sequential scraping is a clear bot signal.
+        random.shuffle(entries)
+
         for entry in entries:
             product = entry.product
             if not product.is_active:
                 continue
 
-            url = entry.url
-            if AMAZON_DOMAIN not in url:
-                logger.debug('[amazon] Skipping non-Amazon URL for %s: %s', product.name, url)
+            raw_url = entry.url
+            if AMAZON_DOMAIN not in raw_url and 'amzn' not in raw_url:
+                logger.debug('[amazon] Skipping non-Amazon URL for %s: %s', product.name, raw_url)
                 continue
 
+            # Always use the bare ASIN URL — strips tracking/affiliate params
+            # that can fingerprint automated requests.
+            url = _strip_to_asin_url(raw_url)
+
             job.products_found += 1
+
+            # Rotate to a fresh browser session every N products.
+            if self._products_since_rotation >= _SESSION_ROTATE_EVERY:
+                logger.debug(
+                    '[amazon] Rotating browser session after %d products',
+                    self._products_since_rotation,
+                )
+                self._make_fresh_session()
+
+            self._products_since_rotation += 1
 
             try:
                 result = self._fetch_price(url)
 
                 if result is None:
-                    # First attempt failed — wait a little longer and try again.
                     retry_delay = self.delay * 2 + random.uniform(1, 3)
                     logger.debug(
                         '[amazon] Attempt 1 failed for %s — retrying in %.1fs',
@@ -257,7 +423,6 @@ class AmazonScraper:
                     result = self._fetch_price(url)
 
                 if result is None:
-                    # Second attempt failed — one more try with a longer back-off.
                     retry_delay2 = self.delay * 3 + random.uniform(2, 5)
                     logger.debug(
                         '[amazon] Attempt 2 failed for %s — final retry in %.1fs',
@@ -267,10 +432,7 @@ class AmazonScraper:
                     result = self._fetch_price(url)
 
                 if result is None:
-                    # All 3 standard attempts failed — try the mobile fallback.
-                    # Wait 10 s then use a completely different browser fingerprint
-                    # (fresh session, iPhone Safari UA, Google referer, bare ASIN
-                    # URL) to bypass bot detection that blocked the desktop session.
+                    # All 3 standard attempts failed — try mobile fallback.
                     logger.debug(
                         '[amazon] All 3 standard attempts failed for %s — '
                         'mobile fallback in 10s',
@@ -280,7 +442,6 @@ class AmazonScraper:
                     result = self._fetch_price_fallback(url)
 
                 if result is None:
-                    # All 4 attempts failed — leave existing price intact.
                     logger.warning(
                         '[amazon] [no price] %s (%s) — could not extract price '
                         'after 4 attempts (3 standard + 1 mobile fallback): %s',
@@ -304,7 +465,6 @@ class AmazonScraper:
                 errors.append(msg)
                 logger.exception('[amazon] Error scraping %s', product.name)
 
-            # Polite delay + random jitter between requests.
             time.sleep(self.delay + random.uniform(0, JITTER_MAX))
 
         job.status = 'success'
@@ -322,7 +482,7 @@ class AmazonScraper:
         GET an Amazon product page and extract the price.
 
         Args:
-            url: Full Amazon product URL (https://www.amazon.com/dp/...).
+            url: Bare Amazon ASIN URL (https://www.amazon.com/dp/...).
 
         Returns:
             (Decimal price, bool in_stock) or None if price cannot be extracted.
@@ -341,14 +501,12 @@ class AmazonScraper:
             logger.debug('[amazon] HTTP %d for %s', response.status_code, url[:80])
             return None
 
-        # Bot / auth-wall detection — Amazon serves several types of block pages.
-        block_signals = (
-            'Type the characters you see',   # CAPTCHA
-            'Robot Check',                   # Robot check page
-            '/ap/signin',                    # Redirect to sign-in
-            'validateCaptcha',               # Inline CAPTCHA form
-        )
-        for signal in block_signals:
+        # Check if we were silently redirected to a block/auth page.
+        if 'amazon.com' in response.url and '/ap/' in response.url:
+            logger.warning('[amazon] Redirected to auth page for %s', url[:80])
+            return None
+
+        for signal in _BLOCK_SIGNALS:
             if signal in response.text:
                 logger.warning('[amazon] Blocked page (%s) for %s', signal, url[:80])
                 return None
@@ -371,60 +529,43 @@ class AmazonScraper:
         rules that blocked the main session:
 
           - Brand-new requests.Session (no cookies from the blocked session)
-          - iPhone Safari User-Agent instead of desktop Chrome
+          - iPhone Safari User-Agent instead of desktop browser
           - Google search as Referer (looks like organic search traffic)
-          - Bare ASIN URL (strips tracking parameters that may fingerprint us)
           - Mobile-specific price CSS selectors tried first
 
         Returns (Decimal price, bool in_stock) or None if still blocked/failed.
         """
-        # Strip to a clean bare ASIN URL — removes any tracking/affiliate params
-        # and ensures we hit the canonical product page.
-        asin_match = re.search(r'/dp/([A-Z0-9]{10})', url)
-        fetch_url = (
-            f'https://www.amazon.com/dp/{asin_match.group(1)}'
-            if asin_match else url
-        )
-
-        # Fresh session — no cookies or history that Amazon may have flagged.
         session = requests.Session()
         session.headers.update({
-            'User-Agent':              _MOBILE_USER_AGENT,
-            'Accept':                  'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language':         'en-US,en;q=0.5',
-            'Accept-Encoding':         'gzip, deflate, br',
-            'Referer':                 'https://www.google.com/search?q=warhammer+40k+miniatures',
-            'DNT':                     '1',
-            'Connection':              'keep-alive',
+            'User-Agent':                _MOBILE_USER_AGENT,
+            'Accept':                    'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language':           'en-US,en;q=0.5',
+            'Accept-Encoding':           'gzip, deflate, br',
+            'Referer':                   'https://www.google.com/search?q=warhammer+40k+miniatures',
+            'DNT':                       '1',
+            'Connection':                'keep-alive',
             'Upgrade-Insecure-Requests': '1',
         })
 
         try:
-            response = session.get(fetch_url, timeout=15)
+            response = session.get(url, timeout=15)
         except requests.RequestException as exc:
-            logger.warning('[amazon] [fallback] Request failed for %s: %s', fetch_url[:80], exc)
+            logger.warning('[amazon] [fallback] Request failed for %s: %s', url[:80], exc)
             return None
 
         if response.status_code != 200:
-            logger.debug('[amazon] [fallback] HTTP %d for %s', response.status_code, fetch_url[:80])
+            logger.debug('[amazon] [fallback] HTTP %d for %s', response.status_code, url[:80])
             return None
 
-        block_signals = (
-            'Type the characters you see',
-            'Robot Check',
-            '/ap/signin',
-            'validateCaptcha',
-        )
-        for signal in block_signals:
+        for signal in _BLOCK_SIGNALS:
             if signal in response.text:
                 logger.warning(
-                    '[amazon] [fallback] Blocked (%s) for %s', signal, fetch_url[:80],
+                    '[amazon] [fallback] Blocked (%s) for %s', signal, url[:80],
                 )
                 return None
 
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Try mobile-specific selectors first, then fall through to standard ones.
         price = None
         for container_sel, whole_sel, fraction_sel in _MOBILE_PRICE_STRATEGIES:
             price = self._try_strategy(soup, container_sel, whole_sel, fraction_sel)
@@ -478,7 +619,6 @@ class AmazonScraper:
                 return None
 
             if whole_sel is None:
-                # Container holds the full price string (e.g. "$39.99" or "39.99")
                 raw = container.get_text(strip=True)
             else:
                 whole_el = container.select_one(whole_sel)
@@ -489,11 +629,9 @@ class AmazonScraper:
                 fraction_el = container.select_one(fraction_sel) if fraction_sel else None
                 fraction_text = fraction_el.get_text(strip=True) if fraction_el else '00'
 
-                # Amazon sometimes includes a trailing period in the whole part
                 whole_text = whole_text.rstrip('.')
                 raw = f'{whole_text}.{fraction_text}'
 
-            # Strip currency symbols, commas, whitespace
             cleaned = re.sub(r'[^\d.]', '', raw)
             if not cleaned:
                 return None
@@ -518,7 +656,7 @@ class AmazonScraper:
         """
         availability_div = soup.select_one('#availability')
         if availability_div is None:
-            return True  # No availability notice = assume in stock
+            return True
 
         avail_text = availability_div.get_text(strip=True).lower()
         unavailable_signals = (
