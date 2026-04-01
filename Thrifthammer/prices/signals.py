@@ -85,22 +85,27 @@ def track_price_history(sender, instance, **kwargs):
 @receiver(post_save, sender=CurrentPrice)
 def bust_price_caches(sender, instance, **kwargs):
     """
-    Invalidate cached pages whenever a CurrentPrice record is saved.
+    Invalidate all cached pages whenever a CurrentPrice record is saved.
 
     Clears:
-      - product_detail|{slug}      — the product detail page cache (30 min TTL)
-      - home_page_data_v4          — the home page Top 10 deals cache (15 min TTL)
-      - product_list_generation    — counter included in list cache keys; incrementing
-                                     it makes every cached product list page stale at
-                                     once without needing to enumerate individual keys
+      - product_detail|{slug}        — product detail page cache (30 min TTL)
+      - home_page_data_v6            — home page Top 10 Deals cache (15 min TTL)
+      - cheapest_price_{product_id}  — per-product cheapest price cache (1 hr TTL)
+                                       used on product cards and list pages
+      - site_last_price_update       — footer "prices last updated" timestamp (15 min TTL)
+      - product_list_generation      — counter included in all list cache keys;
+                                       incrementing it invalidates every cached list
+                                       page variant at once without enumerating keys
 
-    This keeps the search card price (list cache) and the SKU detail page
-    (detail cache) in sync after a scraper run updates a CurrentPrice record.
+    This keeps the home page deals, list cards, and detail pages all in sync
+    immediately after any scraper run updates a CurrentPrice record.
     """
     slug = getattr(instance.product, 'slug', None)
     if slug:
         cache.delete(f'product_detail|{slug}')
-    cache.delete('home_page_data_v4')
+    cache.delete('home_page_data_v6')
+    cache.delete(f'cheapest_price_{instance.product_id}')
+    cache.delete('site_last_price_update')
     # Bust all list-page caches by incrementing the shared generation counter.
     # timeout=None → key never expires on its own; without this the default
     # 5-minute TTL can cause the counter to reset to 0, allowing the list view

@@ -37,3 +37,12 @@ jobs:
           DJANGO_DEBUG: 'False'
           RAILWAY_ENVIRONMENT: production
         run: python manage.py run_scrapers miniature-market
+
+      - name: Clear cache after price update
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_ALLOWED_HOSTS: thrifthammer.com,www.thrifthammer.com,web-production-b6056.up.railway.app
+          DJANGO_DEBUG: 'False'
+          RAILWAY_ENVIRONMENT: production
+        run: python manage.py clear_cache
