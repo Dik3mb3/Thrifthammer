@@ -3372,6 +3372,161 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   .faq-cta-actions { flex-direction: column; align-items: stretch; }
 }
 
+/* ── Blog Product Cards (affiliate posts) ─────────────────────────────────── */
+.blog-product-pair {
+  display: flex;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  margin: var(--sp-4) 0;
+}
+.blog-product-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--sp-3);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-mid);
+  border-radius: 8px;
+  padding: var(--sp-3);
+  text-decoration: none;
+  color: inherit;
+  flex: 1 1 260px;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.blog-product-card:hover {
+  border-color: var(--accent-gold);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  text-decoration: none;
+}
+.blog-product-card img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 4px;
+  background: #fff;
+  flex-shrink: 0;
+}
+.blog-product-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+.blog-product-card-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+.blog-product-card-name {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.35;
+}
+.blog-product-card-btn {
+  display: inline-block;
+  margin-top: var(--sp-1);
+  font-size: 0.78rem;
+  color: var(--accent-gold-lt);
+  font-weight: 600;
+}
+.blog-product-card:hover .blog-product-card-btn {
+  color: var(--accent-gold);
+}
+
+/* Single-product card (not paired) */
+.blog-product-single {
+  margin: var(--sp-4) 0;
+}
+.blog-product-single .blog-product-card {
+  max-width: 420px;
+}
+
+/* Tip box */
+.blog-tip-box {
+  background: rgba(212, 175, 55, 0.08);
+  border-left: 3px solid var(--accent-gold);
+  border-radius: 4px;
+  padding: var(--sp-3) var(--sp-4);
+  margin: var(--sp-4) 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+.blog-tip-box strong {
+  color: var(--accent-gold-lt);
+}
+
+/* Top-3 list box */
+.blog-top3-box {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-mid);
+  border-radius: 8px;
+  padding: var(--sp-4) var(--sp-5);
+  margin: var(--sp-6) 0;
+}
+.blog-top3-box h3 {
+  margin-top: 0;
+  margin-bottom: var(--sp-3);
+}
+.blog-top3-box ol {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+.blog-top3-box li {
+  margin-bottom: var(--sp-2);
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+.blog-top3-box li a {
+  color: var(--accent-gold-lt);
+  text-decoration: underline;
+}
+
+/* Post intro paragraph */
+.post-intro {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--sp-4);
+}
+
+/* Table of contents nav */
+.post-toc {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-mid);
+  border-radius: 6px;
+  padding: var(--sp-3) var(--sp-4);
+  font-size: 0.85rem;
+  margin: var(--sp-4) 0;
+  line-height: 2;
+}
+.post-toc strong {
+  color: var(--text-primary);
+  margin-right: var(--sp-2);
+}
+.post-toc a {
+  color: var(--accent-gold-lt);
+}
+.post-toc a:hover {
+  color: var(--accent-gold);
+}
+
+/* Affiliate disclosure line inside blog posts */
+.blog-affiliate-disclosure {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--sp-3);
+  margin-top: var(--sp-6);
+}
+
+@media (max-width: 640px) {
+  .blog-product-pair { flex-direction: column; }
+  .blog-product-card { flex: 1 1 100%; }
+  .blog-product-card img { width: 64px; height: 64px; }
+}
+
 /* ── Mobile ───────────────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .faction-hero-content { padding: var(--sp-5); }
