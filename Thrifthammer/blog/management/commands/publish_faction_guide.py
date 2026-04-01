@@ -282,7 +282,7 @@ class Command(BaseCommand):
             )
 
         # Attach tags
-        tag_names = ['Warhammer 40K', 'Faction Guide', 'Beginner Tips']
+        tag_names = ['Warhammer 40K', 'Faction Guide', 'Beginner Tips', 'Beginner Guide']
         for name in tag_names:
             tag, _ = Tag.objects.get_or_create(name=name)
             post.tags.add(tag)

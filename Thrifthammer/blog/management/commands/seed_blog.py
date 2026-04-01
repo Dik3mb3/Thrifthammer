@@ -104,7 +104,7 @@ POSTS = [
             'Five clever kit-bashing tricks to stretch your Warhammer budget — '
             'hidden Kabalites, Necron bit buffets, endless Intercessor sprues and more.'
         ),
-        'tags': ['Budget Tips', 'Kit Hacks', 'Drukhari', 'Necrons', 'Space Marines', 'Orks', 'Tyranids'],
+        'tags': ['Budget Tips', 'Kit Hacks', 'Beginner Guide', 'Drukhari', 'Necrons', 'Space Marines', 'Orks', 'Tyranids'],
         'body': """<p>If you've ever stared at your hobby budget and muttered, <em>"I swear these sprues used to come with more bits,"</em> you're not alone. Welcome to the thrifty side of the hobby — where saving money doesn't mean giving up your love for plastic glory.</p>
 
 <p>Here are our top 5 kit hacks to squeeze maximum value (and fun) from your purchases.</p>
