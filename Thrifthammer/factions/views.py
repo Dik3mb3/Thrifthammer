@@ -5,12 +5,12 @@ Each faction page surfaces the best current deals for that faction,
 a quick-stats snapshot, an SEO synopsis, and related blog posts.
 """
 
-from django.db.models import Min
+from django.db.models import Min, Q
 from django.utils import timezone
 from django.views.generic import DetailView, TemplateView
 
 from blog.models import Post
-from products.models import Category, Faction
+from products.models import Category, Faction, Product
 
 # Grand alliance groupings for the Warhammer 40K factions index page.
 # Factions not listed here appear under whichever group matches their name,
@@ -21,8 +21,8 @@ _IMPERIUM = {
     'Sisters of Battle', 'Space Marines', 'Space Wolves', 'Ultramarines',
 }
 _CHAOS = {
-    'Chaos Space Marines', 'Chaos Knights', 'Death Guard', 'Thousand Sons',
-    'World Eaters', 'Chaos Daemons',
+    "Chaos Space Marines", 'Chaos Knights', 'Death Guard', 'Thousand Sons',
+    'World Eaters', 'Chaos Daemons', "Emperor's Children",
 }
 _XENOS = {
     'Aeldari', 'Drukhari', 'Genestealer Cults', 'Leagues of Votann',
@@ -100,9 +100,15 @@ class FactionDetailView(DetailView):
         faction = self.object
 
         # ── Top Deals ────────────────────────────────────────────────────────
+        # Include products from the faction itself plus any parent faction
+        # (e.g. Emperor's Children page also shows shared CSM kits).
+        faction_filter = Q(faction=faction)
+        if faction.parent_faction_id:
+            faction_filter |= Q(faction=faction.parent_faction)
+
         products_qs = (
-            faction.products
-            .filter(is_active=True, msrp__isnull=False, msrp__gt=0)
+            Product.objects
+            .filter(faction_filter, is_active=True, msrp__isnull=False, msrp__gt=0)
             .prefetch_related('current_prices__retailer')
             .annotate(min_price=Min('current_prices__price'))
             .filter(min_price__isnull=False)

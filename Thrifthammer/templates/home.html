@@ -38,6 +38,14 @@
 <style>
   #hero-search-results { display: none; }
 
+  /* ── Hero CTA buttons ──────────────────────────────── */
+  .hero-cta-buttons {
+    display: flex;
+    gap: var(--sp-3);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
   /* ── Email bar at very top ─────────────────────────── */
   .email-topbar {
     background: var(--bg-secondary);
@@ -66,13 +74,12 @@
   .email-topbar-form {
     display: flex;
     gap: var(--sp-2);
-    flex-wrap: wrap;
     flex: 1 1 340px;
     justify-content: flex-end;
   }
   .email-topbar-form input[type="email"] {
     flex: 1;
-    min-width: 200px;
+    min-width: 0;
     padding: 0.6rem 1rem;
     background: var(--bg-elevated);
     border: 1px solid var(--border-mid);
@@ -226,10 +233,114 @@
   .seo-block a { color: var(--accent-gold-lt); text-decoration: underline; }
   .seo-block a:hover { color: var(--accent-gold); }
 
-  @media (max-width: 720px) {
+  /* ── Deals section header: flex row with "See all" link ── */
+  .deals-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+  }
+
+  /* ══════════════════════════════════════════════════════
+     MOBILE — tablet and below (≤ 768px)
+  ══════════════════════════════════════════════════════ */
+  @media (max-width: 768px) {
+    /* Email topbar: stack copy above form */
+    .email-topbar-inner {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--sp-3);
+    }
+    .email-topbar-copy { flex: none; }
+    .email-topbar-copy p { display: none; } /* hide tagline, keep heading + form tight */
+    .email-topbar-form {
+      flex: none;
+      width: 100%;
+      justify-content: flex-start;
+      flex-wrap: nowrap; /* keep input + button on one row */
+    }
+    .email-topbar-form input[type="email"] {
+      flex: 1;
+      font-size: 0.88rem;
+      padding: 0.55rem 0.8rem;
+    }
+    .email-topbar-form .btn {
+      flex-shrink: 0;
+      white-space: nowrap;
+      padding: 0.55rem 1rem;
+      font-size: 0.88rem;
+    }
+
+    /* SEO block: single column */
     .seo-block { columns: 1; }
-    .email-topbar-form { justify-content: flex-start; }
-    .email-topbar-inner { flex-direction: column; align-items: flex-start; }
+
+    /* Audience + Why grids: 2 columns on tablets */
+    .audience-grid { grid-template-columns: 1fr 1fr; }
+    .why-grid      { grid-template-columns: 1fr 1fr; }
+
+    /* Faction strip: 3 per row on tablet */
+    .faction-strip { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ══════════════════════════════════════════════════════
+     MOBILE — small phones (≤ 640px)
+  ══════════════════════════════════════════════════════ */
+  @media (max-width: 640px) {
+    /* Email topbar: tighter padding */
+    .email-topbar { padding: var(--sp-3) 0; }
+    .email-topbar-copy h2 { font-size: 0.9rem; }
+
+    /* Hero CTA buttons: full-width stacked column */
+    .hero-cta-buttons {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--sp-2);
+    }
+    .hero-cta-buttons .btn-hero {
+      min-width: unset !important;
+      width: 100%;
+      text-align: center;
+      justify-content: center;
+      padding: 0.75rem 1rem;
+      font-size: 0.95rem;
+    }
+
+    /* Hero stats: 2 × 2 grid instead of a cramped 4-up row */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-3) var(--sp-4);
+      margin-top: var(--sp-6);
+    }
+    .hero-stat-value { font-size: 1.3rem; }
+
+    /* Deals section header: stack title above link */
+    .deals-header { flex-direction: column; align-items: flex-start; }
+
+    /* Audience + Why grids: single column on small phones */
+    .audience-grid { grid-template-columns: 1fr; }
+    .why-grid      { grid-template-columns: 1fr; }
+    .audience-card, .why-card { padding: var(--sp-4) var(--sp-3); }
+
+    /* Faction strip: 2 per row on small phones */
+    .faction-strip { grid-template-columns: 1fr 1fr; gap: var(--sp-2); }
+    .faction-chip { padding: var(--sp-3) var(--sp-2); }
+    .faction-chip-name { font-size: 0.75rem; }
+    .faction-chip-tag  { font-size: 0.62rem; }
+
+    /* Section header: reduce bottom margin */
+    .section-header { margin-bottom: var(--sp-5); }
+  }
+
+  /* ══════════════════════════════════════════════════════
+     MOBILE — very small phones (≤ 380px)
+  ══════════════════════════════════════════════════════ */
+  @media (max-width: 380px) {
+    .email-topbar-form input[type="email"] { font-size: 0.82rem; padding: 0.5rem 0.6rem; }
+    .email-topbar-form .btn               { font-size: 0.82rem; padding: 0.5rem 0.75rem; }
+    .faction-strip { grid-template-columns: repeat(2, 1fr); }
+    .hero-stat-value { font-size: 1.1rem; }
   }
 </style>
 {% endblock %}
@@ -281,7 +392,7 @@
             <div id="hero-search-results" class="hero-search-results" role="listbox" aria-label="Search suggestions"></div>
         </div>
 
-        <div style="display:flex;gap:var(--sp-3);justify-content:center;flex-wrap:wrap;">
+        <div class="hero-cta-buttons">
             <a href="{% url 'products:list' %}" class="btn btn-primary btn-lg btn-hero">Browse All Products</a>
             <a href="{% url 'calculators:space_marines' %}" class="btn btn-blue btn-lg btn-hero">Army Calculator</a>
             {% if not user.is_authenticated %}
@@ -316,7 +427,7 @@
 {% if recent_drops %}
 <section class="section" aria-labelledby="deals-heading">
     <div class="container">
-        <div class="section-header" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-4);">
+        <div class="section-header deals-header">
             <div>
                 <h2 id="deals-heading">Biggest Discounts Right Now</h2>
                 <p>The best prices available today across US Warhammer retailers</p>
@@ -458,7 +569,7 @@
 {% if live_factions %}
 <section class="section section-alt" aria-labelledby="factions-heading">
     <div class="container">
-        <div class="section-header" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:var(--sp-4);">
+        <div class="section-header deals-header">
             <div>
                 <h2 id="factions-heading">Browse by Faction</h2>
                 <p>Faction-specific price guides, deal tracking, and army cost breakdowns</p>
