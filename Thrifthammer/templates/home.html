@@ -167,12 +167,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 80px;
+    gap: var(--sp-2);
     background: var(--bg-secondary);
     border: 1px solid var(--border-mid);
     border-radius: 8px;
-    padding: var(--sp-2);
+    padding: var(--sp-3) var(--sp-2);
     text-decoration: none;
     color: inherit;
     text-align: center;
@@ -196,7 +195,7 @@
   .faction-chip:hover::before { opacity: 0.22; }
   .faction-chip-name {
     font-family: 'Oswald', sans-serif;
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     font-weight: 600;
     text-align: center;
     text-transform: uppercase;
@@ -204,7 +203,6 @@
     color: var(--text-primary);
     position: relative;
     z-index: 1;
-    line-height: 1.2;
   }
   .faction-chip-tag {
     font-size: 0.68rem;
@@ -327,8 +325,9 @@
 
     /* Faction strip: 2 per row on small phones */
     .faction-strip { grid-template-columns: 1fr 1fr; gap: var(--sp-2); }
-    .faction-chip { height: 70px; padding: var(--sp-2); }
-    .faction-chip-name { font-size: 0.72rem; }
+    .faction-chip { padding: var(--sp-3) var(--sp-2); }
+    .faction-chip-name { font-size: 0.75rem; }
+    .faction-chip-tag  { font-size: 0.62rem; }
 
     /* Section header: reduce bottom margin */
     .section-header { margin-bottom: var(--sp-5); }
@@ -585,6 +584,9 @@
                {% if f.hero_image_url %}style="--faction-img:url('{{ f.hero_image_url }}')"{% endif %}
                title="{{ f.hero_tagline|default:f.name }}">
                 <span class="faction-chip-name">{{ f.display_name|default:f.name }}</span>
+                {% if f.difficulty %}
+                <span class="faction-chip-tag">{{ f.difficulty }}</span>
+                {% endif %}
             </a>
             {% endfor %}
         </div>
