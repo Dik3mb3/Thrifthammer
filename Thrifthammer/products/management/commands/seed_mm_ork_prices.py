@@ -7,15 +7,17 @@ scraped from miniaturemarket.com.
 Prices and stock status sourced from Octoparse scrape — 2026-04-03.
 Only seeds products that exist in our catalog (keyed on slug).
 
-SKIPPED (not in catalog):
-  - Kill Team: Ork Kommandos         → Kill Team product, not in Ork faction catalog
-  - Ork Gorkanaut                    → not in catalog
-  - Ork Warbiker Mob                 → not in catalog
+SKIPPED (not in catalog or wrong product):
+  - Kill Team: Ork Kommandos         → Kill Team product, not mainline Ork
   - Orks Boyz (2022 kit, gw-50-57)  → user confirmed skip (duplicate of Ork Boyz)
-  - Orks Kommandos                   → not in catalog
   - Datacards: Orks                  → accessory, not seeded
   - Necron Ghost Ark                 → wrong faction
   - Arks of Omen products            → not Ork products
+
+NOW IN CATALOG (added via populate_ork_phase3_products):
+  - Ork Gorkanaut    → slug: ork-gorkanaut
+  - Ork Warbiker Mob → slug: ork-warbiker-mob
+  - Orks Kommandos   → slug: ork-kommandos
 
 AIRCRAFT (gw-50-32.html):
   MM lists Wazbom Blastajet/Dakkajet/Burna-Bommer/Blitza-Bommer as one listing at $72.99.
@@ -253,6 +255,28 @@ MM_PRICES = [
         'Warhammer 40K: Orks - Big Mek',
         44.99,
         'https://www.miniaturemarket.com/warhammer-40k-orks-big-mek-gw-50-68.html',
+        False,
+    ),
+    # ── Phase-3 products now in catalog ──────────────────────────────────────
+    (
+        'ork-gorkanaut',
+        'Warhammer 40K: Ork Gorkanaut',
+        123.99,
+        'https://www.miniaturemarket.com/gw-50-19.html',
+        False,
+    ),
+    (
+        'ork-warbiker-mob',
+        'Warhammer 40K: Ork Warbiker Mob',
+        49.99,
+        'https://www.miniaturemarket.com/gw-50-07.html',
+        False,
+    ),
+    (
+        'ork-kommandos',
+        'Warhammer 40K: Orks - Kommandos',
+        55.99,
+        'https://www.miniaturemarket.com/warhammer-40k-orks-kommandos-gw-50-70.html',
         False,
     ),
     # ── Aircraft — one MM listing covers all four build options ───────────────
