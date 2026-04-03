@@ -177,9 +177,9 @@ PRODUCTS = [
     (
         'codex-emperors-children',
         "Codex: Emperor's Children",
-        '',
+        '60030102035',
         60.00,
-        '',
+        '60030102035_ENGFREGERITASPAEmperorsChildrenStdEdHBCodex.jpg',
         'https://www.warhammer.com/en-US/shop/codex-emperors-children-2025-eng',
         '',
         'ec',
