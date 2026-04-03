@@ -35,6 +35,7 @@ import random
 import re
 import time
 from decimal import Decimal, InvalidOperation
+from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 
 import requests
 from bs4 import BeautifulSoup
@@ -47,6 +48,21 @@ from scrapers.models import ScrapeJob
 logger = logging.getLogger(__name__)
 
 NK_DOMAIN = 'nobleknight.com'
+
+
+def _strip_affiliate_params(url):
+    """
+    Remove affiliate tracking params from a Noble Knight URL before fetching.
+
+    The ?awid= parameter is stored in the DB so user-facing links earn
+    commission, but we strip it from scraper requests so bot traffic does
+    not pollute Noble Knight's affiliate analytics.
+    """
+    parsed = urlparse(url)
+    params = parse_qs(parsed.query, keep_blank_values=True)
+    params.pop('awid', None)
+    new_query = urlencode({k: v[0] for k, v in params.items()})
+    return urlunparse(parsed._replace(query=new_query))
 DEFAULT_DELAY = 1.5
 JITTER_MAX = 1.0
 
@@ -135,24 +151,29 @@ class NoblekKnightScraper:
 
             job.products_found += 1
 
+            # Strip affiliate params so bot requests don't hit NK's
+            # affiliate tracking endpoint (the ?awid= tag stays in the DB
+            # for user-facing links but should not appear in scraper GETs).
+            fetch_url = _strip_affiliate_params(url)
+
             try:
-                result = self._fetch_price(url)
+                result = self._fetch_price(fetch_url)
 
                 # Retry on fetch errors (network/rate-limit) — back off longer
                 # between attempts.  Only retry None ("page loaded, no price")
                 # once in case of a transient rendering issue.
                 if result is _FETCH_ERROR:
                     time.sleep(self.delay * 2 + random.uniform(1, 3))
-                    result = self._fetch_price(url)
+                    result = self._fetch_price(fetch_url)
 
                 if result is _FETCH_ERROR:
                     time.sleep(self.delay * 3 + random.uniform(2, 5))
-                    result = self._fetch_price(url)
+                    result = self._fetch_price(fetch_url)
 
                 if result is None:
                     # Retry once: page loaded but price wasn't found (transient?)
                     time.sleep(self.delay * 2 + random.uniform(1, 3))
-                    result = self._fetch_price(url)
+                    result = self._fetch_price(fetch_url)
 
                 if result is _FETCH_ERROR:
                     # All retries hit network/bot-detection failures.
