@@ -246,6 +246,14 @@ class Product(models.Model):
             '"mk2" for Painting Handle XL excludes standard Mk2 handle listings.'
         ),
     )
+    batch_tag = models.CharField(
+        max_length=50, blank=True, default='', db_index=True,
+        help_text=(
+            'Internal label used to group products by the batch they were added in '
+            '(e.g. "phase-2", "phase-3"). Never shown on the site. '
+            'Use list_batch_skus to export a SKU list for any tag.'
+        ),
+    )
     # Allows soft-deletion: inactive products are hidden from catalog
     is_active = models.BooleanField(default=True, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)

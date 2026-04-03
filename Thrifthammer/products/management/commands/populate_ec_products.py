@@ -368,6 +368,7 @@ class Command(BaseCommand):
                     'category': category_40k,
                     'faction': faction,
                     'is_active': True,
+                    'batch_tag': 'phase-2',
                 },
             )
             status = 'Created' if created else 'Updated'
