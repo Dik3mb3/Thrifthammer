@@ -1,16 +1,16 @@
 """
 Management command: populate_ec_products
 
-Creates the Emperor's Children faction and all 22 EC-range product entries
-(21 unique kits; Keeper of Secrets and Shalaxi Helbane share a box but
-get separate DB rows so they can carry individual eBay search names).
+Creates the Emperor's Children faction and all EC-range product entries,
+seeds GW CurrentPrice records at MSRP, and creates UnitType entries so
+Emperor's Children appears in the Army Cost Calculator.
+
+Product names match Games Workshop's official website titles exactly.
+GW URLs come from the en-US storefront (no queryID tracking params).
 
 Also sets parent_faction on EC, Death Guard, World Eaters, and Thousand Sons
 to Chaos Space Marines so those factions inherit CSM shared kits on their
 faction pages and the Army Calculator.
-
-Creates UnitType entries for all EC products so Emperor's Children
-appears in the Army Cost Calculator faction selector immediately.
 
 Safe to run repeatedly (idempotent via update_or_create keyed on slug).
 
@@ -21,7 +21,8 @@ Usage:
 from django.core.management.base import BaseCommand
 
 from calculators.models import UnitType
-from products.models import Category, Faction, Product
+from prices.models import CurrentPrice
+from products.models import Category, Faction, Product, Retailer
 
 # Import role-assignment helpers from populate_units to stay consistent
 from calculators.management.commands.populate_units import (
@@ -34,7 +35,11 @@ from calculators.management.commands.populate_units import (
 _IMG = 'https://www.warhammer.com/app/resources/catalog/product/920x950/{filename}'
 
 # ── Product definitions ───────────────────────────────────────────────────────
-# Each tuple: (slug, name, gw_sku, msrp, image_filename, gw_url, ebay_search_name, faction_key)
+# Each tuple:
+#   (slug, name, gw_sku, msrp, image_filename, gw_url, ebay_search_name, faction_key)
+#
+# name    — matches GW website title exactly
+# gw_url  — en-US storefront URL, no queryID params
 # faction_key: 'ec' = Emperor's Children, 'csm' = Chaos Space Marines
 PRODUCTS = [
     # ── Emperor's Children — EC-specific kits ────────────────────────────────
@@ -44,37 +49,37 @@ PRODUCTS = [
         '99120102207',
         170.00,
         '99120102207_ECCombatPatrol01.jpg',
-        'https://www.warhammer.com/en-WW/shop/combat-patrol-emperors-children-2025',
+        'https://www.warhammer.com/en-US/shop/combat-patrol-emperors-children-2025',
         '',
         'ec',
     ),
     (
         'fulgrim-daemon-primarch-of-slaanesh',
-        'Fulgrim – Daemon Primarch of Slaanesh',
+        'Fulgrim \u2013 Daemon Primarch of Slaanesh',
         '99120102200',
         175.00,
         '99120102200_ECFulgrim01.jpg',
-        'https://www.warhammer.com/en-WW/shop/emperors-children-fulgrim-2025',
+        'https://www.warhammer.com/en-US/shop/emperors-children-fulgrim-2025',
         'Fulgrim Daemon Primarch Slaanesh Warhammer',
         'ec',
     ),
     (
         'emperors-children-tormentors',
-        "Emperor's Children Tormentors",
+        'Tormentors',
         '99120102203',
         70.00,
         '99120102203_ECTormentors01.jpg',
-        'https://www.warhammer.com/en-WW/shop/emperors-children-tormentors-2025',
+        'https://www.warhammer.com/en-US/shop/emperors-children-tormentors-2025',
         '',
         'ec',
     ),
     (
         'emperors-children-flawless-blades',
-        "Emperor's Children Flawless Blades",
+        'Flawless Blades',
         '99120102202',
         60.00,
         '99120102202_ECFlawlessBlades01.jpg',
-        '',
+        'https://www.warhammer.com/en-US/shop/emperors-children-flawless-blades-2025',
         '',
         'ec',
     ),
@@ -84,37 +89,37 @@ PRODUCTS = [
         '99120102201',
         48.00,
         '99120102201_ECLuciusTheEternal01.jpg',
-        '',
+        'https://www.warhammer.com/en-US/shop/emperors-children-lucius-the-eternal-2025',
         '',
         'ec',
     ),
     (
         'emperors-children-noise-marines',
-        "Emperor's Children Noise Marines",
+        'Noise Marines',
         '99120102204',
         69.00,
         '99120102204_ECNoiseMarines01.jpg',
-        '',
+        'https://www.warhammer.com/en-US/shop/emperors-children-noise-marines-2025',
         '',
         'ec',
     ),
     (
         'emperors-children-lord-exultant',
-        "Emperor's Children Lord Exultant",
+        'Lord Exultant',
         '99120102206',
         43.50,
         '99120102206_ECLordExultant01.jpg',
-        '',
+        'https://www.warhammer.com/en-US/shop/emperors-children-lord-exultant-2025',
         '',
         'ec',
     ),
     (
         'emperors-children-lord-kakophonist',
-        "Emperor's Children Lord Kakophonist",
+        'Lord Kakophonist',
         '99120102205',
         42.00,
         '99120102205_ECLordKakophonist01.jpg',
-        '',
+        'https://www.warhammer.com/en-US/shop/emperors-children-lord-kakophonist-2025',
         '',
         'ec',
     ),
@@ -125,7 +130,7 @@ PRODUCTS = [
         '99129915036',
         43.50,
         '99129915036_Daemonettes01.jpg',
-        '',
+        'https://www.warhammer.com/en-US/shop/Daemonettes-of-Slaanesh-2021',
         '',
         'ec',
     ),
@@ -135,7 +140,7 @@ PRODUCTS = [
         '99129915056',
         170.00,
         '99129915056_DoSKeeperofSecrets02.jpg',
-        '',
+        'https://www.warhammer.com/en-US/shop/Keeper-of-Secrets-2019',
         'Keeper of Secrets Warhammer Chaos',
         'ec',
     ),
@@ -145,17 +150,17 @@ PRODUCTS = [
         '99129915056',
         170.00,
         '99129915056_DoSKeeperofSecrets01.jpg',
-        '',
+        'https://www.warhammer.com/en-US/shop/Shalaxi-Hellbane-2019',
         'Shalaxi Helbane Warhammer Chaos',
         'ec',
     ),
     (
         'fiends-of-slaanesh',
-        'Fiends of Slaanesh',
+        'Fiends',
         '99129915052',
         60.00,
         '99129915052_DoSFiends01.jpg',
-        '',
+        'https://www.warhammer.com/en-US/shop/Fiends-of-Slaanesh-2019',
         '',
         'ec',
     ),
@@ -165,7 +170,17 @@ PRODUCTS = [
         '99129915005',
         35.00,
         '99129915005_SeekersLeadNEW.jpg',
+        'https://www.warhammer.com/en-US/shop/Seekers-of-Slaanesh',
         '',
+        'ec',
+    ),
+    (
+        'codex-emperors-children',
+        "Codex: Emperor's Children",
+        '',
+        60.00,
+        '',
+        'https://www.warhammer.com/en-US/shop/codex-emperors-children-2025-eng',
         '',
         'ec',
     ),
@@ -176,7 +191,7 @@ PRODUCTS = [
         '99070102015',
         35.00,
         '99070102015_CSMSorcerer01.jpg',
-        'https://www.warhammer.com/en-WW/shop/Chaos-Space-Marines-Sorcerer-2019',
+        'https://www.warhammer.com/en-US/shop/Chaos-Space-Marines-Sorcerer-2019',
         '',
         'csm',
     ),
@@ -186,7 +201,7 @@ PRODUCTS = [
         '99120102097',
         65.00,
         '99120102097_CSMTerminators01.jpg',
-        'https://www.warhammer.com/en-WW/shop/Chaos-Space-Marine-Terminators-2019',
+        'https://www.warhammer.com/en-US/shop/Chaos-Space-Marine-Terminators-2019',
         '',
         'csm',
     ),
@@ -196,7 +211,7 @@ PRODUCTS = [
         '99120102092',
         60.00,
         '99120102092_CSMRhino01.jpg',
-        '',
+        'https://www.warhammer.com/en-US/shop/Chaos-Space-Marine-Rhino-2019',
         '',
         'csm',
     ),
@@ -206,7 +221,7 @@ PRODUCTS = [
         '99120102052',
         96.00,
         '99120102052_CSMLandRaiderRepack01.jpg',
-        '',
+        'https://www.warhammer.com/en-US/shop/Chaos-Space-Marines-Land-Raider',
         '',
         'csm',
     ),
@@ -216,8 +231,19 @@ PRODUCTS = [
         '99120102089',
         89.00,
         '99120102089_CSMForgefiend02.jpg',
-        '',
+        'https://www.warhammer.com/en-US/shop/Chaos-Space-Marine-Maulerfiend-2019',
         'Maulerfiend Forgefiend Warhammer Chaos',
+        'csm',
+    ),
+    (
+        'forgefiend',
+        'Forgefiend',
+        '99120102089',
+        89.00,
+        '99120102089_CSMForgefiend02.jpg',
+        # Forgefiend and Maulerfiend are the same physical dual-build kit on GW
+        'https://www.warhammer.com/en-US/shop/Chaos-Space-Marine-Maulerfiend-2019',
+        'Forgefiend Maulerfiend Warhammer Chaos',
         'csm',
     ),
     (
@@ -226,7 +252,7 @@ PRODUCTS = [
         '99120102090',
         89.00,
         '99120102090_CSMHeldrake01.jpg',
-        '',
+        'https://www.warhammer.com/en-US/shop/Chaos-Space-Marines-Heldrake-2019',
         '',
         'csm',
     ),
@@ -236,7 +262,7 @@ PRODUCTS = [
         '99120201130',
         89.00,
         '99120201130_S2DDaemonPrince01.jpg',
-        '',
+        'https://www.warhammer.com/en-US/shop/slaves-to-darkness-daemon-prince-2023',
         'Daemon Prince Warhammer Chaos',
         'csm',
     ),
@@ -246,34 +272,23 @@ PRODUCTS = [
         '99120201050',
         60.00,
         '99120201050_ChaosSpawn01.jpg',
+        'https://www.warhammer.com/en-US/shop/Chaos-Spawn-2016',
         '',
-        '',
-        'csm',
-    ),
-    # ── Forgefiend (shares physical kit with Maulerfiend, separate entry) ─────
-    (
-        'forgefiend',
-        'Forgefiend',
-        '99120102089',
-        89.00,
-        '99120102089_CSMForgefiend02.jpg',
-        '',
-        'Forgefiend Maulerfiend Warhammer Chaos',
         'csm',
     ),
 ]
 
-# Sub-factions that should inherit CSM products (all chaos sub-factions except Daemons)
+# Sub-factions that should inherit CSM products
 _CSM_CHILDREN = ["Emperor's Children", 'Death Guard', 'World Eaters', 'Thousand Sons']
 
 
 class Command(BaseCommand):
-    """Create Emperor's Children faction, products, and UnitType entries."""
+    """Create Emperor's Children faction, products, GW prices, and UnitType entries."""
 
     help = (
-        "Populates Emperor's Children faction, 22 EC-range products, and UnitType "
-        "entries for the Army Calculator. Also links EC/DG/WE/TS to CSM as parent. "
-        "Idempotent."
+        "Populates Emperor's Children faction, EC-range products with GW prices, "
+        "and UnitType entries for the Army Calculator. Product names match GW website "
+        "titles exactly. Also links EC/DG/WE/TS to CSM as parent. Idempotent."
     )
 
     def handle(self, *args, **options):
@@ -324,7 +339,6 @@ class Command(BaseCommand):
         if ec_created:
             self.stdout.write(self.style.SUCCESS("Created faction: Emperor's Children"))
         else:
-            # Ensure parent_faction is set even if faction already existed
             if ec_faction.parent_faction != csm_faction:
                 ec_faction.parent_faction = csm_faction
                 ec_faction.save()
@@ -347,14 +361,24 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(f'  Parent already set for: {child_name}')
 
-        # ── Create / update products and UnitTypes ────────────────────────────
+        # ── Resolve GW retailer ───────────────────────────────────────────────
+        gw_retailer = Retailer.objects.filter(name='Games Workshop').first()
+        if not gw_retailer:
+            self.stdout.write(self.style.WARNING(
+                'Games Workshop retailer not found — GW prices will not be seeded. '
+                'Run populate_products first.'
+            ))
+
+        # ── Create / update products, GW prices, and UnitTypes ───────────────
         faction_map = {'ec': ec_faction, 'csm': csm_faction}
         unit_created = 0
         unit_updated = 0
+        price_created = 0
+        price_updated = 0
 
         for (slug, name, gw_sku, msrp, img_filename, gw_url, ebay_name, faction_key) in PRODUCTS:
             faction = faction_map[faction_key]
-            image_url = _IMG.format(filename=img_filename)
+            image_url = _IMG.format(filename=img_filename) if img_filename else ''
 
             product, created = Product.objects.update_or_create(
                 slug=slug,
@@ -375,6 +399,24 @@ class Command(BaseCommand):
             self.stdout.write(
                 self.style.SUCCESS(f'  {status}: {name} [{faction.name}]')
             )
+
+            # ── Seed GW CurrentPrice at MSRP ──────────────────────────────────
+            if gw_retailer and gw_url:
+                _, p_created = CurrentPrice.objects.update_or_create(
+                    product=product,
+                    retailer=gw_retailer,
+                    defaults={
+                        'price': msrp,
+                        'url': gw_url,
+                        'in_stock': True,
+                        'not_available': False,
+                        'listing_title': name,
+                    },
+                )
+                if p_created:
+                    price_created += 1
+                else:
+                    price_updated += 1
 
             # ── Seed UnitType so this faction appears in the Army Calculator ──
             if _should_skip(name):
@@ -399,7 +441,8 @@ class Command(BaseCommand):
                 unit_updated += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f"\npopulate_ec_products complete. "
-            f"{len(PRODUCTS)} product entries processed. "
-            f"UnitTypes: {unit_created} created, {unit_updated} updated."
+            f"\npopulate_ec_products complete.\n"
+            f"  {len(PRODUCTS)} products processed.\n"
+            f"  GW prices: {price_created} created, {price_updated} updated.\n"
+            f"  UnitTypes: {unit_created} created, {unit_updated} updated."
         ))
