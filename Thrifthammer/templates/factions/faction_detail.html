@@ -9,7 +9,6 @@
 
 {% block extra_head %}
 {# ── Canonical ── #}
-<link rel="canonical" href="https://thrifthammer.com/factions/{{ faction.slug }}/">
 
 {# ── Open Graph ── #}
 <meta property="og:type"        content="website">
@@ -170,7 +169,7 @@
 
         <div class="faction-deal-row-img">
           {% if deal.product.image_url %}
-          <img src="{{ deal.product.image_url }}" alt="{{ deal.product.name }}" loading="lazy">
+          <img src="{{ deal.product.image_url }}" alt="{{ deal.product.name }}" loading="lazy" width="920" height="950">
           {% else %}
           <div class="faction-deal-row-img-placeholder" aria-hidden="true"></div>
           {% endif %}

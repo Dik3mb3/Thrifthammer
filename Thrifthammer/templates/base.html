@@ -15,7 +15,7 @@
     <title>{% block title %}ThriftHammer — Warhammer Price Tracker{% endblock %}</title>
     {% block meta_description %}<meta name="description" content="ThriftHammer tracks Warhammer 40,000 prices across US retailers. Compare prices on every kit and find the best deal before you buy.">{% endblock %}
     {% block robots %}<meta name="robots" content="index, follow">{% endblock %}
-    <link rel="canonical" href="https://thrifthammer.com{{ request.path }}">
+    {% block canonical %}<link rel="canonical" href="https://thrifthammer.com{{ request.path }}">{% endblock %}
     <meta name="impact-site-verification" content="531f6b3b-fdd6-4d3a-bd01-96bbde75381d">
     <meta name="google-site-verification" content="0rc6dAId0s09V_xl0qEwDaSCtKHTd5ajxDl0_yqJpNo" />
     {# ── Open Graph sitewide defaults (overridden per-page in extra_head) ── #}
@@ -174,6 +174,12 @@
                         and make a purchase, we may earn a small commission at no
                         extra cost to you. Retailer rankings are based solely on
                         price — lowest first, always.
+                    </p>
+                    <p class="disclosure-text">
+                        ThriftHammer is also a participant in the Noble Knight Games
+                        affiliate program. Noble Knight links on this site are affiliate
+                        links — we may earn a small commission on qualifying purchases
+                        at no extra cost to you.
                     </p>
                 </div>
 

@@ -8,7 +8,14 @@ Sitemap: https://thrifthammer.com/sitemap.xml
 
 # Block admin and private user areas
 Disallow: /admin/
-Disallow: /accounts/
+Disallow: /accounts/profile/
+Disallow: /accounts/watchlist/
+Disallow: /accounts/profile/change-email/
+Disallow: /accounts/profile/change-username/
+Disallow: /accounts/profile/delete/
+Disallow: /accounts/profile/newsletter-toggle/
+Disallow: /accounts/password-change/
+Disallow: /accounts/forgot-password/verify/
 Disallow: /collection/
 Disallow: /army-calculator/my-armies/
 Disallow: /army-calculator/save/

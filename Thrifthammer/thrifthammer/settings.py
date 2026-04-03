@@ -174,6 +174,12 @@ if DEBUG:
     }
 
 # ---------------------------------------------------------------------------
+# Security settings (applied in all environments)
+# ---------------------------------------------------------------------------
+X_FRAME_OPTIONS = 'DENY'
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
+# ---------------------------------------------------------------------------
 # Production security settings
 # ---------------------------------------------------------------------------
 # Railway terminates SSL at the load balancer, so we trust its forwarded header
@@ -186,7 +192,6 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = 'DENY'
 
 # Scraper settings
 SCRAPER_USER_AGENT = os.environ.get(
