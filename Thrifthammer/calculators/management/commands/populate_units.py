@@ -67,6 +67,24 @@ ROLE_RULES = [
         'astorath',
         'lemartes',
         'sanguinor',
+        # ── Space Wolves named characters ───────────────────────────────────
+        'ulrik the slayer', 'ulrik',
+        'arjac rockfist', 'arjac',
+        'njal stormcaller', 'njal',
+        'logan grimnar',
+        # ── Successor chapter named characters ──────────────────────────────
+        'iron father feirros', 'feirros',
+        'caanok var',
+        'adrax agatone', 'agatone',
+        "vulkan he'stan", 'hestan',
+        'tor garadon', 'garadon',
+        'darnath lysander', 'lysander',
+        "kor'sarro khan", 'korsarro',
+        'suboden khan',
+        'kayvaan shrike', 'shrike',
+        'aethon shaan',
+        # ── Grey Knights named characters ────────────────────────────────────
+        'castellan crowe', 'crowe',
         'belisarius cawl',
         'trajann valoris',
         'imotekh',
@@ -436,8 +454,9 @@ class Command(BaseCommand):
 
     # Expected minimum number of unit types after a full seed run.
     # Includes base SM UnitTypes (~145) + BT (~40) + BA (~40) + DA (~40) + DW (~40) cross-faction rows.
+    # Phase-2 adds: SM phase2/phase3 (~70) + UM (~7) + Successor Chapters (~10) + Orks phase2/3 (~30).
     # Combat Patrol combo_box entries are created via migration 0005, not this command.
-    EXPECTED_UNITS = 310
+    EXPECTED_UNITS = 400
 
     def add_arguments(self, parser):
         """Register command-line arguments."""
