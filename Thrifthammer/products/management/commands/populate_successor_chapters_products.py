@@ -165,6 +165,7 @@ class Command(BaseCommand):
                 name=faction_name,
                 defaults={
                     'slug': faction_slug,
+                    'category': category_40k,
                     'parent_faction': sm_faction,
                 },
             )
