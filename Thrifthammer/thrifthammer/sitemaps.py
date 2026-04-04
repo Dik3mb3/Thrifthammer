@@ -29,14 +29,28 @@ from products.models import Faction, Product
 # To add a new static page: append its named URL here.
 # When www support is added, update robots.txt with a second Sitemap: line.
 _STATIC_PAGE_CONFIG = {
-    'home':                      {'priority': 1.0, 'changefreq': 'daily'},
-    'products:list':             {'priority': 0.9, 'changefreq': 'daily'},
-    'calculators:space_marines': {'priority': 0.9, 'changefreq': 'weekly'},
-    'factions:index':            {'priority': 0.8, 'changefreq': 'weekly'},
-    'blog:post_list':            {'priority': 0.7, 'changefreq': 'weekly'},
-    'about':                     {'priority': 0.6, 'changefreq': 'monthly'},
-    'faq':                       {'priority': 0.6, 'changefreq': 'monthly'},
-    'privacy_policy':            {'priority': 0.4, 'changefreq': 'monthly'},
+    'home':                           {'priority': 1.0, 'changefreq': 'daily'},
+    'products:list':                  {'priority': 0.9, 'changefreq': 'daily'},
+    # ── Army Calculator — generic + per-faction pages ─────────────────────────
+    'calculators:space_marines':      {'priority': 0.9, 'changefreq': 'weekly'},
+    'calculators:ultramarines':       {'priority': 0.9, 'changefreq': 'weekly'},
+    'calculators:blood_angels':       {'priority': 0.9, 'changefreq': 'weekly'},
+    'calculators:dark_angels':        {'priority': 0.9, 'changefreq': 'weekly'},
+    'calculators:black_templars':     {'priority': 0.9, 'changefreq': 'weekly'},
+    'calculators:grey_knights':       {'priority': 0.9, 'changefreq': 'weekly'},
+    'calculators:space_wolves':       {'priority': 0.9, 'changefreq': 'weekly'},
+    'calculators:deathwatch':         {'priority': 0.9, 'changefreq': 'weekly'},
+    'calculators:iron_hands':         {'priority': 0.9, 'changefreq': 'weekly'},
+    'calculators:salamanders':        {'priority': 0.9, 'changefreq': 'weekly'},
+    'calculators:imperial_fists':     {'priority': 0.9, 'changefreq': 'weekly'},
+    'calculators:white_scars':        {'priority': 0.9, 'changefreq': 'weekly'},
+    'calculators:raven_guard':        {'priority': 0.9, 'changefreq': 'weekly'},
+    # ── Other static pages ────────────────────────────────────────────────────
+    'factions:index':                 {'priority': 0.8, 'changefreq': 'weekly'},
+    'blog:post_list':                 {'priority': 0.7, 'changefreq': 'weekly'},
+    'about':                          {'priority': 0.6, 'changefreq': 'monthly'},
+    'faq':                            {'priority': 0.6, 'changefreq': 'monthly'},
+    'privacy_policy':                 {'priority': 0.4, 'changefreq': 'monthly'},
 }
 
 

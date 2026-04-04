@@ -56,8 +56,9 @@ class ArmyCalculatorView(TemplateView):
         """Build context with faction selector, units grouped by role, and prebuilt armies."""
         context = super().get_context_data(**kwargs)
 
-        # Determine selected faction from query parameter
-        faction_slug = self.request.GET.get('faction', '').strip()
+        # Determine selected faction — URL path kwargs take priority over query param
+        # (e.g. /army-calculator/blood-angels/ sets kwargs['faction'] = 'blood-angels')
+        faction_slug = (self.kwargs.get('faction') or self.request.GET.get('faction', '')).strip()
         selected_faction = None
         if faction_slug:
             selected_faction = Faction.objects.filter(
