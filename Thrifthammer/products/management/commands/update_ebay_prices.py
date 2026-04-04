@@ -176,6 +176,14 @@ class Command(BaseCommand):
             help='Update a single product by its GW SKU (e.g. 01-07). '
                  'Useful for diagnosing a specific listing with --debug --dry-run.',
         )
+        parser.add_argument(
+            '--batch-tag',
+            type=str,
+            default=None,
+            metavar='TAG',
+            help='Filter to products with a specific batch_tag (e.g. "phase-2", "phase-3"). '
+                 'Can be combined with --faction to target e.g. all phase-2 Ork products.',
+        )
 
     def handle(self, *args, **options):
         """Entry point — run the eBay price update."""
@@ -189,6 +197,7 @@ class Command(BaseCommand):
         debug      = options['debug']
         list_overrides = options['list_overrides']
         sku_filter = (options['sku'] or '').strip()
+        batch_tag  = (options.get('batch_tag') or '').strip()
 
         # ── --list-overrides: print audit table and exit (no API calls) ──────
         if list_overrides:
@@ -226,6 +235,8 @@ class Command(BaseCommand):
             self.stdout.write(f'  Faction     : {faction}')
         if category:
             self.stdout.write(f'  Category    : {category}')
+        if batch_tag:
+            self.stdout.write(f'  Batch tag   : {batch_tag}')
         if limit:
             self.stdout.write(f'  Limit       : {limit} products')
         if product_id:
@@ -301,6 +312,17 @@ class Command(BaseCommand):
                         f'No active products found for category "{category}". '
                         'Use the full or partial name '
                         '(e.g. "paint", "40,000", "Age of Sigmar").'
+                    )
+                )
+                return
+
+        if batch_tag:
+            products = products.filter(batch_tag=batch_tag)
+            if not products.exists():
+                self.stderr.write(
+                    self.style.ERROR(
+                        f'No active products found with batch_tag="{batch_tag}". '
+                        'Check the tag value (e.g. "phase-2", "phase-3").'
                     )
                 )
                 return

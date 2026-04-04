@@ -523,7 +523,9 @@ class Command(BaseCommand):
                 defaults={
                     'name': product.name,
                     'category': role,
-                    'points_cost': 0,       # points to be set by seed_*_points commands
+                    # points_cost intentionally excluded — preserved on update so that
+                    # seed_*_points commands are not wiped on every deploy.
+                    # New entries start at 0 via the model field default.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
