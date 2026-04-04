@@ -452,12 +452,6 @@ class Command(BaseCommand):
 
     help = 'Populate the Army Calculator from all active 40K product SKUs.'
 
-    # Expected minimum number of unit types after a full seed run.
-    # Includes base SM UnitTypes (~145) + BT (~40) + BA (~40) + DA (~40) + DW (~40) cross-faction rows.
-    # Phase-2 adds: SM phase2/phase3 (~70) + UM (~7) + Successor Chapters (~10) + Orks phase2/3 (~30).
-    # Combat Patrol combo_box entries are created via migration 0005, not this command.
-    EXPECTED_UNITS = 400
-
     def add_arguments(self, parser):
         """Register command-line arguments."""
         parser.add_argument(
@@ -465,27 +459,9 @@ class Command(BaseCommand):
             action='store_true',
             help='Delete all existing UnitType and PrebuiltArmy data first.',
         )
-        parser.add_argument(
-            '--skip-if-current',
-            action='store_true',
-            help=(
-                'Exit immediately (no DB writes) when the expected number of unit types '
-                'are already present. Speeds up routine deploys.'
-            ),
-        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        # Fast-path: bail early when units are already seeded.
-        if options.get('skip_if_current') and not options.get('clear'):
-            unit_count = UnitType.objects.count()
-            if unit_count >= self.EXPECTED_UNITS:
-                self.stdout.write(self.style.SUCCESS(
-                    f'populate_units: DB already seeded '
-                    f'({unit_count} unit types) — skipping.'
-                ))
-                return
-
         if options['clear']:
             self.stdout.write('Clearing existing calculator data…')
             PrebuiltArmy.objects.all().delete()
