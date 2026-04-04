@@ -142,14 +142,8 @@ PRODUCTS = [
         '99120103029_OrkBubbleChukka01.jpg',
         'https://www.warhammer.com/en-US/shop/Mek-Gunz-Bubblechukka',
     ),
-    # ── Forge World ──────────────────────────────────────────────────────────
-    (
-        'ork-gargantuan-squiggoth',
-        'Ork Gargantuan Squiggoth',
-        530.00,
-        '99590103031_ORKGargantuanSquiggothUpdate1.jpg',
-        'https://www.warhammer.com/en-US/shop/Ork-Gargantuan-Squiggoth',
-    ),
+    # Ork Gargantuan Squiggoth removed 2026-04-04 — Forge World resin product,
+    # not stocked by mainstream retailers. User requested removal of all FW products.
 ]
 
 

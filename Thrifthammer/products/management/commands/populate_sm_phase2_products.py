@@ -67,13 +67,8 @@ PRODUCTS = [
         '99070101077_SMCPTGravisArmourLead.jpg',
         'https://www.warhammer.com/en-US/shop/space-marines-captain-in-gravis-armour-2022',
     ),
-    (
-        'space-marine-captain-gravis-heavy-bolt-rifle',
-        'Captain in Gravis Armour with Master-crafted Heavy Bolt Rifle',
-        43.50,
-        '99070101048_SMCaptainMasterCraftedBoltRifleLead.jpg',
-        'https://www.warhammer.com/en-US/shop/Captain-With-Master-crafted-Bolt-Rifle-2021',
-    ),
+    # Captain in Gravis Armour with Master-crafted Heavy Bolt Rifle removed 2026-04-04
+    # (product discontinued / not stocked — user requested deletion)
     (
         'space-marine-captain-in-phobos-armour',
         'Captain in Phobos Armour',
