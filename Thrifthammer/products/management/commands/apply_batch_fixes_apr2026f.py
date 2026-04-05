@@ -62,7 +62,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """Run the command."""
         self.stdout.write(self.style.MIGRATE_HEADING(
-            '\n  ── Fix 1–6: Necron eBay search-name corrections ──'
+            '\n  -- Fix 1-6: Necron eBay search-name corrections --'
         ))
 
         for slug, new_name in SEARCH_NAME_FIXES:
@@ -78,11 +78,11 @@ class Command(BaseCommand):
             product.save(update_fields=['ebay_search_name'])
             self.stdout.write(self.style.SUCCESS(
                 f'  Updated: {product.name}\n'
-                f'    "{old_name}" → "{new_name}"'
+                f'    "{old_name}" -> "{new_name}"'
             ))
 
         self.stdout.write(self.style.MIGRATE_HEADING(
-            '\n  ── Fix 7: Deactivate Seraptek Heavy Construct ──'
+            '\n  -- Fix 7: Deactivate Seraptek Heavy Construct --'
         ))
         seraptek = Product.objects.filter(slug=DEACTIVATE_SLUG).first()
         if not seraptek:
