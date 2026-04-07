@@ -630,13 +630,41 @@ class EbayBrowseAPI:
         # Standard sealed retail box titles never use "exclusive" to describe
         # the product itself.
         'exclusive',
+        # Apparel / merchandise — T-shirts, graphic tees, and vintage clothing
+        # share faction/unit names with miniature kits (e.g. "Space Marines Tee",
+        # "Warhammer Vintage Graphic Shirt", "Kayvaan Shrike T-Shirt").
+        # 'shirt' catches T-shirt/shirt listings where the hyphen-split prevents
+        # 'tee' from matching (eBay titles sometimes use "T-Shirt" or just "Shirt").
+        'graphic', 'tee', 'vintage', 'shirt',
+        # Costume / cosplay items — faction-themed Halloween costumes, cosplay
+        # armour, etc. appear in searches but are not miniature kits.
+        # 'roma' — Roma Costume brand produces Warhammer-themed dress-up items.
+        'costume', 'roma',
+        # Terrain / scenery — landscape and wargaming terrain pieces that share
+        # kit names (e.g. "Ork Trukk Shed Terrain").  These are not sealed retail
+        # miniature kits and appear especially in Ork searches.
+        'shed', 'kamp',
+        # Popular culture / media crossover terms — appear in faction searches
+        # because sellers tag unrelated products with Warhammer keywords:
+        #   'halo'     — Halo video game franchise merchandise / action figures
+        #   'joker'    — DC Comics character; appears in Ork / Chaos searches
+        #   'hardcore'  — music genre merch that appears in Ork searches
+        #   '1997'     — year tag on old metal OOP models / vintage merchandise
+        'halo', 'joker', 'hardcore', '1997',
+        # McFarlane Toys — GW-licensed maker of large pre-painted articulated
+        # action figures (e.g. McFarlane Space Marine, McFarlane Ork).  Same
+        # unit names as miniature kits but a completely different product category.
+        # 'mcfarlane' is the unambiguous brand marker.
+        'mcfarlane',
         # Third-party / non-GW manufacturer terms — not genuine GW kits.
         # These companies produce Warhammer-compatible alternative models that
         # appear in faction searches but are not GW products.
         #   'kromlech'  — Polish third-party resin/plastic bits & alternative minis
+        #   'artel'     — Artel W Miniatures; produces alternative sculpts for
+        #                 named characters (e.g. alternative Howling Banshees exarch)
         #   'alternative', 'proxy', 'sculpt', 'sculpted', 'conversion', 'custom',
         #   'resin', 'kitbash', 'kitbashed' — already covered above
-        'kromlech',
+        'kromlech', 'artel',
         # Non-GW toy/collectible terms — not genuine Warhammer miniature kits
         'minifigure', 'minifigures', 'minifigs', 'minifig', 'figurine', 'figurines',
         # JOYTOY: GW-licensed third-party maker of pre-painted, pre-assembled
@@ -847,8 +875,18 @@ class EbayBrowseAPI:
         # titles contain "specialists" or "especially".
         _raw_neg = getattr(product, 'ebay_negative_keywords', '') or ''
         if _raw_neg:
+            _result_item_id = result.get('item_id', '')
             for _neg_kw in _raw_neg.lower().split():
-                if re.search(r'\b' + re.escape(_neg_kw) + r'\b', title_lower):
+                # Pure-digit tokens are treated as blocked eBay item IDs rather
+                # than title keywords (item IDs never appear in listing titles).
+                if _neg_kw.isdigit():
+                    if _result_item_id and _neg_kw == _result_item_id:
+                        logger.debug(
+                            '[ebay] Rejected (blocked item ID %s): "%s"',
+                            _result_item_id, result['title'][:60],
+                        )
+                        return False
+                elif re.search(r'\b' + re.escape(_neg_kw) + r'\b', title_lower):
                     logger.debug(
                         '[ebay] Rejected (negative keyword "%s" in title): "%s"',
                         _neg_kw, result['title'][:60],
@@ -985,6 +1023,11 @@ class EbayBrowseAPI:
             # expensive product from the standalone plastic kit.  We track the
             # standalone kit MSRP, so paint bundles are always the wrong product.
             'paints included',
+            # Action figures — McFarlane Toys and similar brands produce large
+            # pre-painted articulated action figures under the GW licence.
+            # "action figure" unambiguously identifies these (the single word
+            # 'mcfarlane' is also in _BITS_KEYWORDS for title-level blocking).
+            'action figure',
         )
         allow_no_box = getattr(product, 'ebay_allow_no_box', False)
         for phrase in _MISSING_PHRASES:
@@ -1220,10 +1263,16 @@ class EbayBrowseAPI:
             )
 
         # Product-specific negative keywords — title check (word-boundary match)
+        # Pure-digit tokens are treated as blocked eBay item IDs, not title words.
         _raw_neg = getattr(product, 'ebay_negative_keywords', '') or ''
         if _raw_neg:
+            _result_item_id = result.get('item_id', '')
             for _neg_kw in _raw_neg.lower().split():
-                if re.search(r'\b' + re.escape(_neg_kw) + r'\b', title_lower):
+                if _neg_kw.isdigit():
+                    if _result_item_id and _neg_kw == _result_item_id:
+                        reasons.append(f'blocked item ID {_result_item_id}')
+                        break
+                elif re.search(r'\b' + re.escape(_neg_kw) + r'\b', title_lower):
                     reasons.append(f'negative keyword "{_neg_kw}" in title')
                     break
 
