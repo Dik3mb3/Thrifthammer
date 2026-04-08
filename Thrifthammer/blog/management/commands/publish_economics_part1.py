@@ -224,10 +224,10 @@ BODY = """\
       <th>Edition</th>
       <th>Box Name</th>
       <th>Year</th>
-      <th>Launch Price</th>
-      <th>2026 Adj. Value</th>
-      <th>Change vs Prev. (Adj.)</th>
-      <th>Inflation (Period)</th>
+      <th>Launch Price (USD)</th>
+      <th>What That Price Is Worth in 2026 (USD)</th>
+      <th>Price Change vs. Prior Edition (Inflation-Adjusted)</th>
+      <th>Cumulative Inflation During Edition Lifespan</th>
     </tr>
   </thead>
   <tbody>
@@ -461,10 +461,10 @@ BODY = """\
       <th>Edition</th>
       <th>Box Name</th>
       <th>Year</th>
-      <th>Launch Price</th>
-      <th>2026 Adj. Value</th>
-      <th>Change vs Prev. (Adj.)</th>
-      <th>Inflation (Period)</th>
+      <th>Launch Price (GBP)</th>
+      <th>What That Price Is Worth in 2026 (GBP)</th>
+      <th>Price Change vs. Prior Edition (Inflation-Adjusted)</th>
+      <th>Cumulative Inflation During Edition Lifespan</th>
     </tr>
   </thead>
   <tbody>
@@ -561,7 +561,7 @@ BODY = """\
 
 <h2>What Did Players Get in the Box?</h2>
 
-<p style="font-size:0.82rem;color:var(--text-muted);margin-top:-0.5rem;"><strong>Standard Game Size</strong> is an estimated metric based on online research. It attempts to create an apples-to-apples comparison between editions where games were played at different point values. For example, earlier editions were often played at lower point totals than the standard 2,000 points, so points-per-dollar figures are adjusted to account for smaller game sizes. <strong>Old/Mid Hammer &amp; New Hammer</strong> are arbitrary time ranges used to show recent and historic trends.</p>
+<p style="font-size:0.82rem;color:var(--text-muted);margin-top:-0.5rem;"><strong>Standard Game Size</strong> is an estimated metric based on online research. It attempts to create an apples-to-apples comparison between editions where games were played at different point values. For example, earlier editions were often played at lower point totals than the standard 2,000 points, so points-per-dollar figures are scaled up to account for those smaller game sizes.</p>
 
 <!-- ── POINTS PER DOLLAR BAR CHART ────────────────────────────────────── -->
 <div style="background:#1c2230;border-radius:10px;padding:1.25rem 1.5rem;margin:1.75rem 0;overflow-x:auto;">
@@ -642,12 +642,12 @@ BODY = """\
     <tr>
       <th>Edition</th>
       <th>Year</th>
-      <th>Launch Price</th>
-      <th>2026 Adj. Value</th>
-      <th>Points at Launch</th>
-      <th>Adjusted Points</th>
-      <th>Pts per 2026&thinsp;$</th>
-      <th>Pts per 2026&thinsp;$ (Adj.)</th>
+      <th>Launch Price (USD)</th>
+      <th>What That Price Is Worth in 2026 (USD)</th>
+      <th>Points in Box at Launch</th>
+      <th>Points Scaled to a Standard 2,000pt Game</th>
+      <th>Points per 2026 Dollar (Raw)</th>
+      <th>Points per 2026 Dollar (Scaled to 2,000pt Game)</th>
     </tr>
   </thead>
   <tbody>
