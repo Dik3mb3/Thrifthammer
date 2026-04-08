@@ -274,7 +274,7 @@ BODY = """\
       <td>$100</td>
       <td>$142</td>
       <td style="color:#d44040;font-weight:600;">+25%</td>
-      <td style="color:#5c6480;">&#8212;</td>
+      <td>7%</td>
     </tr>
     <tr>
       <td><strong>7th Ed</strong></td>
@@ -283,7 +283,7 @@ BODY = """\
       <td>$110</td>
       <td>$152</td>
       <td style="color:#f0c060;font-weight:600;">+7%</td>
-      <td style="color:#5c6480;">&#8212;</td>
+      <td>3%</td>
     </tr>
     <tr>
       <td><strong>8th Ed</strong></td>
@@ -292,7 +292,7 @@ BODY = """\
       <td>$160</td>
       <td>$213</td>
       <td style="color:#d44040;font-weight:600;">+40%</td>
-      <td style="color:#5c6480;">&#8212;</td>
+      <td>4%</td>
     </tr>
     <tr>
       <td><strong>9th Ed</strong></td>
@@ -301,7 +301,7 @@ BODY = """\
       <td>$200</td>
       <td>$253</td>
       <td style="color:#d44040;font-weight:600;">+19%</td>
-      <td style="color:#5c6480;">&#8212;</td>
+      <td>6%</td>
     </tr>
     <tr>
       <td><strong>10th Ed</strong></td>
@@ -309,8 +309,8 @@ BODY = """\
       <td>2023</td>
       <td>$250</td>
       <td>$268</td>
-      <td style="color:#f0c060;font-weight:600;">+18%</td>
-      <td style="color:#5c6480;">&#8212;</td>
+      <td style="color:#f0c060;font-weight:600;">+6%</td>
+      <td>18%</td>
     </tr>
     <tr style="border-top:1px solid #3a3e4a;">
       <td colspan="3" style="font-family:Oswald,sans-serif;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;color:#7a8090;">Across All Editions</td>
@@ -493,7 +493,7 @@ BODY = """\
       <td>&pound;40</td>
       <td>&pound;73</td>
       <td style="color:#4aab72;font-weight:600;">&#8722;26%</td>
-      <td style="color:#5c6480;">&#8212;</td>
+      <td>8%</td>
     </tr>
     <tr>
       <td><strong>5th Ed</strong></td>
@@ -520,7 +520,7 @@ BODY = """\
       <td>&pound;75</td>
       <td>&pound;105</td>
       <td style="color:#f0c060;font-weight:600;">+11%</td>
-      <td style="color:#5c6480;">&#8212;</td>
+      <td>4%</td>
     </tr>
     <tr>
       <td><strong>8th Ed</strong></td>
@@ -529,7 +529,7 @@ BODY = """\
       <td>&pound;95</td>
       <td>&pound;128</td>
       <td style="color:#d44040;font-weight:600;">+22%</td>
-      <td style="color:#5c6480;">&#8212;</td>
+      <td>3%</td>
     </tr>
     <tr>
       <td><strong>9th Ed</strong></td>
@@ -538,7 +538,7 @@ BODY = """\
       <td>&pound;125</td>
       <td>&pound;161</td>
       <td style="color:#d44040;font-weight:600;">+26%</td>
-      <td style="color:#5c6480;">&#8212;</td>
+      <td>5%</td>
     </tr>
     <tr>
       <td><strong>10th Ed</strong></td>
@@ -771,13 +771,13 @@ BODY = """\
 
 <p>We have too many models on the table today. The chart data proves this unequivocally. Model counts in launch boxes have increased roughly 33% since 6th edition, yet total points in the box have only increased by about 17%.</p>
 
-<p>Warhammer 40K price hikes are increasingly driven by the volume of miniatures required to play a standard game. It's not about buying one or two kits to plug holes in our list &mdash; it's being forced to routinely spend hundreds of dollars to run specialized detachments or access a particular playstyle. If fewer models were required to play, individual price hikes for combo boxes and kits might feel easier to swallow.</p>
+<p>Warhammer 40K price hikes are increasingly driven by the volume of miniatures required to play a standard game. It's not about buying one or two kits to plug holes in our list, rather it's being forced to routinely spend hundreds of dollars to run specialized detachments or access a particular playstyle. If fewer models were required to play, individual price hikes for combo boxes and kits might feel easier to swallow.</p>
 
 <h3>5. Launch Boxes Are Still Amazing Value</h3>
 
 <p>Regardless of rising prices, launch boxes remain one of the best values in all of Warhammer 40K.</p>
 
-<p>If you split a launch box with a friend, your entry cost for roughly 1,000 points could be under $150. That's excellent value, especially when many Combat Patrols struggle to reach 500 points. Before you buy, check our <a href="/products/">price comparison tool</a> to see which retailer has the best deal on the current starter box &mdash; prices vary more than you'd expect.</p>
+<p>If you split a launch box with a friend, your entry cost for roughly 1,000 points could be under $150. That's excellent value, especially when many Combat Patrols struggle to reach 500 points. Before you buy, check our <a href="/products/">price comparison tool</a> to see which retailer has the best deal on the current starter box. Prices vary more than you'd expect.</p>
 
 <h2>Predicting 11th Edition's Price</h2>
 
@@ -813,11 +813,11 @@ BODY = """\
 
 <p>Can we conclude that Games Workshop is simply a greedy corporation pushing prices at all costs? At this point in our Economics of Warhammer journey, the answer is no.</p>
 
-<p>Games Workshop has arguably done an admirable job keeping launch box prices relatively in line with, or even below, long-term inflation. Even during 2020&ndash;2023, a period marked by high inflation, a global pandemic, and logistics disruptions, launch box prices remained relatively reasonable.</p>
+<p>Games Workshop in the past has done an admirable job in improving the value of launch boxes even during periods of price hikes. Even during 2020&ndash;2023, a period marked by high inflation, a global pandemic, and logistics disruptions, launch box prices remained relatively reasonable. While recent history has painted a less favorable picture for Games Workshop's launch box prices, points per dollar remains above average and model count is high.</p>
 
-<p>This doesn't excuse Games Workshop's overall pricing practices, but for Part 1 I would cautiously score this as a point in Games Workshop's favor.</p>
+<p>In general I don't excuse Games Workshop's overall pricing practices, but for Part 1, I would cautiously score this as a point in Games Workshop's favor. Launch boxes despite their price increases over the last few editions are still relatively affordable (especially when split with a friend) and provide a ton of plastic all in one curated box with models that will remain relevant for years to come.</p>
 
-<p>If you disagree, let me know what you think &mdash; and if I made any errors in my data, I'd love to hear that as well.</p>
+<p>If you disagree, let me know what you think and if I made any errors in my data, I'd love to hear that as well.</p>
 """
 
 
