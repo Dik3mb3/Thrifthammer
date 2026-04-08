@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 
 from products.views import about, faq, home, newsletter_signup, privacy_policy
 from thrifthammer.sitemaps import BlogPostSitemap, BlogTagSitemap, FactionSitemap, ProductSitemap, StaticViewSitemap
@@ -16,6 +16,26 @@ SITEMAPS = {
 }
 
 urlpatterns = [
+    # ── 301 redirects for old/deleted product URLs indexed by Google ──────────
+    path(
+        'products/space-marine-marneus-calgar/',
+        RedirectView.as_view(url='/products/marneus-calgar/', permanent=True),
+    ),
+    path(
+        'products/slaves-to-darkness-chaos-warriors-10/',
+        RedirectView.as_view(
+            url='/products/?category=age-of-sigmar&faction=slaves-to-darkness',
+            permanent=True,
+        ),
+    ),
+    path(
+        'products/warhammer-40000-core-rules/',
+        RedirectView.as_view(
+            url='/products/?category=warhammer-40000',
+            permanent=True,
+        ),
+    ),
+    # ─────────────────────────────────────────────────────────────────────────
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('about/', about, name='about'),

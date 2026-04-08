@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% block canonical %}
+{# Canonical strips sort/page/q — only category+faction define a unique page. #}
+{% if selected_category and selected_faction %}<link rel="canonical" href="https://thrifthammer.com/products/?category={{ selected_category }}&faction={{ selected_faction }}">
+{% elif selected_category %}<link rel="canonical" href="https://thrifthammer.com/products/?category={{ selected_category }}">
+{% else %}<link rel="canonical" href="https://thrifthammer.com/products/">
+{% endif %}{% endblock %}
+
 {% block title %}Browse Warhammer 40K Products | ThriftHammer{% endblock %}
 
 {% block meta_description %}<meta name="description" content="Browse all Warhammer 40,000 kits and compare prices across US retailers including Games Workshop, Miniature Market, Noble Knight, Amazon and more.">{% endblock %}

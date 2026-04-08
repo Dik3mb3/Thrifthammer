@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block canonical %}
+{% if selected_faction %}<link rel="canonical" href="https://thrifthammer.com/army-calculator/{{ selected_faction.slug }}/">
+{% else %}<link rel="canonical" href="https://thrifthammer.com/army-calculator/">
+{% endif %}{% endblock %}
+
 {% block title %}Warhammer 40K Army Cost Calculator — ThriftHammer{% endblock %}
 
 {% block meta_description %}<meta name="description" content="Calculate the total cost of your Warhammer 40,000 army using real retailer prices. Pick your faction, add units, and instantly see how much your army costs across US stores.">{% endblock %}
