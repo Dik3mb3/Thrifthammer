@@ -266,11 +266,11 @@
       {% if product.faction %}More {{ product.faction.name }} Products{% else %}Related Products{% endif %}
     </h2>
     <div class="gold-rule"></div>
-    <div class="card-grid">
+    <div class="card-grid" style="align-items:flex-start;">
       {% for rp in related_products %}
       <a href="{% url 'products:detail' rp.slug %}" class="product-card">
         {% if rp.image_url %}
-        <img src="{{ rp.image_url }}" alt="{{ rp.name }}" class="product-card-img" loading="lazy" width="920" height="950">
+        <img src="{{ rp.image_url }}" alt="{{ rp.name }}" class="product-card-img" loading="lazy" width="300" height="300">
         {% else %}
         <div class="product-card-img-placeholder" aria-hidden="true"></div>
         {% endif %}

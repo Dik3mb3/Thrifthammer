@@ -41,6 +41,13 @@
     {# ─── LEFT SIDEBAR ─────────────────────────────────────────── #}
     <aside class="browse-sidebar" id="browse-sidebar" role="complementary" aria-label="Filters">
 
+      {# Clear all filters — always at the top so it's never buried #}
+      {% if query or selected_category or selected_faction %}
+      <a href="{% url 'products:list' %}" class="btn btn-secondary btn-full" style="margin-bottom:var(--sp-3);">
+        ✕ Clear All Filters
+      </a>
+      {% endif %}
+
       {# Search #}
       <div class="sidebar-section">
         <button class="sidebar-toggle open" data-target="search-body" aria-expanded="true">
@@ -150,13 +157,6 @@
           <p style="font-size:0.78rem;color:var(--text-muted);">Select a category to filter by faction.</p>
         </div>
       </div>
-      {% endif %}
-
-      {# Clear all filters #}
-      {% if query or selected_category or selected_faction %}
-      <a href="{% url 'products:list' %}" class="btn btn-secondary btn-full" style="margin-top:var(--sp-2);">
-        ✕ Clear All Filters
-      </a>
       {% endif %}
 
     </aside>

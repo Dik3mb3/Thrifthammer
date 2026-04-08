@@ -195,7 +195,7 @@ def product_list(request):
     # every CurrentPrice save, invalidating all list page variants at once.
     list_gen = cache.get('product_list_generation', 0)
     cache_key = (
-        f'product_list_v3|gen={list_gen}|q={query}|cat={category_slug}'
+        f'product_list_v4|gen={list_gen}|q={query}|cat={category_slug}'
         f'|fac={faction_slug}|sort={sort}|page={page_number}'
     )
     cached = cache.get(cache_key)
@@ -205,10 +205,11 @@ def product_list(request):
     # --- Build queryset ---
     # select_related covers category/faction (avoids N+1 for badges in template).
     #
-    # min_price: cheapest available price (not_available=False), matching the
-    # same price pool that product_detail uses for current_prices.0.  We do NOT
-    # filter by in_stock so a temporarily-OOS listing still counts — identical
-    # to the detail page behaviour.
+    # min_price: cheapest IN-STOCK price only (not_available=False AND in_stock=True).
+    # We intentionally exclude OOS listings so the browse card never shows a price
+    # the user can't actually buy at — showing an OOS price as "Best Price" erodes
+    # trust.  If a product has no in-stock price, min_price will be NULL and the
+    # template will fall through to "No price yet".
     #
     # gw_ref_price_sq: live GW price (if tracked), used as the discount reference
     # exactly like gw_ref_price in product_detail — falls back to product.msrp.
@@ -232,7 +233,10 @@ def product_list(request):
         .annotate(
             min_price=Min(
                 'current_prices__price',
-                filter=Q(current_prices__not_available=False),
+                filter=Q(
+                    current_prices__not_available=False,
+                    current_prices__in_stock=True,
+                ),
             )
         )
         .annotate(gw_ref_price=gw_ref_price_sq)
@@ -455,7 +459,10 @@ def search_autocomplete(request):
         .annotate(
             min_price=Min(
                 'current_prices__price',
-                filter=Q(current_prices__not_available=False),
+                filter=Q(
+                    current_prices__not_available=False,
+                    current_prices__in_stock=True,
+                ),
             )
         )
         .values('name', 'slug', 'min_price')
