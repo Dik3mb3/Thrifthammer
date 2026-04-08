@@ -19,7 +19,7 @@ _CARD   = 'background:#1c2230;border-radius:10px;padding:1.25rem 1.5rem;margin:1
 _LEGEND = 'display:flex;gap:1.5rem;margin-bottom:1.25rem;font-size:0.75rem;font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:0.06em;color:#7a8090;'
 _SWATCH_GOLD    = 'display:inline-block;width:14px;height:3px;background:#c8922a;border-radius:2px;margin-right:4px;vertical-align:middle;'
 _SWATCH_ADJ     = 'display:inline-block;width:14px;height:3px;background:rgba(240,192,96,0.3);border-radius:2px;margin-right:4px;vertical-align:middle;'
-_ROW    = 'display:grid;grid-template-columns:110px 1fr 110px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;'
+_ROW    = 'display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;'
 _LABEL  = 'font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;'
 _BARS   = 'display:flex;flex-direction:column;gap:3px;'
 _VALS   = 'font-size:0.74rem;line-height:1.4;'
@@ -90,16 +90,16 @@ BODY = """\
 <p style="font-size:0.82rem;color:var(--text-muted);margin-top:-0.5rem;">US inflation estimates sourced from <a href="https://www.usinflationcalculator.com/" target="_blank" rel="noopener">usinflationcalculator.com</a>. 2nd and 3rd Edition USD prices were estimated from community forums and Reddit threads based on exchange rates at the time.</p>
 
 <!-- ── US PRICE BAR CHART ─────────────────────────────────────────────── -->
-<div style="background:#1c2230;border-radius:10px;padding:1.25rem 1.5rem;margin:1.75rem 0;overflow-x:auto;">
+<div style="background:#1c2230;border-radius:10px;padding:0.75rem 1rem;margin:1rem 0;overflow-x:auto;">
   <div style="font-family:Oswald,sans-serif;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:#c8bfb0;margin-bottom:0.25rem;">Launch Box Price vs. 2026 Inflation-Adjusted Value (USD)</div>
   <div style="font-size:0.72rem;color:#5c6480;margin-bottom:1.1rem;">Bars show actual launch price (gold) and what inflation would suggest it should cost today (faint).</div>
   <div style="display:flex;gap:1.5rem;margin-bottom:1.1rem;">
     <span style="font-size:0.72rem;color:#7a8090;font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:0.04em;display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:3px;background:#c8922a;border-radius:2px;"></span>Launch Price</span>
     <span style="font-size:0.72rem;color:#7a8090;font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:0.04em;display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:3px;background:rgba(240,192,96,0.3);border-radius:2px;"></span>2026 Adjusted Value</span>
   </div>
-  <div style="min-width:300px;">
+  <div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 115px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">2nd Ed &rsquo;93</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:22.4%;"></div>
@@ -111,7 +111,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 115px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">3rd Ed &rsquo;98</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:33.6%;"></div>
@@ -123,7 +123,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 115px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">4th Ed &rsquo;04</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:28.0%;"></div>
@@ -135,7 +135,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 115px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">5th Ed &rsquo;08</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:28.0%;"></div>
@@ -147,7 +147,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 115px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">6th Ed &rsquo;12</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:37.3%;"></div>
@@ -159,7 +159,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 115px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">7th Ed &rsquo;14</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:41.0%;"></div>
@@ -171,7 +171,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 115px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">8th Ed &rsquo;17</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:59.7%;"></div>
@@ -183,7 +183,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 115px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">9th Ed &rsquo;20</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:74.6%;"></div>
@@ -195,7 +195,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 115px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#c8bfb0;text-align:right;">10th Ed &rsquo;23</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:93.3%;"></div>
@@ -208,7 +208,7 @@ BODY = """\
     </div>
 
     <div style="height:1px;background:#2a2e3a;margin:0.75rem 0;"></div>
-    <div style="display:grid;grid-template-columns:110px 1fr 115px;align-items:center;gap:0.5rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.72rem;text-transform:uppercase;color:#5c6480;text-align:right;">Total change</div>
       <div></div>
       <div style="font-size:0.72rem;line-height:1.4;color:#5c6480;">+97% adj &nbsp;|&nbsp; 111% inflation</div>
@@ -218,16 +218,16 @@ BODY = """\
 </div>
 
 <!-- ── US DATA TABLE ──────────────────────────────────────────────────── -->
-<table>
+<table style="text-align:center;">
   <thead>
     <tr>
       <th>Edition</th>
-      <th>Box Name</th>
+      <th>Box</th>
       <th>Year</th>
-      <th>Launch Price (USD)</th>
-      <th>What That Price Is Worth in 2026 (USD)</th>
-      <th>Price Change vs. Prior Edition (Inflation-Adjusted)</th>
-      <th>Cumulative Inflation During Edition Lifespan</th>
+      <th>Launch Price</th>
+      <th>2026 Value ¹</th>
+      <th>Price Change ²</th>
+      <th>Inflation ³</th>
     </tr>
   </thead>
   <tbody>
@@ -321,22 +321,23 @@ BODY = """\
     </tr>
   </tbody>
 </table>
+<p style="font-size:0.72rem;color:var(--text-muted);margin-top:-0.25rem;">¹ What the launch price is worth in 2026 dollars &nbsp;&middot;&nbsp; ² Price change vs. prior edition, inflation-adjusted &nbsp;&middot;&nbsp; ³ Total inflation during each edition's lifespan</p>
 
 <h2>The Big Picture: UK Launch Box Prices Across Editions</h2>
 
 <p style="font-size:0.82rem;color:var(--text-muted);margin-top:-0.5rem;">UK inflation estimates sourced from the <a href="https://www.bankofengland.co.uk/monetary-policy/inflation/inflation-calculator" target="_blank" rel="noopener">Bank of England Inflation Calculator</a>.</p>
 
 <!-- ── UK PRICE BAR CHART ─────────────────────────────────────────────── -->
-<div style="background:#1c2230;border-radius:10px;padding:1.25rem 1.5rem;margin:1.75rem 0;overflow-x:auto;">
+<div style="background:#1c2230;border-radius:10px;padding:0.75rem 1rem;margin:1rem 0;overflow-x:auto;">
   <div style="font-family:Oswald,sans-serif;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:#c8bfb0;margin-bottom:0.25rem;">Launch Box Price vs. 2026 Inflation-Adjusted Value (GBP)</div>
   <div style="font-size:0.72rem;color:#5c6480;margin-bottom:1.1rem;">Bars show actual launch price (gold) and what inflation would suggest it should cost today (faint).</div>
   <div style="display:flex;gap:1.5rem;margin-bottom:1.1rem;">
     <span style="font-size:0.72rem;color:#7a8090;font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:0.04em;display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:3px;background:#c8922a;border-radius:2px;"></span>Launch Price</span>
     <span style="font-size:0.72rem;color:#7a8090;font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:0.04em;display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:3px;background:rgba(240,192,96,0.3);border-radius:2px;"></span>2026 Adjusted Value</span>
   </div>
-  <div style="min-width:300px;">
+  <div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 110px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">2nd Ed &rsquo;93</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:21.7%;"></div>
@@ -348,7 +349,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 110px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">3rd Ed &rsquo;98</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:31.1%;"></div>
@@ -360,7 +361,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 110px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">4th Ed &rsquo;04</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:24.8%;"></div>
@@ -372,7 +373,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 110px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">5th Ed &rsquo;08</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:37.3%;"></div>
@@ -384,7 +385,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 110px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">6th Ed &rsquo;12</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:40.4%;"></div>
@@ -396,7 +397,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 110px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">7th Ed &rsquo;14</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:46.6%;"></div>
@@ -408,7 +409,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 110px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">8th Ed &rsquo;17</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:59.0%;"></div>
@@ -420,7 +421,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 110px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">9th Ed &rsquo;20</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:77.6%;"></div>
@@ -432,7 +433,7 @@ BODY = """\
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 110px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#c8bfb0;text-align:right;">10th Ed &rsquo;23</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
         <div style="height:9px;background:#c8922a;border-radius:3px;width:93.2%;"></div>
@@ -445,7 +446,7 @@ BODY = """\
     </div>
 
     <div style="height:1px;background:#2a2e3a;margin:0.75rem 0;"></div>
-    <div style="display:grid;grid-template-columns:110px 1fr 110px;align-items:center;gap:0.5rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.72rem;text-transform:uppercase;color:#5c6480;text-align:right;">Total change</div>
       <div></div>
       <div style="font-size:0.72rem;line-height:1.4;color:#5c6480;">+109% adj &nbsp;|&nbsp; 106% inflation</div>
@@ -455,16 +456,16 @@ BODY = """\
 </div>
 
 <!-- ── UK DATA TABLE ──────────────────────────────────────────────────── -->
-<table>
+<table style="text-align:center;">
   <thead>
     <tr>
       <th>Edition</th>
-      <th>Box Name</th>
+      <th>Box</th>
       <th>Year</th>
-      <th>Launch Price (GBP)</th>
-      <th>What That Price Is Worth in 2026 (GBP)</th>
-      <th>Price Change vs. Prior Edition (Inflation-Adjusted)</th>
-      <th>Cumulative Inflation During Edition Lifespan</th>
+      <th>Launch Price</th>
+      <th>2026 Value ¹</th>
+      <th>Price Change ²</th>
+      <th>Inflation ³</th>
     </tr>
   </thead>
   <tbody>
@@ -558,18 +559,19 @@ BODY = """\
     </tr>
   </tbody>
 </table>
+<p style="font-size:0.72rem;color:var(--text-muted);margin-top:-0.25rem;">¹ What the launch price is worth in 2026 pounds &nbsp;&middot;&nbsp; ² Price change vs. prior edition, inflation-adjusted &nbsp;&middot;&nbsp; ³ Total inflation during each edition's lifespan</p>
 
 <h2>What Did Players Get in the Box?</h2>
 
 <p style="font-size:0.82rem;color:var(--text-muted);margin-top:-0.5rem;"><strong>Standard Game Size</strong> is an estimated metric based on online research. It attempts to create an apples-to-apples comparison between editions where games were played at different point values. For example, earlier editions were often played at lower point totals than the standard 2,000 points, so points-per-dollar figures are scaled up to account for those smaller game sizes.</p>
 
 <!-- ── POINTS PER DOLLAR BAR CHART ────────────────────────────────────── -->
-<div style="background:#1c2230;border-radius:10px;padding:1.25rem 1.5rem;margin:1.75rem 0;overflow-x:auto;">
+<div style="background:#1c2230;border-radius:10px;padding:0.75rem 1rem;margin:1rem 0;overflow-x:auto;">
   <div style="font-family:Oswald,sans-serif;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:#c8bfb0;margin-bottom:0.25rem;">Points per 2026 Dollar (Adjusted for Game Size)</div>
   <div style="font-size:0.72rem;color:#5c6480;margin-bottom:1.1rem;">Higher is better value. Green = great (&ge;9 pts/$) &nbsp;&middot;&nbsp; Gold = decent (7&ndash;9 pts/$) &nbsp;&middot;&nbsp; Red = poor (&lt;7 pts/$).</div>
-  <div style="min-width:300px;">
+  <div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 70px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">3rd Ed &rsquo;98</div>
       <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
         <div style="position:absolute;left:0;top:0;height:100%;width:34.9%;background:#d44040;border-radius:4px;opacity:0.75;"></div>
@@ -577,7 +579,7 @@ BODY = """\
       <div style="font-size:0.8rem;font-weight:700;color:#d44040;text-align:right;">3.7 pts/$</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 70px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">4th Ed &rsquo;04</div>
       <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
         <div style="position:absolute;left:0;top:0;height:100%;width:63.2%;background:#d44040;border-radius:4px;opacity:0.75;"></div>
@@ -585,7 +587,7 @@ BODY = """\
       <div style="font-size:0.8rem;font-weight:700;color:#d44040;text-align:right;">6.7 pts/$</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 70px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">5th Ed &rsquo;08</div>
       <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
         <div style="position:absolute;left:0;top:0;height:100%;width:94.3%;background:#4aab72;border-radius:4px;opacity:0.85;"></div>
@@ -593,7 +595,7 @@ BODY = """\
       <div style="font-size:0.8rem;font-weight:700;color:#4aab72;text-align:right;">10.0 pts/$</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 70px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#c8bfb0;text-align:right;">6th Ed &rsquo;12 &#9733;</div>
       <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
         <div style="position:absolute;left:0;top:0;height:100%;width:100%;background:#4aab72;border-radius:4px;opacity:0.85;"></div>
@@ -601,7 +603,7 @@ BODY = """\
       <div style="font-size:0.8rem;font-weight:700;color:#4aab72;text-align:right;">10.6 pts/$</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 70px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">7th Ed &rsquo;14</div>
       <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
         <div style="position:absolute;left:0;top:0;height:100%;width:93.4%;background:#4aab72;border-radius:4px;opacity:0.85;"></div>
@@ -609,7 +611,7 @@ BODY = """\
       <div style="font-size:0.8rem;font-weight:700;color:#4aab72;text-align:right;">9.9 pts/$</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 70px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">8th Ed &rsquo;17</div>
       <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
         <div style="position:absolute;left:0;top:0;height:100%;width:68.9%;background:#c8922a;border-radius:4px;opacity:0.85;"></div>
@@ -617,7 +619,7 @@ BODY = """\
       <div style="font-size:0.8rem;font-weight:700;color:#c8922a;text-align:right;">7.3 pts/$</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 70px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">9th Ed &rsquo;20</div>
       <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
         <div style="position:absolute;left:0;top:0;height:100%;width:74.5%;background:#c8922a;border-radius:4px;opacity:0.85;"></div>
@@ -625,7 +627,7 @@ BODY = """\
       <div style="font-size:0.8rem;font-weight:700;color:#c8922a;text-align:right;">7.9 pts/$</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:110px 1fr 70px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#c8bfb0;text-align:right;">10th Ed &rsquo;23</div>
       <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
         <div style="position:absolute;left:0;top:0;height:100%;width:63.2%;background:#d44040;border-radius:4px;opacity:0.75;"></div>
@@ -637,17 +639,17 @@ BODY = """\
 </div>
 
 <!-- ── POINTS DATA TABLE ──────────────────────────────────────────────── -->
-<table>
+<table style="text-align:center;">
   <thead>
     <tr>
       <th>Edition</th>
       <th>Year</th>
-      <th>Launch Price (USD)</th>
-      <th>What That Price Is Worth in 2026 (USD)</th>
-      <th>Points in Box at Launch</th>
-      <th>Points Scaled to a Standard 2,000pt Game</th>
-      <th>Points per 2026 Dollar (Raw)</th>
-      <th>Points per 2026 Dollar (Scaled to 2,000pt Game)</th>
+      <th>Launch Price</th>
+      <th>2026 Value ¹</th>
+      <th>Box Points</th>
+      <th>Scaled Points ²</th>
+      <th>Pts / 2026$ ³</th>
+      <th>Scaled Pts / 2026$ ⁴</th>
     </tr>
   </thead>
   <tbody>
@@ -743,7 +745,7 @@ BODY = """\
     </tr>
   </tbody>
 </table>
-<p style="font-size:0.78rem;color:var(--text-muted);">&#9733; Best all-time value per inflation-adjusted dollar.</p>
+<p style="font-size:0.72rem;color:var(--text-muted);margin-top:0.25rem;">&#9733; Best all-time value per inflation-adjusted dollar &nbsp;&middot;&nbsp; ¹ Launch price adjusted to 2026 dollars &nbsp;&middot;&nbsp; ² Points scaled to a standard 2,000pt game for cross-edition comparison &nbsp;&middot;&nbsp; ³ Points per 2026 dollar (raw box count) &nbsp;&middot;&nbsp; ⁴ Points per 2026 dollar (game-size scaled)</p>
 
 <h2>Top Takeaways</h2>
 
