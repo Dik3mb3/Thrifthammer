@@ -635,7 +635,11 @@ class EbayBrowseAPI:
         # "Warhammer Vintage Graphic Shirt", "Kayvaan Shrike T-Shirt").
         # 'shirt' catches T-shirt/shirt listings where the hyphen-split prevents
         # 'tee' from matching (eBay titles sometimes use "T-Shirt" or just "Shirt").
-        'graphic', 'tee', 'vintage', 'shirt',
+        'graphic', 'tee', 'vintage', 'shirt', 'shirts',
+        # "Service" — catches "Paint Service", "Painting Service", "Commission
+        # Service" listings where a seller is offering a painting service rather
+        # than selling a sealed retail kit.  Pairs with 'commission'/'painted'.
+        'service',
         # Costume / cosplay items — faction-themed Halloween costumes, cosplay
         # armour, etc. appear in searches but are not miniature kits.
         # 'roma' — Roma Costume brand produces Warhammer-themed dress-up items.
