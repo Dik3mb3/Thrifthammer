@@ -845,6 +845,7 @@ class Command(BaseCommand):
             return
 
         defaults = dict(
+            slug=SLUG,
             title='Is Warhammer 40K Getting More Expensive? Launch Box Prices from 2nd to 10th Edition',
             excerpt=(
                 'We went back in time and compared every Warhammer 40K launch box from 2nd '
@@ -856,9 +857,8 @@ class Command(BaseCommand):
             published_at=timezone.now(),
             meta_title='Is Warhammer 40K Getting More Expensive? Launch Box Prices 2nd-10th Ed',
             meta_description=(
-                'Inflation-adjusted Warhammer 40K launch box prices from 2nd to 10th Edition. '
-                'Is Games Workshop pricing fair? The data might surprise you. Part 1 of the '
-                'Economics of Warhammer series.'
+                'Inflation-adjusted 40K launch box prices from 2nd to 10th Edition. '
+                'Is GW pricing fair? The data might surprise you. Part 1 of Economics of Warhammer.'
             ),
         )
 
