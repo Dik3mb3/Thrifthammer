@@ -145,11 +145,51 @@ class MiniatureMarketScraper:
             job.products_found += 1
 
             try:
-                # Non-numeric SKUs (KT-, HA-, BP-, etc.) are not on MM
+                # If a URL is already stored for this product, go directly to it.
+                # This handles products with non-standard GW SKUs (e.g. P-240xxx)
+                # that were seeded via the admin/management commands — no search needed.
+                stored_cp = (
+                    CurrentPrice.objects
+                    .filter(product=product, retailer=retailer)
+                    .exclude(url='')
+                    .exclude(url__isnull=True)
+                    .first()
+                )
+                if stored_cp and stored_cp.url:
+                    result = self._fetch_price_from_url(stored_cp.url)
+                    if result is not None:
+                        price, in_stock = result
+                        CurrentPrice.objects.update_or_create(
+                            product=product,
+                            retailer=retailer,
+                            defaults={
+                                'price': price,
+                                'url': stored_cp.url,
+                                'in_stock': in_stock,
+                                'not_available': False,
+                            },
+                        )
+                        stock_label = 'in stock' if in_stock else 'OUT OF STOCK'
+                        logger.info(
+                            '[url]      %s — $%.2f (%s)',
+                            product.name, price, stock_label,
+                        )
+                        job.prices_updated += 1
+                        time.sleep(self.delay)
+                        continue
+                    # URL fetch failed — fall through to search if SKU allows,
+                    # otherwise leave existing record untouched.
+                    logger.info(
+                        '[url-fail] %s — could not fetch price from stored URL',
+                        product.name,
+                    )
+
+                # Non-numeric SKUs with no stored URL are not on MM.
                 if not GW_SKU_PATTERN.match(sku):
                     self._save_not_available(product, retailer)
-                    logger.info('[n/a]      %s — non-standard SKU', product.name)
+                    logger.info('[n/a]      %s — non-standard SKU, no stored URL', product.name)
                     job.prices_updated += 1
+                    time.sleep(self.delay)
                     continue
 
                 result = self._find_product(product.name, sku=sku)
@@ -251,6 +291,78 @@ class MiniatureMarketScraper:
         # stock when MM had it listed but unavailable).
         in_stock = self._check_stock(best_hit['url'])
         return price, in_stock, best_hit['url']
+
+    # -------------------------------------------------------------------------
+    # Direct URL fetch (for products with pre-seeded URLs)
+    # -------------------------------------------------------------------------
+
+    def _fetch_price_from_url(self, url):
+        """
+        Fetch price and stock directly from a stored MM product page URL.
+
+        Used when a URL has already been seeded (e.g. via management command
+        or admin), bypassing the search/suggest flow entirely.  Handles
+        products with non-standard GW SKUs (P-240xxx) that the search-based
+        path would skip.
+
+        Returns (Decimal price, bool in_stock) or None on failure.
+        """
+        full_url = (
+            url if url.startswith('http')
+            else f'https://www.miniaturemarket.com{url}'
+        )
+        try:
+            resp = self.session.get(full_url, timeout=15)
+            if resp.status_code != 200:
+                logger.debug(
+                    '[mm] URL fetch HTTP %d for %s', resp.status_code, full_url
+                )
+                return None
+
+            soup = BeautifulSoup(resp.text, 'html.parser')
+
+            # MM product pages display price in <span class="price">$XX.XX</span>
+            price = None
+            for el in soup.select('span.price'):
+                price = self._extract_price_from_text(el.get_text(strip=True))
+                if price:
+                    break
+
+            if price is None:
+                logger.debug('[mm] No price found at %s', full_url)
+                return None
+
+            in_stock = self._check_stock_from_soup(soup)
+            return price, in_stock
+
+        except Exception as exc:
+            logger.warning('[mm] URL fetch failed for %s: %s', full_url, exc)
+            return None
+
+    def _check_stock_from_soup(self, soup):
+        """
+        Determine stock status from an already-parsed MM product page soup.
+
+        Avoids a second HTTP request when we already have the page content.
+        """
+        text_lower = soup.get_text().lower()
+        out_of_stock_signals = [
+            'out of stock',
+            'notify me when available',
+            'notify me when this product',
+            'email me when available',
+            'currently unavailable',
+            'soldout',
+            'sold-out',
+            '"is_saleable":false',
+            '"stock_status":"out_of_stock"',
+        ]
+        for signal in out_of_stock_signals:
+            if signal in text_lower:
+                return False
+        if 'add to cart' in text_lower or 'addtocart' in text_lower:
+            return True
+        return True
 
     # -------------------------------------------------------------------------
     # Stock check

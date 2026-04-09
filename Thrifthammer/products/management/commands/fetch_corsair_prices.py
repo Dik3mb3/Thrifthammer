@@ -116,35 +116,34 @@ def _fetch_nk(entries, dry_run, stdout):
 
 def _fetch_mm(products_and_entries, dry_run, stdout):
     """
-    Fetch Miniature Market prices via their suggest search endpoint.
+    Fetch Miniature Market prices directly from stored product page URLs.
 
-    The standard MM scraper skips non-numeric GW SKUs (P-240xxx).
-    This function calls _find_product() directly, bypassing that SKU check.
+    Uses the URL-based path added to MiniatureMarketScraper, so non-numeric
+    GW SKUs (P-240xxx) are handled correctly instead of being skipped.
     """
     from scrapers.retailers.miniature_market import MiniatureMarketScraper
     scraper = MiniatureMarketScraper()
 
     updated = 0
     for product, entry in products_and_entries:
-        stdout.write(f'  [mm] Searching for {product.name}...')
-        result = scraper._find_product(product.name)
+        if not entry.url:
+            stdout.write(f'  [mm] SKIP {product.name} — no stored URL')
+            continue
+
+        stdout.write(f'  [mm] Fetching {product.name} from stored URL...')
+        result = scraper._fetch_price_from_url(entry.url)
 
         if result is None:
-            stdout.write(f'    -> not found on MM (pre-order or not listed yet)')
+            stdout.write(f'    -> no price found (page may not be live yet)')
         else:
-            price, in_stock, mm_url = result
+            price, in_stock = result
             stock = 'in stock' if in_stock else 'OOS'
-            full_url = (
-                mm_url if mm_url.startswith('http')
-                else f'https://www.miniaturemarket.com{mm_url}'
-            )
-            stdout.write(f'    -> ${price}  {stock}  {full_url}')
+            stdout.write(f'    -> ${price}  {stock}')
             if not dry_run:
                 entry.price = price
                 entry.in_stock = in_stock
                 entry.not_available = False
-                entry.url = full_url
-                entry.save(update_fields=['price', 'in_stock', 'not_available', 'url'])
+                entry.save(update_fields=['price', 'in_stock', 'not_available'])
                 updated += 1
 
         time.sleep(1)
