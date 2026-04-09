@@ -143,14 +143,14 @@ NK_LINKS = [
         'aeldari-corsair-voidreavers',
         'Corsair Voidreavers',
         None,
-        f'https://www.nobleknight.com/Search-Results?zQuery=Corsair%20Voidreavers&awid={NK_AWID}',
+        f'https://www.nobleknight.com/P/2148424024/Corsair-Voidreavers?awid={NK_AWID}',
         False, False,
     ),
     (
         'aeldari-prince-yriel',
         'Prince Yriel',
         None,
-        f'https://www.nobleknight.com/Search-Results?zQuery=Prince%20Yriel&awid={NK_AWID}',
+        f'https://www.nobleknight.com/P/2148424076/Prince-Yriel?awid={NK_AWID}',
         False, False,
     ),
     (
