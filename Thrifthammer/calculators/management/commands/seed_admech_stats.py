@@ -141,7 +141,7 @@ ADMECH_UNITS = [
 
     # ── Combat Patrol ────────────────────────────────────────────────────────
 
-    ('Adeptus Mechanicus Combat Patrol', 0,
+    ('Adeptus Mechanicus Combat Patrol', 290,
      stat('', None, '', None, '', None),
      [],
      []),

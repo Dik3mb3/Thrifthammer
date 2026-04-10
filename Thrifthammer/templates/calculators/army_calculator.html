@@ -125,6 +125,11 @@
             <div class="datasheet-weapons">
               <div class="weapons-type-label">Ranged Weapons</div>
               <table class="weapons-table">
+                <colgroup>
+                  <col class="wt-col-name"><col class="wt-col-range"><col class="wt-col-a">
+                  <col class="wt-col-skill"><col class="wt-col-s"><col class="wt-col-ap">
+                  <col class="wt-col-d"><col class="wt-col-kw">
+                </colgroup>
                 <thead><tr><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th></tr></thead>
                 <tbody>
                 {% for w in ranged %}{% if w.weapon_type == 'ranged' %}
@@ -151,6 +156,11 @@
             <div class="datasheet-weapons">
               <div class="weapons-type-label">Melee Weapons</div>
               <table class="weapons-table">
+                <colgroup>
+                  <col class="wt-col-name"><col class="wt-col-range"><col class="wt-col-a">
+                  <col class="wt-col-skill"><col class="wt-col-s"><col class="wt-col-ap">
+                  <col class="wt-col-d"><col class="wt-col-kw">
+                </colgroup>
                 <thead><tr><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th></tr></thead>
                 <tbody>
                 {% for w in melee %}{% if w.weapon_type == 'melee' %}

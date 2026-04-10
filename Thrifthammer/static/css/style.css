@@ -1897,11 +1897,25 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   color: var(--accent-gold-lt);
   margin-bottom: var(--sp-1);
 }
+/*
+ * table-layout: fixed + colgroup widths ensure ranged and melee tables
+ * share identical column widths so headers stay perfectly aligned.
+ */
 .weapons-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.78rem;
+  table-layout: fixed;
 }
+/* Column widths — applied via col.wt-col-* classes in both tables */
+.wt-col-name  { width: 28%; }
+.wt-col-range { width: 9%; }
+.wt-col-a     { width: 7%; }
+.wt-col-skill { width: 7%; }
+.wt-col-s     { width: 6%; }
+.wt-col-ap    { width: 6%; }
+.wt-col-d     { width: 7%; }
+.wt-col-kw    { width: 30%; }
 .weapons-table th {
   text-align: left;
   padding: 3px 6px;
@@ -1913,16 +1927,19 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   text-transform: uppercase;
   border-bottom: 1px solid var(--border-mid);
   white-space: nowrap;
+  overflow: hidden;
 }
 .weapons-table td {
   padding: 4px 6px;
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-secondary);
   vertical-align: top;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .weapons-table tr:last-child td { border-bottom: none; }
-.weapons-table .weapon-name { color: var(--text-primary); font-weight: 500; }
-.weapons-table .weapon-keywords { color: var(--text-muted); font-size: 0.72rem; }
+.weapons-table .weapon-name { color: var(--text-primary); font-weight: 500; white-space: normal; }
+.weapons-table .weapon-keywords { color: var(--text-muted); font-size: 0.72rem; white-space: normal; }
 
 /* Abilities */
 .datasheet-abilities { margin-bottom: var(--sp-2); }
