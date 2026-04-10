@@ -76,7 +76,7 @@
             {% if row.item.alert_type != 'none' %}
             <span class="watchlist-alert-badge">
               {% if row.item.alert_type == 'price' %}
-                🔔 Alert: ${{ row.item.target_price }}
+                🔔 Alert: at or below ${{ row.item.target_price }}
               {% elif row.item.alert_type == 'site_low' %}
                 🔔 Alert: website low
               {% elif row.item.alert_type == 'pct_off' %}
@@ -106,7 +106,7 @@
               </div>
 
               <div class="alert-form-row alert-field-price" {% if row.item.alert_type != 'price' %}style="display:none"{% endif %}>
-                <label class="alert-form-label">Price threshold ($)</label>
+                <label class="alert-form-label">Target price — alert me at or below ($)</label>
                 <input type="number" name="target_price" step="0.01" min="0" placeholder="e.g. 29.99"
                        value="{{ row.item.target_price|default:'' }}" class="alert-input">
               </div>

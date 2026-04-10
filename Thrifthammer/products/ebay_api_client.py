@@ -725,6 +725,11 @@ class EbayBrowseAPI:
         # miniature box because they are cheaper and pass all keyword checks.
         # Globally blocked (also excluded at eBay query level via -cards -datacards).
         'card', 'cards', 'datacard', 'datacards',
+        # Vinyl figures / vinyl collectibles — soft-plastic stylised collectible
+        # figures (e.g. Funko Pop style, GW-branded vinyl toys) that share unit
+        # names with miniature kits but are a completely different product category.
+        # No GW sealed plastic miniature kit title ever uses "vinyl".
+        'vinyl',
     }
 
     # Conservative bits keyword set used for shortDescription checks only.
