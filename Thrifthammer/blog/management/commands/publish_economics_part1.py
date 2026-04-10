@@ -797,7 +797,7 @@ BODY = """\
     <tr>
       <td><strong>Low End</strong></td>
       <td style="color:#4aab72;font-weight:700;">$285</td>
-      <td>GW provides close to 2,000 total points, similar to recent editions, at roughly 7 points per dollar &mdash; in line with recent trends.</td>
+      <td>GW provides close to 2,000 total points, similar to recent editions, at roughly 7 points per dollar in line with recent edition launches.</td>
     </tr>
     <tr>
       <td><strong>High End</strong></td>
