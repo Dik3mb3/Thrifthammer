@@ -344,7 +344,7 @@ BODY = """\
         <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:47.2%;"></div>
       </div>
       <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">&pound;34.99</div>
+        <div style="color:#c8922a;font-weight:700;">&pound;35</div>
         <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">&pound;76 adj</div>
       </div>
     </div>
@@ -376,12 +376,12 @@ BODY = """\
     <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">5th Ed &rsquo;08</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:37.3%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:61.5%;"></div>
+        <div style="height:9px;background:#c8922a;border-radius:3px;width:24.8%;"></div>
+        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:41.0%;"></div>
       </div>
       <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">&pound;60</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">&pound;99 adj</div>
+        <div style="color:#c8922a;font-weight:700;">&pound;40</div>
+        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">&pound;66 adj</div>
       </div>
     </div>
 
@@ -400,12 +400,12 @@ BODY = """\
     <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
       <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">7th Ed &rsquo;14</div>
       <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:46.6%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:65.2%;"></div>
+        <div style="height:9px;background:#c8922a;border-radius:3px;width:43.5%;"></div>
+        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:60.9%;"></div>
       </div>
       <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">&pound;75</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">&pound;105 adj</div>
+        <div style="color:#c8922a;font-weight:700;">&pound;70</div>
+        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">&pound;98 adj</div>
       </div>
     </div>
 
@@ -473,7 +473,7 @@ BODY = """\
       <td><strong>2nd Ed</strong></td>
       <td>2nd Edition Starter Box</td>
       <td>1993</td>
-      <td>&pound;34.99</td>
+      <td>&pound;35</td>
       <td>&pound;76</td>
       <td style="color:#5c6480;">&#8212;</td>
       <td style="color:#5c6480;">&#8212;</td>
@@ -500,9 +500,9 @@ BODY = """\
       <td><strong>5th Ed</strong></td>
       <td>Assault on Black Reach</td>
       <td>2008</td>
-      <td>&pound;60</td>
-      <td>&pound;99</td>
-      <td style="color:#d44040;font-weight:600;">+36%</td>
+      <td>&pound;40</td>
+      <td>&pound;66.07</td>
+      <td style="color:#4aab72;font-weight:600;">&#8722;9%</td>
       <td>11%</td>
     </tr>
     <tr>
@@ -511,16 +511,16 @@ BODY = """\
       <td>2012</td>
       <td>&pound;65</td>
       <td>&pound;95</td>
-      <td style="color:#4aab72;font-weight:600;">&#8722;4%</td>
+      <td style="color:#d44040;font-weight:600;">+44%</td>
       <td>13%</td>
     </tr>
     <tr>
       <td><strong>7th Ed</strong></td>
       <td>Dark Vengeance</td>
       <td>2014</td>
-      <td>&pound;75</td>
-      <td>&pound;105</td>
-      <td style="color:#f0c060;font-weight:600;">+11%</td>
+      <td>&pound;70</td>
+      <td>&pound;98</td>
+      <td style="color:#f0c060;font-weight:600;">+3%</td>
       <td>4%</td>
     </tr>
     <tr>
@@ -529,7 +529,7 @@ BODY = """\
       <td>2017</td>
       <td>&pound;95</td>
       <td>&pound;128</td>
-      <td style="color:#d44040;font-weight:600;">+22%</td>
+      <td style="color:#d44040;font-weight:600;">+31%</td>
       <td>3%</td>
     </tr>
     <tr>
