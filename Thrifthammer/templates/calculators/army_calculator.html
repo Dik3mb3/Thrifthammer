@@ -53,31 +53,135 @@
       <div class="unit-category" data-category="{{ cat_key }}">
         <div class="unit-category-header">{{ cat.label }}</div>
         {% for unit in cat.units %}
+        {% with ranged_weapons=unit.weapon_profiles.all|dictsort:"order" melee_weapons=unit.weapon_profiles.all abilities=unit.abilities.all %}
         <div class="unit-row" id="unit-row-{{ unit.pk }}" data-unit-id="{{ unit.pk }}"
              data-name="{{ unit.name|escapejs }}"
              data-points="{{ unit.points_cost|default:0 }}"
              data-typical-qty="{{ unit.typical_quantity }}"
              data-price="{% if unit.product %}{{ unit.product.get_cheapest_price.price|default:'' }}{% endif %}"
              data-msrp="{% if unit.product %}{{ unit.product.msrp|default:'' }}{% endif %}">
-          <span class="unit-name">{{ unit.name }}</span>
-          <span class="unit-pts">{{ unit.points_cost }}pts × {{ unit.typical_quantity }}</span>
-          <span class="unit-price">
-            {% if unit.product %}
-              {% with best=unit.product.get_cheapest_price %}
-                {% if best %}<span style="color:var(--accent-green-lt);">${{ best.price }}</span>{% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
-              {% endwith %}
-            {% else %}
-              <span style="color:var(--text-muted);" title="No product linked">—</span>
-            {% endif %}
-          </span>
-          <div class="unit-qty" style="display:none;">
-            <button type="button" class="decrease-qty" title="Decrease">−</button>
-            <span class="qty-display">1</span>
-            <button type="button" class="increase-qty" title="Increase">+</button>
-            <button type="button" class="remove-unit" title="Remove">✕</button>
+
+          {# ── Unit header row ── #}
+          <div class="unit-row-header">
+            <span class="unit-name">{{ unit.name }}</span>
+            <span class="unit-pts">{{ unit.points_cost }}pts{% if unit.typical_quantity > 1 %} × {{ unit.typical_quantity }}{% endif %}</span>
+            <span class="unit-price">
+              {% if unit.product %}
+                {% with best=unit.product.get_cheapest_price %}
+                  {% if best %}<span style="color:var(--accent-green-lt);">${{ best.price }}</span>{% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
+                {% endwith %}
+              {% else %}
+                <span style="color:var(--text-muted);" title="No product linked">—</span>
+              {% endif %}
+            </span>
+            <div class="unit-row-actions">
+              {% if unit.stat_movement or unit.weapon_profiles.exists %}
+              <button type="button" class="btn-datasheet-toggle" aria-label="View datasheet" title="View stats &amp; weapons">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                Stats
+              </button>
+              {% endif %}
+              <div class="unit-qty" style="display:none;">
+                <button type="button" class="decrease-qty" title="Decrease">−</button>
+                <span class="qty-display">1</span>
+                <button type="button" class="increase-qty" title="Increase">+</button>
+                <button type="button" class="remove-unit" title="Remove">✕</button>
+              </div>
+              <button type="button" class="btn btn-primary btn-sm add-unit-btn" style="min-width:52px;">Add</button>
+            </div>
           </div>
-          <button type="button" class="btn btn-primary btn-sm add-unit-btn" style="min-width:52px;">Add</button>
+
+          {# ── Datasheet panel (hidden by default) ── #}
+          {% if unit.stat_movement or unit.weapon_profiles.exists or unit.abilities.exists %}
+          <div class="unit-datasheet" style="display:none;">
+
+            {# Stat line #}
+            {% if unit.stat_movement %}
+            <div class="datasheet-stats">
+              <div class="stat-block"><span class="stat-label">M</span><span class="stat-value">{{ unit.stat_movement }}</span></div>
+              <div class="stat-block"><span class="stat-label">T</span><span class="stat-value">{{ unit.stat_toughness }}</span></div>
+              <div class="stat-block"><span class="stat-label">Sv</span><span class="stat-value">{{ unit.stat_save }}</span></div>
+              <div class="stat-block"><span class="stat-label">W</span><span class="stat-value">{{ unit.stat_wounds }}</span></div>
+              <div class="stat-block"><span class="stat-label">Ld</span><span class="stat-value">{{ unit.stat_leadership }}</span></div>
+              <div class="stat-block"><span class="stat-label">OC</span><span class="stat-value">{{ unit.stat_oc }}</span></div>
+              {% if unit.stat_invuln %}<div class="stat-block stat-block--special"><span class="stat-label">Inv</span><span class="stat-value">{{ unit.stat_invuln }}</span></div>{% endif %}
+              {% if unit.stat_fnp %}<div class="stat-block stat-block--special"><span class="stat-label">FNP</span><span class="stat-value">{{ unit.stat_fnp }}</span></div>{% endif %}
+            </div>
+            {% endif %}
+
+            {# Ranged weapons #}
+            {% with ranged=unit.weapon_profiles.all %}
+            {% if ranged %}
+            {% with has_ranged=False %}{% endwith %}
+            <div class="datasheet-weapons">
+              <div class="weapons-type-label">Ranged Weapons</div>
+              <table class="weapons-table">
+                <thead><tr><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th></tr></thead>
+                <tbody>
+                {% for w in ranged %}{% if w.weapon_type == 'ranged' %}
+                <tr>
+                  <td class="weapon-name">{{ w.name }}</td>
+                  <td>{{ w.range }}</td>
+                  <td>{{ w.attacks }}</td>
+                  <td>{{ w.skill }}</td>
+                  <td>{{ w.strength }}</td>
+                  <td>{{ w.ap }}</td>
+                  <td>{{ w.damage }}</td>
+                  <td class="weapon-keywords">{% if w.keywords %}{{ w.keywords }}{% else %}—{% endif %}</td>
+                </tr>
+                {% endif %}{% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            {# Melee weapons #}
+            {% with melee=unit.weapon_profiles.all %}
+            {% if melee %}
+            <div class="datasheet-weapons">
+              <div class="weapons-type-label">Melee Weapons</div>
+              <table class="weapons-table">
+                <thead><tr><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th></tr></thead>
+                <tbody>
+                {% for w in melee %}{% if w.weapon_type == 'melee' %}
+                <tr>
+                  <td class="weapon-name">{{ w.name }}</td>
+                  <td>Melee</td>
+                  <td>{{ w.attacks }}</td>
+                  <td>{{ w.skill }}</td>
+                  <td>{{ w.strength }}</td>
+                  <td>{{ w.ap }}</td>
+                  <td>{{ w.damage }}</td>
+                  <td class="weapon-keywords">{% if w.keywords %}{{ w.keywords }}{% else %}—{% endif %}</td>
+                </tr>
+                {% endif %}{% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            {# Abilities #}
+            {% if unit.abilities.exists %}
+            <div class="datasheet-abilities">
+              <div class="weapons-type-label">Abilities</div>
+              <div class="abilities-grid">
+                {% for ab in unit.abilities.all %}
+                <div class="ability-card">
+                  <span class="ability-name">{{ ab.name }}</span>
+                  <span class="ability-desc">{{ ab.description }}</span>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+
+          </div>
+          {% endif %}
+
         </div>
+        {% endwith %}
         {% endfor %}
       </div>
       {% empty %}
@@ -334,11 +438,26 @@
     return '';
   }
 
+  /* Datasheet toggle */
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.btn-datasheet-toggle');
+    if (btn) {
+      var row = btn.closest('.unit-row');
+      var sheet = row && row.querySelector('.unit-datasheet');
+      if (sheet) {
+        var isOpen = sheet.style.display !== 'none';
+        sheet.style.display = isOpen ? 'none' : 'block';
+        btn.classList.toggle('active', !isOpen);
+      }
+    }
+  });
+
   /* Event delegation */
   document.addEventListener('click', function (e) {
     var row = e.target.closest('.unit-row');
     if (!row) return;
     var unitId = row.dataset.unitId;
+    if (e.target.closest('.btn-datasheet-toggle')) return; // handled above
     if (e.target.classList.contains('add-unit-btn')) {
       addUnit(unitId);
     } else if (e.target.classList.contains('increase-qty')) {

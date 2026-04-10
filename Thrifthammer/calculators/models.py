@@ -75,6 +75,17 @@ class UnitType(models.Model):
         blank=True,
         help_text='Brief rules flavour or role description shown in the UI.',
     )
+
+    # ── Stat line (10th Edition datasheet) ────────────────────────────────────
+    stat_movement  = models.CharField(max_length=8,  blank=True, default='', help_text='e.g. 5"')
+    stat_toughness = models.PositiveSmallIntegerField(null=True, blank=True, help_text='e.g. 5')
+    stat_save      = models.CharField(max_length=4,  blank=True, default='', help_text='e.g. 3+')
+    stat_wounds    = models.PositiveSmallIntegerField(null=True, blank=True, help_text='e.g. 4')
+    stat_leadership = models.CharField(max_length=4, blank=True, default='', help_text='e.g. 7+')
+    stat_oc        = models.PositiveSmallIntegerField(null=True, blank=True, help_text='Objective Control value')
+    stat_invuln    = models.CharField(max_length=4,  blank=True, default='', help_text='Invulnerable save e.g. 4+')
+    stat_fnp       = models.CharField(max_length=4,  blank=True, default='', help_text='Feel No Pain e.g. 5+')
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -110,6 +121,73 @@ class UnitType(models.Model):
         if not self.product:
             return None
         return self.product.msrp
+
+
+class WeaponProfile(models.Model):
+    """
+    A single weapon profile belonging to a UnitType datasheet.
+
+    Units can have multiple ranged and melee weapons, each with their
+    own stats. Profiles are ordered and grouped by weapon_type for display.
+    """
+
+    RANGED = 'ranged'
+    MELEE  = 'melee'
+    WEAPON_TYPE_CHOICES = [
+        (RANGED, 'Ranged'),
+        (MELEE,  'Melee'),
+    ]
+
+    unit_type   = models.ForeignKey(
+        UnitType, on_delete=models.CASCADE, related_name='weapon_profiles',
+    )
+    name        = models.CharField(max_length=200, help_text='Weapon name e.g. "Autoch-pattern bolter"')
+    weapon_type = models.CharField(max_length=8, choices=WEAPON_TYPE_CHOICES, default=RANGED)
+    range       = models.CharField(max_length=12, blank=True, default='', help_text='e.g. 24" or Melee')
+    attacks     = models.CharField(max_length=10, help_text='e.g. 2 or D6+1')
+    skill       = models.CharField(max_length=4,  help_text='BS or WS value e.g. 3+')
+    strength    = models.CharField(max_length=8,  help_text='e.g. 5 or 12')
+    ap          = models.CharField(max_length=4,  help_text='e.g. 0 or -3')
+    damage      = models.CharField(max_length=10, help_text='e.g. 1 or D3 or D6+1')
+    keywords    = models.CharField(
+        max_length=300, blank=True, default='',
+        help_text='Comma-separated special rules e.g. "Blast, Heavy, Indirect Fire"',
+    )
+    order       = models.PositiveSmallIntegerField(default=0, help_text='Display order within the unit.')
+
+    class Meta:
+        ordering = ['unit_type', 'weapon_type', 'order', 'name']
+
+    def __str__(self):
+        return f'{self.unit_type.name} — {self.name}'
+
+    @property
+    def keywords_list(self):
+        """Return keywords as a clean list for template iteration."""
+        return [k.strip() for k in self.keywords.split(',') if k.strip()]
+
+
+class UnitAbility(models.Model):
+    """
+    A named special rule or ability on a UnitType datasheet.
+
+    Each ability has a short name (shown as a heading) and a full
+    description. Ordered for consistent display.
+    """
+
+    unit_type   = models.ForeignKey(
+        UnitType, on_delete=models.CASCADE, related_name='abilities',
+    )
+    name        = models.CharField(max_length=200, help_text='Ability name e.g. "Cyberstimms"')
+    description = models.TextField(help_text='Full rules text for this ability.')
+    order       = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ['unit_type', 'order', 'name']
+        verbose_name_plural = 'Unit abilities'
+
+    def __str__(self):
+        return f'{self.unit_type.name} — {self.name}'
 
 
 class SavedArmy(models.Model):

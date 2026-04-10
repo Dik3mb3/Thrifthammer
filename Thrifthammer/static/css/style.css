@@ -1817,6 +1817,144 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
 .unit-row .unit-qty button.remove-unit { background: rgb(155 32 32 / 0.3); border-color: var(--accent-red); }
 .unit-row .unit-qty button.remove-unit:hover { background: var(--accent-red); color: white; }
 
+/* ── Unit row restructure for datasheet ──────────────────────────────────── */
+.unit-row { display: block; }
+.unit-row-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.unit-row-header .unit-name { flex: 1; font-size: 0.9rem; color: var(--text-secondary); }
+.unit-row.selected .unit-name { color: var(--text-primary); }
+.unit-row-header .unit-pts { color: var(--text-muted); font-size: 0.8rem; min-width: 65px; text-align: right; font-variant-numeric: tabular-nums; }
+.unit-row-header .unit-price { color: var(--accent-green-lt); font-size: 0.875rem; min-width: 65px; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.unit-row-actions { display: flex; align-items: center; gap: var(--sp-2); }
+
+/* Stats toggle button */
+.btn-datasheet-toggle {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded-sm);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  padding: 2px 7px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  white-space: nowrap;
+}
+.btn-datasheet-toggle:hover,
+.btn-datasheet-toggle.active { border-color: var(--accent-gold); color: var(--accent-gold-lt); }
+
+/* ── Datasheet panel ─────────────────────────────────────────────────────── */
+.unit-datasheet {
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Stat line */
+.datasheet-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: var(--sp-3);
+}
+.stat-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 44px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--rounded-sm);
+  padding: 4px 6px;
+}
+.stat-block--special { border-color: var(--accent-gold); background: rgb(200 146 42 / 0.08); }
+.stat-label {
+  font-size: 0.62rem;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.stat-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+/* Weapon tables */
+.datasheet-weapons { margin-bottom: var(--sp-3); overflow-x: auto; }
+.weapons-type-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-gold-lt);
+  margin-bottom: var(--sp-1);
+}
+.weapons-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+.weapons-table th {
+  text-align: left;
+  padding: 3px 6px;
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-mid);
+  white-space: nowrap;
+}
+.weapons-table td {
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.weapons-table tr:last-child td { border-bottom: none; }
+.weapons-table .weapon-name { color: var(--text-primary); font-weight: 500; }
+.weapons-table .weapon-keywords { color: var(--text-muted); font-size: 0.72rem; }
+
+/* Abilities */
+.datasheet-abilities { margin-bottom: var(--sp-2); }
+.abilities-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.ability-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--accent-gold);
+  border-radius: var(--rounded-sm);
+  padding: var(--sp-2) var(--sp-3);
+  font-size: 0.8rem;
+}
+.ability-name {
+  display: block;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.ability-desc { color: var(--text-muted); line-height: 1.4; }
+
+/* Mobile: hide keyword column on small screens */
+@media (max-width: 600px) {
+  .weapons-table th:last-child,
+  .weapons-table td:last-child { display: none; }
+  .stat-block { min-width: 36px; }
+  .stat-value { font-size: 0.82rem; }
+}
+
 .calc-sidebar { position: sticky; top: 80px; }
 .totals-card {
   background: var(--bg-secondary);

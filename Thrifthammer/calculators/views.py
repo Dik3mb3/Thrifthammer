@@ -90,7 +90,11 @@ class ArmyCalculatorView(TemplateView):
                 .filter(faction_filter)
                 .filter(Q(product__isnull=True) | Q(product__is_active=True))
                 .select_related('product', 'faction')
-                .prefetch_related('product__current_prices__retailer')
+                .prefetch_related(
+                    'product__current_prices__retailer',
+                    'weapon_profiles',
+                    'abilities',
+                )
                 .order_by('category', 'name')
             )
             raw_units = list(unit_qs)
