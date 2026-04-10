@@ -49,6 +49,15 @@
         <p style="font-size:0.85rem;">More factions coming soon.</p>
       </div>
       {% else %}
+      {# ── Expand / Collapse All datasheets ── #}
+      {% if selected_faction %}
+      <div style="display:flex;justify-content:flex-end;margin-bottom:var(--sp-3);">
+        <button type="button" id="toggle-all-datasheets" class="btn-datasheet-toggle" style="font-size:0.78rem;padding:4px 12px;">
+          ▶ Expand All Stats
+        </button>
+      </div>
+      {% endif %}
+
       {% for cat_key, cat in ordered_categories %}
       <div class="unit-category" data-category="{{ cat_key }}">
         <div class="unit-category-header">{{ cat.label }}</div>
@@ -438,19 +447,34 @@
     return '';
   }
 
-  /* Datasheet toggle */
+  /* Datasheet toggle — individual */
   document.addEventListener('click', function (e) {
     var btn = e.target.closest('.btn-datasheet-toggle');
-    if (btn) {
-      var row = btn.closest('.unit-row');
-      var sheet = row && row.querySelector('.unit-datasheet');
-      if (sheet) {
-        var isOpen = sheet.style.display !== 'none';
-        sheet.style.display = isOpen ? 'none' : 'block';
-        btn.classList.toggle('active', !isOpen);
-      }
+    if (!btn || btn.id === 'toggle-all-datasheets') return;
+    var row = btn.closest('.unit-row');
+    var sheet = row && row.querySelector('.unit-datasheet');
+    if (sheet) {
+      var isOpen = sheet.style.display !== 'none';
+      sheet.style.display = isOpen ? 'none' : 'block';
+      btn.classList.toggle('active', !isOpen);
     }
   });
+
+  /* Expand / Collapse All */
+  var toggleAllBtn = qs('#toggle-all-datasheets');
+  if (toggleAllBtn) {
+    var allExpanded = false;
+    toggleAllBtn.addEventListener('click', function () {
+      allExpanded = !allExpanded;
+      qsa('.unit-datasheet').forEach(function (sheet) {
+        sheet.style.display = allExpanded ? 'block' : 'none';
+      });
+      qsa('.btn-datasheet-toggle:not(#toggle-all-datasheets)').forEach(function (btn) {
+        btn.classList.toggle('active', allExpanded);
+      });
+      toggleAllBtn.textContent = allExpanded ? '▼ Collapse All Stats' : '▶ Expand All Stats';
+    });
+  }
 
   /* Event delegation */
   document.addEventListener('click', function (e) {
