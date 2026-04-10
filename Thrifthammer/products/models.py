@@ -384,3 +384,29 @@ class NewsletterSignup(models.Model):
     def get_unsubscribe_url(self):
         """Return the absolute unsubscribe URL for this subscriber."""
         return f'https://thrifthammer.com/products/newsletter/unsubscribe/{self.token}/'
+
+
+class IssueReport(models.Model):
+    """A data-quality report submitted by a visitor on a product page."""
+
+    product = models.ForeignKey(
+        'Product',
+        on_delete=models.CASCADE,
+        related_name='issue_reports',
+    )
+    issue_type = models.CharField(max_length=60)
+    description = models.TextField()
+    contact_email = models.EmailField(blank=True, default='')
+    emailed_at = models.DateTimeField(
+        null=True, blank=True,
+        help_text='When this report was included in the daily digest email.',
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Issue Report'
+        verbose_name_plural = 'Issue Reports'
+
+    def __str__(self):
+        return f'{self.issue_type} — {self.product.name} ({self.created_at:%Y-%m-%d})'

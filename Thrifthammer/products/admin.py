@@ -10,7 +10,7 @@ from django.db.models import Prefetch
 from django.utils.html import format_html
 
 from prices.models import CurrentPrice
-from .models import Category, Faction, NewsletterSignup, Product, Retailer
+from .models import Category, Faction, IssueReport, NewsletterSignup, Product, Retailer
 
 
 @admin.register(Category)
@@ -158,4 +158,15 @@ class NewsletterSignupAdmin(admin.ModelAdmin):
     list_display = ('email', 'created_at')
     search_fields = ('email',)
     readonly_fields = ('created_at',)
+    ordering = ('-created_at',)
+
+
+@admin.register(IssueReport)
+class IssueReportAdmin(admin.ModelAdmin):
+    """Admin for visitor-submitted data issue reports."""
+
+    list_display = ('product', 'issue_type', 'contact_email', 'emailed_at', 'created_at')
+    list_filter = ('issue_type', 'emailed_at')
+    search_fields = ('product__name', 'description', 'contact_email')
+    readonly_fields = ('product', 'issue_type', 'description', 'contact_email', 'created_at')
     ordering = ('-created_at',)

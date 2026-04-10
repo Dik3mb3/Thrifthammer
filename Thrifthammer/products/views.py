@@ -35,7 +35,7 @@ from accounts.models import WatchlistItem
 from prices.models import CurrentPrice
 
 from .forms import IssueReportForm
-from .models import Category, Faction, NewsletterSignup, Product
+from .models import Category, Faction, IssueReport, NewsletterSignup, Product
 
 
 # ---------------------------------------------------------------------------
@@ -552,20 +552,13 @@ def report_issue(request, slug):
                 f"Reporter: {contact_email}"
             )
 
-            try:
-                send_mail(
-                    subject=f'[ThriftHammer] Issue Report — {product.name}',
-                    message=body,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[settings.ISSUE_REPORT_EMAIL],
-                    fail_silently=False,
-                )
-                logger.info('Issue report email sent for product %s', product.gw_sku)
-            except Exception as exc:
-                logger.error(
-                    'Failed to send issue report email for product %s: %s',
-                    product.gw_sku, exc,
-                )
+            IssueReport.objects.create(
+                product=product,
+                issue_type=form.cleaned_data['issue_type'],
+                description=description,
+                contact_email=contact_email if contact_email != 'Anonymous' else '',
+            )
+            logger.info('Issue report saved for product %s', product.gw_sku)
 
             messages.success(
                 request,
