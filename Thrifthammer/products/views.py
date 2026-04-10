@@ -14,11 +14,15 @@ Performance strategy:
 - Autocomplete limited to 10 results, cached 5 minutes.
 """
 
+import logging
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.mail import send_mail
+
+logger = logging.getLogger(__name__)
 from django.core.paginator import InvalidPage, Paginator
 from django.db.models import Case, Count, DecimalField, ExpressionWrapper, F, FloatField, Min, OuterRef, Q, Subquery, Value, When
 from django.http import JsonResponse
@@ -548,13 +552,20 @@ def report_issue(request, slug):
                 f"Reporter: {contact_email}"
             )
 
-            send_mail(
-                subject=f'[ThriftHammer] Issue Report — {product.name}',
-                message=body,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.ISSUE_REPORT_EMAIL],
-                fail_silently=True,  # never crash the user's page on email failure
-            )
+            try:
+                send_mail(
+                    subject=f'[ThriftHammer] Issue Report — {product.name}',
+                    message=body,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.ISSUE_REPORT_EMAIL],
+                    fail_silently=False,
+                )
+                logger.info('Issue report email sent for product %s', product.gw_sku)
+            except Exception as exc:
+                logger.error(
+                    'Failed to send issue report email for product %s: %s',
+                    product.gw_sku, exc,
+                )
 
             messages.success(
                 request,
