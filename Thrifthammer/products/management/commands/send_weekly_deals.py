@@ -31,7 +31,7 @@ class Command(BaseCommand):
     help = 'Email the top N discounted products to every newsletter subscriber.'
 
     def add_arguments(self, parser):
-        """Add --dry-run and --limit flags."""
+        """Add --dry-run, --limit, and --recipient flags."""
         parser.add_argument(
             '--dry-run',
             action='store_true',
@@ -43,11 +43,18 @@ class Command(BaseCommand):
             default=10,
             help='Number of top deals to include (default: 10).',
         )
+        parser.add_argument(
+            '--recipient',
+            type=str,
+            default=None,
+            help='Send only to this address instead of all subscribers (for testing).',
+        )
 
     def handle(self, *args, **options):
         """Main entry point — find deals, build email, send to all subscribers."""
         dry_run = options['dry_run']
         limit = options['limit']
+        recipient_override = options['recipient']
         today = datetime.date.today()
 
         # ── 1. Find top deals ────────────────────────────────────────────────
@@ -65,13 +72,21 @@ class Command(BaseCommand):
                 f'(save {d["pct_off"]:.0f}% off ${d["msrp"]:.2f})'
             )
 
-        # ── 2. Gather subscribers ────────────────────────────────────────────
-        subscribers = list(NewsletterSignup.objects.all())
-        if not subscribers:
-            self.stdout.write(self.style.WARNING('No newsletter subscribers — nothing to send.'))
-            return
-
-        self.stdout.write(f'\n{len(subscribers)} subscriber(s) found.')
+        # ── 2. Gather subscribers (or use override for testing) ──────────────
+        if recipient_override:
+            # Create a minimal stub — just needs .email and .get_unsubscribe_url()
+            class _Stub:
+                email = recipient_override
+                def get_unsubscribe_url(self):
+                    return 'https://thrifthammer.com/products/newsletter/unsubscribe/test/'
+            subscribers = [_Stub()]
+            self.stdout.write(f'\nTEST MODE — sending only to: {recipient_override}')
+        else:
+            subscribers = list(NewsletterSignup.objects.all())
+            if not subscribers:
+                self.stdout.write(self.style.WARNING('No newsletter subscribers — nothing to send.'))
+                return
+            self.stdout.write(f'\n{len(subscribers)} subscriber(s) found.')
 
         # ── 3. Fetch latest published blog post ──────────────────────────────
         latest_post = (
@@ -132,6 +147,13 @@ class Command(BaseCommand):
         self.stdout.write(
             f'\nDone -- sent: {sent} | errors: {errors}'
         )
+
+        if errors and not sent:
+            # Every send failed — raise so GitHub Actions marks the run red
+            raise Exception(
+                f'All {errors} email(s) failed to send. '
+                'Check EMAIL_HOST_USER / EMAIL_HOST_PASSWORD secrets.'
+            )
 
     # ── Helpers ──────────────────────────────────────────────────────────────
 
