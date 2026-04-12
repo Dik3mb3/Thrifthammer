@@ -115,13 +115,15 @@ DRUKHARI_UNITS = [
      ]),
 
     ('Drukhari Wyches', 90,
-     stat('8"', 3, '6+', 1, '7+', 2, invuln='6+ (4+ vs melee)'),
+     stat('8"', 3, '6+', 1, '7+', 2, invuln='6+'),
      [
          rng('Splinter Pistol (x10)', '12"', '1', '3+', 2, 0, 1,
              'Anti-Infantry 3+, Assault, Pistol'),
          mel('Hekatarii Blade (x10)', '4', '3+', 3, -1, 1),
      ],
      [
+         ability('Dodge',
+                 'This unit has a 4+ invulnerable save against melee attacks.'),
          ability('No Escape',
                  'Each time an enemy unit (excluding Monsters and Vehicles) '
                  'within Engagement Range of one or more units from your army '
