@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       factions:
-        description: 'Which factions to seed (comma-separated: votann,admech,aeldari,guard,custodes,drukhari,grey_knights — or "all"). Maintenance: delete_codex_units, delete_legacy_guard_units, fix_necron_data'
+        description: 'Which factions to seed (comma-separated: votann,admech,aeldari,guard,custodes,drukhari,grey_knights,necrons — or "all"). Maintenance: delete_codex_units, delete_legacy_guard_units'
         type: string
         default: 'all'
       dry_run:
@@ -99,10 +99,6 @@ jobs:
 
           if echo "$FACTIONS" | grep -q "delete_legacy_guard_units"; then
             run_seed delete_legacy_guard_units
-          fi
-
-          if echo "$FACTIONS" | grep -q "fix_necron_data"; then
-            run_seed fix_necron_data
           fi
 
           echo "All selected faction seeds complete."
