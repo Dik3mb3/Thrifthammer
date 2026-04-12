@@ -93,6 +93,10 @@ jobs:
             run_seed seed_necrons_stats
           fi
 
+          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "aeldari"; then
+            run_seed seed_aeldari_stats
+          fi
+
           if echo "$FACTIONS" | grep -q "delete_codex_units"; then
             run_seed delete_codex_units
           fi
