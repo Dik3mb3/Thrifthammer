@@ -357,8 +357,10 @@ def product_detail(request, slug):
             CurrentPrice.objects
             .filter(product=product)
             .select_related('retailer')
-            # not_available entries (price=NULL) always sink to the bottom
-            .order_by('not_available', 'price')
+            # Sort: available first, then in-stock before out-of-stock,
+            # then cheapest first — ensures current_prices.0 is always the
+            # cheapest currently in-stock price (matching search/list behaviour).
+            .order_by('not_available', '-in_stock', 'price')
         )
         # Related products: prefer same faction+category, then same faction,
         # then same category — avoids the alphabetical Adepta Sororitas problem.

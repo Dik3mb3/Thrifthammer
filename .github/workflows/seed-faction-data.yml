@@ -1,0 +1,84 @@
+name: Seed Faction Stat Data (Production)
+
+# Run manually from GitHub Actions UI to populate unit stats,
+# weapon profiles, and abilities into the Railway PostgreSQL database.
+# Safe to re-run — all seed commands use update_or_create.
+
+on:
+  workflow_dispatch:
+    inputs:
+      factions:
+        description: 'Which factions to seed (comma-separated: votann,admech,aeldari,guard,custodes — or "all")'
+        type: string
+        default: 'all'
+      dry_run:
+        description: 'Dry run (preview changes, write nothing)'
+        type: boolean
+        default: false
+
+jobs:
+  seed:
+    name: Seed faction data into production DB
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./Thrifthammer
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: Thrifthammer/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Seed faction data
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_ALLOWED_HOSTS: thrifthammer.com,www.thrifthammer.com,web-production-b6056.up.railway.app
+          DJANGO_DEBUG: 'False'
+          RAILWAY_ENVIRONMENT: production
+        run: |
+          FLAGS=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            FLAGS="--dry-run"
+          fi
+
+          FACTIONS="${{ github.event.inputs.factions }}"
+
+          run_seed() {
+            echo "========================================="
+            echo "Running: $1"
+            echo "========================================="
+            python manage.py $1 $FLAGS
+          }
+
+          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "votann"; then
+            run_seed seed_votann_stats
+          fi
+
+          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "admech"; then
+            run_seed seed_admech_stats
+          fi
+
+          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "aeldari"; then
+            run_seed seed_aeldari_stats
+          fi
+
+          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "guard"; then
+            run_seed seed_guard_stats
+          fi
+
+          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "custodes"; then
+            run_seed seed_custodes_stats
+          fi
+
+          echo "All selected faction seeds complete."
