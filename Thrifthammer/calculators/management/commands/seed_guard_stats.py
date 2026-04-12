@@ -89,36 +89,6 @@ GUARD_UNITS = [
                  'at the start or end of any turn.'),
      ]),
 
-    ('Astra Militarum Infantry Squad', 65,
-     stat('6"', 3, '5+', 1, '7+', 2),
-     [
-         rng('Laspistol',          '12"', '1', '4+', 3, 0, 1, 'Pistol'),
-         rng('Lasgun (x9)',        '24"', '1', '4+', 3, 0, 1, 'Rapid Fire 1'),
-         mel('Chainsword',         '3', '4+', 3, 0, 1),
-         mel('Close combat weapon (x9)', '1', '4+', 3, 0, 1),
-     ],
-     [
-         ability('Shock Troops',
-                 'At the end of your Command phase, if this unit is within '
-                 'range of an objective marker you control, that objective '
-                 'marker remains under your control, even if you have no '
-                 'models within range of it, until your opponent controls it '
-                 'at the start or end of any turn.'),
-     ]),
-
-    ('Astra Militarum Veteran Guardsmen', 60,
-     stat('6"', 3, '5+', 1, '7+', 2),
-     [
-         rng('Laspistol',          '12"', '1', '4+', 3, 0, 1, 'Pistol'),
-         rng('Lasgun (x4)',        '24"', '1', '4+', 3, 0, 1, 'Rapid Fire 1'),
-         mel('Close combat weapon (x5)', '1', '4+', 3, 0, 1),
-     ],
-     [
-         ability('Veterans',
-                 'Each time a model in this unit makes an attack, '
-                 're-roll a Hit roll of 1.'),
-     ]),
-
     # ── Vehicles ─────────────────────────────────────────────────────────────
 
     ('Astra Militarum Basilisk', 140,

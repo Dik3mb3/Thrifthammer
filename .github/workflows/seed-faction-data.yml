@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       factions:
-        description: 'Which factions to seed (comma-separated: votann,admech,aeldari,guard — or "all")'
+        description: 'Which factions to seed (comma-separated: votann,admech,aeldari,guard,custodes — or "all")'
         type: string
         default: 'all'
       dry_run:
@@ -75,6 +75,10 @@ jobs:
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "guard"; then
             run_seed seed_guard_stats
+          fi
+
+          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "custodes"; then
+            run_seed seed_custodes_stats
           fi
 
           echo "All selected faction seeds complete."
