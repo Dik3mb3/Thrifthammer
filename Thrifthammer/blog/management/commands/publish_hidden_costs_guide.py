@@ -57,9 +57,10 @@ at over one hundred dollars just for dice. That is ridiculous for something as s
 with six different numbers on it.</p>
 
 <p>The better approach is to use dice from other games such as board games or tabletop RPGs, then
-supplement them with bulk dice. Brands like Chessex offer thirty-six dice for ten dollars. Buy two
-of these and you are set for most armies in the game. This is the route I personally use and
-recommend to all players.</p>
+supplement them with bulk dice. Brands like
+<a href="https://www.amazon.com/Chessex-Opaque-Black-Dice-Block/dp/B0011WOEQ2/" target="_blank" rel="noopener noreferrer sponsored">Chessex</a>
+offer thirty-six dice for ten dollars. Buy two of these and you are set for most armies in the
+game. This is the route I personally use and recommend to all players.</p>
 
 <hr>
 
@@ -72,9 +73,10 @@ becomes where you store everything and how you transport it safely to games.</p>
 an old Ikea cabinet that I magnetized to store multiple armies. Each shelf is labeled, which helps
 keep everything organized and easy to access.</p>
 
-<p>If you do not have spare furniture or extra space, plastic bins are another great option. Adding
-a metal sheet to the bottom and magnetizing your models creates a simple storage solution that can
-fit in any corner of your home.</p>
+<p>If you do not have spare furniture or extra space,
+<a href="https://www.amazon.com/Plastic-Storage-Modular-Stackable-Latching/dp/B06ZZ3XHBW/" target="_blank" rel="noopener noreferrer sponsored">plastic bins</a>
+are another great option. Adding a metal sheet to the bottom and magnetizing your models creates a
+simple storage solution that can fit in any corner of your home.</p>
 
 <p>This type of storage can also double as transport for smaller elite armies such as Knights,
 Custodes, or Grey Knights. Horde armies are another story. Bringing multiple bins quickly becomes
@@ -82,18 +84,23 @@ inconvenient and difficult to manage.</p>
 
 <p>There are several dedicated transport options available if you need a more premium solution.
 Foam cases remain a popular choice, although I am personally not a big fan. If you are considering
-foam, companies like Battlefoam offer a wide range of options designed for different army sizes.
-These cases can range from $50 to $300, but they provide strong protection and peace of mind.
-Even as someone who prefers magnetized storage, Battlefoam produces great quality products.</p>
+foam, companies like
+<a href="https://us.battlefoam.com/warhammer-40-000/" target="_blank" rel="noopener noreferrer sponsored">Battlefoam</a>
+offer a wide range of options designed for different army sizes. These cases can range from $50 to
+$300, but they provide strong protection and peace of mind. Even as someone who prefers magnetized
+storage, Battlefoam produces great quality products.</p>
 
-<p>My personal favorite solution is the MagCase 2.0, which uses metal trays and magnets for
-storage. The case is sturdy, looks great, and is easy to build. The main downside is weight,
-though carrying two thousand points of Orks is never going to be light no matter what solution
-you choose.</p>
+<p>My personal favorite solution is the
+<a href="https://tabletopstronghold.com/products/magcase-mdf-magnetic-carrying-case-display-case-for-miniatures-miniature-storage-designed-for-warhammer-40k-aos-dnd-and-more?variant=42844602532027" target="_blank" rel="noopener noreferrer sponsored">MagCase 2.0</a>,
+which uses metal trays and magnets for storage. The case is sturdy, looks great, and is easy to
+build. The main downside is weight, though carrying two thousand points of Orks is never going to
+be light no matter what solution you choose.</p>
 
 <p>There are also lesser-known brands that can often be found online at lower prices. These options
 may lack some of the sturdiness of premium cases, but many players find them perfectly adequate.
-Look at reviews, be careful, and you should be fine with any case you choose.</p>
+Look at reviews, be careful, and you should be fine with any case you choose. I have used
+<a href="https://www.amazon.com/WELIDAY-Miniatures-Storage-Transport-Aluminum/dp/B0DK6L83CJ/" target="_blank" rel="noopener noreferrer sponsored">this particular case</a>
+myself and it is still going strong years later.</p>
 
 <p>Storage and transport is one area where investing in quality can save you frustration in the
 long run.</p>
@@ -227,7 +234,8 @@ expect.</p>
 
 <h2>Final Thoughts</h2>
 
-<p>At ThriftHammer, the goal is to help players find deals, save money, and help newer players
+<p>At ThriftHammer, the goal is to help players find deals, save money, and help
+<a href="/blog/tag/beginner-guide/">newer players</a>
 navigate the hobby more effectively. Warhammer 40K can be an expensive hobby, but understanding
 these hidden costs helps set expectations early.</p>
 
