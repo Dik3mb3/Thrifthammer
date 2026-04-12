@@ -185,7 +185,7 @@ GUARD_UNITS = [
 
     # ── Combat Patrol ────────────────────────────────────────────────────────
 
-    ('Astra Militarum Combat Patrol', 0,
+    ('Astra Militarum Combat Patrol', 295,
      stat('', None, '', None, '', None),
      [], []),
 ]
