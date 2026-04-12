@@ -237,8 +237,10 @@
             <td>
               {% if cp.not_available %}
               <span style="color:var(--text-muted);font-size:0.85rem;">Not Available</span>
-              {% else %}
+              {% elif cp.url %}
               <a href="{{ cp.url }}" target="_blank" rel="noopener noreferrer sponsored" class="btn btn-primary btn-sm btn-ext">{% if 'amazon' in cp.retailer.slug %}View on Amazon{% else %}Buy{% endif %}</a>
+              {% else %}
+              <span style="color:var(--text-muted);font-size:0.85rem;">—</span>
               {% endif %}
             </td>
           </tr>

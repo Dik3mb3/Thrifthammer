@@ -1027,6 +1027,7 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   position: absolute;
   top: calc(100% + 4px);
   left: 0; right: 0;
+  min-width: 320px;
   background: var(--bg-secondary);
   border: 1px solid var(--border-mid);
   border-radius: var(--rounded-lg);
