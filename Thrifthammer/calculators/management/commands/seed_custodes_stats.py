@@ -161,6 +161,10 @@ CUSTODES_UNITS = [
                  'roll one D6 for each model in this unit; for each 2+, that '
                  'enemy unit suffers 2 mortal wounds.'),
      ]),
+
+    ('Adeptus Custodes Combat Patrol', 600,
+     stat('', None, '', None, '', None),
+     [], []),
 ]
 
 
