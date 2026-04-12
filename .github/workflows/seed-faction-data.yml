@@ -89,6 +89,10 @@ jobs:
             run_seed seed_grey_knights_stats
           fi
 
+          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "necrons"; then
+            run_seed seed_necrons_stats
+          fi
+
           if echo "$FACTIONS" | grep -q "delete_codex_units"; then
             run_seed delete_codex_units
           fi
