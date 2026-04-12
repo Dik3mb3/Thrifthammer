@@ -1,0 +1,3812 @@
+{
+  "faction": "Orks",
+  "source_file": "POINTS_ORKS.html",
+  "extracted_date": "2026-04-12",
+  "total_cards": 54,
+  "units": [
+    {
+      "card_name": "Boss Snikrot",
+      "points": 75,
+      "primary_stats": {
+        "model": "Boss Snikrot",
+        "M": "6\"",
+        "T": "5",
+        "SV": "5+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Boss Snikrot",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Slugga",
+          "range": "12\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Mork’s Teeth",
+          "A": "6",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Precision, Twin-linked"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n\nKOMMANDOS"
+        }
+      ]
+    },
+    {
+      "card_name": "Da Red Gobbo [Legends]",
+      "points": 40,
+      "primary_stats": {
+        "model": "Da Red Gobbo",
+        "M": "6\"",
+        "T": "2",
+        "SV": "5+",
+        "W": "3",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Da Red Gobbo",
+          "M": "6\"",
+          "T": "2",
+          "SV": "5+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Kustom grot blasta",
+          "range": "12\"",
+          "A": "D3",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating Wounds, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Icon of da Revolushun",
+          "A": "3",
+          "WS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n\nGretchin"
+        }
+      ]
+    },
+    {
+      "card_name": "Ghazghkull Thraka",
+      "points": 235,
+      "primary_stats": {
+        "model": "Ghazghkull Thraka",
+        "M": "5\"",
+        "T": "6",
+        "SV": "2+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "4"
+      },
+      "all_model_stats": [
+        {
+          "model": "Ghazghkull Thraka",
+          "M": "5\"",
+          "T": "6",
+          "SV": "2+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "4"
+        },
+        {
+          "model": "Makari",
+          "M": "5\"",
+          "T": "6",
+          "SV": "7+",
+          "W": "1",
+          "LD": "8+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Mork’s Roar",
+          "range": "36\"",
+          "A": "12",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 4"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Gork’s Klaw - strike",
+          "A": "6",
+          "WS": "2+",
+          "S": "14",
+          "AP": "-3",
+          "D": "4",
+          "keywords": ""
+        },
+        {
+          "name": "Gork’s Klaw - sweep",
+          "A": "12",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        },
+        {
+          "name": "Makari’s stabba",
+          "A": "1",
+          "WS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This unit can be attached to the following units:\n\nBoyz\nMeganobz\nNobz"
+        }
+      ]
+    },
+    {
+      "card_name": "Mozrog Skragbad",
+      "points": 145,
+      "primary_stats": {
+        "model": "Mozrog Skragbad",
+        "M": "10\"",
+        "T": "8",
+        "SV": "3+",
+        "W": "8",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Mozrog Skragbad",
+          "M": "10\"",
+          "T": "8",
+          "SV": "3+",
+          "W": "8",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Thump gun",
+          "range": "18\"",
+          "A": "D3",
+          "BS": "5+",
+          "S": "6",
+          "AP": "0",
+          "D": "2",
+          "keywords": "Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Big Chompa’s jaws",
+          "A": "3",
+          "WS": "3+",
+          "S": "7",
+          "AP": "-2",
+          "D": "4",
+          "keywords": "Devastating Wounds, Extra Attacks"
+        },
+        {
+          "name": "Gutrippa",
+          "A": "6",
+          "WS": "2+",
+          "S": "7",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Anti-Monster 4+, Anti-Vehicle 4+"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n\nSQUIGHOG BOYZ"
+        }
+      ]
+    },
+    {
+      "card_name": "Zodgrod Wortsnagga",
+      "points": 90,
+      "primary_stats": {
+        "model": "Zodgrod Wortsnagga",
+        "M": "6\"",
+        "T": "5",
+        "SV": "5+",
+        "W": "5",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Zodgrod Wortsnagga",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "5",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Squigstoppa",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Anti-Monster 4+, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Da Grabzappa",
+          "A": "5",
+          "WS": "2+",
+          "S": "7",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Super Runts",
+          "description": "While this model is leading a unit:\n\nModels in that unit have the Scouts 9\" ability.\nEach time a model in that unit makes an attack, add 1 to the Hit roll and add 1 to the Wound roll.\nEach time an attack targets that unit, subtract 1 from the Wound roll."
+        },
+        {
+          "name": "Special Dose",
+          "description": "While the Waaagh! is active for your army, add 6\" to the Move characteristic of models in this model’s unit."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n\nGretchin"
+        }
+      ]
+    },
+    {
+      "card_name": "Beastboss",
+      "points": 80,
+      "primary_stats": {
+        "model": "Beastboss",
+        "M": "6\"",
+        "T": "5",
+        "SV": "4+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Beastboss",
+          "M": "6\"",
+          "T": "5",
+          "SV": "4+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shoota",
+          "range": "18\"",
+          "A": "2",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 1"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Beast Snagga klaw",
+          "A": "4",
+          "WS": "3+",
+          "S": "10",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Anti-Monster 4+, Anti-Vehicle 4+"
+        },
+        {
+          "name": "Beastchoppa",
+          "A": "6",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Anti-Monster 4+, Anti-Vehicle 4+"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Beastboss",
+          "description": "While this model is leading a unit, each time a model in that unit makes a melee attack, add 1 to the Hit roll."
+        },
+        {
+          "name": "Ferocious Rage",
+          "description": "Each time this model makes a Charge move, until the end of the turn, melee weapons it is equipped with have the [DEVASTATING WOUNDS] ability."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n\nBeast Snagga Boyz"
+        },
+        {
+          "name": "Invulnerable Save (5+)",
+          "description": "This model has a 5+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Beastboss on Squigosaur",
+      "points": 110,
+      "primary_stats": {
+        "model": "Beastboss on Squigosaur",
+        "M": "10\"",
+        "T": "8",
+        "SV": "3+",
+        "W": "8",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Beastboss on Squigosaur",
+          "M": "10\"",
+          "T": "8",
+          "SV": "3+",
+          "W": "8",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Slugga",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Beastchoppa",
+          "A": "6",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Anti-Monster 4+, Anti-Vehicle 4+"
+        },
+        {
+          "name": "Squigosaur’s jaws",
+          "A": "3",
+          "WS": "4+",
+          "S": "7",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Devastating Wounds, Extra Attacks"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n\nSQUIGHOG BOYZ"
+        }
+      ]
+    },
+    {
+      "card_name": "Big Mek",
+      "points": 70,
+      "primary_stats": {
+        "model": "Big Mek",
+        "M": "6\"",
+        "T": "5",
+        "SV": "3+",
+        "W": "6",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Big Mek",
+          "M": "6\"",
+          "T": "5",
+          "SV": "3+",
+          "W": "6",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Kustom mega-blasta",
+          "range": "24\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "D6",
+          "keywords": "Hazardous"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Power klaw",
+          "A": "4",
+          "WS": "3+",
+          "S": "9",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nBOYZ\nLOOTAS\nMEK GUNZ\nNOBZ"
+        }
+      ]
+    },
+    {
+      "card_name": "Big Mek in Mega Armour",
+      "points": 90,
+      "primary_stats": {
+        "model": "Big Mek in Mega Armour",
+        "M": "5\"",
+        "T": "6",
+        "SV": "2+",
+        "W": "5",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Big Mek in Mega Armour",
+          "M": "5\"",
+          "T": "6",
+          "SV": "2+",
+          "W": "5",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Kustom mega-blasta",
+          "range": "24\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "D6",
+          "keywords": "Hazardous"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Power klaw",
+          "A": "4",
+          "WS": "3+",
+          "S": "9",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n\nMEGANOBZ"
+        }
+      ]
+    },
+    {
+      "card_name": "Big Mek with Shokk Attack Gun",
+      "points": 80,
+      "primary_stats": {
+        "model": "Big Mek with Shokk Attack Gun",
+        "M": "6\"",
+        "T": "5",
+        "SV": "4+",
+        "W": "5",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Big Mek with Shokk Attack Gun",
+          "M": "6\"",
+          "T": "5",
+          "SV": "4+",
+          "W": "5",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shokk attack gun",
+          "range": "60\"",
+          "A": "D6+1",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Blast, Heavy"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "More Dakka",
+          "description": "While this model is leading a unit, each time a model in that unit makes a ranged attack, re-roll a Hit roll of 1."
+        },
+        {
+          "name": "Deranged Snotling Assault",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks; that unit must take a Battle-shock test."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nBoyz\nLootas\nMek Gunz\nNobz"
+        }
+      ]
+    },
+    {
+      "card_name": "Deffkilla Wartrike",
+      "points": 80,
+      "primary_stats": {
+        "model": "Deffkilla Wartrike",
+        "M": "12\"",
+        "T": "6",
+        "SV": "4+",
+        "W": "9",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Deffkilla Wartrike",
+          "M": "12\"",
+          "T": "6",
+          "SV": "4+",
+          "W": "9",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Deffkilla boomstikks",
+          "range": "12\"",
+          "A": "6",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Assault"
+        },
+        {
+          "name": "Killa jet - burna",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        },
+        {
+          "name": "Killa jet - cutta",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Melta 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Snagga klaw",
+          "A": "4",
+          "WS": "3+",
+          "S": "10",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n\nWARBIKERS"
+        }
+      ]
+    },
+    {
+      "card_name": "Mek",
+      "points": 45,
+      "primary_stats": {
+        "model": "Mek",
+        "M": "6\"",
+        "T": "5",
+        "SV": "5+",
+        "W": "4",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Mek",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "4",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Kustom mega-slugga",
+          "range": "12\"",
+          "A": "D3",
+          "BS": "5+",
+          "S": "8",
+          "AP": "-2",
+          "D": "D6",
+          "keywords": "Blast, Hazardous"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Wrench",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nBOYZ\nLOOTAS\nMEK GUNZ\nNOBZ\nTANKBUSTAS"
+        }
+      ]
+    },
+    {
+      "card_name": "Painboss",
+      "points": 70,
+      "primary_stats": {
+        "model": "Painboss",
+        "M": "6\"",
+        "T": "5",
+        "SV": "4+",
+        "W": "4",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Painboss",
+          "M": "6\"",
+          "T": "5",
+          "SV": "4+",
+          "W": "4",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Beast Snagga klaw",
+          "A": "3",
+          "WS": "4+",
+          "S": "9",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Anti-Monster 4+, Anti-Vehicle 4+"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n\nBEAST SNAGGA BOYZ"
+        }
+      ]
+    },
+    {
+      "card_name": "Painboy",
+      "points": 80,
+      "primary_stats": {
+        "model": "Painboy",
+        "M": "6\"",
+        "T": "5",
+        "SV": "5+",
+        "W": "3",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Painboy",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "’Urty syringe",
+          "A": "1",
+          "WS": "3+",
+          "S": "2",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Anti-Infantry 4+, Extra Attacks, Precision"
+        },
+        {
+          "name": "Power klaw",
+          "A": "3",
+          "WS": "4+",
+          "S": "9",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nBOYZ\nNOBZ\nLOOTAS\nBURNA BOYZ\nTANKBUSTAS"
+        }
+      ]
+    },
+    {
+      "card_name": "Warboss",
+      "points": 75,
+      "primary_stats": {
+        "model": "Warboss",
+        "M": "6\"",
+        "T": "5",
+        "SV": "4+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Warboss",
+          "M": "6\"",
+          "T": "5",
+          "SV": "4+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Kombi-weapon",
+          "range": "24\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Anti-Infantry 4+, Devastating Wounds, Rapid Fire 1"
+        },
+        {
+          "name": "Twin slugga",
+          "range": "12\"",
+          "A": "2",
+          "BS": "5+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Big choppa",
+          "A": "5",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nBOYZ\nNOBZ"
+        }
+      ]
+    },
+    {
+      "card_name": "Warboss in Mega Armour",
+      "points": 80,
+      "primary_stats": {
+        "model": "Warboss in Mega Armour",
+        "M": "5\"",
+        "T": "6",
+        "SV": "2+",
+        "W": "7",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Warboss in Mega Armour",
+          "M": "5\"",
+          "T": "6",
+          "SV": "2+",
+          "W": "7",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Big shoota",
+          "range": "36\"",
+          "A": "3",
+          "BS": "4+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "’Uge choppa",
+          "A": "4",
+          "WS": "2+",
+          "S": "12",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n\nMEGANOBZ"
+        }
+      ]
+    },
+    {
+      "card_name": "Weirdboy",
+      "points": 65,
+      "primary_stats": {
+        "model": "Weirdboy",
+        "M": "6\"",
+        "T": "5",
+        "SV": "5+",
+        "W": "4",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Weirdboy",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "4",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "’Eadbanger",
+          "range": "24\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "6",
+          "AP": "-3",
+          "D": "1",
+          "keywords": "Precision, Psychic"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Weirdboy staff",
+          "A": "3",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Da Jump (Psychic)",
+          "description": "Once per turn, at the end of your Movement phase, one WEIRDBOY from your army can use this ability. If it does, roll one D6: on a 1, that WEIRDBOY’s unit suffers D6 mortal wounds; on a 2+, remove this WEIRDBOY’s unit from the battlefield and set it up again anywhere on the battlefield that is more than 9\" horizontally away from all enemy models."
+        },
+        {
+          "name": "Waaagh! Energy",
+          "description": "While this model is leading a unit, add 1 to the Strength and Damage characteristics of this model’s ’Eadbanger weapon for every 5 models in that unit (rounding down), but while that unit contains 10 or more models, that weapon has the [HAZARDOUS] ability."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n\nBoyz"
+        }
+      ]
+    },
+    {
+      "card_name": "Wurrboy",
+      "points": 60,
+      "primary_stats": {
+        "model": "Wurrboy",
+        "M": "6\"",
+        "T": "5",
+        "SV": "5+",
+        "W": "4",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Wurrboy",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "4",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Eyez of Mork",
+          "range": "18\"",
+          "A": "D6",
+          "BS": "5+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Psychic"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "3",
+          "WS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Roar of Mork (Psychic)",
+          "description": "In your opponent’s Command phase, you can select one enemy unit within 18\" of and visible to this Psyker and roll one D6: on a 1, this Psyker’s unit suffers D3 mortal wounds; on a 2+, until the start of your opponent’s next Command phase, that enemy unit is confrazzled. While a unit is confrazzled, each time a Battle-shock or Leadership test is taken for it, subtract 2 from that test."
+        },
+        {
+          "name": "Unstable Oracle",
+          "description": "While this model is leading a unit, add 2 to the Attacks characteristic of this model’s Eyez of Mork weapon for every 5 models in that unit (rounding down), but while that unit contains 10 or more models, that weapon has the [HAZARDOUS] ability."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n\nBeast Snagga Boyz"
+        }
+      ]
+    },
+    {
+      "card_name": "Beast Snagga Boyz",
+      "points": 95,
+      "primary_stats": {
+        "model": "Beast Snagga Nob",
+        "M": "6\"",
+        "T": "5",
+        "SV": "5+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Beast Snagga Nob",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "2"
+        },
+        {
+          "model": "Beast Snagga Boy (x9)",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Slugga (x10)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Power snappa",
+          "A": "4",
+          "WS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        },
+        {
+          "name": "Choppa (x9)",
+          "A": "3",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Monster Hunters",
+          "description": "Each time a model in this unit makes an attack that targets a MONSTER or VEHICLE unit, you can re-roll the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Boyz",
+      "points": 80,
+      "primary_stats": {
+        "model": "Boss Nob",
+        "M": "6\"",
+        "T": "5",
+        "SV": "5+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Boss Nob",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "2"
+        },
+        {
+          "model": "Boy (x9)",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Slugga (x10)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Big choppa",
+          "A": "3",
+          "WS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        },
+        {
+          "name": "Choppa (x9)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Get Da Good Bitz",
+          "description": "At the end of your Command phase, if this unit is within range of an objective marker you control, that objective marker remains under your control, even if you have no models within range of it, until your opponent controls it at the start or end of any turn."
+        },
+        {
+          "name": "Bodyguard",
+          "description": "If this unit has a Starting Strength of 20, you can attach up to two Leader units to it instead of one (but only if one of those is a WARBOSS model). If you do, and this unit is destroyed, the Leader units attached to it become separate units with their original Starting Strengths."
+        }
+      ]
+    },
+    {
+      "card_name": "Boyz",
+      "points": 170,
+      "primary_stats": {
+        "model": "Boss Nob",
+        "M": "6\"",
+        "T": "5",
+        "SV": "5+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Boss Nob",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "2"
+        },
+        {
+          "model": "Boy (x19)",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Slugga (x19)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Rokkit launcha",
+          "range": "24\"",
+          "A": "D3",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Big choppa",
+          "A": "3",
+          "WS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        },
+        {
+          "name": "Choppa (x18)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Close combat weapon",
+          "A": "2",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Get Da Good Bitz",
+          "description": "At the end of your Command phase, if this unit is within range of an objective marker you control, that objective marker remains under your control, even if you have no models within range of it, until your opponent controls it at the start or end of any turn."
+        },
+        {
+          "name": "Bodyguard",
+          "description": "If this unit has a Starting Strength of 20, you can attach up to two Leader units to it instead of one (but only if one of those is a WARBOSS model). If you do, and this unit is destroyed, the Leader units attached to it become separate units with their original Starting Strengths."
+        }
+      ]
+    },
+    {
+      "card_name": "Breaka Boyz",
+      "points": 140,
+      "primary_stats": {
+        "model": "Breaka Boyz",
+        "M": "6\"",
+        "T": "5",
+        "SV": "4+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Breaka Boyz",
+          "M": "6\"",
+          "T": "5",
+          "SV": "4+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Rokkit pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Choppa",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Smash hammer (x6)",
+          "A": "2",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Anti-Monster 4+, Anti-Vehicle 4+"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Attached Unit",
+          "description": "If a CHARACTER unit from your army with the Leader ability can be attached to a BOYZ unit, it can be attached to this unit instead."
+        },
+        {
+          "name": "Trophy Hunters",
+          "description": "Each time this unit declares a charge, you can re-roll the Charge roll."
+        },
+        {
+          "name": "Bomb Squigs",
+          "description": "Once per battle, for each bomb squig this unit has, after this unit ends a Normal move, you can use one Bomb Squig. If you do, select one enemy unit within 12\" and visible to this unit and roll one D6: on a 3+, that enemy unit suffers D3 mortal wounds."
+        }
+      ]
+    },
+    {
+      "card_name": "Burna Boyz",
+      "points": 60,
+      "primary_stats": {
+        "model": "Burna Boyz",
+        "M": "6\"",
+        "T": "5",
+        "SV": "5+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Burna Boyz",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Burna (x4)",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        },
+        {
+          "name": "Big shoota",
+          "range": "36\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Cuttin’ flames (x4)",
+          "A": "2",
+          "WS": "4+",
+          "S": "4",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Close combat weapon",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Pyromaniaks",
+          "description": "Each time a model in this unit makes a ranged attack with a burna that targets an enemy unit within 6\", re-roll a Wound roll of 1. If the target of that attack is also within range of an objective marker, you can re-roll the Wound roll instead."
+        }
+      ]
+    },
+    {
+      "card_name": "Flash Gitz",
+      "points": 80,
+      "primary_stats": {
+        "model": "Flash Gitz",
+        "M": "6\"",
+        "T": "5",
+        "SV": "4+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Flash Gitz",
+          "M": "6\"",
+          "T": "5",
+          "SV": "4+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Snazzgun (x5)",
+          "range": "24\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Heavy, Sustained Hits 1"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Choppa (x5)",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Gun-crazy Show-offs",
+          "description": "Each time a model in this unit targets the closest eligible target with its snazzgun, until the end of the phase, that weapon has an Attacks characteristic of 4."
+        }
+      ]
+    },
+    {
+      "card_name": "Gretchin",
+      "points": 40,
+      "primary_stats": {
+        "model": "Gretchin (x10)",
+        "M": "6\"",
+        "T": "2",
+        "SV": "7+",
+        "W": "1",
+        "LD": "8+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Gretchin (x10)",
+          "M": "6\"",
+          "T": "2",
+          "SV": "7+",
+          "W": "1",
+          "LD": "8+",
+          "OC": "2"
+        },
+        {
+          "model": "Runtherd",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Grot blasta (x10)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Slugga",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x10)",
+          "A": "1",
+          "WS": "5+",
+          "S": "2",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Grot-smacka",
+          "A": "3",
+          "WS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Runtherd",
+          "description": "Each time an attack targets this unit, if it contains one or more Gretchin models, until that attack is resolved, Runtherd models in this unit have a Toughness characteristic of 2."
+        },
+        {
+          "name": "Thievin’ Scavengers",
+          "description": "At the start of your Movement phase, roll one D6 for each objective marker you control that has one or more units from your army with this ability within range of it (excluding Battle-shocked units). If one or more of those rolls is a 4+, you gain 1CP."
+        }
+      ]
+    },
+    {
+      "card_name": "Kommandos",
+      "points": 120,
+      "primary_stats": {
+        "model": "Boss Nob",
+        "M": "6\"",
+        "T": "5",
+        "SV": "5+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Boss Nob",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "1"
+        },
+        {
+          "model": "Kommandos (x9)",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Slugga (x10)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Choppa (x10)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Sneaky Surprise",
+          "description": "Enemy units cannot use the Fire Overwatch Stratagem to shoot at this unit."
+        },
+        {
+          "name": "Patrol Squad",
+          "description": "At the start of the Declare Battle Formations step this unit can be split into two units, each containing five models.\n(when splitting a unit in this way, make a note of which models form each of the two new units. If you are splitting a unit that is equipped with 1 bomb squig and/or 1 distraction grot, only one of the new units can use that ability during the battle – make a note of which of the new units this will be)."
+        }
+      ]
+    },
+    {
+      "card_name": "Lootas",
+      "points": 50,
+      "primary_stats": {
+        "model": "Lootas",
+        "M": "6\"",
+        "T": "5",
+        "SV": "5+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Lootas",
+          "M": "6\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Deffgun (x4)",
+          "range": "48\"",
+          "A": "2",
+          "BS": "6+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Heavy, Rapid Fire 1"
+        },
+        {
+          "name": "Big shoota",
+          "range": "36\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x5)",
+          "A": "2",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Dat’s Our Loot!",
+          "description": "Each time a model in this unit makes a ranged attack, re-roll a Hit roll of 1. If that attack targets a unit that is within range of an objective marker, you can re-roll the Hit roll instead."
+        }
+      ]
+    },
+    {
+      "card_name": "Meganobz",
+      "points": 65,
+      "primary_stats": {
+        "model": "Meganobz",
+        "M": "5\"",
+        "T": "6",
+        "SV": "2+",
+        "W": "3",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Meganobz",
+          "M": "5\"",
+          "T": "6",
+          "SV": "2+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Kustom shoota (x2)",
+          "range": "18\"",
+          "A": "4",
+          "BS": "5+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Power klaw (x2)",
+          "A": "3",
+          "WS": "4+",
+          "S": "9",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Krumpin’ Time",
+          "description": "While the Waaagh! is active for your army, models in this unit have the Feel No Pain 5+ ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Nobz",
+      "points": 105,
+      "primary_stats": {
+        "model": "Nobz",
+        "M": "6\"",
+        "T": "5",
+        "SV": "4+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Nobz",
+          "M": "6\"",
+          "T": "5",
+          "SV": "4+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Slugga (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Big choppa (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Da Boss’ Ladz",
+          "description": "While a WARBOSS model is leading this unit, each time an attack targets this unit, if the Strength characteristic of that attack is greater than the Toughness characteristic of this unit, subtract 1 from the Wound roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Stormboyz",
+      "points": 65,
+      "primary_stats": {
+        "model": "Boss Nob",
+        "M": "12\"",
+        "T": "5",
+        "SV": "5+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Boss Nob",
+          "M": "12\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "1"
+        },
+        {
+          "model": "Stormboy (x4)",
+          "M": "12\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Slugga (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Choppa (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Full Throttle",
+          "description": "This unit is eligible to declare a charge in a turn in which it Advanced or Fell Back."
+        }
+      ]
+    },
+    {
+      "card_name": "Tankbustas",
+      "points": 140,
+      "primary_stats": {
+        "model": "Tankbusta (x6)",
+        "M": "6\"",
+        "T": "5",
+        "SV": "4+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Tankbusta (x6)",
+          "M": "6\"",
+          "T": "5",
+          "SV": "4+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Rokkit pistol (x2)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Rokkit launcha (x5)",
+          "range": "24\"",
+          "A": "D3",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Choppa",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Close combat weapon (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Tank Hunters",
+          "description": "Each time a model in this unit makes an attack that targets a MONSTER or VEHICLE unit, add 1 to the Hit roll and add 1 to the Wound roll."
+        },
+        {
+          "name": "Attached Unit",
+          "description": "If a CHARACTER unit from your army with the Leader ability can be attached to a LOOTAS unit, it can be attached to this unit instead."
+        },
+        {
+          "name": "Bomb Squigs",
+          "description": "Once per battle, for each bomb squig this unit has, after this unit ends a Normal move, you can use one Bomb Squig. If you do, select one enemy unit within 12\" and visible to this unit and roll one D6: on a 3+, that enemy unit suffers D3 mortal wounds."
+        }
+      ]
+    },
+    {
+      "card_name": "Squighog Boyz",
+      "points": 150,
+      "primary_stats": {
+        "model": "Nob on Smasha Squig",
+        "M": "10\"",
+        "T": "7",
+        "SV": "4+",
+        "W": "4",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Nob on Smasha Squig",
+          "M": "10\"",
+          "T": "7",
+          "SV": "4+",
+          "W": "4",
+          "LD": "7+",
+          "OC": "2"
+        },
+        {
+          "model": "Squighog Boyz (x3)",
+          "M": "10\"",
+          "T": "7",
+          "SV": "4+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Slugga",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Saddlegit weapons (x3)",
+          "range": "9\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Assault"
+        },
+        {
+          "name": "Stikka (ranged) (x3)",
+          "range": "9\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Assault, Anti-Monster 4+, Anti-Vehicle 4+"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Big choppa",
+          "A": "4",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Anti-Monster 4+, Anti-Vehicle 4+"
+        },
+        {
+          "name": "Squig jaws (x4)",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Extra Attacks"
+        },
+        {
+          "name": "Stikka (melee) (x3)",
+          "A": "3",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Anti-Monster 4+, Anti-Vehicle 4+, Lance"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Wild Ride",
+          "description": "You can ignore any or all modifiers to this unit’s Move characteristic and to Advance and Charge rolls made for this unit."
+        }
+      ]
+    },
+    {
+      "card_name": "Warbikers",
+      "points": 65,
+      "primary_stats": {
+        "model": "Boss Nob on Warbike",
+        "M": "12\"",
+        "T": "6",
+        "SV": "4+",
+        "W": "4",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Boss Nob on Warbike",
+          "M": "12\"",
+          "T": "6",
+          "SV": "4+",
+          "W": "4",
+          "LD": "7+",
+          "OC": "2"
+        },
+        {
+          "model": "Warbiker (x2)",
+          "M": "12\"",
+          "T": "6",
+          "SV": "4+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Twin dakkagun (x3)",
+          "range": "18\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Assault, Rapid Fire 2, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x3)",
+          "A": "2",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Drive-by Dakka",
+          "description": "Each time a model in this unit makes a ranged attack that targets a unit within 9\", improve the Armour Penetration characteristic of that attack by 1."
+        },
+        {
+          "name": "Invulnerable Save (6+) [Warbikers]",
+          "description": "Models in this unit have a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Gargantuan Squiggoth",
+      "points": 440,
+      "primary_stats": {
+        "model": "Gargantuan Squiggoth",
+        "M": "10\"",
+        "T": "13",
+        "SV": "3+",
+        "W": "30",
+        "LD": "7+",
+        "OC": "12"
+      },
+      "all_model_stats": [
+        {
+          "model": "Gargantuan Squiggoth",
+          "M": "10\"",
+          "T": "13",
+          "SV": "3+",
+          "W": "30",
+          "LD": "7+",
+          "OC": "12"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Huge tusks - strike",
+          "A": "6",
+          "WS": "3+",
+          "S": "14",
+          "AP": "-3",
+          "D": "12",
+          "keywords": "Lance"
+        },
+        {
+          "name": "Huge tusks - sweep",
+          "A": "18",
+          "WS": "3+",
+          "S": "9",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Gargantuan",
+          "description": "Each time this model makes a Normal, Advance or Fall Back move, it can move over models (excluding TITANIC models) and terrain features that are 4\" or less in height as if they were not there."
+        },
+        {
+          "name": "Walking Bastion",
+          "description": "This model does not suffer the penalty to its Hit rolls for making ranged attacks while enemy units are within Engagement Range of it."
+        },
+        {
+          "name": "Damaged: 1-10 Wounds Remaining",
+          "description": "While this model has 1-10 wounds remaining, subtract 6 from this model’s Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Hunta Rig",
+      "points": 135,
+      "primary_stats": {
+        "model": "Hunta Rig",
+        "M": "10\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "16",
+        "LD": "7+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Hunta Rig",
+          "M": "10\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "16",
+          "LD": "7+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "’Eavy lobba",
+          "range": "48\"",
+          "A": "D6",
+          "BS": "5+",
+          "S": "6",
+          "AP": "0",
+          "D": "2",
+          "keywords": "Blast, Indirect Fire"
+        },
+        {
+          "name": "Stikka kannon",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "12",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Anti-Monster 2+, Anti-Vehicle 2+, Snagged"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Butcha boyz",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Anti-Monster 4+, Anti-Vehicle 4+, Extra Attacks"
+        },
+        {
+          "name": "Savage horns and hooves",
+          "A": "4",
+          "WS": "4+",
+          "S": "8",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Extra Attacks, Lance"
+        },
+        {
+          "name": "Saw blades",
+          "A": "6",
+          "WS": "3+",
+          "S": "10",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "On Da Hunt",
+          "description": "For each model embarked within this TRANSPORT, add 1 to the Attacks characteristic of this model’s butcha boyz weapon (to a maximum of +6)."
+        },
+        {
+          "name": "Damaged: 1-5 Wounds Remaining",
+          "description": "While this model has 1-5 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Kill Rig",
+      "points": 155,
+      "primary_stats": {
+        "model": "Kill Rig",
+        "M": "10\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "16",
+        "LD": "7+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Kill Rig",
+          "M": "10\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "16",
+          "LD": "7+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "’Eavy lobba",
+          "range": "48\"",
+          "A": "D6",
+          "BS": "5+",
+          "S": "6",
+          "AP": "0",
+          "D": "2",
+          "keywords": "Blast, Indirect Fire"
+        },
+        {
+          "name": "Stikka kannon",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "12",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Anti-Monster 2+, Anti-Vehicle 2+, Snagged"
+        },
+        {
+          "name": "Wurrtower",
+          "range": "24\"",
+          "A": "D3",
+          "BS": "N/A",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6",
+          "keywords": "Hazardous, Psychic, Torrent"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Butcha boyz",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Anti-Monster 4+, Anti-Vehicle 4+, Extra Attacks"
+        },
+        {
+          "name": "Savage horns and hooves",
+          "A": "4",
+          "WS": "4+",
+          "S": "8",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Extra Attacks, Lance"
+        },
+        {
+          "name": "Saw blades",
+          "A": "6",
+          "WS": "3+",
+          "S": "10",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Spirit of Gork (Psychic)",
+          "description": "At the start of the Fight phase, you can select one friendly ORKS unit within 12\" of this model and roll one D6: on a 1, this model suffers D3 mortal wounds; on a 2-5, until the end of the phase, add 1 to the Strength characteristic of melee weapons equipped by models in that unit; on a 6, until the end of the phase, add 1 to the Strength characteristic of melee weapons equipped by models in that unit and those weapons have the [LETHAL HITS] ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Battlewagon",
+      "points": 160,
+      "primary_stats": {
+        "model": "Battlewagon",
+        "M": "10\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "16",
+        "LD": "7+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Battlewagon",
+          "M": "10\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "16",
+          "LD": "7+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Tracks and wheels",
+          "A": "6",
+          "WS": "4+",
+          "S": "8",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Ramshackle but Rugged",
+          "description": "Each time an attack is allocated to this model, worsen the Armour Penetration characteristic of that attack by 1."
+        },
+        {
+          "name": "Damaged: 1-5 Wounds Remaining",
+          "description": "While this model has 1-5 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (6+)",
+          "description": "This model has a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Blitza-bommer",
+      "points": 115,
+      "primary_stats": {
+        "model": "Blitza-bommer",
+        "M": "20+\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "12",
+        "LD": "7+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Blitza-bommer",
+          "M": "20+\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "12",
+          "LD": "7+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Big shoota",
+          "range": "36\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        },
+        {
+          "name": "Twin supa-shoota",
+          "range": "36\"",
+          "A": "4",
+          "BS": "5+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Rapid Fire 2, Sustained Hits 1, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Boom Bomb",
+          "description": "Each time this model ends a Normal move, you can select one enemy unit it moved over during that move and roll one D6: on a 4+, that unit suffers D6 mortal wounds."
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (6+)",
+          "description": "This model has a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Boomdakka Snazzwagon",
+      "points": 70,
+      "primary_stats": {
+        "model": "Boomdakka Snazzwagon",
+        "M": "12\"",
+        "T": "7",
+        "SV": "4+",
+        "W": "9",
+        "LD": "7+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Boomdakka Snazzwagon",
+          "M": "12\"",
+          "T": "7",
+          "SV": "4+",
+          "W": "9",
+          "LD": "7+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Big shoota",
+          "range": "36\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        },
+        {
+          "name": "Grot blasta",
+          "range": "12\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Mek speshul",
+          "range": "24\"",
+          "A": "12",
+          "BS": "5+",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Rapid Fire 4, Sustained Hits 1"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Spiked wheels",
+          "A": "4",
+          "WS": "4+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Billowing Fumes (Aura)",
+          "description": "While an enemy unit (excluding MONSTERS and VEHICLES) is within 6\" of this model, each time a model in that unit makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (6+)",
+          "description": "This model has a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Burna-bommer",
+      "points": 125,
+      "primary_stats": {
+        "model": "Burna-bommer",
+        "M": "20+\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "12",
+        "LD": "7+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Burna-bommer",
+          "M": "20+\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "12",
+          "LD": "7+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Twin big shoota",
+          "range": "36\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2, Twin-linked"
+        },
+        {
+          "name": "Twin supa-shoota",
+          "range": "36\"",
+          "A": "4",
+          "BS": "5+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Rapid Fire 2, Sustained Hits 1, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Burna Bomb",
+          "description": "Each time this model ends a Normal move, you can select one enemy unit it moved over during that move. Until the end of the turn, models in that unit cannot have the Benefit of Cover. In addition, roll one D6 for each model in that unit: for each 6, that unit suffers 1 mortal wound."
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (6+)",
+          "description": "This model has a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Dakkajet",
+      "points": 135,
+      "primary_stats": {
+        "model": "Dakkajet",
+        "M": "20+\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "12",
+        "LD": "7+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Dakkajet",
+          "M": "20+\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "12",
+          "LD": "7+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Twin supa-shoota (x2)",
+          "range": "36\"",
+          "A": "4",
+          "BS": "5+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Rapid Fire 2, Sustained Hits 1, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Dakkastorm",
+          "description": "Each time this model makes a ranged attack, every successful Hit roll scores a Critical Hit."
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (6+)",
+          "description": "This model has a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Deff Dread",
+      "points": 120,
+      "primary_stats": {
+        "model": "Deff Dread",
+        "M": "8\"",
+        "T": "9",
+        "SV": "2+",
+        "W": "8",
+        "LD": "7+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Deff Dread",
+          "M": "8\"",
+          "T": "9",
+          "SV": "2+",
+          "W": "8",
+          "LD": "7+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Big shoota (x2)",
+          "range": "36\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Stompy feet",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Dread klaw (x2)",
+          "A": "4",
+          "WS": "3+",
+          "S": "12",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Dead Choppy"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Piston-driven Brutality",
+          "description": "Each time this model ends a Charge move, select one enemy unit within Engagement Range of it and roll one D6: on a 2‑5, that enemy unit suffers D3 mortal wounds; on a 6, that enemy unit suffers D3+3 mortal wounds."
+        },
+        {
+          "name": "Invulnerable Save (6+)",
+          "description": "This model has a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Deffkoptas",
+      "points": 80,
+      "primary_stats": {
+        "model": "Deffkoptas (x3)",
+        "M": "12\"",
+        "T": "6",
+        "SV": "4+",
+        "W": "4",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Deffkoptas (x3)",
+          "M": "12\"",
+          "T": "6",
+          "SV": "4+",
+          "W": "4",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Kopta rokkits (x3)",
+          "range": "24\"",
+          "A": "D3",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Blast, Twin-linked"
+        },
+        {
+          "name": "Slugga (x3)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Spinnin’ blades (x3)",
+          "A": "6",
+          "WS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Deff from Above",
+          "description": "Each time this unit ends a Normal move, you can select one enemy unit it moved over during that move and roll one D6 for each model in this unit: for each 4+, that enemy unit suffers 1 mortal wound."
+        },
+        {
+          "name": "Invulnerable Save (6+) [Deffkoptas]",
+          "description": "Models in this unit have a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Gorkanaut",
+      "points": 265,
+      "primary_stats": {
+        "model": "Gorkanaut",
+        "M": "8\"",
+        "T": "12",
+        "SV": "3+",
+        "W": "20",
+        "LD": "7+",
+        "OC": "8"
+      },
+      "all_model_stats": [
+        {
+          "model": "Gorkanaut",
+          "M": "8\"",
+          "T": "12",
+          "SV": "3+",
+          "W": "20",
+          "LD": "7+",
+          "OC": "8"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Deffstorm mega-shoota",
+          "range": "36\"",
+          "A": "20",
+          "BS": "5+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Rapid Fire 10"
+        },
+        {
+          "name": "Rokkit launcha (x2)",
+          "range": "24\"",
+          "A": "D3",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Skorcha",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        },
+        {
+          "name": "Twin big shoota (x2)",
+          "range": "36\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Klaw of Gork - strike",
+          "A": "5",
+          "WS": "3+",
+          "S": "18",
+          "AP": "-3",
+          "D": "6",
+          "keywords": ""
+        },
+        {
+          "name": "Klaw of Gork - sweep",
+          "A": "15",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Clankin’ Forward",
+          "description": "Each time this model makes a Normal, Advance or Fall Back move, it can move over enemy models (excluding MONSTER and VEHICLE models) and terrain features that are 4\" or less in height as if they were not there."
+        },
+        {
+          "name": "Big an’ Stompy",
+          "description": "Each time this model makes a melee attack, if the Waaagh! is active for your army, add 1 to the Hit roll."
+        },
+        {
+          "name": "Damaged: 1-7 Wounds Remaining",
+          "description": "While this model has 1-7 wounds remaining, subtract 4 from this model’s Objective Control characteristic, and each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (6+)",
+          "description": "This model has a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Killa Kans",
+      "points": 125,
+      "primary_stats": {
+        "model": "Killa Kans (x3)",
+        "M": "6\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "5",
+        "LD": "8+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Killa Kans (x3)",
+          "M": "6\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "5",
+          "LD": "8+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Kan shoota (x3)",
+          "range": "36\"",
+          "A": "3",
+          "BS": "4+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating Wounds, Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Kan klaw (x3)",
+          "A": "3",
+          "WS": "4+",
+          "S": "8",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Shooty Power Trip",
+          "description": "Each time this unit is selected to shoot, you can roll one D6:\n\nOn a 1-2, this unit suffers D3 mortal wounds.\nOn a 3-4, until the end of the phase, add 1 to the Strength characteristic of ranged weapons equipped by models in this unit.\nOn a 5-6, until the end of the phase, add 1 to the Attacks characteristic of ranged weapons equipped by models in this unit."
+        },
+        {
+          "name": "Invulnerable Save (6+) [Killa Kans]",
+          "description": "Models in this unit have a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Kustom Boosta-blasta",
+      "points": 70,
+      "primary_stats": {
+        "model": "Kustom Boosta-blasta",
+        "M": "12\"",
+        "T": "7",
+        "SV": "4+",
+        "W": "9",
+        "LD": "7+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Kustom Boosta-blasta",
+          "M": "12\"",
+          "T": "7",
+          "SV": "4+",
+          "W": "9",
+          "LD": "7+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Burna exhausts",
+          "range": "6\"",
+          "A": "2D6",
+          "BS": "N/A",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent, Twin-linked"
+        },
+        {
+          "name": "Grot blasta",
+          "range": "12\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Rivet kannon",
+          "range": "36\"",
+          "A": "6",
+          "BS": "5+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Assault, Rapid Fire 3"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Spiked wheels",
+          "A": "4",
+          "WS": "4+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Rivetin’ Dakka",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks made with a rivet kannon. Until the start of your next turn, that enemy unit is suppressed. While a unit is suppressed, each time a model in that unit makes a ranged attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (6+)",
+          "description": "This model has a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Megatrakk Scrapjet",
+      "points": 75,
+      "primary_stats": {
+        "model": "Megatrakk Scrapjet",
+        "M": "12\"",
+        "T": "7",
+        "SV": "4+",
+        "W": "9",
+        "LD": "7+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Megatrakk Scrapjet",
+          "M": "12\"",
+          "T": "7",
+          "SV": "4+",
+          "W": "9",
+          "LD": "7+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Rokkit cannon",
+          "range": "24\"",
+          "A": "D6+1",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Twin big shoota (x2)",
+          "range": "36\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2, Twin-linked"
+        },
+        {
+          "name": "Wing missiles",
+          "range": "24\"",
+          "A": "1",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Nose drill",
+          "A": "4",
+          "WS": "4+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Drill Through",
+          "description": "Each time this model ends a Charge move, select one enemy unit within Engagement Range of it and roll one D6: on a 2-5, that enemy unit suffers D3 mortal wounds; on a 6, that enemy unit suffers 3 mortal wounds."
+        },
+        {
+          "name": "Invulnerable Save (6+)",
+          "description": "This model has a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Mek Gunz",
+      "points": 50,
+      "primary_stats": {
+        "model": "Mek Gunz",
+        "M": "3\"",
+        "T": "5",
+        "SV": "5+",
+        "W": "6",
+        "LD": "8+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Mek Gunz",
+          "M": "3\"",
+          "T": "5",
+          "SV": "5+",
+          "W": "6",
+          "LD": "8+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Smasha gun",
+          "range": "48\"",
+          "A": "D3+1",
+          "BS": "4+",
+          "S": "9",
+          "AP": "-3",
+          "D": "3",
+          "keywords": "Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Grot crew",
+          "A": "6",
+          "WS": "5+",
+          "S": "2",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Splat!",
+          "description": "Each time a model in this unit makes a ranged attack that targets a unit that is at its Starting Strength (excluding MONSTERS and VEHICLES), re-roll a Hit roll of 1."
+        },
+        {
+          "name": "Invulnerable Save (6+) [Mek Gunz]",
+          "description": "Models in this unit have a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Morkanaut",
+      "points": 280,
+      "primary_stats": {
+        "model": "Morkanaut",
+        "M": "8\"",
+        "T": "12",
+        "SV": "3+",
+        "W": "20",
+        "LD": "7+",
+        "OC": "8"
+      },
+      "all_model_stats": [
+        {
+          "model": "Morkanaut",
+          "M": "8\"",
+          "T": "12",
+          "SV": "3+",
+          "W": "20",
+          "LD": "7+",
+          "OC": "8"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Kustom mega-blasta",
+          "range": "24\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "D6",
+          "keywords": "Hazardous"
+        },
+        {
+          "name": "Kustom mega-zappa",
+          "range": "36\"",
+          "A": "D6+3",
+          "BS": "5+",
+          "S": "10",
+          "AP": "-2",
+          "D": "D6",
+          "keywords": "Blast, Hazardous"
+        },
+        {
+          "name": "Rokkit launcha (x2)",
+          "range": "24\"",
+          "A": "D3",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Twin big shoota (x2)",
+          "range": "36\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Klaw of Mork - strike",
+          "A": "4",
+          "WS": "3+",
+          "S": "18",
+          "AP": "-3",
+          "D": "6",
+          "keywords": ""
+        },
+        {
+          "name": "Klaw of Mork - sweep",
+          "A": "12",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Clankin’ Forward",
+          "description": "Each time this model makes a Normal, Advance or Fall Back move, it can move over enemy models (excluding MONSTER and VEHICLE models) and terrain features that are 4\" or less in height as if they were not there."
+        },
+        {
+          "name": "Big an’ Shooty",
+          "description": "Each time this model makes a ranged attack, if the Waaagh! is active for your army, add 1 to the Hit roll."
+        },
+        {
+          "name": "Damaged: 1-7 Wounds Remaining",
+          "description": "While this model has 1-7 wounds remaining, subtract 4 from this model’s Objective Control characteristic, and each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (5+)",
+          "description": "This model has a 5+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Rukkatrukk Squigbuggy",
+      "points": 95,
+      "primary_stats": {
+        "model": "Rukkatrukk Squigbuggy",
+        "M": "12\"",
+        "T": "7",
+        "SV": "4+",
+        "W": "9",
+        "LD": "7+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Rukkatrukk Squigbuggy",
+          "M": "12\"",
+          "T": "7",
+          "SV": "4+",
+          "W": "9",
+          "LD": "7+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Sawn-off shotgun",
+          "range": "12\"",
+          "A": "2",
+          "BS": "5+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Assault"
+        },
+        {
+          "name": "Squig launchas",
+          "range": "36\"",
+          "A": "D6+6",
+          "BS": "5+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Blast, Ignores Cover, Indirect Fire"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Saw blades",
+          "A": "4",
+          "WS": "4+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Buzzer Squigs",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit (excluding MONSTERS and VEHICLES) hit by one or more of those attacks made with squig-launchas and roll one D6; on a 4+, until the end of your opponent's next turn, that enemy unit is hindered. While a unit is hindered, subtract 2\" from its Move characteristic and subtract 2 from Advance and Charge rolls made for it."
+        },
+        {
+          "name": "Squig Mine",
+          "description": "Once per battle, at the start of any phase, select one enemy unit within 3\" of this model and roll one D6: on a 4+, that enemy unit suffers D6 mortal wounds.\nDesigner’s Note: Place a Squig Mine token next to the model, removing it once this ability has been used."
+        },
+        {
+          "name": "Invulnerable Save (6+)",
+          "description": "This model has a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Shokkjump Dragsta",
+      "points": 70,
+      "primary_stats": {
+        "model": "Shokkjump Dragsta",
+        "M": "12\"",
+        "T": "7",
+        "SV": "4+",
+        "W": "9",
+        "LD": "7+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Shokkjump Dragsta",
+          "M": "12\"",
+          "T": "7",
+          "SV": "4+",
+          "W": "9",
+          "LD": "7+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Kustom shokk rifle",
+          "range": "24\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "D6+1",
+          "keywords": "Devastating Wounds, Hazardous, Precision"
+        },
+        {
+          "name": "Rokkit launcha",
+          "range": "24\"",
+          "A": "D3",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Saw blades",
+          "A": "4",
+          "WS": "4+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Shokk Tunnel",
+          "description": "Each time this model is selected to Advance, you can remove it from the battlefield and set it up again anywhere on the battlefield that is more than 9\" horizontally away from all enemy models instead of making an Advance move (this model is still considered to have Advanced this turn)."
+        },
+        {
+          "name": "Invulnerable Save (6+)",
+          "description": "This model has a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Stompa",
+      "points": 800,
+      "primary_stats": {
+        "model": "Stompa",
+        "M": "10\"",
+        "T": "14",
+        "SV": "2+",
+        "W": "30",
+        "LD": "6+",
+        "OC": "12"
+      },
+      "all_model_stats": [
+        {
+          "model": "Stompa",
+          "M": "10\"",
+          "T": "14",
+          "SV": "2+",
+          "W": "30",
+          "LD": "6+",
+          "OC": "12"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Big shoota (x3)",
+          "range": "36\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        },
+        {
+          "name": "Deffkannon",
+          "range": "72\"",
+          "A": "3D6",
+          "BS": "5+",
+          "S": "14",
+          "AP": "-3",
+          "D": "D6",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Skorcha",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        },
+        {
+          "name": "Supa-gatler",
+          "range": "24\"",
+          "A": "20",
+          "BS": "5+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Sustained Hits 1"
+        },
+        {
+          "name": "Supa-rokkits",
+          "range": "100\"",
+          "A": "D6",
+          "BS": "5+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+2",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Twin big shoota",
+          "range": "36\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Mega-choppa - strike",
+          "A": "6",
+          "WS": "3+",
+          "S": "24",
+          "AP": "-5",
+          "D": "10",
+          "keywords": ""
+        },
+        {
+          "name": "Mega-choppa - sweep",
+          "A": "18",
+          "WS": "3+",
+          "S": "10",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Damaged: 1-10 Wounds Remaining",
+          "description": "While this model has 1-10 wounds remaining, subtract 6 from this model’s Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Waaagh! Effigy (Aura)",
+          "description": "While a friendly ORKS unit is within 12\" of this model, each time you take a Battle-shock test for that unit, add 1 to that test."
+        },
+        {
+          "name": "Stompin’ Forward",
+          "description": "Each time this model makes a Normal, Advance or Fall Back move, it can move over models (excluding Titanic models) and terrain features that are 4\" or less in height as if they were not there."
+        },
+        {
+          "name": "Invulnerable Save (6+)",
+          "description": "This model has a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Wazbom Blastajet",
+      "points": 175,
+      "primary_stats": {
+        "model": "Wazbom Blastajet",
+        "M": "20+\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "12",
+        "LD": "7+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Wazbom Blastajet",
+          "M": "20+\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "12",
+          "LD": "7+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Smasha gun",
+          "range": "48\"",
+          "A": "D3",
+          "BS": "4+",
+          "S": "9",
+          "AP": "-3",
+          "D": "4",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Twin wazbom mega-kannon",
+          "range": "36\"",
+          "A": "D3",
+          "BS": "4+",
+          "S": "12",
+          "AP": "-2",
+          "D": "D6",
+          "keywords": "Blast, Hazardous, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Blastajet Attack Run",
+          "description": "Each time this model makes a ranged attack that targets a unit that cannot FLY, re-roll a Hit roll of 1."
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (6+)",
+          "description": "This model has a 6+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Trukk",
+      "points": 70,
+      "primary_stats": {
+        "model": "Trukk",
+        "M": "12\"",
+        "T": "8",
+        "SV": "4+",
+        "W": "10",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Trukk",
+          "M": "12\"",
+          "T": "8",
+          "SV": "4+",
+          "W": "10",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Big shoota",
+          "range": "36\"",
+          "A": "3",
+          "BS": "5+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Spiked wheel",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Grot Riggers",
+          "description": "At the start of your Command phase, this model regains 1 lost wound."
+        },
+        {
+          "name": "Invulnerable Save (6+)",
+          "description": "This model has a 6+ invulnerable save."
+        }
+      ]
+    }
+  ]
+}
