@@ -407,9 +407,18 @@ def product_detail(request, slug):
         )
         gw_ref_price = gw_cp.price if gw_cp else product.msrp
 
+        # Pre-filter for JSON-LD schema — only offers with a real price and
+        # not marked unavailable.  Using a separate list means forloop.last
+        # in the template is always accurate (no skipped-entry comma bugs).
+        schema_prices = [
+            cp for cp in current_prices
+            if cp.price and not cp.not_available
+        ]
+
         cached_ctx = {
             'product':          product,
             'current_prices':   current_prices,
+            'schema_prices':    schema_prices,
             'related_products': related_products,
             'savings':          savings,
             'gw_ref_price':     gw_ref_price,

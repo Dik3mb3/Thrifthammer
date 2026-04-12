@@ -28,16 +28,16 @@
   "category": "{{ product.category.name|escapejs }}"{% endif %}{% if product.image_url %},
   "image": "{{ product.image_url|escapejs }}"{% endif %}{% if product.description %},
   "description": "{{ product.description|truncatechars:200|escapejs }}"{% endif %}{% if product.gw_sku %},
-  "sku": "{{ product.gw_sku|escapejs }}"{% endif %}{% if current_prices %},
+  "sku": "{{ product.gw_sku|escapejs }}"{% endif %}{% if schema_prices %},
   "offers": [
-    {% for cp in current_prices %}{% if not cp.not_available and cp.price %}{
+    {% for cp in schema_prices %}{
       "@type": "Offer",
       "seller": { "@type": "Organization", "name": "{{ cp.retailer.name|escapejs }}" },
-      "price": "{{ cp.price|floatformat:'2' }}",
+      "price": {{ cp.price|floatformat:'2' }},
       "priceCurrency": "USD",
       "availability": "{% if cp.in_stock %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
       "url": "{{ cp.url|escapejs }}"
-    }{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}
+    }{% if not forloop.last %},{% endif %}{% endfor %}
   ]{% endif %}
 }
 </script>
