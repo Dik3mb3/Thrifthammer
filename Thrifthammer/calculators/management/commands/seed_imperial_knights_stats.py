@@ -294,12 +294,12 @@ class Command(BaseCommand):
 
                 unit.weapon_profiles.all().delete()
                 for order, wp in enumerate(weapons):
-                    WeaponProfile.objects.create(unit=unit, order=order, **wp)
+                    WeaponProfile.objects.create(unit_type=unit, order=order, **wp)
 
                 unit.abilities.all().delete()
                 for order, ab in enumerate(abilities):
                     UnitAbility.objects.create(
-                        unit=unit, order=order,
+                        unit_type=unit, order=order,
                         name=ab['name'], description=ab['description'],
                     )
 
