@@ -30,8 +30,37 @@ urlpatterns = [
     ),
     path(
         'products/warhammer-40000-core-rules/',
+        RedirectView.as_view(url='/products/?category=warhammer-40000', permanent=True),
+    ),
+    path(
+        'products/warhammer-40000-starter-set/',
+        RedirectView.as_view(url='/products/?category=warhammer-40000', permanent=True),
+    ),
+    path(
+        'products/space-marine-judiciar/',
         RedirectView.as_view(
-            url='/products/?category=warhammer-40000',
+            url='/products/?category=warhammer-40000&faction=space-marines',
+            permanent=True,
+        ),
+    ),
+    path(
+        'products/space-marine-land-raider/',
+        RedirectView.as_view(
+            url='/products/?category=warhammer-40000&faction=space-marines',
+            permanent=True,
+        ),
+    ),
+    path(
+        'products/deathwatch-veteran-squad/',
+        RedirectView.as_view(
+            url='/products/?category=warhammer-40000&faction=deathwatch',
+            permanent=True,
+        ),
+    ),
+    path(
+        'products/deathwatch-decimus-kill-team/',
+        RedirectView.as_view(
+            url='/products/?category=warhammer-40000&faction=deathwatch',
             permanent=True,
         ),
     ),

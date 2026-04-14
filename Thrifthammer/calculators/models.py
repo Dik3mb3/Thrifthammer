@@ -95,6 +95,12 @@ class UnitType(models.Model):
             models.Index(fields=['is_active', 'category']),
             models.Index(fields=['faction', 'is_active']),
         ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'faction'],
+                name='unique_unit_type_name_per_faction',
+            ),
+        ]
 
     def __str__(self):
         return f"{self.name} ({self.get_category_display()})"
