@@ -80,7 +80,7 @@ html {
   background-color: var(--bg-primary);
   background-image:
     /* Dark veil: shows 15% of the image — enough for atmosphere, not distraction */
-    linear-gradient(rgb(13 15 20 / 0.85), rgb(13 15 20 / 0.85)),
+    linear-gradient(rgba(13, 15, 20, 0.85), rgba(13, 15, 20, 0.85)),
     url('../images/bg-grimdark.jpg');
   background-attachment: fixed;
   background-size: cover;
@@ -2887,6 +2887,12 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 @media (max-width: 900px) {
   .blog-detail-layout { grid-template-columns: 1fr; }
   .blog-sidebar { position: static; }
+  /* Prevent grimdark background image bleeding through transparent blog elements
+     at viewport widths where the <768px .page-content fix hasn't kicked in yet.
+     Covers landscape phones and narrow tablets (769–900px). */
+  .blog-detail-layout,
+  .blog-article,
+  .blog-sidebar { background-color: rgb(13, 15, 20); }
 }
 
 /* ── Comments ──────────────────────────────────────────────────────────── */
