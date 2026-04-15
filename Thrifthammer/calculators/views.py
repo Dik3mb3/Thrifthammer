@@ -99,26 +99,35 @@ class ArmyCalculatorView(TemplateView):
             )
             raw_units = list(unit_qs)
 
-            # Deduplicate by product_id when parent faction units are included.
-            # If both a sub-faction unit and a parent-faction unit reference the
-            # same product, prefer the sub-faction unit (more specific category/
-            # naming). This prevents e.g. "Space Marine Aggressors" and
-            # "Aggressor Squad" both appearing when Ultramarines is selected.
+            # Deduplicate when parent faction units are included.
+            # Sub-faction units take priority. A parent-faction unit is
+            # suppressed if the sub-faction already has a unit with the same
+            # product_id OR the same name. The name check is necessary for
+            # sub-faction units that have product=NULL (they won't add to
+            # seen_product_ids, so the parent-faction copy would otherwise
+            # slip through on the product_id check alone).
             if selected_faction.parent_faction_id:
                 seen_product_ids: set = set()
+                seen_names: set = set()
                 units = []
-                # First pass: add all sub-faction units, recording their product_ids
+                # First pass: add all sub-faction units
                 for u in raw_units:
                     if u.faction_id == selected_faction.pk:
                         units.append(u)
+                        seen_names.add(u.name)
                         if u.product_id is not None:
                             seen_product_ids.add(u.product_id)
-                # Second pass: add parent-faction units only if their product
-                # hasn't already been claimed by a sub-faction unit
+                # Second pass: add parent-faction units only when neither
+                # their product nor their name was claimed by a sub-faction unit
                 for u in raw_units:
                     if u.faction_id != selected_faction.pk:
-                        if u.product_id is None or u.product_id not in seen_product_ids:
+                        product_ok = (
+                            u.product_id is None
+                            or u.product_id not in seen_product_ids
+                        )
+                        if product_ok and u.name not in seen_names:
                             units.append(u)
+                            seen_names.add(u.name)
                             if u.product_id is not None:
                                 seen_product_ids.add(u.product_id)
                 # Re-sort after manual assembly (mirrors DB order_by)

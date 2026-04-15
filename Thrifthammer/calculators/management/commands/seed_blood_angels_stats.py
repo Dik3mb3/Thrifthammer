@@ -5,9 +5,9 @@ Seeds points costs, stat lines, weapon profiles, and unit abilities
 for Blood Angels units in the database. Safe to re-run — uses
 delete+create for weapons/abilities and direct field writes for stats.
 
-Uses get_or_create so missing UnitTypes are created automatically;
-no SKU lookup needed — stats seeding only requires (name, faction).
-Product/pricing links are handled separately by the points seed.
+Uses get() to locate existing UnitTypes by name+faction. Units not
+found are skipped with a warning — product/pricing links and unit
+creation are handled separately by populate_units / points seeds.
 
 Usage:
     python manage.py seed_blood_angels_stats
@@ -1844,7 +1844,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         dry_run = options['dry_run']
-        created = updated = skipped = 0
+        updated = skipped = 0
 
         faction = Faction.objects.filter(name=FACTION_NAME).first()
         if not faction:
@@ -1855,22 +1855,24 @@ class Command(BaseCommand):
 
         with transaction.atomic():
             for db_name, points, stats, weapons, abilities in BLOOD_ANGELS_UNITS:
-                unit, was_created = UnitType.objects.get_or_create(
-                    name=db_name,
-                    faction=faction,
-                    defaults={'points_cost': points, 'is_active': True},
-                )
+                try:
+                    unit = UnitType.objects.get(
+                        name=db_name,
+                        faction=faction,
+                    )
+                except UnitType.DoesNotExist:
+                    self.stdout.write(
+                        self.style.WARNING(f'  SKIP (not found): {db_name}')
+                    )
+                    skipped += 1
+                    continue
 
                 if dry_run:
-                    tag = 'CREATE' if was_created else 'UPDATE'
                     self.stdout.write(
-                        f'  DRY-RUN [{tag}]: {db_name} '
+                        f'  DRY-RUN [UPDATE]: {db_name} '
                         f'({points}pts, T{stats["stat_toughness"]})'
                     )
-                    if was_created:
-                        created += 1
-                    else:
-                        updated += 1
+                    updated += 1
                     continue
 
                 # Update stat fields
@@ -1894,12 +1896,8 @@ class Command(BaseCommand):
                         name=ab['name'], description=ab['description'],
                     )
 
-                tag = 'CREATED' if was_created else 'OK'
-                self.stdout.write(f'  {tag}: {db_name}')
-                if was_created:
-                    created += 1
-                else:
-                    updated += 1
+                self.stdout.write(f'  OK: {db_name}')
+                updated += 1
 
             if dry_run:
                 transaction.set_rollback(True)
@@ -1907,6 +1905,6 @@ class Command(BaseCommand):
         self.stdout.write(
             self.style.SUCCESS(
                 f'\nBlood Angels seed complete: '
-                f'{updated} updated, {created} created, {skipped} skipped.'
+                f'{updated} updated, {skipped} skipped.'
             )
         )
