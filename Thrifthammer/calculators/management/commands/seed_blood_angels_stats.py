@@ -673,7 +673,7 @@ BLOOD_ANGELS_UNITS = [
      [
          ability('Deadly Terror',
                  'While this model is leading a unit, increase the range of '
-                 "that unit's Terror Troops ability by 3".'),
+                 "that unit's Terror Troops ability by 3"),
          ability('Leader',
                  'This model can be attached to the following unit:\n'
                  '\u25a0 Reiver Squad\n'
