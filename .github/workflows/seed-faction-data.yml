@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       factions:
-        description: 'Which factions to seed (comma-separated: votann,admech,aeldari,guard,custodes,drukhari,grey_knights,necrons,orks,sisters_of_battle,tau,genestealer_cults,imperial_knights — or "all"). Maintenance: delete_codex_units, delete_legacy_guard_units'
+        description: 'Which factions to seed (comma-separated: votann,admech,aeldari,guard,custodes,drukhari,grey_knights,necrons,orks,sisters_of_battle,tau,genestealer_cults,imperial_knights,blood_angels — or "all"). Maintenance: delete_codex_units, delete_legacy_guard_units'
         type: string
         default: 'all'
       dry_run:
@@ -115,6 +115,10 @@ jobs:
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "imperial_knights"; then
             run_seed seed_imperial_knights_stats
+          fi
+
+          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "blood_angels"; then
+            run_seed seed_blood_angels_stats
           fi
 
           if echo "$FACTIONS" | grep -q "delete_codex_units"; then
