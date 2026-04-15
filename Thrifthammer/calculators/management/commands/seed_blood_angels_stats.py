@@ -5,9 +5,9 @@ Seeds points costs, stat lines, weapon profiles, and unit abilities
 for Blood Angels units in the database. Safe to re-run — uses
 delete+create for weapons/abilities and direct field writes for stats.
 
-Uses get() to locate existing UnitTypes by name+faction. Units not
-found are skipped with a warning — product/pricing links and unit
-creation are handled separately by populate_units / points seeds.
+Units that don't exist in the Blood Angels faction are skipped cleanly.
+Shared SM units use the Blood Angels UnitType name (e.g. 'Aggressor Squad',
+not 'Space Marine Aggressors') — the exact names from populate_units.py.
 
 Usage:
     python manage.py seed_blood_angels_stats
@@ -18,7 +18,6 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from calculators.models import UnitAbility, UnitType, WeaponProfile
-from products.models import Faction
 
 FACTION_NAME = 'Blood Angels'
 
@@ -56,8 +55,7 @@ def ability(name, desc):
 # -- Unit Data ----------------------------------------------------------------
 # Format: (db_unit_name, points, stats_dict, [weapons], [abilities])
 # Weapon/ability text sourced from parsed New Recruit HTML (2026-04-14).
-# db_unit_name is used for get_or_create — matches existing UnitType.name
-# where one exists, otherwise a new UnitType is created for that faction.
+# db_unit_name must match the existing UnitType.name in the Blood Angels faction.
 
 BLOOD_ANGELS_UNITS = [
 
@@ -325,32 +323,6 @@ BLOOD_ANGELS_UNITS = [
                  'Control characteristic of models in that unit.'),
      ]),
 
-    ('Ancient in Terminator Armour', 75,
-     stat('5"', 5, '2+', 5, '6+', 1, invuln='4+'),
-     [
-         rng('Storm bolter', '24"', 2, '3+', 4, 0, 1, 'Rapid Fire 2'),
-         mel('Chainfist', 4, '3+', 8, -2, 2, 'Anti Vehicle 3+'),
-     ],
-     [
-         ability('Keep the Banner High',
-                 'While this model is leading a unit, each time a model in '
-                 'that unit makes an attack, add 1 to the Hit roll if that '
-                 'unit is below its Starting Strength, and add 1 to the Wound '
-                 'roll as well if that unit is Below Half-strength'),
-         ability('Leader',
-                 'This model can be attached to the following units:\n'
-                 '\u25a0 Terminator Squad\n'
-                 '\u25a0 Terminator Assault Squad\n'
-                 'You can attach this model to one of the above units even if '
-                 'one Captain, Chapter Master or Lieutenant model has already '
-                 'been attached to it. If you do, and that Bodyguard unit is '
-                 'destroyed, the Leader units attached to it become separate '
-                 'units, with their original Starting Strengths.'),
-         ability('Astartes Banner',
-                 'While this model is leading a unit, add 1 to the Objective '
-                 'Control characteristic of models in that unit.'),
-     ]),
-
     ('Apothecary', 50,
      stat('6"', 4, '3+', 4, '6+', 1),
      [
@@ -383,6 +355,7 @@ BLOOD_ANGELS_UNITS = [
                  'units, with their original Starting Strengths.'),
      ]),
 
+    # db_name 'Captain' covers the generic SM captain card_name "Captain"
     ('Captain', 80,
      stat('6"', 4, '3+', 5, '6+', 1, invuln='4+'),
      [
@@ -400,110 +373,17 @@ BLOOD_ANGELS_UNITS = [
                  '\u25a0 Intercessor Squad\n'
                  '\u25a0 Sternguard Veteran Squad\n'
                  '\u25a0 Company Heroes\n'
-                 '\u25a0 Tactical Squad'),
+                 '\u25a0 Tactical Squad\n\n'
+                 'This model cannot be attached to a Bladeguard Veteran Squad '
+                 'unless it is equipped with a relic shield, and cannot be '
+                 'attached to a Hellblaster Squad unless it is equipped with '
+                 'a plasma pistol.'),
          ability('Finest Hour',
                  'Once per battle, at the start of the Fight phase, this model '
                  'can use this ability. If it does, until the end of the phase, '
                  'add 3 to the Attacks characteristic of melee weapons equipped '
                  'by this model and those weapons have the [DEVASTATING WOUNDS] '
                  'ability.'),
-         ability('Rites of Battle',
-                 'Once per battle round, one unit from your army with this '
-                 'ability can use it when its unit is targeted with a '
-                 'Stratagem. If it does, reduce the CP cost of that use of '
-                 'that Stratagem by 1CP.'),
-     ]),
-
-    ('Captain in Gravis Armour', 80,
-     stat('5"', 6, '3+', 6, '6+', 1, invuln='4+'),
-     [
-         rng('Master-crafted Heavy Bolt Rifle', '30"', 2, '2+', 5, -1, 3,
-             'Assault, Heavy'),
-         mel('Master-crafted power weapon', 6, '2+', 5, -2, 2),
-     ],
-     [
-         ability('Refuse to Yield',
-                 'Each time an attack is allocated to this model, halve the '
-                 'Damage characteristic of that attack.'),
-         ability('Leader',
-                 'This model can be attached to the following units:\n'
-                 '\u25a0 Aggressor Squad\n'
-                 '\u25a0 Eradicator Squad\n'
-                 '\u25a0 Heavy Intercessor Squad'),
-         ability('Rites of Battle',
-                 'Once per battle round, one unit from your army with this '
-                 'ability can use it when its unit is targeted with a '
-                 'Stratagem. If it does, reduce the CP cost of that use of '
-                 'that Stratagem by 1CP.'),
-     ]),
-
-    ('Captain in Phobos Armour', 70,
-     stat('6"', 4, '3+', 5, '6+', 1, invuln='4+'),
-     [
-         rng('Bolt pistol', '12"', 1, '2+', 4, 0, 1, 'Pistol'),
-         rng('Instigator Bolt Carbine', '24"', 1, '2+', 4, -2, 2,
-             'Precision'),
-         mel('Combat Knife', 6, '2+', 4, -1, 1),
-     ],
-     [
-         ability('Master of Deceit',
-                 'After both players have deployed their armies, if your army '
-                 'includes one or more models with this ability, you can select '
-                 'up to three friendly ADEPTUS ASTARTES INFANTRY units and '
-                 'redeploy all of those units. When doing so, any of those '
-                 'units can be placed into Strategic Reserves, regardless of '
-                 'how many units are already in Strategic Reserves.'),
-         ability('Leader',
-                 'This model can be attached to the following units:\n'
-                 '\u25a0 Eliminator Squad\n'
-                 '\u25a0 Incursor Squad\n'
-                 '\u25a0 Infiltrator Squad\n'
-                 '\u25a0 Reiver Squad\n'
-                 '\u25a0 Scout Squad'),
-         ability('Rites of Battle',
-                 'Once per battle round, one unit from your army with this '
-                 'ability can use it when its unit is targeted with a '
-                 'Stratagem. If it does, reduce the CP cost of that use of '
-                 'that Stratagem by 1CP.'),
-     ]),
-
-    ('Captain in Terminator Armour', 95,
-     stat('5"', 5, '2+', 6, '6+', 1, invuln='4+'),
-     [
-         rng('Storm bolter', '24"', 2, '2+', 4, 0, 1, 'Rapid Fire 2'),
-         mel('Relic Weapon', 6, '2+', 5, -2, 2),
-     ],
-     [
-         ability('Leader',
-                 'This model can be attached to the following units:\n'
-                 '\u25a0 Relic Terminator Squad\n'
-                 '\u25a0 Terminator Assault Squad\n'
-                 '\u25a0 Terminator Squad'),
-         ability('Unstoppable Valour',
-                 "You can re-roll Charge rolls made for this model's unit."),
-         ability('Rites of Battle',
-                 'Once per battle round, one unit from your army with this '
-                 'ability can use it when its unit is targeted with a '
-                 'Stratagem. If it does, reduce the CP cost of that use of '
-                 'that Stratagem by 1CP.'),
-     ]),
-
-    ('Captain with Jump Pack', 75,
-     stat('12"', 4, '3+', 5, '6+', 1, invuln='4+'),
-     [
-         rng('Heavy Bolt Pistol', '18"', 1, '2+', 4, -1, 1, 'Pistol'),
-         mel('Astartes Chainsword', 7, '2+', 4, -1, 1),
-     ],
-     [
-         ability("Angel's Wrath",
-                 'While this model is leading a unit, each time that unit '
-                 'ends a Charge move, until the end of the turn, add 1 to the '
-                 'Strength characteristic of melee weapons equipped by models '
-                 'in that unit.'),
-         ability('Leader',
-                 'This model can be attached to the following units:\n'
-                 '\u25a0 Assault Intercessors with Jump Packs\n'
-                 '\u25a0 Vanguard Veteran Squad with Jump Packs'),
          ability('Rites of Battle',
                  'Once per battle round, one unit from your army with this '
                  'ability can use it when its unit is targeted with a '
@@ -537,48 +417,6 @@ BLOOD_ANGELS_UNITS = [
                  'Battle-shocked.'),
      ]),
 
-    ('Chaplain in Terminator Armour', 75,
-     stat('5"', 5, '2+', 5, '5+', 1, invuln='4+'),
-     [
-         rng('Storm bolter', '24"', 2, '3+', 4, 0, 1, 'Rapid Fire 2'),
-         mel('Crozius arcanum', 5, '2+', 6, -1, 2),
-     ],
-     [
-         ability('Recitation of Faith',
-                 'While this model is leading a unit, models in that unit '
-                 'have the Feel No Pain 4+ ability against mortal wounds.'),
-         ability('Leader',
-                 'This model can be attached to the following units:\n'
-                 '\u25a0 Terminator Assault Squad\n'
-                 '\u25a0 Terminator Squad'),
-         ability('Litany of Hate',
-                 'While this model is leading a unit, each time a model in '
-                 'that unit makes a melee attack, add 1 to the Wound roll.'),
-     ]),
-
-    ('Chaplain on Bike', 75,
-     stat('12"', 5, '3+', 5, '5+', 1, invuln='4+'),
-     [
-         rng('Absolver bolt pistol', '18"', 1, '3+', 5, -1, 2, 'Pistol'),
-         rng('Twin bolt rifle', '24"', 2, '3+', 4, -1, 1, 'Twin-linked'),
-         mel('Crozius arcanum', 5, '2+', 6, -1, 2),
-     ],
-     [
-         ability('Catechism of Fire',
-                 "Each time this model's unit is selected to shoot, you can "
-                 'select one enemy unit within 12" of and visible to this '
-                 'model. Until the end of the phase, ranged weapons equipped '
-                 "by models in this model's unit have the [DEVASTATING WOUNDS] "
-                 'ability when targeting that enemy unit.'),
-         ability('Leader',
-                 'This model can be attached to the following units:\n'
-                 '\u25a0 Bike Squad\n'
-                 '\u25a0 Outrider Squad'),
-         ability('Litany of Hate',
-                 'While this model is leading a unit, each time a model in '
-                 'that unit makes a melee attack, add 1 to the Wound roll.'),
-     ]),
-
     ('Librarian', 65,
      stat('6"', 4, '3+', 4, '6+', 1),
      [
@@ -602,31 +440,6 @@ BLOOD_ANGELS_UNITS = [
                  '\u25a0 Intercessor Squad\n'
                  '\u25a0 Sternguard Veteran Squad\n'
                  '\u25a0 Tactical Squad'),
-         ability('Psychic Hood',
-                 'While this model is leading a unit, models in that unit '
-                 'have the Feel No Pain 4+ ability against Psychic Attacks.'),
-     ]),
-
-    ('Librarian in Phobos Armour', 70,
-     stat('6"', 4, '3+', 4, '6+', 1),
-     [
-         rng('Bolt pistol', '12"', 1, '3+', 4, 0, 1, 'Pistol'),
-         rng('Smite - Witchfire', '24"', 'D6', '3+', 5, -1, 'D3', 'Psychic'),
-         rng('Smite - Focused Witchfire', '24"', 'D6', '3+', 6, -2, 'D3',
-             'Devastating Wounds, Hazardous, Psychic'),
-         mel('Force weapon', 4, '3+', 6, -1, 'D3', 'Psychic'),
-     ],
-     [
-         ability('Shrouding [Psychic]',
-                 'While this model is leading a unit, models in that unit '
-                 'have the Stealth ability and that unit cannot be targeted '
-                 'by ranged attacks unless the attacking model is within 12".'),
-         ability('Leader',
-                 'This model can be attached to the following units:\n'
-                 '\u25a0 Eliminator Squad\n'
-                 '\u25a0 Incursor Squad\n'
-                 '\u25a0 Infiltrator Squad\n'
-                 '\u25a0 Reiver Squad'),
          ability('Psychic Hood',
                  'While this model is leading a unit, models in that unit '
                  'have the Feel No Pain 4+ ability against Psychic Attacks.'),
@@ -663,80 +476,7 @@ BLOOD_ANGELS_UNITS = [
                  'models in that unit have the [LETHAL HITS] ability.'),
      ]),
 
-    ('Lieutenant in Reiver Armour', 55,
-     stat('6"', 4, '3+', 4, '6+', 1),
-     [
-         rng('Master-crafted Special Issue Bolt Pistol', '12"', 1, '2+', 4,
-             -1, 2, 'Pistol, Precision'),
-         mel('Combat Knife', 6, '2+', 4, -1, 1, 'Precision'),
-     ],
-     [
-         ability('Deadly Terror',
-                 'While this model is leading a unit, increase the range of '
-                 "that unit's Terror Troops ability by 3"),
-         ability('Leader',
-                 'This model can be attached to the following unit:\n'
-                 '\u25a0 Reiver Squad\n'
-                 'You can attach this model a unit it can lead even if one '
-                 'Captain or Chapter Master model has already been attached to '
-                 'it. If you do, and that Bodyguard unit is destroyed, the '
-                 'Leader units attached to it become separate units, with '
-                 'their original Starting Strengths.'),
-         ability('Tactical Precision',
-                 'While this model is leading a unit, weapons equipped by '
-                 'models in that unit have the [LETHAL HITS] ability.'),
-     ]),
-
-    ('Techmarine', 55,
-     stat('6"', 4, '2+', 4, '6+', 1),
-     [
-         rng('Forge Bolter', '24"', 3, '2+', 5, -1, 2),
-         rng('Grav-pistol', '12"', 1, '2+', 4, -1, 2,
-             'Anti-vehicle 2+, Pistol'),
-         mel('Omnissian power axe', 4, '3+', 6, -2, 2),
-         mel('Servo-arm', 1, '3+', 8, -2, 3, 'Extra Attacks'),
-     ],
-     [
-         ability('Techmarine',
-                 'While this model is within 3" of one or more friendly '
-                 'Adeptus Astartes Vehicle units, this model has the Lone '
-                 'Operative ability'),
-         ability('Blessing of the Omnissiah',
-                 'In your Command phase, you can select one friendly Adeptus '
-                 'Astartes Vehicle model within 3" of this model. That model '
-                 'regains up to D3 lost wounds and, until the start of your '
-                 'next Command phase, each time that Vehicle model makes an '
-                 'attack, add 1 to the Hit roll. Each model can only be '
-                 'selected for this ability once per turn.'),
-         ability('Vengeance of the Omnissiah',
-                 'If a friendly Adeptus Astartes Vehicle model is destroyed '
-                 'within 12" of this model, until the end of the battle, this '
-                 "model's Omnissian power axe has an Attacks characteristic "
-                 'of 7.'),
-         ability('Leader',
-                 'This model can be attached to the following units:\n'
-                 '\u25a0 Assault Intercessor Squad\n'
-                 '\u25a0 Desolation Squad\n'
-                 '\u25a0 Devastator Squad\n'
-                 '\u25a0 Intercessor Squad\n'
-                 '\u25a0 Tactical Squad'),
-     ]),
-
     # ── Shared Infantry ────────────────────────────────────────────────────────
-
-    ('Aggressor Squad', 95,
-     stat('5"', 6, '3+', 3, '6+', 1),
-     [
-         rng('Flamestorm Gauntlets (x3)', '12"', 'D6+1', 'N/A', 4, 0, 1,
-             'Ignores Cover, Torrent, Twin-linked'),
-         mel('Twin power fist (x3)', 3, '3+', 8, -2, 2, 'Twin-linked'),
-     ],
-     [
-         ability('Close-quarters Firepower',
-                 'Each time a model in this unit makes a ranged attack that '
-                 'targets the closest eligible target, improve the Armour '
-                 'Penetration characteristic of that attack by 1.'),
-     ]),
 
     ('Assault Intercessor Squad', 75,
      stat('6"', 4, '3+', 2, '6+', 2),
@@ -752,19 +492,18 @@ BLOOD_ANGELS_UNITS = [
                  'Wound roll instead.'),
      ]),
 
-    ('Assault Intercessors with Jump Packs', 90,
-     stat('12"', 4, '3+', 2, '6+', 1),
+    ('Aggressor Squad', 95,
+     stat('5"', 6, '3+', 3, '6+', 1),
      [
-         rng('Heavy Bolt Pistol (x5)', '18"', 1, '3+', 4, -1, 1, 'Pistol'),
-         mel('Astartes Chainsword (x5)', 4, '3+', 4, -1, 1),
+         rng('Flamestorm Gauntlets (x3)', '12"', 'D6+1', 'N/A', 4, 0, 1,
+             'Ignores Cover, Torrent, Twin-linked'),
+         mel('Twin power fist (x3)', 3, '3+', 8, -2, 2, 'Twin-linked'),
      ],
      [
-         ability('Hammer of Wrath',
-                 'Each time this unit ends a Charge move, select one enemy '
-                 'unit within Engagement Range of it, then roll one D6 for '
-                 'each model in this unit that is within Engagement Range of '
-                 'that enemy unit: for each 4+, that enemy unit suffers 1 '
-                 'mortal wound.'),
+         ability('Close-quarters Firepower',
+                 'Each time a model in this unit makes a ranged attack that '
+                 'targets the closest eligible target, improve the Armour '
+                 'Penetration characteristic of that attack by 1.'),
      ]),
 
     ('Bladeguard Veteran Squad', 80,
@@ -783,41 +522,6 @@ BLOOD_ANGELS_UNITS = [
                  '\u25a0 Shields of the Imperium: Each time an invulnerable '
                  'saving throw is made for a model in this unit, re-roll a '
                  'saving throw of 1.'),
-     ]),
-
-    ('Centurion Assault Squad', 150,
-     stat('4"', 7, '2+', 4, '6+', 2),
-     [
-         rng('Centurion Bolters (x2)', '24"', 3, '3+', 4, 0, 1,
-             'Rapid Fire 3, Twin-linked'),
-         rng('Twin flamer (x3)', '12"', 'D6', 'N/A', 4, 0, 1,
-             'Ignores Cover, Torrent, Twin-linked'),
-         mel('Siege Drills (x3)', 3, '3+', 10, -2, 3, 'Twin-linked'),
-     ],
-     [
-         ability('Annihilator Protocols',
-                 'Melee weapons equipped by models in this unit have the '
-                 '[SUSTAINED HITS 2] ability when targeting Monster, Vehicle '
-                 'or Fortification units'),
-         ability('Centurion Assault Launchers',
-                 'The bearer has the Grenades keyword.'),
-     ]),
-
-    ('Centurion Devastator Squad', 175,
-     stat('4"', 7, '2+', 4, '6+', 2),
-     [
-         rng('Centurion Bolters (x3)', '24"', 3, '3+', 4, 0, 1,
-             'Rapid Fire 3, Twin-linked'),
-         rng('Grav-cannon (x3)', '24"', 3, '3+', 6, -1, 3,
-             'Anti-Vehicle 2+'),
-         mel('Centurion Fists (x3)', 3, '4+', 5, -1, 2),
-     ],
-     [
-         ability('Decimator Protocols',
-                 'Each time a model in this unit makes a ranged attack, '
-                 're-roll a Hit roll of 1. If the target of that attack is an '
-                 'enemy unit within range of an objective marker, you can '
-                 're-roll the Hit roll instead.'),
      ]),
 
     ('Company Heroes', 105,
@@ -843,23 +547,6 @@ BLOOD_ANGELS_UNITS = [
                  'You must attach one Captain or Chapter Master model to this '
                  'unit. If this is not possible, this unit does not take part '
                  'in the battle and counts as having been destroyed.'),
-     ]),
-
-    ('Desolation Squad', 200,
-     stat('6"', 4, '3+', 2, '6+', 1),
-     [
-         rng('Bolt pistol (x5)', '12"', 1, '3+', 4, 0, 1, 'Pistol'),
-         rng('Castellan Launcher (x5)', '36"', 'D3', '3+', 4, 0, 1,
-             'Blast, Indirect Fire'),
-         rng('Superfrag Rocket Launcher (x5)', '48"', 'D6+1', '4+', 5, 0, 1,
-             'Blast, Heavy'),
-         mel('Close combat weapon (x5)', 3, '3+', 4, 0, 1),
-     ],
-     [
-         ability('Targeter Optics',
-                 'Each time this unit Remains Stationary, until the start of '
-                 'your next Movement phase, ranged weapons equipped by models '
-                 'in this unit have the [IGNORES COVER] ability.'),
      ]),
 
     ('Devastator Squad', 120,
@@ -918,42 +605,6 @@ BLOOD_ANGELS_UNITS = [
                  'Damage roll.'),
      ]),
 
-    ('Heavy Intercessor Squad', 100,
-     stat('5"', 6, '3+', 3, '6+', 2),
-     [
-         rng('Bolt pistol (x5)', '12"', 1, '3+', 4, 0, 1, 'Pistol'),
-         rng('Heavy Bolt Rifle (x5)', '30"', 2, '3+', 5, -1, 2,
-             'Assault, Heavy'),
-         mel('Close combat weapon (x5)', 3, '3+', 4, 0, 1),
-     ],
-     [
-         ability('Unyielding in the Face of the Foe',
-                 'While this unit is within range of an objective marker you '
-                 'control, each time an attack with a Damage characteristic '
-                 'of 1 is allocated to a model in this unit, add 1 to any '
-                 'armour saving throw made against that attack.'),
-     ]),
-
-    ('Hellblaster Squad', 110,
-     stat('6"', 4, '3+', 2, '6+', 1),
-     [
-         rng('Bolt pistol (x5)', '12"', 1, '3+', 4, 0, 1, 'Pistol'),
-         rng('Plasma Incinerator - Standard (x5)', '24"', 2, '3+', 7, -2, 1,
-             'Assault, Heavy'),
-         rng('Plasma Incinerator - Supercharge (x5)', '24"', 2, '3+', 8, -3,
-             2, 'Assault, Heavy, Hazardous'),
-         mel('Close combat weapon (x5)', 3, '3+', 4, 0, 1),
-     ],
-     [
-         ability('For the Chapter!',
-                 'Each time a model in this unit is destroyed, roll one D6: '
-                 'on a 3+, do not remove it from play. The destroyed model '
-                 "can shoot after the attacking model's unit has finished "
-                 'making its attacks, and is then removed from play. When '
-                 'resolving these attacks, any Hazardous tests taken for that '
-                 'attack are automatically passed.'),
-     ]),
-
     ('Inceptor Squad', 120,
      stat('10"', 6, '3+', 3, '6+', 1),
      [
@@ -977,8 +628,7 @@ BLOOD_ANGELS_UNITS = [
          rng('Bolt pistol (x5)', '12"', 1, '3+', 4, 0, 1, 'Pistol'),
          rng('Occulus Bolt Carbine (x5)', '24"', 2, '3+', 4, 0, 1,
              'Assault, Ignores Cover'),
-         mel('Paired Combat Blades (x5)', 3, '3+', 4, -1, 1,
-             'Sustained Hits 1'),
+         mel('Paired Combat Blades (x5)', 3, '3+', 4, -1, 1, 'Sustained Hits 1'),
      ],
      [
          ability('Multi-spectrum Array',
@@ -1041,25 +691,6 @@ BLOOD_ANGELS_UNITS = [
                  "target of all of this unit's attacks"),
      ]),
 
-    ('Reiver Squad', 80,
-     stat('6"', 4, '3+', 2, '6+', 1),
-     [
-         rng('Special Issue Bolt Pistol (x5)', '12"', 1, '3+', 4, -1, 1,
-             'Pistol, Precision'),
-         mel('Combat Knife (x5)', 4, '3+', 4, -1, 1, 'Precision'),
-     ],
-     [
-         ability('Fearsome Assault',
-                 'At the start of the Fight phase, each enemy unit within '
-                 'Engagement Range of one or more units with this ability must '
-                 'take a Battle-shock test subtracting 1 from that test'),
-         ability('Terror Troops',
-                 'While an enemy unit (excluding Monsters and Vehicles) is '
-                 'within 3" of one or more units with this ability, subtract '
-                 '1 from the Objective Control characteristic of models in '
-                 'that enemy unit.'),
-     ]),
-
     ('Scout Squad', 70,
      stat('6"', 4, '4+', 2, '6+', 1),
      [
@@ -1104,29 +735,6 @@ BLOOD_ANGELS_UNITS = [
                  'units, each containing five models'),
      ]),
 
-    ('Terminator Assault Squad', 180,
-     stat('5"', 5, '2+', 4, '6+', 1, invuln='4+'),
-     [
-         mel('Thunder Hammer (x5)', 3, '3+', 8, -2, 2, 'Devastating Wounds'),
-     ],
-     [
-         ability('Teleport Homer',
-                 'At the start of the battle, you can set up one Teleport '
-                 'Homer token for this unit anywhere on the battlefield that '
-                 "is not in your opponent's deployment zone. If you do, once "
-                 'per battle, you can target this unit with the Rapid Ingress '
-                 'Stratagem for 0CP, but when resolving that Stratagem, you '
-                 'must set this unit up within 3" horizontally of that token '
-                 'and not within 9" horizontally of any enemy models. That '
-                 'token is then removed.'),
-         ability('Terminatus Assault',
-                 'At the start of the Fight phase, each enemy unit within '
-                 'Engagement Range of this unit must take a Battle-Shock '
-                 'test.'),
-         ability('Storm Shield',
-                 'The bearer has a Wounds characteristic of 4.'),
-     ]),
-
     ('Terminator Squad', 170,
      stat('5"', 5, '2+', 3, '6+', 1, invuln='4+'),
      [
@@ -1161,7 +769,7 @@ BLOOD_ANGELS_UNITS = [
                  'have the [LETHAL HITS] ability.'),
      ]),
 
-    # ── Vehicles & Transports ─────────────────────────────────────────────────
+    # ── Vehicles ──────────────────────────────────────────────────────────────
 
     ('Blood Angels Baal Predator', 125,
      stat('12"', 10, '3+', 11, '6+', 3),
@@ -1222,31 +830,6 @@ BLOOD_ANGELS_UNITS = [
                  'model makes an attack, subtract 1 from the Hit roll.'),
      ]),
 
-    ('Drop Pods', 70,
-     stat('-', 7, '3+', 8, '6+', 0),
-     [],
-     [
-         ability('Drop Pod Assault',
-                 'This model must start the battle in Reserves and can be set '
-                 'up in the Reinforcements step of your first, second or third '
-                 'Movement phase, regardless of any mission rules. Any units '
-                 'embarked within this model must immediately disembark after '
-                 'it has been set up on the battlefield, and they must be set '
-                 'up more than 9" away from all enemy models.'),
-         ability('Transport',
-                 'This model has a transport capacity of 12 Adeptus Astartes '
-                 'Infantry models. It cannot transport Jump Pack, Wulfen, '
-                 'Gravis, Centurion or Terminator models.'),
-         ability('Combat Disembarkation',
-                 'Each time a unit disembarks from this model after it has '
-                 'been set up on the battlefield, that unit is still eligible '
-                 'to declare a charge this turn'),
-         ability('Deployment Complete',
-                 'Once this unit is set up on the battlefield and all units '
-                 'within it have disembarked, until the end of the battle, '
-                 'units cannot embark within this TRANSPORT'),
-     ]),
-
     ('Firestrike Servo-Turrets', 75,
      stat('3"', 6, '2+', 6, '6+', 2),
      [
@@ -1259,60 +842,6 @@ BLOOD_ANGELS_UNITS = [
                  'Each time you select this unit for the Fire Overwatch '
                  'Stratagem, hits are scored on unmodified Hit rolls of 4+ '
                  'when resolving that Stratagem.'),
-     ]),
-
-    ('Gladiator Lancer', 160,
-     stat('10"', 10, '3+', 12, '6+', 3),
-     [
-         rng('Lancer Laser Destroyer', '72"', 2, '3+', 14, -4, 'D6+3',
-             'Heavy'),
-         rng('Fragstorm grenade launcher (x2)', '18"', 'D6', '3+', 4, 0, 1,
-             'Blast'),
-         mel('Armoured Hull', 3, '4+', 6, 0, 1),
-     ],
-     [
-         ability('Aqullon Optics',
-                 'Each time this model is selected to shoot, you can re-roll '
-                 'one Hit roll, you can re-roll one Wound roll and you can '
-                 're-roll one Damage roll when resolving its attacks'),
-         ability('Damaged: 1-4 Wounds Remaining',
-                 'While this model has 1-4 wounds remaining, each time this '
-                 'model makes an attack, subtract 1 from the Hit roll.'),
-     ]),
-
-    ('Gladiator Reaper', 160,
-     stat('10"', 10, '3+', 12, '6+', 3),
-     [
-         rng('Tempest Bolter (x2)', '24"', 4, '3+', 4, -1, 1,
-             'Rapid Fire 4'),
-         rng('Twin Heavy Onslaught Gatling Cannon', '24"', 12, '3+', 6, 0, 1,
-             'Devastating Wounds, Twin-linked'),
-         mel('Armoured Hull', 3, '4+', 6, 0, 1),
-     ],
-     [
-         ability('Rotating Death',
-                 "This model's twin heavy onslaught gatling cannon has the "
-                 '[SUSTAINED HITS 2] ability when targeting Infantry units.'),
-         ability('Damaged: 1-4 Wounds Remaining',
-                 'While this model has 1-4 wounds remaining, each time this '
-                 'model makes an attack, subtract 1 from the Hit roll.'),
-     ]),
-
-    ('Gladiator Valiant', 150,
-     stat('10"', 10, '3+', 12, '6+', 3),
-     [
-         rng('Multi-melta (x2)', '18"', 2, '3+', 9, -4, 'D6', 'Melta 2'),
-         rng('Twin Las-talon', '36"', 2, '3+', 10, -3, 'D6+1', 'Twin-linked'),
-         mel('Armoured Hull', 3, '4+', 6, 0, 1),
-     ],
-     [
-         ability('Ferocious Assault',
-                 'Each time this model makes an attack with its twin las-talon '
-                 'that targets the closest eligible Monster or Vehicle unit, '
-                 'add 1 to the Hit roll'),
-         ability('Damaged: 1-4 Wounds Remaining',
-                 'While this model has 1-4 wounds remaining, each time this '
-                 'model makes an attack, subtract 1 from the Hit roll.'),
      ]),
 
     ('Hammerfall Bunker', 175,
@@ -1387,57 +916,7 @@ BLOOD_ANGELS_UNITS = [
                  'does, after that enemy unit has finished making its attacks, '
                  'that model can shoot as if it were your Shooting phase, but '
                  'when resolving those attacks it can only target that enemy '
-                 'unit.'),
-     ]),
-
-    ('Invictor Tactical Warsuit', 125,
-     stat('8"', 8, '3+', 12, '6+', 4),
-     [
-         rng('Fragstorm grenade launcher', '18"', 'D6', '3+', 4, 0, 1,
-             'Blast'),
-         rng('Heavy Bolter', '36"', 3, '3+', 5, -1, 2, 'Sustained Hits 1'),
-         rng('Twin Ironhail Heavy Stubber', '36"', 3, '3+', 4, 0, 1,
-             'Rapid Fire 3, Twin-linked'),
-         rng('Incendium Cannon', '12"', 'D6+3', 'N/A', 6, -1, 1,
-             'Ignores Cover, Torrent'),
-         mel('Invictor Fist', 5, '3+', 14, -2, 3),
-     ],
-     [
-         ability('Combat Support',
-                 "Once per turn, in your opponent's Shooting phase, when a "
-                 'friendly Adeptus Astartes Phobos Infantry unit within 6" '
-                 'of this model is selected as the target of an attack, this '
-                 'model can use this ability. If it does, after that enemy '
-                 "model's unit has finished making its attacks, this model "
-                 'can shoot as if it were your Shooting phase, but when '
-                 'resolving those attacks it can only target that enemy unit.'),
-         ability('Damaged: 1-4 Wounds Remaining',
-                 'While this model has 1-4 wounds remaining, each time this '
-                 'model makes an attack, subtract 1 from the Hit roll.'),
-     ]),
-
-    # Land Raider (vanilla — twin lascannons)
-    ('Land Raider', 220,
-     stat('10"', 12, '2+', 16, '6+', 5),
-     [
-         rng('Godhammer Lascannon (x2)', '48"', 2, '3+', 12, -3, 'D6+1'),
-         rng('Twin heavy bolter', '36"', 3, '3+', 5, -1, 2,
-             'Sustained Hits 1, Twin-linked'),
-         mel('Armoured Tracks', 6, '4+', 8, 0, 1),
-     ],
-     [
-         ability('Assault Ramp',
-                 'Each time a unit disembarks from this model after it has '
-                 'made a Normal move, that unit is still eligible to declare '
-                 'a charge this turn.'),
-         ability('Transport',
-                 'This model has a transport capacity of 12 Adeptus Astartes '
-                 'Infantry models. Each Jump Pack, Wulfen, Gravis or '
-                 'Terminator model takes up the space of 2 models and each '
-                 'Centurion model takes up the space of 3 models.'),
-         ability('Damaged: 1-5 Wounds Remaining',
-                 'While this model has 1-5 wounds remaining, each time this '
-                 'model makes an attack, subtract 1 from the Hit roll.'),
+                 'unit [and only if it is an eligible target).'),
      ]),
 
     ('Land Raider Crusader', 220,
@@ -1452,30 +931,6 @@ BLOOD_ANGELS_UNITS = [
      [
          ability('Transport',
                  'This model has a transport capacity of 16 Adeptus Astartes '
-                 'Infantry models. Each Jump Pack, Wulfen, Gravis or '
-                 'Terminator model takes up the space of 2 models and each '
-                 'Centurion model takes up the space of 3 models.'),
-         ability('Assault Ramp',
-                 'Each time a unit disembarks from this model after it has '
-                 'made a Normal move, that unit is still eligible to declare '
-                 'a charge this turn.'),
-         ability('Damaged: 1-5 Wounds Remaining',
-                 'While this model has 1-5 wounds remaining, each time this '
-                 'model makes an attack, subtract 1 from the Hit roll.'),
-     ]),
-
-    ('Land Raider Redeemer', 270,
-     stat('12"', 12, '2+', 16, '6+', 5),
-     [
-         rng('Flamestorm Cannon (x2)', '12"', 'D6+3', 'N/A', 6, -2, 2,
-             'Ignores Cover, Torrent'),
-         rng('Twin assault cannon', '24"', 6, '3+', 6, 0, 1,
-             'Devastating wounds, Twin-linked'),
-         mel('Armoured Tracks', 6, '4+', 8, 0, 1),
-     ],
-     [
-         ability('Transport',
-                 'This model has a transport capacity of 14 Adeptus Astartes '
                  'Infantry models. Each Jump Pack, Wulfen, Gravis or '
                  'Terminator model takes up the space of 2 models and each '
                  'Centurion model takes up the space of 3 models.'),
@@ -1518,46 +973,6 @@ BLOOD_ANGELS_UNITS = [
                  'model makes an attack, subtract 1 from the Hit roll.'),
      ]),
 
-    ('Predator Annihilator', 135,
-     stat('10"', 10, '3+', 11, '6+', 3),
-     [
-         rng('Predator Twin Lascannon', '48"', 1, '3+', 14, -3, 'D6+1',
-             'Twin-linked'),
-         mel('Armoured Tracks', 3, '4+', 6, 0, 1),
-     ],
-     [
-         ability('Annihilator',
-                 'Each time a ranged attack made by this model is allocated '
-                 'to a Monster or Vehicle model, you can re-roll the Damage '
-                 'roll'),
-         ability('Damaged: 1-4 Wounds Remaining',
-                 'While this model has 1-4 wounds remaining, each time this '
-                 'model makes an attack, subtract 1 from the Hit roll.'),
-     ]),
-
-    ('Razorback', 95,
-     stat('12"', 9, '3+', 10, '6+', 2),
-     [
-         rng('Twin heavy bolter', '36"', 3, '3+', 5, -1, 2,
-             'Sustained Hits 1, Twin-linked'),
-         mel('Armoured Tracks', 3, '4+', 6, 0, 1),
-     ],
-     [
-         ability('Fire Support',
-                 'In your Shooting phase, after this model has shot, select '
-                 'one enemy unit it scored one or more hits against this '
-                 'phase. Until the end of the phase, each time a friendly '
-                 'model that disembarked from this Transport this turn makes '
-                 'an attack that targets that enemy unit, you can re-roll '
-                 'the Wound roll.'),
-         ability('Transport',
-                 'This model has a transport capacity of 6 Adeptus Astartes '
-                 'Infantry models. It cannot transport JUMP PACK, WULFEN, '
-                 'PHOBOS, GRAVIS, CENTURION, TERMINATOR or TACTICUS models '
-                 '(excluding TACTICUS CHARACTER models that began the battle '
-                 'attached to a non-TACTICUS unit)'),
-     ]),
-
     ('Redemptor Dreadnought', 205,
      stat('8"', 10, '2+', 12, '6+', 4),
      [
@@ -1575,39 +990,6 @@ BLOOD_ANGELS_UNITS = [
                  'from the Damage characteristic of that attack'),
          ability('Damaged: 1-4 Wounds Remaining',
                  'While this model has 1-4 wounds remaining, each time this '
-                 'model makes an attack, subtract 1 from the Hit roll.'),
-     ]),
-
-    ('Repulsor', 180,
-     stat('10"', 12, '3+', 16, '6+', 5),
-     [
-         rng('Hunter-slayer missile', '48"', 1, '2+', 14, -3, 'D6',
-             'Indirect Fire, One Shot'),
-         rng('Repulsor Defensive Array', '24"', 18, '3+', 4, 0, 1),
-         rng('Twin heavy bolter', '36"', 3, '3+', 5, -1, 2,
-             'Sustained Hits 1, Twin-linked'),
-         rng('Heavy Onslaught Gatling Cannon', '24"', 12, '3+', 6, 0, 1,
-             'Devastating Wounds'),
-         mel('Armoured Hull', 6, '4+', 8, 0, 1),
-     ],
-     [
-         ability('Transport',
-                 'This model has a transport capacity of 14 ADEPTUS ASTARTES '
-                 'INFANTRY models. Each JUMP PACK, WULFEN, GRAVIS or '
-                 'TERMINATOR model takes up the space of 2 models and each '
-                 'CENTURION model takes up the space of 3 models.'),
-         ability('Emergency Combat Embarkation',
-                 "Once per turn, in your opponent's Charge phase, after an "
-                 'enemy unit has selected targets for its charge but before '
-                 'it makes a Charge move, you can select one Adeptus Astartes '
-                 'unit from your army that was selected as a target of that '
-                 'charge. Provided that unit is not within Engagement Range '
-                 'of any enemy units and every model in that unit is within '
-                 '3" of this Transport, it can embark within this Transport. '
-                 'The charging unit can then select new targets for its '
-                 'charge.'),
-         ability('Damaged: 1-5 Wounds Remaining',
-                 'While this model has 1-5 wounds remaining, each time this '
                  'model makes an attack, subtract 1 from the Hit roll.'),
      ]),
 
@@ -1640,152 +1022,6 @@ BLOOD_ANGELS_UNITS = [
          ability('Damaged: 1-5 Wounds Remaining',
                  'While this model has 1-5 wounds remaining, each time this '
                  'model makes an attack, subtract 1 from the Hit roll.'),
-     ]),
-
-    ('Rhino', 75,
-     stat('12"', 9, '3+', 10, '6+', 2),
-     [
-         rng('Storm bolter', '24"', 2, '3+', 4, 0, 1, 'Rapid Fire 2'),
-         mel('Armoured Tracks', 3, '4+', 6, 0, 1),
-     ],
-     [
-         ability('Self Repair',
-                 'At the end of your Command phase, this model regains 1 lost '
-                 'wound.'),
-         ability('Transport',
-                 'This model has a transport capacity of 12 ADEPTUS ASTARTES '
-                 'INFANTRY models. It cannot transport JUMP PACK, WULFEN, '
-                 'PHOBOS, GRAVIS, CENTURION, TERMINATOR or TACTICUS models '
-                 '(excluding TACTICUS CHARACTER models that began the battle '
-                 'attached to a non-TACTICUS unit)'),
-     ]),
-
-    ('Storm Speeder Hailstrike', 115,
-     stat('14"', 9, '3+', 11, '6+', 3),
-     [
-         rng('Fragstorm grenade launcher (x2)', '18"', 'D6', '3+', 4, 0, 1,
-             'Blast'),
-         rng('Onslaught gatling cannon', '24"', 8, '3+', 5, 0, 1,
-             'Devastating Wounds'),
-         rng('Twin Ironhail Heavy Stubber', '36"', 3, '3+', 4, 0, 1,
-             'Rapid Fire 3, Twin-linked'),
-         mel('Close combat weapon', 4, '3+', 4, 0, 1),
-     ],
-     [
-         ability('Hailstrike',
-                 'Each time this model has shot, select one enemy unit '
-                 '(excluding MONSTERS or VEHICLES) that was hit by one or '
-                 'more of those attacks. Until the end of the phase, each '
-                 'time a friendly ADEPTUS ASTARTES unit makes a ranged attack '
-                 'that targets that enemy unit, improve the Armour Penetration '
-                 'characteristic of that attack by 1. The same enemy unit can '
-                 'only be affected by this ability once per phase.'),
-     ]),
-
-    ('Storm Speeder Hammerstrike', 125,
-     stat('14"', 9, '3+', 11, '6+', 3),
-     [
-         rng('Hammerstrike Missile Launcher', '36"', 2, '3+', 9, -3, 'D6'),
-         rng('Krakstorm Grenade Launcher (x2)', '18"', 1, '3+', 9, -1, 'D3'),
-         rng('Melta Destroyer', '18"', 3, '3+', 9, -4, 'D6', 'Melta 2'),
-         mel('Close combat weapon', 4, '3+', 4, 0, 1),
-     ],
-     [
-         ability('Hammerstrike',
-                 'Each time this model has shot, select one enemy unit that '
-                 'was hit by one or more of those attacks. Until the end of '
-                 'the phase, that enemy unit cannot have the Benefit of '
-                 'Cover.'),
-     ]),
-
-    ('Storm Speeder Thunderstrike', 135,
-     stat('14"', 9, '3+', 11, '6+', 3),
-     [
-         rng('Stormfury Missiles', '48"', 1, '2+', 12, -3, 'D6+1'),
-         rng('Thunderstrike Las-talon', '36"', 2, '2+', 9, -3, 'D6+1'),
-         rng('Twin Icarus Rocket Pod', '24"', 'D3', '3+', 8, -1, 2,
-             'Anti-Fly 2+, Twin-linked'),
-         mel('Close combat weapon', 4, '3+', 4, 0, 1),
-     ],
-     [
-         ability('Thunderstrike',
-                 'Each time this model has shot, select one enemy MONSTER or '
-                 'VEHICLE unit that was hit by one or more of those attacks. '
-                 'Until the end of the phase, each time a friendly ADEPTUS '
-                 'ASTARTES unit makes a ranged attack that targets that enemy '
-                 'unit, add 1 to the Wound roll.'),
-     ]),
-
-    ('Stormhawk Interceptor', 155,
-     stat('20"+', 9, '3+', 10, '6+', 0),
-     [
-         rng('Twin assault cannon', '24"', 6, '3+', 6, 0, 1,
-             'Devastating wounds, Twin-linked'),
-         rng('Las-talon', '36"', 2, '3+', 10, -3, 'D6+1'),
-         rng('Skyhammer Missile Launcher', '48"', 3, '3+', 8, -1, 'D3',
-             'Anti-Fly 2+'),
-         mel('Armoured Hull', 3, '4+', 6, 0, 1),
-     ],
-     [
-         ability('Interceptor',
-                 'Each time this model makes a ranged attack that targets a '
-                 'unit that can Fly, add 1 to the Hit roll'),
-     ]),
-
-    ('Stormraven Gunship', 280,
-     stat('20"+', 10, '3+', 14, '6+', 0),
-     [
-         rng('Stormstrike Missile Launcher (x2)', '48"', 1, '3+', 10, -2, 3),
-         rng('Twin assault cannon', '24"', 6, '3+', 6, 0, 1,
-             'Devastating wounds, Twin-linked'),
-         rng('Typhoon missile launcher - frag', '48"', '2D6', '3+', 4, 0, 1,
-             'Blast'),
-         rng('Typhoon missile launcher - krak', '48"', 2, '3+', 9, -2, 'D6'),
-         mel('Armoured Hull', 6, '4+', 8, 0, 1),
-     ],
-     [
-         ability('Armoured Resilience',
-                 'Each time an attack is allocated to this model, subtract 1 '
-                 'from the Damage characteristic of that attack.'),
-         ability('Transport',
-                 'This model has a transport capacity of 12 Adeptus Astartes '
-                 'Infantry models and 1 Dreadnought model. Each Jump Pack, '
-                 'Wulfen, Gravis or Terminator model takes up the space of 2 '
-                 'models and each Centurion model takes up the space of 3 '
-                 'models.'),
-         ability('Damaged: 1-5 Wounds Remaining',
-                 'While this model has 1-5 wounds remaining, each time this '
-                 'model makes an attack, subtract 1 from the Hit roll.'),
-     ]),
-
-    ('Stormtalon Gunship', 165,
-     stat('20"+', 8, '3+', 10, '6+', 0),
-     [
-         rng('Twin assault cannon', '24"', 6, '3+', 6, 0, 1,
-             'Devastating wounds, Twin-linked'),
-         rng('Skyhammer Missile Launcher', '48"', 3, '3+', 8, -1, 'D3',
-             'Anti-Fly 2+, Twin-linked'),
-         mel('Armoured Hull', 3, '4+', 6, 0, 1),
-     ],
-     [
-         ability('Strafing Run',
-                 'Each time this model makes a ranged attack that targets a '
-                 'unit that cannot Fly, add 1 to the Hit roll.'),
-     ]),
-
-    ('Venerable Dreadnought', 135,
-     stat('6"', 9, '2+', 8, '6+', 3),
-     [
-         rng('Missile Launcher - Frag', '48"', 'D6', '3+', 4, 0, 1, 'Blast'),
-         rng('Missile Launcher - Krak', '48"', 1, '3+', 9, -2, 'D6'),
-         rng('Assault Cannon', '24"', 6, '3+', 6, 0, 1, 'Devastating Wounds'),
-         mel('Close combat weapon', 5, '3+', 6, 0, 1),
-     ],
-     [
-         ability('Wisdom of the Ancients [Aura]',
-                 'While a friendly Adeptus Astartes Infantry unit is within '
-                 '6" of this model, each time a model in that unit makes an '
-                 'attack, re-roll a Hit roll of 1.'),
      ]),
 
     ('Vindicator', 185,
@@ -1846,30 +1082,20 @@ class Command(BaseCommand):
         dry_run = options['dry_run']
         updated = skipped = 0
 
-        faction = Faction.objects.filter(name=FACTION_NAME).first()
-        if not faction:
-            self.stdout.write(self.style.ERROR(
-                f'Faction "{FACTION_NAME}" not found — aborting.'
-            ))
-            return
-
         with transaction.atomic():
             for db_name, points, stats, weapons, abilities in BLOOD_ANGELS_UNITS:
                 try:
                     unit = UnitType.objects.get(
-                        name=db_name,
-                        faction=faction,
+                        name=db_name, faction__name=FACTION_NAME,
                     )
                 except UnitType.DoesNotExist:
-                    self.stdout.write(
-                        self.style.WARNING(f'  SKIP (not found): {db_name}')
-                    )
+                    self.stdout.write(f'  SKIP (not found): {db_name}')
                     skipped += 1
                     continue
 
                 if dry_run:
                     self.stdout.write(
-                        f'  DRY-RUN [UPDATE]: {db_name} '
+                        f'  DRY-RUN: would update {db_name} '
                         f'({points}pts, T{stats["stat_toughness"]})'
                     )
                     updated += 1
@@ -1879,14 +1105,12 @@ class Command(BaseCommand):
                 unit.points_cost = points
                 for field, value in stats.items():
                     setattr(unit, field, value)
-                unit.is_active = True
                 unit.save()
 
                 # Replace weapon profiles
                 unit.weapon_profiles.all().delete()
                 for order, wp in enumerate(weapons):
-                    WeaponProfile.objects.create(unit_type=unit, order=order,
-                                                 **wp)
+                    WeaponProfile.objects.create(unit_type=unit, order=order, **wp)
 
                 # Replace abilities
                 unit.abilities.all().delete()
