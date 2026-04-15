@@ -605,7 +605,10 @@ class Command(BaseCommand):
             ('48-40', 'Outrider Squad',               'mounted'),
             ('48-42', 'Invader ATV',                  'mounted'),
             ('48-97', 'Inceptor Squad',               'mounted'),
-            ('48-99', 'Suppressor Squad',             'mounted'),
+            # Suppressor Squad (48-99) removed — 48-99 is now assigned to the
+            # 'Ancient in Terminator Armour' product by assign_missing_skus.
+            # Suppressor Squad cross-faction linking is handled by
+            # sync_cross_faction_units (looks up SM UnitType by name, not SKU).
             # ── Vehicles ─────────────────────────────────────────────────────
             ('48-46', 'Ballistus Dreadnought',        'vehicle'),
             ('48-44', 'Brutalis Dreadnought',         'vehicle'),
@@ -745,7 +748,10 @@ class Command(BaseCommand):
             ('48-40', 'Outrider Squad',               'mounted'),
             ('48-42', 'Invader ATV',                  'mounted'),
             ('48-97', 'Inceptor Squad',               'mounted'),
-            ('48-99', 'Suppressor Squad',             'mounted'),
+            # Suppressor Squad (48-99) removed — 48-99 is now assigned to the
+            # 'Ancient in Terminator Armour' product by assign_missing_skus.
+            # Suppressor Squad cross-faction linking is handled by
+            # sync_cross_faction_units (looks up SM UnitType by name, not SKU).
             # ── Vehicles ─────────────────────────────────────────────────────
             ('48-46', 'Ballistus Dreadnought',        'vehicle'),
             ('48-44', 'Brutalis Dreadnought',         'vehicle'),
@@ -882,7 +888,10 @@ class Command(BaseCommand):
             ('48-40', 'Outrider Squad',               'mounted'),
             ('48-42', 'Invader ATV',                  'mounted'),
             ('48-97', 'Inceptor Squad',               'mounted'),
-            ('48-99', 'Suppressor Squad',             'mounted'),
+            # Suppressor Squad (48-99) removed — 48-99 is now assigned to the
+            # 'Ancient in Terminator Armour' product by assign_missing_skus.
+            # Suppressor Squad cross-faction linking is handled by
+            # sync_cross_faction_units (looks up SM UnitType by name, not SKU).
             # ── Vehicles ─────────────────────────────────────────────────────
             ('48-46', 'Ballistus Dreadnought',        'vehicle'),
             ('48-44', 'Brutalis Dreadnought',         'vehicle'),
@@ -1020,7 +1029,10 @@ class Command(BaseCommand):
             ('48-40', 'Outrider Squad',               'mounted'),
             ('48-42', 'Invader ATV',                  'mounted'),
             ('48-97', 'Inceptor Squad',               'mounted'),
-            ('48-99', 'Suppressor Squad',             'mounted'),
+            # Suppressor Squad (48-99) removed — 48-99 is now assigned to the
+            # 'Ancient in Terminator Armour' product by assign_missing_skus.
+            # Suppressor Squad cross-faction linking is handled by
+            # sync_cross_faction_units (looks up SM UnitType by name, not SKU).
             # ── Vehicles ─────────────────────────────────────────────────────
             ('48-46', 'Ballistus Dreadnought',        'vehicle'),
             ('48-44', 'Brutalis Dreadnought',         'vehicle'),
