@@ -59,11 +59,12 @@
     flex-wrap: wrap;
   }
   .email-topbar-copy { flex: 1 1 260px; }
-  .email-topbar-copy h2 {
+  .email-topbar-copy .email-topbar-title {
     font-family: 'Cinzel', serif;
     font-size: clamp(0.95rem, 2vw, 1.2rem);
     color: var(--accent-gold-lt);
     margin: 0 0 var(--sp-1);
+    font-weight: 700;
   }
   .email-topbar-copy p {
     font-size: 0.83rem;
@@ -352,7 +353,7 @@
     <div class="container">
         <div class="email-topbar-inner">
             <div class="email-topbar-copy">
-                <h2>Get Weekly Warhammer Deal Alerts</h2>
+                <p class="email-topbar-title">Get Weekly Warhammer Deal Alerts</p>
                 <p>We'll email you the biggest price drops across US retailers every week. No spam. Unsubscribe any time.</p>
             </div>
             <form class="email-topbar-form" method="post" action="{% url 'newsletter_signup' %}">
