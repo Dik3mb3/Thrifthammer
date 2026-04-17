@@ -7,9 +7,9 @@
 {% else %}<link rel="canonical" href="https://thrifthammer.com/products/">
 {% endif %}{% endblock %}
 
-{% block title %}Browse Warhammer 40K Products | ThriftHammer{% endblock %}
+{% block title %}{% if selected_faction_obj %}{{ selected_faction_obj.name }} Kits — Best Prices | ThriftHammer{% elif selected_category_obj %}{{ selected_category_obj.name }} Kits — Best Prices | ThriftHammer{% elif query %}Search: {{ query }} | ThriftHammer{% else %}Browse Warhammer 40K Products | ThriftHammer{% endif %}{% endblock %}
 
-{% block meta_description %}<meta name="description" content="Browse all Warhammer 40,000 kits and compare prices across US retailers including Games Workshop, Miniature Market, Noble Knight, Amazon and more.">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if selected_faction_obj %}Compare prices on {{ selected_faction_obj.name }} kits across US retailers. Find the best deal on every unit before you buy.{% elif selected_category_obj %}Compare prices on {{ selected_category_obj.name }} kits across US retailers. Find the best deal on every unit before you buy.{% elif query %}ThriftHammer price results for "{{ query }}". Compare prices across US retailers and find the best deal.{% else %}Browse all Warhammer 40,000 kits and compare prices across US retailers including Games Workshop, Miniature Market, Noble Knight, Amazon and more.{% endif %}">{% endblock %}
 
 {% block extra_head %}
 <meta property="og:title" content="Browse Warhammer 40K Products — ThriftHammer">

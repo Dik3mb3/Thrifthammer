@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %}Warhammer Savings Blog | ThriftHammer{% endblock %}
+{% block title %}{% if active_tag %}{{ active_tag.name }} — Warhammer Blog | ThriftHammer{% else %}Warhammer Savings Blog | ThriftHammer{% endif %}{% endblock %}
 
-{% block meta_description %}<meta name="description" content="Tips, guides and Top 10 lists to help you save money on Warhammer 40,000. New posts weekly from ThriftHammer.">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if active_tag %}Browse ThriftHammer blog posts tagged {{ active_tag.name }}. Tips and guides to help you save money on Warhammer 40,000.{% else %}Tips, guides and Top 10 lists to help you save money on Warhammer 40,000. New posts weekly from ThriftHammer.{% endif %}">{% endblock %}
 
 {% block canonical %}<link rel="canonical" href="https://thrifthammer.com{% if active_tag and tag_in_path %}/blog/tag/{{ active_tag.slug }}/{% else %}/blog/{% endif %}">{% endblock %}
 

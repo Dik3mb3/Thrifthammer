@@ -5,13 +5,13 @@
 {% else %}<link rel="canonical" href="https://thrifthammer.com/army-calculator/">
 {% endif %}{% endblock %}
 
-{% block title %}Warhammer 40K Army Cost Calculator — ThriftHammer{% endblock %}
+{% block title %}{% if selected_faction %}{{ selected_faction.name }} Army Cost Calculator — ThriftHammer{% else %}Warhammer 40K Army Cost Calculator — ThriftHammer{% endif %}{% endblock %}
 
-{% block meta_description %}<meta name="description" content="Calculate the total cost of your Warhammer 40,000 army using real retailer prices. Pick your faction, add units, and instantly see how much your army costs across US stores.">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if selected_faction %}Build a {{ selected_faction.name }} army list and calculate the real cost. Compare unit prices across US retailers and find the best deals on every kit.{% else %}Calculate the total cost of your Warhammer 40,000 army using real retailer prices. Pick your faction, add units, and instantly see how much your army costs across US stores.{% endif %}">{% endblock %}
 
 {% block extra_head %}
-<meta property="og:title" content="40K Army Cost Calculator — ThriftHammer">
-<meta property="og:description" content="Build your 40K army list and see the real cost. Compare prices across US retailers for every unit in your roster.">
+<meta property="og:title" content="{% if selected_faction %}{{ selected_faction.name }} Army Cost Calculator — ThriftHammer{% else %}40K Army Cost Calculator — ThriftHammer{% endif %}">
+<meta property="og:description" content="{% if selected_faction %}Build a {{ selected_faction.name }} army list and calculate the real cost. Compare unit prices across US retailers and find the best deals on every kit.{% else %}Build your 40K army list and see the real cost. Compare prices across US retailers for every unit in your roster.{% endif %}">
 <meta property="og:type" content="website">
 {% endblock %}
 

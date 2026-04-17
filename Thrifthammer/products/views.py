@@ -310,15 +310,22 @@ def product_list(request):
     # would re-execute on cache retrieval and lose the annotation.
     product_list_evaluated = list(page_obj.object_list)
 
+    # Resolve selected category/faction to objects for template title/description use.
+    # Uses already-fetched lists — no extra DB queries.
+    selected_category_obj = next((c for c in categories if c.slug == category_slug), None)
+    selected_faction_obj  = next((f for f in factions  if f.slug == faction_slug),  None)
+
     ctx = {
-        'page_obj':          page_obj,
-        'products':          product_list_evaluated,
-        'paginator':         paginator,
-        'categories':        categories,
-        'factions':          factions,
-        'query':             query,
-        'selected_category': category_slug,
-        'selected_faction':  faction_slug,
+        'page_obj':               page_obj,
+        'products':               product_list_evaluated,
+        'paginator':              paginator,
+        'categories':             categories,
+        'factions':               factions,
+        'query':                  query,
+        'selected_category':      category_slug,
+        'selected_faction':       faction_slug,
+        'selected_category_obj':  selected_category_obj,
+        'selected_faction_obj':   selected_faction_obj,
         'sort':              sort,
         'sort_options': [
             ('discount',   'Best Discount'),
