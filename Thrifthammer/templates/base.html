@@ -38,7 +38,9 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+    {# Non-blocking font load: preload triggers fetch early; onload swaps rel to stylesheet #}
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"></noscript>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
@@ -49,7 +51,7 @@
 
             {# Brand / Logo #}
             <a href="{% url 'home' %}" class="navbar-brand" aria-label="ThriftHammer home">
-                <img src="{% static 'images/logo.svg' %}" alt="ThriftHammer" class="brand-logo">
+                <img src="{% static 'images/logo.svg' %}" alt="ThriftHammer" class="brand-logo" width="175" height="60">
             </a>
 
             {# Center search bar — hidden on mobile (shown in hero) #}
@@ -127,7 +129,7 @@
 
                 {# Col 1 — Brand + about #}
                 <div class="footer-brand">
-                    <img src="{% static 'images/logo.svg' %}" alt="ThriftHammer" class="footer-logo">
+                    <img src="{% static 'images/logo.svg' %}" alt="ThriftHammer" class="footer-logo" width="175" height="60">
                     <p>
                         Track prices on Warhammer kits across US retailers.
                         Find the best deal and never overpay for plastic again.
