@@ -12,7 +12,7 @@ so they inherit generic SM products via the parent FK.
   Raven Guard   — 2 products: Kayvaan Shrike, Aethon Shaan
 
 All products are tagged batch_tag='phase-2'. GW CurrentPrice seeded at MSRP.
-Idempotent (update_or_create keyed on slug/faction name).
+Idempotent (update_or_create keyed on gw_sku/faction name).
 
 Sourced from GW en-US all-SM scrape — 2026-04-04.
 
@@ -27,7 +27,7 @@ from products.models import Category, Faction, Product, Retailer
 
 _IMG = 'https://www.warhammer.com/app/resources/catalog/product/920x950/{filename}'
 
-# (faction_name, slug, name, msrp, img_filename, gw_url)
+# (faction_name, slug, name, msrp, img_filename, gw_url, gw_sku)
 PRODUCTS = [
     # ── Iron Hands ────────────────────────────────────────────────────────────
     (
@@ -37,6 +37,7 @@ PRODUCTS = [
         47.00,
         '99120101257_SMIHFeirros01.jpg',
         'https://www.warhammer.com/en-US/shop/Iron-Hands-Feirros-2020',
+        '61-02',
     ),
     (
         'Iron Hands',
@@ -45,6 +46,7 @@ PRODUCTS = [
         47.00,
         '99120101447_SpaceMarinesIronHandsCaanokVar01.jpg',
         'https://www.warhammer.com/en-US/shop/iron-hands-caanok-var-2025',
+        '61-01',
     ),
     # ── Salamanders ───────────────────────────────────────────────────────────
     (
@@ -54,6 +56,7 @@ PRODUCTS = [
         47.00,
         '99120101259_SALAdraxAgatone01.jpg',
         'https://www.warhammer.com/en-US/shop/Salamanders-Adrax-Agatone-2020',
+        '63-01',
     ),
     (
         'Salamanders',
@@ -62,6 +65,7 @@ PRODUCTS = [
         47.00,
         '99120101444_SpaceMarinesSalamandersVulkanHestan1.jpg',
         'https://www.warhammer.com/en-US/shop/salamanders-vulkan-hestan-2025',
+        '63-02',
     ),
     # ── Imperial Fists ────────────────────────────────────────────────────────
     (
@@ -71,6 +75,7 @@ PRODUCTS = [
         47.00,
         '99120101258_SMIFTorGaradon01.jpg',
         'https://www.warhammer.com/en-US/shop/Imperial-Fists-Tor-Garadon-2020',
+        '60-02',
     ),
     (
         'Imperial Fists',
@@ -79,6 +84,7 @@ PRODUCTS = [
         47.00,
         '99120101446_SpaceMarinesImperialFistsDarnathLysander1.jpg',
         'https://www.warhammer.com/en-US/shop/imperial-fists-darnath-lysander-2025',
+        '60-01',
     ),
     # ── White Scars ───────────────────────────────────────────────────────────
     (
@@ -88,6 +94,7 @@ PRODUCTS = [
         47.00,
         '99120101255_WSKorsarroKhan01.jpg',
         'https://www.warhammer.com/en-US/shop/White-Scars-KorSarro-Khan-2020',
+        '64-01',
     ),
     (
         'White Scars',
@@ -96,6 +103,7 @@ PRODUCTS = [
         65.00,
         '99120101448_SPACEMARINESWhiteScarsSubodenKhan01.jpg',
         'https://www.warhammer.com/en-US/shop/white-scars-suboden-khan-2025',
+        '64-02',
     ),
     # ── Raven Guard ───────────────────────────────────────────────────────────
     (
@@ -105,6 +113,7 @@ PRODUCTS = [
         47.00,
         '99120101256_SMRGKayvaanShrike01.jpg',
         'https://www.warhammer.com/en-US/shop/Raven-Guard-Kayvaan-Shrike-2020',
+        '62-02',
     ),
     (
         'Raven Guard',
@@ -113,6 +122,7 @@ PRODUCTS = [
         47.00,
         '99120101445_RavenGuardAethonShaan01.jpg',
         'https://www.warhammer.com/en-US/shop/raven-guard-aethon-shaan-2025',
+        '62-01',
     ),
 ]
 
@@ -182,7 +192,7 @@ class Command(BaseCommand):
         total_price_updated = 0
 
         current_faction_name = None
-        for (faction_name, slug, name, msrp, img_filename, gw_url) in PRODUCTS:
+        for (faction_name, slug, name, msrp, img_filename, gw_url, gw_sku) in PRODUCTS:
             if faction_name != current_faction_name:
                 self.stdout.write(self.style.MIGRATE_HEADING(f'\n  ── {faction_name} ──'))
                 current_faction_name = faction_name
@@ -191,10 +201,11 @@ class Command(BaseCommand):
             image_url = _IMG.format(filename=img_filename)
 
             product, created = Product.objects.update_or_create(
-                slug=slug,
+                gw_sku=gw_sku,
                 defaults={
                     'name': name,
-                    'gw_sku': '',
+                    'slug': slug,
+                    'gw_sku': gw_sku,
                     'msrp': msrp,
                     'image_url': image_url,
                     'gw_url': gw_url,

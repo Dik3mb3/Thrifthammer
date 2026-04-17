@@ -16,7 +16,7 @@ UNCERTAIN (excluded — user to confirm):
     Combat Patrol rerelease. Name overlaps with existing 'Ork Boyz'.
     Not added to avoid overwriting. Confirm separately.
 
-Safe to run repeatedly (idempotent via update_or_create keyed on slug).
+Safe to run repeatedly (idempotent via update_or_create keyed on gw_sku).
 
 Usage:
     python manage.py populate_ork_phase2_products
@@ -29,7 +29,7 @@ from products.models import Category, Faction, Product, Retailer
 
 _IMG = 'https://www.warhammer.com/app/resources/catalog/product/920x950/{filename}'
 
-# (slug, name, msrp, image_filename, gw_url)
+# (slug, name, msrp, image_filename, gw_url, gw_sku)
 PRODUCTS = [
     # ── Characters ────────────────────────────────────────────────────────────
     (
@@ -38,6 +38,7 @@ PRODUCTS = [
         43.50,
         '99120103114_Snikrot1.jpg',
         'https://www.warhammer.com/en-US/shop/orks-boss-snikrot-2023',
+        '50-32',
     ),
     (
         'ork-ghazghkull-thraka',
@@ -45,6 +46,7 @@ PRODUCTS = [
         82.00,
         '99120103079_ThrakaLead.jpg',
         'https://www.warhammer.com/en-US/shop/Ghazghkull-Thraka-2020',
+        '50-38',
     ),
     (
         'ork-beastboss',
@@ -52,6 +54,7 @@ PRODUCTS = [
         43.50,
         '99120103078_BeastbossLead.jpg',
         'https://www.warhammer.com/en-US/shop/orks-beastboss-2021',
+        '50-23',
     ),
     (
         'ork-beastboss-on-squigosaur',
@@ -59,6 +62,7 @@ PRODUCTS = [
         60.00,
         '99120103075_BeastbossSquigasaurLead.jpg',
         'https://www.warhammer.com/en-US/shop/beastboss-on-squigosaur-2021',
+        '50-24',
     ),
     (
         'ork-mozrog-skragbad',
@@ -66,6 +70,7 @@ PRODUCTS = [
         60.00,
         '99120103075_MozrogLead.jpg',
         'https://www.warhammer.com/en-US/shop/orks-mozrog-skragbad-2021',
+        '50-51',
     ),
     (
         'ork-painboss',
@@ -73,6 +78,7 @@ PRODUCTS = [
         43.50,
         '99070103006_ORKSPainBossLead.jpg',
         'https://www.warhammer.com/en-US/shop/orks-painboss-2021',
+        '50-60',
     ),
     (
         'ork-zodgrod-wortsnagga',
@@ -80,6 +86,7 @@ PRODUCTS = [
         48.00,
         '60010103001_BeastsnaggaZodGroup1.jpg',
         'https://www.warhammer.com/en-US/shop/orks-zodgrod-wortsnagga-2021',
+        '50-67',
     ),
     (
         'ork-big-mek-shokk-attack-gun',
@@ -87,6 +94,7 @@ PRODUCTS = [
         43.50,
         '99120103031_ShokkAttackGun01.jpg',
         'https://www.warhammer.com/en-US/shop/Big-Mek-with-Shokk-Attack-Gun',
+        '50-28',
     ),
     (
         'ork-mek',
@@ -94,6 +102,7 @@ PRODUCTS = [
         32.00,
         '99070103004_OrkMek01.jpg',
         'https://www.warhammer.com/en-US/shop/Ork-Mek-2018',
+        '50-55',
     ),
     (
         'ork-painboy',
@@ -101,6 +110,7 @@ PRODUCTS = [
         35.00,
         '99070103003_Painboy01.jpg',
         'https://www.warhammer.com/en-US/shop/Ork-Painboy-2018',
+        '50-56',
     ),
     # ── Infantry ──────────────────────────────────────────────────────────────
     (
@@ -109,6 +119,7 @@ PRODUCTS = [
         60.00,
         '99120103073_ORKSnaggaBoyzLead.jpg',
         'https://www.warhammer.com/en-US/shop/orks-beast-snagga-boyz-2021',
+        '50-52',
     ),
     (
         'ork-squighog-boyz',
@@ -116,6 +127,7 @@ PRODUCTS = [
         69.00,
         '60010103001_BeastsnaggaHogzGroup2.jpg',
         'https://www.warhammer.com/en-US/shop/orks-squighog-boyz-2021',
+        '50-63',
     ),
     (
         'ork-stormboyz',
@@ -123,6 +135,7 @@ PRODUCTS = [
         42.00,
         '99120103056_Stormboyz01.jpg',
         'https://www.warhammer.com/en-US/shop/Ork-Stormboyz-2018',
+        '50-57',
     ),
     (
         'ork-gretchin',
@@ -130,6 +143,7 @@ PRODUCTS = [
         27.00,
         '99120103053_OrkGretchin01.jpg',
         'https://www.warhammer.com/en-US/shop/Ork-Gretchin-2018',
+        '50-54',
     ),
     (
         'ork-deffkoptas',
@@ -137,6 +151,7 @@ PRODUCTS = [
         69.00,
         '99120103107_DeffkoptasLead.jpg',
         'https://www.warhammer.com/en-US/shop/deffkoptas-2022',
+        '50-37',
     ),
     # ── Vehicles ──────────────────────────────────────────────────────────────
     (
@@ -145,6 +160,7 @@ PRODUCTS = [
         145.00,
         '99120103072_ORKSKillRigHuntaRigLeadAlt.jpg',
         'https://www.warhammer.com/en-US/shop/hunta-rig-2021',
+        '50-41',
     ),
     (
         'ork-kill-rig',
@@ -152,6 +168,7 @@ PRODUCTS = [
         145.00,
         '99120103072_ORKSKillRigHuntaRigLead.jpg',
         'https://www.warhammer.com/en-US/shop/orks-kill-rig-2021',
+        '50-42',
     ),
     (
         'ork-shokkjump-dragsta',
@@ -159,6 +176,7 @@ PRODUCTS = [
         60.00,
         '99120103067_ShokkjumpDragsta01.jpg',
         'https://www.warhammer.com/en-US/shop/Orks-Shokkjump-Dragsta-2019',
+        '50-62',
     ),
     (
         'ork-kustom-boosta-blasta',
@@ -166,6 +184,7 @@ PRODUCTS = [
         60.00,
         '99120103064_BoostaBlasta01.jpg',
         'https://www.warhammer.com/en-US/shop/Orks-Kustom-Boosta-Blasta-2019',
+        '50-44',
     ),
     (
         'ork-rukkatrukk-squigbuggy',
@@ -173,6 +192,7 @@ PRODUCTS = [
         60.00,
         '99120103066_RukkatrukkSquigbuggy01.jpg',
         'https://www.warhammer.com/en-US/shop/Orks-Rukkatrukk-Squigbuggy-2018',
+        '50-61',
     ),
     (
         'ork-megatrakk-scrapjet',
@@ -180,6 +200,7 @@ PRODUCTS = [
         60.00,
         '99120103065_MegatrakScrapjet01.jpg',
         'https://www.warhammer.com/en-US/shop/Orks-Megatrakk-Scrapjet-2018',
+        '50-45',
     ),
     (
         'ork-deffkilla-wartrike',
@@ -187,6 +208,7 @@ PRODUCTS = [
         60.00,
         '99120103063_DeffkillaWartrike01.jpg',
         'https://www.warhammer.com/en-US/shop/Orks-Deffkilla-Wartrike-2018',
+        '50-36',
     ),
     (
         'ork-boomdakka-snazzwagon',
@@ -194,6 +216,7 @@ PRODUCTS = [
         60.00,
         '99120103062_BoomdakkaSnazzwagon01.jpg',
         'https://www.warhammer.com/en-US/shop/Orks-Boomdakka-Snazzwagon-2018',
+        '50-31',
     ),
     # ── Aircraft (all share the same physical kit — 4 build options) ──────────
     (
@@ -202,6 +225,7 @@ PRODUCTS = [
         90.00,
         '99120103043_OrkBurnaBommer01.jpg',
         'https://www.warhammer.com/en-US/shop/Ork-Burna-Bommer-NEW',
+        '50-33',
     ),
     (
         'ork-blitza-bommer',
@@ -209,6 +233,7 @@ PRODUCTS = [
         90.00,
         '99120103043_OrkBlitzaBommer01.jpg',
         'https://www.warhammer.com/en-US/shop/Ork-Blitza-Bommer-NEW',
+        '50-29',
     ),
     (
         'ork-dakkajet',
@@ -216,6 +241,7 @@ PRODUCTS = [
         90.00,
         '99120103043_OrkDakkajet01.jpg',
         'https://www.warhammer.com/en-US/shop/Ork-Dakkajet-NEW',
+        '50-35',
     ),
     (
         'ork-wazbom-blastajet',
@@ -223,6 +249,7 @@ PRODUCTS = [
         90.00,
         '99120103043_WazbomBlastajet01.jpg',
         'https://www.warhammer.com/en-US/shop/Ork-Wazbom-Blastajet',
+        '50-65',
     ),
     # ── Artillery (all share the same physical kit — 3 build options) ─────────
     (
@@ -231,6 +258,7 @@ PRODUCTS = [
         60.00,
         '99120103029_OrkTraktorCannon01.jpg',
         'https://www.warhammer.com/en-US/shop/Mek-Gunz-Traktor-Kannon',
+        '50-49',
     ),
     (
         'ork-mek-gunz-kustom-mega-kannon',
@@ -238,6 +266,7 @@ PRODUCTS = [
         60.00,
         '99120103029_OrkKustomCannon01.jpg',
         'https://www.warhammer.com/en-US/shop/Mek-Gunz-Kustom-Mega-kannon',
+        '50-47',
     ),
     (
         'ork-mek-gunz-smasha-gun',
@@ -245,6 +274,7 @@ PRODUCTS = [
         60.00,
         '99120103029_OrkSmashaGun01.jpg',
         'https://www.warhammer.com/en-US/shop/Mek-Gunz-Smasha-Gun',
+        '50-48',
     ),
     # ── Codex ─────────────────────────────────────────────────────────────────
     (
@@ -253,6 +283,7 @@ PRODUCTS = [
         60.00,
         '60030103013_ENGOrkCodex1.jpg',
         'https://www.warhammer.com/en-US/shop/codex-orks-hb-english-2024',
+        '50-34',
     ),
 ]
 
@@ -294,14 +325,15 @@ class Command(BaseCommand):
         price_created = 0
         price_updated = 0
 
-        for (slug, name, msrp, img_filename, gw_url) in PRODUCTS:
+        for (slug, name, msrp, img_filename, gw_url, gw_sku) in PRODUCTS:
             image_url = _IMG.format(filename=img_filename)
 
             product, created = Product.objects.update_or_create(
-                slug=slug,
+                gw_sku=gw_sku,
                 defaults={
                     'name': name,
-                    'gw_sku': '',
+                    'slug': slug,
+                    'gw_sku': gw_sku,
                     'msrp': msrp,
                     'image_url': image_url,
                     'gw_url': gw_url,

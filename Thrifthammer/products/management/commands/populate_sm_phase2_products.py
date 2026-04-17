@@ -37,7 +37,7 @@ SKIPPED (not mainline SM units):
   - Blood Angels Chaplain With Jump Pack (wrong faction)
   - Legion Thunderhawk Gunship, Astraeus Super-heavy Tank (Forge World)
 
-Safe to run repeatedly (idempotent via update_or_create keyed on slug).
+Safe to run repeatedly (idempotent via update_or_create keyed on gw_sku).
 
 Usage:
     python manage.py populate_sm_phase2_products
@@ -50,7 +50,7 @@ from products.models import Category, Faction, Product, Retailer
 
 _IMG = 'https://www.warhammer.com/app/resources/catalog/product/920x950/{filename}'
 
-# (slug, name, msrp, image_filename, gw_url)
+# (slug, name, msrp, image_filename, gw_url, gw_sku)
 PRODUCTS = [
     # ── Characters ────────────────────────────────────────────────────────────
     (
@@ -59,6 +59,7 @@ PRODUCTS = [
         43.50,
         '99120101278_SMPrimarisTechmarineLead.jpg',
         'https://www.warhammer.com/en-US/shop/Primaris-Techmarine-2020',
+        '48-135',
     ),
     (
         'space-marine-captain-in-gravis-armour',
@@ -66,6 +67,7 @@ PRODUCTS = [
         43.50,
         '99070101077_SMCPTGravisArmourLead.jpg',
         'https://www.warhammer.com/en-US/shop/space-marines-captain-in-gravis-armour-2022',
+        '48-101',
     ),
     # Captain in Gravis Armour with Master-crafted Heavy Bolt Rifle removed 2026-04-04
     # (product discontinued / not stocked — user requested deletion)
@@ -75,6 +77,7 @@ PRODUCTS = [
         43.50,
         '99070101046_SMPrimarisCaptainPhobosArmour01.jpg',
         'https://www.warhammer.com/en-US/shop/Primaris-Captain-In-Phobos-Armour-2020',
+        '48-102',
     ),
     (
         'space-marine-captain-with-jump-pack',
@@ -82,6 +85,7 @@ PRODUCTS = [
         43.50,
         '99120101394_SMJumpPkCpt1.jpg',
         'https://www.warhammer.com/en-US/shop/space-marines-captain-with-jump-pack-2023',
+        '48-104',
     ),
     (
         'space-marine-captain-jump-pack-relic-shield',
@@ -89,6 +93,7 @@ PRODUCTS = [
         43.50,
         '99120101492_SpaceMarinesCaptainwithJumpPackandRelicShield01.jpg',
         'https://www.warhammer.com/en-US/shop/space-marines-captain-with-jump-pack-and-relic-shield-2025',
+        '48-105',
     ),
     (
         'space-marine-captain-with-relic-shield',
@@ -96,6 +101,7 @@ PRODUCTS = [
         43.50,
         '99120101396_SMCaptainStormShield1.jpg',
         'https://www.warhammer.com/en-US/shop/space-marines-captain-with-storm-shield-2023',
+        '48-106',
     ),
     (
         'space-marine-captain-in-terminator-armour',
@@ -103,6 +109,7 @@ PRODUCTS = [
         47.00,
         '99120101400_SMCptTermArmour1.jpg',
         'https://www.warhammer.com/en-US/shop/space-marines-captain-in-terminator-armour-2023',
+        '48-103',
     ),
     (
         'space-marine-lieutenant-in-phobos-armour',
@@ -110,6 +117,7 @@ PRODUCTS = [
         39.00,
         '99070101045_SMPrimarisLieutenantinPhobosArmour01.jpg',
         'https://www.warhammer.com/en-US/shop/Primaris-Lieutenant-In-Phobos-Armour-2020',
+        '48-121',
     ),
     (
         'space-marine-lieutenant-with-power-sword',
@@ -117,6 +125,7 @@ PRODUCTS = [
         39.00,
         '99070101032_SMPrimarisLieutenantPowerSword01.jpg',
         'https://www.warhammer.com/en-US/shop/Space-Marine-Primaris-Lieutenant-With-Power-Sword-2020',
+        '48-122',
     ),
     (
         'space-marine-lieutenant-with-storm-shield',
@@ -124,6 +133,7 @@ PRODUCTS = [
         39.00,
         '99070101080_SMLtStormShield1.jpg',
         'https://www.warhammer.com/en-US/shop/space-marines-lieutenant-with-storm-shield-2023',
+        '48-123',
     ),
     (
         'space-marine-librarian-in-phobos-armour',
@@ -131,6 +141,7 @@ PRODUCTS = [
         39.00,
         '99070101046_SMPrimarisLibrarianPhobosArmour01.jpg',
         'https://www.warhammer.com/en-US/shop/Primaris-Librarian-In-Phobos-Armour-2020',
+        '48-125',
     ),
     (
         'space-marine-librarian-in-terminator-armour',
@@ -138,6 +149,7 @@ PRODUCTS = [
         42.00,
         '60010199057_LeviathanEXTRA3.jpg',
         'https://www.warhammer.com/en-US/shop/space-marine-librarian-in-terminator-armour-2023',
+        '48-120',
     ),
     (
         'space-marine-ancient-in-terminator-armour',
@@ -145,6 +157,7 @@ PRODUCTS = [
         47.00,
         '99120101455_SPACEMARINESAncientInTerminatorArmour01.jpg',
         'https://www.warhammer.com/en-US/shop/space-marines-ancient-in-terminator-armour-2025',
+        '48-99',
     ),
     # ── Infantry ──────────────────────────────────────────────────────────────
     (
@@ -153,6 +166,7 @@ PRODUCTS = [
         65.00,
         '99120101189_PrimarisHellblasters01.jpg',
         'https://www.warhammer.com/en-US/shop/Space-Marines-Primaris-Hellblasters-2020',
+        '48-117',
     ),
     (
         'space-marine-reiver-squad',
@@ -160,6 +174,7 @@ PRODUCTS = [
         65.00,
         '99120101186_SpaceMarineRievers01.jpg',
         'https://www.warhammer.com/en-US/shop/Space-Marines-Primaris-Reivers-2020',
+        '48-127',
     ),
     (
         'space-marine-heavy-intercessor-squad',
@@ -167,6 +182,7 @@ PRODUCTS = [
         65.00,
         '99120101288_SMHeavyIntercessorsLead.jpg',
         'https://www.warhammer.com/en-US/shop/Space-Marines-Heavy-Intercessors-2021',
+        '48-116',
     ),
     (
         'space-marine-terminator-assault-squad',
@@ -174,6 +190,7 @@ PRODUCTS = [
         69.00,
         '99120101454_SPACEMARINESTerminatorAssaultSquad01.jpg',
         'https://www.warhammer.com/en-US/shop/space-marines-terminator-assault-squad-2025',
+        '48-136',
     ),
     (
         'space-marine-centurion-devastator-squad',
@@ -181,6 +198,7 @@ PRODUCTS = [
         80.00,
         '99120101106_CenturionDevastatorSquadNEW01.jpg',
         'https://www.warhammer.com/en-US/shop/Centurion-Devastator-Squad-2020',
+        '48-108',
     ),
     (
         'space-marine-centurion-assault-squad',
@@ -188,6 +206,7 @@ PRODUCTS = [
         80.00,
         '99120101106_CenturionAssaultSquadNEW01.jpg',
         'https://www.warhammer.com/en-US/shop/Centurion-Assault-Squad-2020',
+        '48-107',
     ),
     (
         'space-marine-assault-intercessors-jump-packs',
@@ -195,6 +214,7 @@ PRODUCTS = [
         60.00,
         '99120101392_SMJumpPkIntercessors2.jpg',
         'https://www.warhammer.com/en-US/shop/space-marines-jump-pack-intercessors-2023',
+        '48-100',
     ),
     (
         'space-marine-desolation-squad',
@@ -202,6 +222,7 @@ PRODUCTS = [
         60.00,
         '99120101377_SMDesolationSquad2.jpg',
         'https://www.warhammer.com/en-US/shop/space-marines-desolation-squad-2023',
+        '48-111',
     ),
     # ── Vehicles ──────────────────────────────────────────────────────────────
     (
@@ -210,6 +231,7 @@ PRODUCTS = [
         60.00,
         '99120101273_SMPrimarisChaplainBikeLead.jpg',
         'https://www.warhammer.com/en-US/shop/Primaris-Chaplain-on-Bike-2020',
+        '48-109',
     ),
     (
         'space-marine-venerable-dreadnought',
@@ -217,6 +239,7 @@ PRODUCTS = [
         65.00,
         '99120101083_VenerableDreadnoughtNEW01.jpg',
         'https://www.warhammer.com/en-US/shop/Space-Marine-Venerable-Dreadnought-2020',
+        '48-137',
     ),
     (
         'space-marine-invictor-tactical-warsuit',
@@ -224,6 +247,7 @@ PRODUCTS = [
         73.50,
         '99120101264_SMPrimarisInvictusTacticalWarsuit01.jpg',
         'https://www.warhammer.com/en-US/shop/Space-Marine-Primaris-Invictor-Tactical-Warsuit-2020',
+        '48-118',
     ),
     (
         'space-marine-rhino',
@@ -231,6 +255,7 @@ PRODUCTS = [
         60.00,
         '99120101063_SpaceMarineRhinoNEW01.jpg',
         'https://www.warhammer.com/en-US/shop/Space-Marines-Rhino-2020',
+        '48-128',
     ),
     (
         'space-marine-razorback',
@@ -238,6 +263,7 @@ PRODUCTS = [
         60.00,
         '99120101245_SMRazorback01.jpg',
         'https://www.warhammer.com/en-US/shop/Space-Marines-Razorback-2020',
+        '48-126',
     ),
     (
         'space-marine-drop-pods',
@@ -245,6 +271,7 @@ PRODUCTS = [
         85.00,
         '99120101423_SpaceMarinesDropPods1.jpg',
         'https://www.warhammer.com/en-US/shop/space-marines-drop-pods-2025',
+        '48-112',
     ),
     (
         'space-marine-land-raider-redeemer',
@@ -252,6 +279,7 @@ PRODUCTS = [
         115.00,
         '99120101344_SMLandRaiderCrusaderandRedeemerLead.jpg',
         'https://www.warhammer.com/en-US/shop/Landraider-Redeemer-2020',
+        '48-119',
     ),
     (
         'space-marine-predator-destructor',
@@ -259,6 +287,7 @@ PRODUCTS = [
         80.00,
         '99120101247_SMPredator01Alt.jpg',
         'https://www.warhammer.com/en-US/shop/Space-Marines-Predator-2020',
+        '48-124',
     ),
     # ── Storm Speeders (same physical kit — 3 build options) ──────────────────
     (
@@ -267,6 +296,7 @@ PRODUCTS = [
         82.00,
         '99120101274_SMThunderstrikeLead.jpg',
         'https://www.warhammer.com/en-US/shop/Space-Marines-Storm-Speeder-Thunderstrike',
+        '48-133',
     ),
     (
         'space-marine-storm-speeder-hammerstrike',
@@ -274,6 +304,7 @@ PRODUCTS = [
         82.00,
         '99120101274_SMHammerstrikeLead.jpg',
         'https://www.warhammer.com/en-US/shop/Space-Marines-Storm-Speeder-Hammerstrike',
+        '48-132',
     ),
     (
         'space-marine-storm-speeder-hailstrike',
@@ -281,6 +312,7 @@ PRODUCTS = [
         82.00,
         '99120101274_SMStormspeederLead.jpg',
         'https://www.warhammer.com/en-US/shop/Space-Marines-Storm-Speeder-2020',
+        '48-131',
     ),
     # ── Gladiators (same physical kit — 3 build options) ──────────────────────
     (
@@ -289,6 +321,7 @@ PRODUCTS = [
         96.00,
         '99120101282_SMGladiatorLancerTankLead.jpg',
         'https://www.warhammer.com/en-US/shop/Gladiator-Lancer-2020',
+        '48-113',
     ),
     (
         'space-marine-gladiator-reaper',
@@ -296,6 +329,7 @@ PRODUCTS = [
         96.00,
         '99120101282_SMGladiatorReaperTankLead.jpg',
         'https://www.warhammer.com/en-US/shop/Gladiator-Reaper-2020',
+        '48-114',
     ),
     (
         'space-marine-gladiator-valiant',
@@ -303,6 +337,7 @@ PRODUCTS = [
         96.00,
         '99120101282_SMGladiatorLancerReaperTankLead.jpg',
         'https://www.warhammer.com/en-US/shop/Gladiator-2020',
+        '48-115',
     ),
     # ── Aircraft (same kit — Stormtalon/Stormhawk dual build) ─────────────────
     (
@@ -311,6 +346,7 @@ PRODUCTS = [
         69.00,
         '99120101315_StormhawkTalonInterceptorLead.jpg',
         'https://www.warhammer.com/en-US/shop/Stormtalon-Gunship-2020',
+        '48-134',
     ),
     (
         'space-marine-stormhawk-interceptor',
@@ -318,6 +354,7 @@ PRODUCTS = [
         69.00,
         '99120101315_SMStormhawkInterceptorLeadNew.jpg',
         'https://www.warhammer.com/en-US/shop/Stormhawk-Interceptor-2020',
+        '48-129',
     ),
     (
         'space-marine-stormraven-gunship',
@@ -325,6 +362,7 @@ PRODUCTS = [
         127.00,
         '99120101339_SMStormravenGunshipLead.jpg',
         'https://www.warhammer.com/en-US/shop/Stormraven-Gunship-2020',
+        '48-130',
     ),
     # ── Codex ─────────────────────────────────────────────────────────────────
     (
@@ -333,6 +371,7 @@ PRODUCTS = [
         60.00,
         '60030101061_ENGSMCodex01.jpg',
         'https://www.warhammer.com/en-US/shop/codex-space-marines-hb-2023-eng',
+        '48-110',
     ),
 ]
 
@@ -374,14 +413,15 @@ class Command(BaseCommand):
         price_created = 0
         price_updated = 0
 
-        for (slug, name, msrp, img_filename, gw_url) in PRODUCTS:
+        for (slug, name, msrp, img_filename, gw_url, gw_sku) in PRODUCTS:
             image_url = _IMG.format(filename=img_filename)
 
             product, created = Product.objects.update_or_create(
-                slug=slug,
+                gw_sku=gw_sku,
                 defaults={
                     'name': name,
-                    'gw_sku': '',
+                    'slug': slug,
+                    'gw_sku': gw_sku,
                     'msrp': msrp,
                     'image_url': image_url,
                     'gw_url': gw_url,

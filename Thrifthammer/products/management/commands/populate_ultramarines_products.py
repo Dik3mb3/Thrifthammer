@@ -19,7 +19,7 @@ Generic SM products are seeded separately via populate_sm_phase2_products
 and tagged to the Space Marines faction — Ultramarines inherits them via
 parent_faction.
 
-Safe to run repeatedly (idempotent via update_or_create keyed on slug).
+Safe to run repeatedly (idempotent via update_or_create keyed on gw_sku).
 
 Usage:
     python manage.py populate_ultramarines_products
@@ -32,7 +32,7 @@ from products.models import Category, Faction, Product, Retailer
 
 _IMG = 'https://www.warhammer.com/app/resources/catalog/product/920x950/{filename}'
 
-# (slug, name, msrp, image_filename, gw_url)
+# (slug, name, msrp, image_filename, gw_url, gw_sku)
 PRODUCTS = [
     (
         'ultramarines-captain-titus-wardens',
@@ -40,6 +40,7 @@ PRODUCTS = [
         94.00,
         '99120101459_SpaceMarinesTitusWardens1.jpg',
         'https://www.warhammer.com/en-US/shop/captain-titus-and-the-wardens-of-ultramar-2026',
+        '55-31',
     ),
     (
         'ultramarines-roboute-guilliman',
@@ -47,6 +48,7 @@ PRODUCTS = [
         73.50,
         '99120101177_TriumvirateofthePrimarch02.jpg',
         'https://www.warhammer.com/en-US/shop/Roboute-Guilliman-Ultramarines-Primarch-2020',
+        '55-02',
     ),
     (
         'ultramarines-marneus-calgar',
@@ -54,6 +56,7 @@ PRODUCTS = [
         55.50,
         '99120101450_UltramarinesMarneusCalgarArmourAntilochus1.jpg',
         'https://www.warhammer.com/en-US/shop/marneus-calgar-in-armour-of-antilochus-2025',
+        '55-12',
     ),
     (
         'ultramarines-chief-librarian-tigurius',
@@ -61,6 +64,7 @@ PRODUCTS = [
         48.00,
         '99120101254_UMChiefLibrarian01.jpg',
         'https://www.warhammer.com/en-US/shop/Ultramarines-Chief-Librarian-Tigurius-2020',
+        '55-33',
     ),
     (
         'ultramarines-cato-sicarius',
@@ -68,6 +72,7 @@ PRODUCTS = [
         48.00,
         '99120101452_UltramarinesCatoSicarius1.jpg',
         'https://www.warhammer.com/en-US/shop/ultramarines-cato-sicarius-2025',
+        '55-32',
     ),
     (
         'ultramarines-honour-guard',
@@ -75,6 +80,7 @@ PRODUCTS = [
         65.00,
         '99120101453_UltramarinesVictrixHonourGuard1.jpg',
         'https://www.warhammer.com/en-US/shop/ultramarines-victrix-honour-guard-2025',
+        '55-35',
     ),
     (
         'ultramarines-upgrades-and-transfers',
@@ -82,6 +88,7 @@ PRODUCTS = [
         35.00,
         '99120101451_SpaceMarineUltramarinesUpgradesTransfers1.jpg',
         'https://www.warhammer.com/en-US/shop/ultramarines-upgrades-and-transfers-2025',
+        '55-34',
     ),
 ]
 
@@ -157,14 +164,15 @@ class Command(BaseCommand):
         price_created = 0
         price_updated = 0
 
-        for (slug, name, msrp, img_filename, gw_url) in PRODUCTS:
+        for (slug, name, msrp, img_filename, gw_url, gw_sku) in PRODUCTS:
             image_url = _IMG.format(filename=img_filename)
 
             product, created = Product.objects.update_or_create(
-                slug=slug,
+                gw_sku=gw_sku,
                 defaults={
                     'name': name,
-                    'gw_sku': '',
+                    'slug': slug,
+                    'gw_sku': gw_sku,
                     'msrp': msrp,
                     'image_url': image_url,
                     'gw_url': gw_url,

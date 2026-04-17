@@ -23,7 +23,7 @@ NOTES:
   - Ork Gargantuan Squiggoth ($530) is a Forge World resin product
     (note 99590103031_ image prefix vs 9912... for plastic kits).
 
-Safe to run repeatedly (idempotent via update_or_create keyed on slug).
+Safe to run repeatedly (idempotent via update_or_create keyed on gw_sku).
 
 Usage:
     python manage.py populate_ork_phase3_products
@@ -36,7 +36,7 @@ from products.models import Category, Faction, Product, Retailer
 
 _IMG = 'https://www.warhammer.com/app/resources/catalog/product/920x950/{filename}'
 
-# (slug, name, msrp, image_filename, gw_url)
+# (slug, name, msrp, image_filename, gw_url, gw_sku)
 PRODUCTS = [
     # ── Characters ────────────────────────────────────────────────────────────
     (
@@ -45,6 +45,7 @@ PRODUCTS = [
         39.00,
         '99120103111_WarbossAttackSquigLead.jpg',
         'https://www.warhammer.com/en-US/shop/ork-warboss-with-attack-squig-2022',
+        '50-59',
     ),
     (
         'ork-big-mek-2024',
@@ -52,6 +53,7 @@ PRODUCTS = [
         53.00,
         '99120103120_ORKBigMek01.jpg',
         'https://www.warhammer.com/en-US/shop/orks-big-mek-2024',
+        '50-26',
     ),
     (
         'ork-big-mek-in-mega-armour',
@@ -59,6 +61,7 @@ PRODUCTS = [
         73.50,
         '99120103035_BigMekMega01.jpg',
         'https://www.warhammer.com/en-US/shop/Big-Mek-in-Mega-Armour',
+        '50-27',
     ),
     (
         'ork-weirdboy',
@@ -66,6 +69,7 @@ PRODUCTS = [
         33.50,
         '99800103004_WeirdboyNEW01.jpg',
         'https://www.warhammer.com/en-US/shop/Ork-Weirdboy',
+        '50-66',
     ),
     # ── Infantry ──────────────────────────────────────────────────────────────
     (
@@ -74,6 +78,7 @@ PRODUCTS = [
         42.00,
         '99120103054_OrkBurnaBoyz01.jpg',
         'https://www.warhammer.com/en-US/shop/Ork-Burna-Boyz-2018',
+        '50-53',
     ),
     (
         'ork-kommandos',
@@ -81,6 +86,7 @@ PRODUCTS = [
         69.00,
         '99120103127_KT2Group2.jpg',
         'https://www.warhammer.com/en-US/shop/orks-kommandos-2025',
+        '50-43',
     ),
     # ── Cavalry / Bikes ───────────────────────────────────────────────────────
     (
@@ -89,6 +95,7 @@ PRODUCTS = [
         60.00,
         '99120103057_WarbikerMob01.jpg',
         'https://www.warhammer.com/en-US/shop/Ork-Warbiker-Mob-2018',
+        '50-58',
     ),
     # ── Vehicles ──────────────────────────────────────────────────────────────
     (
@@ -97,6 +104,7 @@ PRODUCTS = [
         130.00,
         '99120103084_GunwagonLead.jpg',
         'https://www.warhammer.com/en-US/shop/gunwagon-2021',
+        '50-40',
     ),
     (
         'ork-bonebreaka',
@@ -104,6 +112,7 @@ PRODUCTS = [
         130.00,
         '99120103084_BonebreakaLead.jpg',
         'https://www.warhammer.com/en-US/shop/bonebreaka-2021',
+        '50-30',
     ),
     (
         'ork-big-ed-bossbunka',
@@ -111,6 +120,7 @@ PRODUCTS = [
         85.00,
         '99120103082_BigEdBossBunkaLead.jpg',
         'https://www.warhammer.com/en-US/shop/orks-big-ed-bossbunka-2021',
+        '50-25',
     ),
     # ── Walkers / Super-heavies ───────────────────────────────────────────────
     (
@@ -119,6 +129,7 @@ PRODUCTS = [
         150.00,
         '99120103034_Gorkanaut01.jpg',
         'https://www.warhammer.com/en-US/shop/Gorkanaut',
+        '50-39',
     ),
     (
         'ork-morkanaut',
@@ -126,6 +137,7 @@ PRODUCTS = [
         150.00,
         '99120103034_Morkanaut01.jpg',
         'https://www.warhammer.com/en-US/shop/Morkanaut',
+        '50-50',
     ),
     (
         'ork-stompa',
@@ -133,6 +145,7 @@ PRODUCTS = [
         150.00,
         '99120103021_StompaNEW01.jpg',
         'https://www.warhammer.com/en-US/shop/Ork-Stompa',
+        '50-64',
     ),
     # ── Fortifications ───────────────────────────────────────────────────────
     (
@@ -141,6 +154,7 @@ PRODUCTS = [
         60.00,
         '99120103029_OrkBubbleChukka01.jpg',
         'https://www.warhammer.com/en-US/shop/Mek-Gunz-Bubblechukka',
+        '50-46',
     ),
     # Ork Gargantuan Squiggoth removed 2026-04-04 — Forge World resin product,
     # not stocked by mainstream retailers. User requested removal of all FW products.
@@ -183,14 +197,15 @@ class Command(BaseCommand):
         price_created = 0
         price_updated = 0
 
-        for (slug, name, msrp, img_filename, gw_url) in PRODUCTS:
+        for (slug, name, msrp, img_filename, gw_url, gw_sku) in PRODUCTS:
             image_url = _IMG.format(filename=img_filename)
 
             product, created = Product.objects.update_or_create(
-                slug=slug,
+                gw_sku=gw_sku,
                 defaults={
                     'name': name,
-                    'gw_sku': '',
+                    'slug': slug,
+                    'gw_sku': gw_sku,
                     'msrp': msrp,
                     'image_url': image_url,
                     'gw_url': gw_url,

@@ -34,7 +34,7 @@ SKIPPED:
   - Kill Team products, bundles, starter sets
 
 Sourced from GW en-US all-SM scrape — 2026-04-04. Tagged batch_tag='phase-2'.
-Seeds GW CurrentPrice at MSRP. Idempotent (update_or_create keyed on slug).
+Seeds GW CurrentPrice at MSRP. Idempotent (update_or_create keyed on gw_sku).
 
 Usage:
     python manage.py populate_sm_phase3_products
@@ -47,7 +47,7 @@ from products.models import Category, Faction, Product, Retailer
 
 _IMG = 'https://www.warhammer.com/app/resources/catalog/product/920x950/{filename}'
 
-# {faction_name: [(slug, name, msrp, img_filename, gw_url), ...]}
+# {faction_name: [(slug, name, msrp, img_filename, gw_url, gw_sku), ...]}
 PRODUCTS_BY_FACTION = {
     'Blood Angels': [
         (
@@ -56,6 +56,7 @@ PRODUCTS_BY_FACTION = {
             39.00,
             '99070101017_BloodAngelsChaplainJumpack01.jpg',
             'https://www.warhammer.com/en-US/shop/Blood-Angels-Chaplain-with-Jump-Pack-2020',
+            '41-27',
         ),
         (
             'blood-angels-librarian-terminator-armour',
@@ -63,6 +64,7 @@ PRODUCTS_BY_FACTION = {
             35.00,
             '99070101007_BATerminatorLib01.jpg',
             'https://www.warhammer.com/en-US/shop/Blood-Angels-Terminator-Librarian-2014',
+            '41-28',
         ),
         (
             'blood-angels-captain',
@@ -70,6 +72,7 @@ PRODUCTS_BY_FACTION = {
             43.50,
             '99120101416_BACaptain01.jpg',
             'https://www.warhammer.com/en-US/shop/blood-angels-captain-2024',
+            '41-26',
         ),
         (
             'codex-supplement-blood-angels',
@@ -77,6 +80,7 @@ PRODUCTS_BY_FACTION = {
             35.00,
             '60030101063_EngBACodex01.jpg',
             'https://www.warhammer.com/en-US/shop/codex-supplement-blood-angels-2024-eng',
+            '41-29',
         ),
     ],
     'Black Templars': [
@@ -86,6 +90,7 @@ PRODUCTS_BY_FACTION = {
             35.00,
             '60030101065_ENGBlackTemplarsCodexHB1.jpg',
             'https://www.warhammer.com/en-US/shop/codex-supplement-black-templars-2025-eng',
+            '58-01',
         ),
     ],
     'Dark Angels': [
@@ -95,6 +100,7 @@ PRODUCTS_BY_FACTION = {
             35.00,
             '99070101011_DarkAngelsInterrogatorChaplain01.jpg',
             'https://www.warhammer.com/en-US/shop/Dark-Angels-Interrogator-Chaplain-2017',
+            '44-22',
         ),
         (
             'dark-angels-ravenwing-bike-squadron',
@@ -102,6 +108,7 @@ PRODUCTS_BY_FACTION = {
             60.00,
             '99120101050_BikeSquadNEW_01.jpg',
             'https://www.warhammer.com/en-US/shop/Dark-Angels-Ravenwing-Bike-Squadron',
+            '44-23',
         ),
         (
             'codex-supplement-dark-angels',
@@ -109,6 +116,7 @@ PRODUCTS_BY_FACTION = {
             35.00,
             '60030101062_ENGDACodex1.jpg',
             'https://www.warhammer.com/en-US/shop/codex-supplement-dark-angels-eng-2024',
+            '44-21',
         ),
     ],
     'Grey Knights': [
@@ -118,6 +126,7 @@ PRODUCTS_BY_FACTION = {
             48.00,
             '99120107015_GKCastellanCroweLead.jpg',
             'https://www.warhammer.com/en-US/shop/grey-knights-castellan-crowe-2022',
+            '57-21',
         ),
         (
             'grey-knights-purifier-squad',
@@ -125,6 +134,7 @@ PRODUCTS_BY_FACTION = {
             69.00,
             '99120107018_PurifierLead.jpg',
             'https://www.warhammer.com/en-US/shop/Grey-Knights-Purifier-Squad-2022',
+            '57-27',
         ),
         (
             'grey-knights-purgation-squad',
@@ -132,6 +142,7 @@ PRODUCTS_BY_FACTION = {
             69.00,
             '99120107018_PurgationLead.jpg',
             'https://www.warhammer.com/en-US/shop/Grey-Knights-Purgation-Squad-2022',
+            '57-26',
         ),
         (
             'grey-knights-interceptor-squad',
@@ -139,6 +150,7 @@ PRODUCTS_BY_FACTION = {
             69.00,
             '99120107018_InceptorLead.jpg',
             'https://www.warhammer.com/en-US/shop/Grey-Knights-Interceptor-Squad-2022',
+            '57-24',
         ),
         (
             'grey-knights-paladins',
@@ -146,6 +158,7 @@ PRODUCTS_BY_FACTION = {
             60.00,
             '99120107001_PaladinsSquadNEW01.jpg',
             'https://www.warhammer.com/en-US/shop/Grey-Knights-Paladins-2017',
+            '57-25',
         ),
         (
             'grey-knights-grand-master-nemesis-dreadknight',
@@ -153,6 +166,7 @@ PRODUCTS_BY_FACTION = {
             82.00,
             '99120107023_GreyKnightsGrandmasterinNemesisDreadknightVehicle01.jpg',
             'https://www.warhammer.com/en-US/shop/grey-knights-grandmaster-in-nemesis-dreadknight-2025',
+            '57-23',
         ),
         (
             'codex-grey-knights',
@@ -160,6 +174,7 @@ PRODUCTS_BY_FACTION = {
             60.00,
             '60030107008_INTGreyKnightsBattletome01.jpg',
             'https://www.warhammer.com/en-US/shop/codex-grey-knights-2025-eng',
+            '57-22',
         ),
     ],
     'Space Wolves': [
@@ -169,6 +184,7 @@ PRODUCTS_BY_FACTION = {
             39.00,
             '99070101019_UlrikTheSlayer01.jpg',
             'https://www.warhammer.com/en-US/shop/Space-Wolves-Ulrik-the-Slayer-2020',
+            '53-31',
         ),
         (
             'space-wolves-iron-priest',
@@ -176,6 +192,7 @@ PRODUCTS_BY_FACTION = {
             39.00,
             '99070101018_SpaceWolvesIronPriest01.jpg',
             'https://www.warhammer.com/en-US/shop/Space-Wolves-Iron-Priest-2020',
+            '53-26',
         ),
         (
             'space-wolves-wulfen',
@@ -183,6 +200,7 @@ PRODUCTS_BY_FACTION = {
             65.00,
             '99120101140_SpaceWolvesWulfen01.jpg',
             'https://www.warhammer.com/en-US/shop/Space-Wolves-Wulfen-2020',
+            '53-35',
         ),
         (
             'space-wolves-venerable-dreadnought',
@@ -190,6 +208,7 @@ PRODUCTS_BY_FACTION = {
             65.00,
             '99120101116_SWVenerableDread01.jpg',
             'https://www.warhammer.com/en-US/shop/Space-Wolves-Venerable-Dreadnought-2020',
+            '53-30',
         ),
         (
             'space-wolves-fenrisian-wolves',
@@ -197,6 +216,7 @@ PRODUCTS_BY_FACTION = {
             43.50,
             '99120101252_FenrisianWolvesLead.jpg',
             'https://www.warhammer.com/en-US/shop/Fenrisian-Wolves-2020',
+            '53-25',
         ),
         (
             'space-wolves-murderfang',
@@ -204,6 +224,7 @@ PRODUCTS_BY_FACTION = {
             65.00,
             '99120101116_Murderfang01.jpg',
             'https://www.warhammer.com/en-US/shop/Murderfang-2020',
+            '53-28',
         ),
         (
             'space-wolves-bjorn-fell-handed',
@@ -211,6 +232,7 @@ PRODUCTS_BY_FACTION = {
             65.00,
             '99120101116_BornFellhanded01.jpg',
             'https://www.warhammer.com/en-US/shop/Bjorn-the-Fellhanded-2020',
+            '53-22',
         ),
         (
             'space-wolves-wulfen-dreadnought',
@@ -218,6 +240,7 @@ PRODUCTS_BY_FACTION = {
             65.00,
             '99120101116_Murderfang01.jpg',
             'https://www.warhammer.com/en-US/shop/wulfen-dreadnought-2025',
+            '53-36',
         ),
         (
             'space-wolves-wolf-priest',
@@ -225,6 +248,7 @@ PRODUCTS_BY_FACTION = {
             42.00,
             '99120101435_SpaceWolvesWolfPriest1.jpg',
             'https://www.warhammer.com/en-US/shop/space-wolves-wolf-priest-2025',
+            '53-34',
         ),
         (
             'space-wolves-wolf-guard-battle-leader',
@@ -232,6 +256,7 @@ PRODUCTS_BY_FACTION = {
             43.50,
             '99120101436_SpaceWolvesWolfGuardBattleLeader1.jpg',
             'https://www.warhammer.com/en-US/shop/space-wolves-wolf-guard-battle-leader-2025',
+            '53-32',
         ),
         (
             'space-wolves-blood-claws',
@@ -239,6 +264,7 @@ PRODUCTS_BY_FACTION = {
             65.00,
             '99120101434_SpaceWolvesBloodClaws1.jpg',
             'https://www.warhammer.com/en-US/shop/space-wolves-blood-claws-2025',
+            '53-23',
         ),
         (
             'space-wolves-arjac-rockfist',
@@ -246,6 +272,7 @@ PRODUCTS_BY_FACTION = {
             47.00,
             '99120101439_SpaceWolvesArjacRockfist1.jpg',
             'https://www.warhammer.com/en-US/shop/space-wolves-arjac-rockfist-2025',
+            '53-21',
         ),
         (
             'space-wolves-njal-stormcaller',
@@ -253,6 +280,7 @@ PRODUCTS_BY_FACTION = {
             47.00,
             '99120101440_SpaceWolvesNjalStormcaller1.jpg',
             'https://www.warhammer.com/en-US/shop/space-wolves-njal-stormcaller-2025',
+            '53-29',
         ),
         (
             'space-wolves-wolf-guard-headtakers',
@@ -260,6 +288,7 @@ PRODUCTS_BY_FACTION = {
             69.00,
             '99120101437_SpaceWolvesWolfGuardHeadtakers1.jpg',
             'https://www.warhammer.com/en-US/shop/space-wolves-wolf-guard-headtakers-2025',
+            '53-33',
         ),
         (
             'space-wolves-logan-grimnar',
@@ -267,6 +296,7 @@ PRODUCTS_BY_FACTION = {
             73.50,
             '99120101438_SpaceWolvesLoganGrimnar1.jpg',
             'https://www.warhammer.com/en-US/shop/space-wolves-logan-grimnar-2025',
+            '53-27',
         ),
         (
             'codex-supplement-space-wolves',
@@ -274,6 +304,7 @@ PRODUCTS_BY_FACTION = {
             35.00,
             '60030101064_EngSWCodex01.jpg',
             'https://www.warhammer.com/en-US/shop/codex-supplement-space-wolves-2025-eng',
+            '53-24',
         ),
     ],
 }
@@ -318,14 +349,15 @@ class Command(BaseCommand):
 
             self.stdout.write(self.style.MIGRATE_HEADING(f'\n  ── {faction_name} ──'))
 
-            for (slug, name, msrp, img_filename, gw_url) in products:
+            for (slug, name, msrp, img_filename, gw_url, gw_sku) in products:
                 image_url = _IMG.format(filename=img_filename)
 
                 product, created = Product.objects.update_or_create(
-                    slug=slug,
+                    gw_sku=gw_sku,
                     defaults={
                         'name': name,
-                        'gw_sku': '',
+                        'slug': slug,
+                        'gw_sku': gw_sku,
                         'msrp': msrp,
                         'image_url': image_url,
                         'gw_url': gw_url,
