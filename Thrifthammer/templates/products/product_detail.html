@@ -174,13 +174,13 @@
       {# Description #}
       {% if product.description %}
       <div class="product-description">
-        <h3>About This Kit</h3>
+        <h2>About This Kit</h2>
         <p>{{ product.description }}</p>
       </div>
       {% endif %}
 
       {# Price comparison table #}
-      <h2 style="font-size:1.1rem;margin-bottom:var(--sp-2);">Price Comparison</h2>
+      <h3 style="font-size:1.1rem;margin-bottom:var(--sp-2);">Price Comparison</h3>
       {% if current_prices %}
       <div class="price-table-wrap">
       <table class="price-table">
@@ -264,9 +264,9 @@
   {# ── Related products ── #}
   {% if related_products %}
   <div style="margin-top:var(--sp-12);">
-    <h2 style="font-size:1.1rem;margin-bottom:var(--sp-2);">
+    <h3 style="font-size:1.1rem;margin-bottom:var(--sp-2);">
       {% if product.faction %}More {{ product.faction.name }} Products{% else %}Related Products{% endif %}
-    </h2>
+    </h3>
     <div class="gold-rule"></div>
     <div class="card-grid" style="align-items:flex-start;">
       {% for rp in related_products %}
