@@ -138,18 +138,151 @@ CROSS_FACTION_UNITS = {
         ],
     },
 
+    # ── Space Wolves ──────────────────────────────────────────────────────────
+    # SM kits that appear in the Space Wolves army list but already exist as
+    # SM UnitTypes (48-xx or HA-xxx SKUs).  Units with 53-xx SKUs are native
+    # SW UnitTypes seeded by seed_space_wolves_stats.py — skip them here.
+    # Units with 41-xx SKUs belong to Blood Angels; they need BA as parent
+    # (future work: add once the BA calculator confirms those UnitType names).
+    "Space Wolves": {
+        "parent_faction": "Space Marines",
+        "units": [
+
+            # ── Characters ───────────────────────────────────────────────────
+            # card_name "Ancient in Terminator Armor" differs (US spelling):
+            {"parent": "Ancient in Terminator Armour"},
+            {"parent": "Captain in Gravis Armour"},
+            {"parent": "Captain in Phobos Armour"},
+            {"parent": "Captain in Terminator Armour"},
+            {"parent": "Captain with Jump Pack"},
+            # card_name "Captain" maps to SM "Captain with Relic Shield":
+            {"parent": "Captain with Relic Shield",
+             "name":   "Captain"},
+            # SM name differs from SW display name:
+            {"parent": "Space Marine Chaplain",
+             "name":   "Chaplain"},
+            {"parent": "Space Marine Chaplain in Terminator Armour",
+             "name":   "Chaplain in Terminator Armour"},
+            {"parent": "Chaplain on Bike"},
+            {"parent": "Space Marine Librarian",
+             "name":   "Librarian"},
+            {"parent": "Primaris Librarian in Phobos Armour",
+             "name":   "Librarian in Phobos Armour"},
+            {"parent": "Lieutenant in Reiver Armour"},
+            {"parent": "Space Marine Primaris Lieutenant",
+             "name":   "Lieutenant"},
+            # SM stores Techmarine under legacy 'hq' category:
+            {"parent": "Techmarine",
+             "category": "character"},
+
+            # ── Battleline ───────────────────────────────────────────────────
+            {"parent": "Space Marine Ancient",
+             "name":   "Ancient"},
+            {"parent": "Space Marine Assault Intercessors",
+             "name":   "Assault Intercessor Squad"},
+            {"parent": "Assault Intercessors with Jump Packs"},
+            {"parent": "Space Marine Intercessors",
+             "name":   "Intercessor Squad"},
+            {"parent": "Space Marine Scouts",
+             "name":   "Scout Squad"},
+
+            # ── Infantry ─────────────────────────────────────────────────────
+            {"parent": "Space Marine Aggressors",
+             "name":   "Aggressor Squad"},
+            {"parent": "Space Marine Bladeguard Veterans",
+             "name":   "Bladeguard Veteran Squad"},
+            {"parent": "Centurion Assault Squad"},
+            {"parent": "Centurion Devastator Squad"},
+            {"parent": "Desolation Squad"},
+            {"parent": "Space Marine Eradicators",
+             "name":   "Eradicator Squad"},
+            {"parent": "Heavy Intercessor Squad"},
+            {"parent": "Hellblaster Squad"},
+            {"parent": "Space Marine Inceptors",
+             "name":   "Inceptor Squad"},
+            {"parent": "Space Marine Incursors",
+             "name":   "Incursor Squad"},
+            {"parent": "Space Marine Infernus Squad",
+             "name":   "Infernus Squad"},
+            {"parent": "Space Marine Infiltrators",
+             "name":   "Infiltrator Squad"},
+            {"parent": "Reiver Squad"},
+            {"parent": "Space Marine Sternguard Veteran Squad",
+             "name":   "Sternguard Veteran Squad"},
+            {"parent": "Space Marine Terminator Squad",
+             "name":   "Terminator Squad"},
+            {"parent": "Terminator Assault Squad"},
+            {"parent": "Space Marine Vanguard Veteran Squad",
+             "name":   "Vanguard Veteran Squad with Jump Packs"},
+
+            # ── Vehicles ─────────────────────────────────────────────────────
+            {"parent": "Space Marine Ballistus Dreadnought",
+             "name":   "Ballistus Dreadnought"},
+            {"parent": "Space Marine Brutalis Dreadnought",
+             "name":   "Brutalis Dreadnought"},
+            {"parent": "Space Marine Company Heroes",
+             "name":   "Company Heroes"},
+            {"parent": "Space Marine Firestrike Servo-Turrets",
+             "name":   "Firestrike Servo-Turrets"},
+            {"parent": "Gladiator Lancer"},
+            {"parent": "Gladiator Reaper"},
+            {"parent": "Gladiator Valiant"},
+            {"parent": "Space Marine Hammerfall Bunker",
+             "name":   "Hammerfall Bunker"},
+            {"parent": "Space Marine Impulsor",
+             "name":   "Impulsor"},
+            {"parent": "Space Marine Invader ATV",
+             "name":   "Invader ATV"},
+            # SM stores Invictor under legacy 'infantry' category:
+            {"parent": "Invictor Tactical Warsuit",
+             "category": "vehicle"},
+            {"parent": "Space Marine Outriders",
+             "name":   "Outrider Squad"},
+            # Predator Annihilator is the SW display name for the SM Predator kit:
+            {"parent": "Space Marine Predator",
+             "name":    "Predator Annihilator"},
+            {"parent": "Space Marine Redemptor Dreadnought",
+             "name":   "Redemptor Dreadnought"},
+            {"parent": "Space Marine Repulsor Executioner",
+             "name":   "Repulsor"},
+            {"parent": "Space Marine Primaris Eliminators",
+             "name":   "Eliminator Squad"},
+            {"parent": "Storm Speeder Hailstrike"},
+            {"parent": "Storm Speeder Hammerstrike"},
+            {"parent": "Storm Speeder Thunderstrike"},
+            # SM categorises Stormhawk + Stormtalon as 'transport'; they are gunships:
+            {"parent": "Stormhawk Interceptor",
+             "category": "vehicle"},
+            {"parent": "Stormtalon Gunship",
+             "category": "vehicle"},
+            # card_name "Dreadnought" maps to SM "Venerable Dreadnought":
+            {"parent": "Venerable Dreadnought",
+             "name":   "Dreadnought"},
+            {"parent": "Space Marine Vindicator",
+             "name":   "Vindicator"},
+            {"parent": "Space Marine Whirlwind",
+             "name":   "Whirlwind"},
+
+            # ── Transports ───────────────────────────────────────────────────
+            {"parent": "Drop Pods",
+             "name":   "Drop Pod"},
+            # SW card_name "Land Raider" maps to SM "Space Marine Land Raider Crusader":
+            {"parent": "Space Marine Land Raider Crusader",
+             "name":   "Land Raider"},
+            {"parent": "Land Raider Redeemer"},
+            {"parent": "Razorback"},
+            # SM stores Rhino under legacy 'dedicated_transport' category:
+            {"parent": "Rhino",
+             "category": "transport"},
+            {"parent": "Stormraven Gunship"},
+        ],
+    },
+
     # ── Future sub-factions — add when their army calculators are built ───────
     # "Dark Angels": {
     #     "parent_faction": "Space Marines",
     #     "units": [
     #         {"parent": "Ravenwing Bike Squadron"},
-    #         ...
-    #     ],
-    # },
-    # "Space Wolves": {
-    #     "parent_faction": "Space Marines",
-    #     "units": [
-    #         {"parent": "Blood Claws"},
     #         ...
     #     ],
     # },
