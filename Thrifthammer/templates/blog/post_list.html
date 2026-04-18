@@ -1,49 +1,31 @@
 {% extends "base.html" %}
 
-{% block title %}{% if active_tag %}{{ active_tag.name }} — Warhammer Blog | ThriftHammer{% else %}Warhammer Savings Blog | ThriftHammer{% endif %}{% endblock %}
+{% block title %}Warhammer Blog — Tips, Guides &amp; Savings | ThriftHammer{% endblock %}
 
-{% block meta_description %}<meta name="description" content="{% if active_tag %}Browse ThriftHammer blog posts tagged {{ active_tag.name }}. Tips and guides to help you save money on Warhammer 40,000.{% else %}Tips, guides and Top 10 lists to help you save money on Warhammer 40,000. New posts weekly from ThriftHammer.{% endif %}">{% endblock %}
+{% block meta_description %}<meta name="description" content="Guides, Top 10 lists, and savings tips to help you build more and spend less on Warhammer 40,000. New posts every week from ThriftHammer.">{% endblock %}
 
-{% block canonical %}<link rel="canonical" href="https://thrifthammer.com{% if active_tag and tag_in_path %}/blog/tag/{{ active_tag.slug }}/{% else %}/blog/{% endif %}">{% endblock %}
+{% block canonical %}<link rel="canonical" href="https://thrifthammer.com/blog/">{% endblock %}
 
 {% block content %}
 <div class="page-content">
 
-  {# ── Page header ── #}
-  <div class="blog-list-header">
-    <div>
-      <h1 class="section-title">The ThriftHammer Blog</h1>
-      <div class="gold-rule"></div>
-      <p class="blog-list-tagline">
-        Guides, Top 10 lists, and savings tips to help you build more and spend less on Warhammer 40,000.
-      </p>
-    </div>
+  {# ── Page title bar ── #}
+  <div class="blog-page-bar">
+    <h1>ThriftHammer Blog</h1>
+    <span class="blog-page-bar-tagline">Guides, Top 10s &amp; savings tips for Warhammer hobbyists</span>
   </div>
 
-  {# ── Tag filter bar ── #}
-  {% if all_tags %}
-  <nav class="blog-tag-bar" aria-label="Filter posts by tag">
-    <a href="{% url 'blog:post_list' %}"
-       class="blog-tag-btn{% if not active_tag %} active{% endif %}">
-      All Posts
-    </a>
-    {% for tag in all_tags %}
-    <a href="{% url 'blog:tag_list' tag_slug=tag.slug %}"
-       class="blog-tag-btn{% if active_tag.slug == tag.slug %} active{% endif %}">
-      {{ tag.name }}
-    </a>
-    {% endfor %}
-  </nav>
-  {% endif %}
+  {% if hero_post or latest_posts or stream_posts %}
 
-  {# ── Content ── #}
-  {% if hero_post or grid_posts %}
+  {# ════════════════════════════════════════════════════════════
+     MASTHEAD — big hero left + latest sidebar right (page 1 only)
+     ════════════════════════════════════════════════════════════ #}
+  {% if hero_post or latest_posts %}
+  <div class="blog-masthead">
 
-  {# ── Hero card — most recent post ── #}
-  {% if hero_post %}
-  <a href="{{ hero_post.get_absolute_url }}" class="blog-hero-card">
-
-    <div class="blog-hero-img-wrap">
+    {# ── Hero (most recent post) ── #}
+    {% if hero_post %}
+    <a href="{{ hero_post.get_absolute_url }}" class="blog-hero" aria-label="{{ hero_post.title }}">
       {% if hero_post.featured_image_url %}
       <img
         src="{{ hero_post.featured_image_url }}"
@@ -51,71 +33,86 @@
         class="blog-hero-img"
         loading="eager"
         fetchpriority="high"
-        width="1200" height="500"
+        width="1200" height="675"
       >
       {% else %}
       <div class="blog-hero-img-placeholder" aria-hidden="true"></div>
       {% endif %}
-      {% if hero_post.tags.all %}
-      <span class="blog-img-tag">{{ hero_post.tags.all.0.name }}</span>
-      {% endif %}
-    </div>
-
-    <div class="blog-hero-body">
-      <h2 class="blog-hero-title">{{ hero_post.title }}</h2>
-      <div class="blog-hero-meta">
-        <span>By {{ hero_post.author|default:"ThriftHammer" }}</span>
-        <span aria-hidden="true">·</span>
-        <time datetime="{{ hero_post.published_at|date:'Y-m-d' }}">{{ hero_post.published_at|date:"j F Y" }}</time>
-        <span aria-hidden="true">·</span>
-        <span>{{ hero_post.reading_time }} min read</span>
+      <div class="blog-hero-gradient" aria-hidden="true"></div>
+      <div class="blog-hero-content">
+        {% if hero_post.tags.all %}
+        <span class="blog-cat-badge">{{ hero_post.tags.all.0.name }}</span>
+        {% endif %}
+        <h2 class="blog-hero-title">{{ hero_post.title }}</h2>
+        <div class="blog-hero-byline">
+          <span class="blog-hero-byline-author">{{ hero_post.author|default:"ThriftHammer" }}</span>
+          <span aria-hidden="true">·</span>
+          <time datetime="{{ hero_post.published_at|date:'Y-m-d' }}">{{ hero_post.published_at|date:"j F Y" }}</time>
+          <span aria-hidden="true">·</span>
+          <span>{{ hero_post.reading_time }} min read</span>
+        </div>
       </div>
-      {% if hero_post.excerpt %}
-      <p class="blog-hero-excerpt">{{ hero_post.excerpt }}</p>
-      {% endif %}
-      <span class="blog-hero-cta" aria-hidden="true">Read Article &rarr;</span>
-    </div>
+    </a>
+    {% endif %}
 
-  </a>
-  {% endif %}
-
-  {# ── 2-column grid — remaining posts ── #}
-  {% if grid_posts %}
-  <div class="blog-grid">
-    {% for post in grid_posts %}
-    <a href="{{ post.get_absolute_url }}" class="blog-card">
-
-      <div class="blog-card-img-wrap">
+    {# ── Latest sidebar (posts 2–6) ── #}
+    {% if latest_posts %}
+    <nav class="blog-latest" aria-label="Latest posts">
+      <p class="blog-latest-heading">Latest</p>
+      {% for post in latest_posts %}
+      <a href="{{ post.get_absolute_url }}" class="blog-latest-item">
         {% if post.featured_image_url %}
         <img
           src="{{ post.featured_image_url }}"
           alt="{{ post.featured_image_alt|default:post.title }}"
-          class="blog-card-img"
+          class="blog-latest-thumb"
+          loading="lazy"
+          width="80" height="52"
+        >
+        {% else %}
+        <div class="blog-latest-thumb-placeholder" aria-hidden="true"></div>
+        {% endif %}
+        <div class="blog-latest-text">
+          <p class="blog-latest-title">{{ post.title }}</p>
+          <time class="blog-latest-date" datetime="{{ post.published_at|date:'Y-m-d' }}">{{ post.published_at|date:"j M Y" }}</time>
+        </div>
+      </a>
+      {% endfor %}
+    </nav>
+    {% endif %}
+
+  </div>{# /.blog-masthead #}
+  {% endif %}
+
+  {# ════════════════════════════════════════════════════════════
+     STREAM — 4-column borderless card grid
+     ════════════════════════════════════════════════════════════ #}
+  {% if stream_posts %}
+  <p class="blog-stream-heading">More Articles</p>
+  <div class="blog-stream">
+    {% for post in stream_posts %}
+    <a href="{{ post.get_absolute_url }}" class="blog-stream-card">
+
+      <div class="blog-stream-img-wrap">
+        {% if post.featured_image_url %}
+        <img
+          src="{{ post.featured_image_url }}"
+          alt="{{ post.featured_image_alt|default:post.title }}"
+          class="blog-stream-img"
           loading="lazy"
           width="800" height="450"
         >
         {% else %}
-        <div class="blog-card-img-placeholder" aria-hidden="true"></div>
+        <div class="blog-stream-img-placeholder" aria-hidden="true"></div>
         {% endif %}
         {% if post.tags.all %}
-        <span class="blog-img-tag">{{ post.tags.all.0.name }}</span>
+        <span class="blog-stream-cat">{{ post.tags.all.0.name }}</span>
         {% endif %}
       </div>
 
-      <div class="blog-card-body">
-        <h2 class="blog-card-title">{{ post.title }}</h2>
-        {% if post.excerpt %}
-        <p class="blog-card-excerpt">{{ post.excerpt }}</p>
-        {% endif %}
-        <div class="blog-card-meta">
-          <span>By {{ post.author|default:"ThriftHammer" }}</span>
-          <span aria-hidden="true">·</span>
-          <time datetime="{{ post.published_at|date:'Y-m-d' }}">{{ post.published_at|date:"j F Y" }}</time>
-          <span aria-hidden="true">·</span>
-          <span>{{ post.reading_time }} min read</span>
-          <span class="blog-read-more">Read &rarr;</span>
-        </div>
-      </div>
+      <h2 class="blog-stream-title">{{ post.title }}</h2>
+      <span class="blog-stream-author">{{ post.author|default:"ThriftHammer" }}</span>
+      <time class="blog-stream-date" datetime="{{ post.published_at|date:'Y-m-d' }}">{{ post.published_at|date:"j F Y" }}</time>
 
     </a>
     {% endfor %}
@@ -151,8 +148,7 @@
   {# ── Empty state ── #}
   <div style="text-align:center;padding:var(--sp-16) 0;">
     <p style="color:var(--text-muted);font-size:1rem;margin-bottom:var(--sp-4);">
-      No posts published yet{% if active_tag %} for the tag <strong>{{ active_tag.name }}</strong>{% endif %}.
-      Check back soon. New posts every week.
+      No posts published yet. Check back soon — new posts every week.
     </p>
     <a href="{% url 'products:list' %}" class="btn btn-secondary">Browse Products</a>
   </div>
