@@ -73,13 +73,13 @@ class PostListView(ListView):
         # True when the tag is expressed as a URL path segment (not a query param)
         context['tag_in_path'] = bool(self.kwargs.get('tag_slug'))
 
-        # Split posts into hero / latest sidebar / stream grid — page 1 only
+        # Split posts: full-width hero + 3-col latest row + 4-col stream grid
         posts = list(context['posts'])
         page_obj = context['page_obj']
         if page_obj.number == 1 and posts:
             context['hero_post']    = posts[0]
-            context['latest_posts'] = posts[1:6]   # up to 5 in sidebar
-            context['stream_posts'] = posts[6:]    # remainder in 4-col grid
+            context['latest_posts'] = posts[1:4]   # up to 3 in "latest" row
+            context['stream_posts'] = posts[4:]    # remainder in 4-col grid
         else:
             context['hero_post']    = None
             context['latest_posts'] = []
