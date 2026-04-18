@@ -2577,14 +2577,14 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
    Blog — List page
    ============================================================================= */
 
-.blog-list-page { padding-top: 0; }
+.blog-list-page { padding-top: var(--sp-6); }
 
 /* ── Full-width hero ── */
 .blog-hero-full {
   display: block;
   position: relative;
   width: 100%;
-  height: 520px;
+  height: 420px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
@@ -3279,7 +3279,7 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   .blog-stream { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 900px) {
-  .blog-hero-full { height: 420px; }
+  .blog-hero-full { height: 340px; }
   .blog-latest-grid { grid-template-columns: repeat(2, 1fr); }
   .blog-stream { grid-template-columns: repeat(2, 1fr); }
   .blog-detail-layout { grid-template-columns: 1fr; }
