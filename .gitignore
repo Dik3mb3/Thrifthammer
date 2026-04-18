@@ -6,11 +6,11 @@
 db.sqlite3
 *.db
 
-# Loose scripts / scratch files at repo root
-*.py
-*.js
-*.txt
-*.json
+# Loose scripts / scratch files at repo root (leading / = root only, not subdirs)
+/*.py
+/*.js
+/*.txt
+/*.json
 !parser_output/**
 
 # Virtual environments
