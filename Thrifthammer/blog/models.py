@@ -5,10 +5,13 @@ The blog is focused on helping Warhammer 40K players save money on the hobby
 and improving organic SEO. Articles are created by staff in the Django admin.
 """
 
+import math
+
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.html import strip_tags
 from django.utils.text import slugify
 
 from products.utils import unique_slug
@@ -102,6 +105,14 @@ class Post(models.Model):
         help_text='Meta description for search engines. Aim for 120-160 chars.',
     )
 
+    # Author
+    author = models.CharField(
+        max_length=100,
+        blank=True,
+        default='ThriftHammer',
+        help_text='Author display name shown on cards and articles. Defaults to "ThriftHammer".',
+    )
+
     # Optional featured image URL
     featured_image_url = models.URLField(
         blank=True,
@@ -140,6 +151,12 @@ class Post(models.Model):
             and self.published_at is not None
             and self.published_at <= timezone.now()
         )
+
+    @property
+    def reading_time(self):
+        """Estimated reading time in minutes at ~200 words per minute (min 1)."""
+        word_count = len(strip_tags(self.body).split())
+        return max(1, math.ceil(word_count / 200))
 
     @property
     def effective_meta_title(self):

@@ -63,7 +63,7 @@ class PostListView(ListView):
         return qs
 
     def get_context_data(self, **kwargs):
-        """Add tag list and active tag to context."""
+        """Add tag list, active tag, hero post, and grid posts to context."""
         context = super().get_context_data(**kwargs)
         tag_slug = self._get_tag_slug()
         active_tag = Tag.objects.filter(slug=tag_slug).first() if tag_slug else None
@@ -72,6 +72,17 @@ class PostListView(ListView):
         context['active_tag'] = active_tag
         # True when the tag is expressed as a URL path segment (not a query param)
         context['tag_in_path'] = bool(self.kwargs.get('tag_slug'))
+
+        # Split first post (hero) from the rest (grid) — hero only on page 1
+        posts = list(context['posts'])
+        page_obj = context['page_obj']
+        if page_obj.number == 1 and posts:
+            context['hero_post'] = posts[0]
+            context['grid_posts'] = posts[1:]
+        else:
+            context['hero_post'] = None
+            context['grid_posts'] = posts
+
         return context
 
 
@@ -101,17 +112,37 @@ class PostDetailView(DetailView):
         ).prefetch_related('tags')
 
     def get_context_data(self, **kwargs):
-        """Add recent posts, comments, and comment form to context."""
+        """Add recent posts, related posts, comments, and comment form to context."""
         context = super().get_context_data(**kwargs)
-        context['recent_posts'] = list(
-            Post.objects
-            .filter(
-                status=Post.STATUS_PUBLISHED,
-                published_at__lte=timezone.now(),
-            )
-            .exclude(pk=self.object.pk)
-            .order_by('-published_at')[:5]
+        published_qs = Post.objects.filter(
+            status=Post.STATUS_PUBLISHED,
+            published_at__lte=timezone.now(),
         )
+
+        # Recent posts for sidebar (exclude current)
+        context['recent_posts'] = list(
+            published_qs.exclude(pk=self.object.pk).order_by('-published_at')[:5]
+        )
+
+        # Related posts — by shared tag first, topped up with recent if needed
+        post_tags = self.object.tags.all()
+        related = list(
+            published_qs
+            .filter(tags__in=post_tags)
+            .exclude(pk=self.object.pk)
+            .distinct()
+            .order_by('-published_at')[:3]
+        )
+        if len(related) < 3:
+            exclude_pks = [self.object.pk] + [p.pk for p in related]
+            extra = list(
+                published_qs
+                .exclude(pk__in=exclude_pks)
+                .order_by('-published_at')[:3 - len(related)]
+            )
+            related += extra
+        context['related_posts'] = related
+
         context['comments'] = self.object.comments.select_related('author').all()
         context['comment_form'] = CommentForm()
         return context
