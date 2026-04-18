@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       factions:
-        description: 'Which factions to seed (comma-separated: votann,admech,aeldari,guard,custodes,drukhari,grey_knights,necrons,orks,sisters_of_battle,tau,genestealer_cults,imperial_knights,blood_angels,space_wolves — or "all"). Maintenance: delete_codex_units, delete_legacy_guard_units, assign_missing_skus, sync_cross_faction_units'
+        description: 'Which factions to seed (comma-separated: votann,admech,aeldari,guard,custodes,drukhari,grey_knights,necrons,orks,sisters_of_battle,tau,genestealer_cults,imperial_knights,blood_angels,space_wolves,dark_angels — or "all"). Maintenance: delete_codex_units, delete_legacy_guard_units, assign_missing_skus, sync_cross_faction_units'
         type: string
         default: 'all'
       dry_run:
@@ -133,6 +133,21 @@ jobs:
               --faction "Space Wolves" \
               --json ../parser_output/spacewolves_parsed.json \
               --mapping ../parser_output/spacewolves_mapping.csv \
+              $FLAGS
+          fi
+          
+          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "dark_angels"; then
+            echo "========================================="
+            echo "Running: sync_cross_faction_units --faction Dark Angels"
+            echo "========================================="
+            python manage.py sync_cross_faction_units --faction "Dark Angels" $FLAGS
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Dark Angels"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Dark Angels" \
+              --json ../parser_output/dark_angels_parsed.json \
+              --mapping ../parser_output/dark_angels_mapping.csv \
               $FLAGS
           fi
 
