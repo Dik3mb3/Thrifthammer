@@ -1,0 +1,18 @@
+# Local Claude Code settings (may contain API keys)
+.claude/settings.local.json
+.claude/worktrees/
+
+# Local database
+db.sqlite3
+*.db
+
+# Loose scripts / scratch files at repo root
+*.py
+*.js
+*.txt
+*.json
+!parser_output/**
+
+# Virtual environments
+venv/
+.venv/

@@ -151,21 +151,6 @@ jobs:
               $FLAGS
           fi
 
-          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "dark_angels"; then
-            echo "========================================="
-            echo "Running: sync_cross_faction_units --faction Dark Angels"
-            echo "========================================="
-            python manage.py sync_cross_faction_units --faction "Dark Angels" $FLAGS
-            echo "========================================="
-            echo "Running: import_faction_stats --faction Dark Angels"
-            echo "========================================="
-            python manage.py import_faction_stats \
-              --faction "Dark Angels" \
-              --json ../parser_output/dark_angels_parsed.json \
-              --mapping ../parser_output/dark_angels_mapping.csv \
-              $FLAGS
-          fi
-
           if echo "$FACTIONS" | grep -q "sync_cross_faction_units"; then
             run_seed "sync_cross_faction_units"
           fi
