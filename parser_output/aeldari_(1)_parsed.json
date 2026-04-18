@@ -1,0 +1,4339 @@
+{
+  "faction": "Aeldari",
+  "source_file": "POINTS_Aeldari (1).html",
+  "extracted_date": "2026-04-12",
+  "total_cards": 62,
+  "units": [
+    {
+      "card_name": "Asurmen",
+      "points": 135,
+      "primary_stats": {
+        "model": "Asurmen",
+        "M": "7\"",
+        "T": "3",
+        "SV": "2+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Asurmen",
+          "M": "7\"",
+          "T": "3",
+          "SV": "2+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "The Bloody Twins",
+          "range": "24\"",
+          "A": "6",
+          "BS": "2+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "The Sword of Asur",
+          "A": "6",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-3",
+          "D": "3",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Invulnerable Save (Asurmen)",
+          "description": "Asurmen has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Hand of Asuryan",
+          "description": "Once per battle, when this model is selected to shoot, it can use this ability. If it does, until the end of the phase, its Bloody Twins weapon has a Damage characteristic of 3 and the [Anti-Infantry 5+] and [Devastating Wounds] abilities."
+        },
+        {
+          "name": "Tactical Acumen",
+          "description": "While this model is leading a unit, in your Shooting phase, after that unit has shot, it can make a Normal move of up to 6\". If it does, until the end of the turn, that unit is not eligible to declare a charge."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n■ Dire Avengers"
+        }
+      ]
+    },
+    {
+      "card_name": "Avatar of Khaine",
+      "points": 280,
+      "primary_stats": {
+        "model": "Avatar of Khaine",
+        "M": "10\"",
+        "T": "11",
+        "SV": "2+",
+        "W": "14",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Avatar of Khaine",
+          "M": "10\"",
+          "T": "11",
+          "SV": "2+",
+          "W": "14",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "The Wailing Doom",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "16",
+          "AP": "-4",
+          "D": "D6+2",
+          "keywords": "Sustained Hits D3"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "The Wailing Doom - Strike",
+          "A": "6",
+          "WS": "2+",
+          "S": "16",
+          "AP": "-4",
+          "D": "D6+2",
+          "keywords": ""
+        },
+        {
+          "name": "The Wailing Doom - Sweep",
+          "A": "12",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Molten Form",
+          "description": "Each time an attack is allocated to this model, halve the Damage characteristic of that attack."
+        },
+        {
+          "name": "The Bloody Handed (Aura)",
+          "description": "While a friendly Aeldari unit is within 6\" of this model, add 1 to Advance and Charge rolls made for that unit."
+        },
+        {
+          "name": "Damaged: 1-5 Wounds Remaining",
+          "description": "While this model has 1-5 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (Avatar)",
+          "description": "The Avatar of Khaine has a 4+ Invulnerable save"
+        }
+      ]
+    },
+    {
+      "card_name": "Baharroth",
+      "points": 115,
+      "primary_stats": {
+        "model": "Baharroth",
+        "M": "14\"",
+        "T": "3",
+        "SV": "2+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Baharroth",
+          "M": "14\"",
+          "T": "3",
+          "SV": "2+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Fury of the Tempest",
+          "range": "24\"",
+          "A": "4",
+          "BS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Assault, Lethal Hits"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "The Shining Blade",
+          "A": "6",
+          "WS": "2+",
+          "S": "5",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Sustained Hits 1"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Invulnerable Save (Baharroth)",
+          "description": "Baharroth has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n■ Swooping Hawks"
+        },
+        {
+          "name": "Cry of the Wind",
+          "description": "Each time this model is set-up on the battlefield, until the end of the turn, each time this model makes a ranged attack, a successful unmodified Hit roll scores a Critical Hit."
+        },
+        {
+          "name": "Cloudstrider",
+          "description": "While this model is leading a unit, at the end of your opponent's turn, if that unit is not within Engagement Range of one or more enemy units, you can remove it from the battlefield and place it into Strategic Reserves. In addition, while this model is leading a unit, when that unit is set-up on the battlefield using the Deep Strike ability, in your Movement phase, it can use this ability. if it does, that unit can be set-up anywhere on the battlefield that is more than 6\" horizontally away from all enemy models, but until the end of the turn, it is not eligible to declare a charge."
+        }
+      ]
+    },
+    {
+      "card_name": "Eldrad Ulthran",
+      "points": 120,
+      "primary_stats": {
+        "model": "Eldrad Ulthran",
+        "M": "7\"",
+        "T": "4",
+        "SV": "6+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Eldrad Ulthran",
+          "M": "7\"",
+          "T": "4",
+          "SV": "6+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Mind War",
+          "range": "18\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "5",
+          "AP": "-2",
+          "D": "D6",
+          "keywords": "Anti-character 4+, Precision, Psychic"
+        },
+        {
+          "name": "Shuriken Pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Staff of Ulthamar and witchblade",
+          "A": "3",
+          "WS": "2+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Anti-Infantry 2+, Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Invulnerable Save (Eldrad)",
+          "description": "Eldrad Ulthran has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Diviner of the Futures",
+          "description": "At the start of your Command phase, if this model is on the battlefield, you gain 1CP."
+        },
+        {
+          "name": "Doom (Psychic)",
+          "description": "At the end of your Movement phase, select one enemy unit within 18\" of and visible to this model. Until the start of your next Command phase, each time a friendly Aeldari model makes an attack that targets that enemy unit, add 1 to the Wound roll"
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Guardian Defenders\n■ Storm Guardians\n■ Warlock Conclave"
+        }
+      ]
+    },
+    {
+      "card_name": "Fuegan",
+      "points": 120,
+      "primary_stats": {
+        "model": "Fuegan",
+        "M": "7\"",
+        "T": "3",
+        "SV": "2+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Fuegan",
+          "M": "7\"",
+          "T": "3",
+          "SV": "2+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Searsong - Beam",
+          "range": "12\"",
+          "A": "3",
+          "BS": "2+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Assault, Melta 1, Sustained hits 2"
+        },
+        {
+          "name": "Searsong - Lance",
+          "range": "18\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "14",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Assault, Melta 6"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "The Fire Axe",
+          "A": "6",
+          "WS": "2+",
+          "S": "5",
+          "AP": "-4",
+          "D": "3",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Invulnerable Save (Fuegan)",
+          "description": "Fuegan has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Burning Lance",
+          "description": "While this model is leading a unit, add 6\" to the Range characteristic of Melta weapons equipped by models in that unit."
+        },
+        {
+          "name": "Unquenchable Resolve",
+          "description": "The first time this model is destroyed, at the end of the phase, roll one D6. On a 2+, set this model back up on the battlefield as close as possible to where it was destroyed and not within Engagement Range of one or more enemy units, with its full wounds remaining."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n■ Fire Dragons"
+        }
+      ]
+    },
+    {
+      "card_name": "Irillyth [Legends]",
+      "points": 105,
+      "primary_stats": {
+        "model": "Irillyth",
+        "M": "12\"",
+        "T": "3",
+        "SV": "2+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Irillyth",
+          "M": "12\"",
+          "T": "3",
+          "SV": "2+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Spear of Starlight",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "4",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Spear of Starlight",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Invulnerable Save (Phoenix Lord)",
+          "description": "Irillyth has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n■ Shadow Spectres"
+        },
+        {
+          "name": "Reaper of Souls",
+          "description": "While this model is leading a unit, each time a model in that unit makes an attack, add 1 to the Hit roll"
+        },
+        {
+          "name": "Shadow of Death (Aura)",
+          "description": "While an enemy unit is within 6\" of this model, each time that unit takes a Battle-shock or Leadership test, subtract 1 from that test."
+        }
+      ]
+    },
+    {
+      "card_name": "Jain Zar",
+      "points": 120,
+      "primary_stats": {
+        "model": "Jain Zar",
+        "M": "8\"",
+        "T": "3",
+        "SV": "2+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Jain Zar",
+          "M": "8\"",
+          "T": "3",
+          "SV": "2+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Silent Death",
+          "range": "12\"",
+          "A": "6",
+          "BS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Assault"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Blade of Destruction",
+          "A": "8",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Anti-Infantry 3+"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Invulnerable Save (Jain Zar)",
+          "description": "Jain Zar has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n■ Howling Banshees"
+        },
+        {
+          "name": "Whirling Death",
+          "description": "While this model is leading a unit, each time that unit Advances, do not make an Advance roll. Instead, until the end of the phase, add 6\" to the Move characteristic of models in that unit and each time a model in that unit makes an Advance move, ignore any vertical distance when determining the total distance that model can be moved during that move."
+        },
+        {
+          "name": "Storm of Silence",
+          "description": "Each time this model makes an attack that targets a Character unit, you can re-roll the Wound roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Kharseth",
+      "points": 95,
+      "primary_stats": {
+        "model": "Kharseth",
+        "M": "7\"",
+        "T": "3",
+        "SV": "6+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Kharseth",
+          "M": "7\"",
+          "T": "3",
+          "SV": "6+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Dread of the Deep Void",
+          "range": "24\"",
+          "A": "D6+2",
+          "BS": "3+",
+          "S": "3",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Anti-Infantry 2+, Blast, Hazardous, Ignores Cover, Psychic"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Waystave",
+          "A": "3",
+          "WS": "2+",
+          "S": "3",
+          "AP": "0",
+          "D": "3",
+          "keywords": "Anti-Infantry 2+, Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Invulnerable Save (Kharseth)",
+          "description": "Kharseth has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Corsair Voidreavers\n■ Corsair Voidscarred"
+        },
+        {
+          "name": "Aethersense (Psychic)",
+          "description": "Enemy units that are set up on the battlefield from Reserves cannot be set up within 12\" of this model."
+        },
+        {
+          "name": "Fury of the Void (Psychic)",
+          "description": "In your Shooting phase, after this model’s unit has shot, select one enemy unit hit by one or more attacks made with this model’s Dread of the Deep Void. Until the end of the turn, that unit is riven. Each time an Aeldari model from your army makes an attack that targets a riven unit, add 1 to the Strength characteristic of that attack."
+        }
+      ]
+    },
+    {
+      "card_name": "Lhykhis",
+      "points": 135,
+      "primary_stats": {
+        "model": "Lhykhis",
+        "M": "12\"",
+        "T": "3",
+        "SV": "2+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Lhykhis",
+          "M": "12\"",
+          "T": "3",
+          "SV": "2+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Brood Twain",
+          "range": "12\"",
+          "A": "D6+3",
+          "BS": "N/A",
+          "S": "6",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent, Twin-Linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Spider's Fangs",
+          "A": "5",
+          "WS": "2+",
+          "S": "4",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Extra Attacks, Lethal Hits"
+        },
+        {
+          "name": "Weaverender",
+          "A": "5",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n■ Warp Spiders"
+        },
+        {
+          "name": "Invulnerable Save (Lhykhis)",
+          "description": "Lhykhis has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Empyric Ambush",
+          "description": "While this model is leading a unit, that unit is eligible to declare a charge in a turn in which it used its Flickerjump ability."
+        },
+        {
+          "name": "Whispering Web",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the end of the turn, each time a friendly Aeldari model makes an attack that targets that unit, an unmodified Hit roll of 5+ scores a Critical Hit."
+        }
+      ]
+    },
+    {
+      "card_name": "Maugan Ra",
+      "points": 100,
+      "primary_stats": {
+        "model": "Maugan Ra",
+        "M": "7\"",
+        "T": "3",
+        "SV": "2+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Maugan Ra",
+          "M": "7\"",
+          "T": "3",
+          "SV": "2+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Maugetar",
+          "range": "36\"",
+          "A": "6",
+          "BS": "2+",
+          "S": "7",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Devastating wounds, Ignores cover"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Maugetar",
+          "A": "5",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n■ Dark Reapers"
+        },
+        {
+          "name": "Invulnerable Save (Maugan Ra)",
+          "description": "Maugan Ra has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Harvester of Souls",
+          "description": "While this model is leading a unit, in your Shooting phase, after selecting targets for that unit's attacks, if every attack targets the same unit, roll one D6 for the target unit and one D6 for every other enemy unit within 3\" of the target unit. On a 5+, the unit being rolled for is struck by explosive debris; after resolving all of that unit's attacks against the target unit, each unit struck by explosive debris suffers D3 mortal wounds."
+        },
+        {
+          "name": "Face of Death",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. That enemy unit must take a Battle-shock test, subtracting 1 from the result."
+        }
+      ]
+    },
+    {
+      "card_name": "Prince Yriel",
+      "points": 95,
+      "primary_stats": {
+        "model": "Prince Yriel",
+        "M": "7\"",
+        "T": "3",
+        "SV": "3+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Prince Yriel",
+          "M": "7\"",
+          "T": "3",
+          "SV": "3+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        },
+        {
+          "name": "The Eye of Wrath",
+          "range": "6\"",
+          "A": "3",
+          "BS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "The Spear of Twilight",
+          "A": "5",
+          "WS": "2+",
+          "S": "7",
+          "AP": "-3",
+          "D": "3",
+          "keywords": "Lance"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Invulnerable Save (Prince Yriel)",
+          "description": "Prince Yriel has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Corsair Voidreavers\n■ Corsair Voidscarred"
+        },
+        {
+          "name": "Piratical Hero",
+          "description": "While this model is leading a unit, each time a model in that unit makes an attack, that attack has the [Sustained Hits 1] ability and add 1 to the Hit roll."
+        },
+        {
+          "name": "Prince of Corsairs",
+          "description": "After both players have deployed their armies, if this model is on the battlefield (or any Transport it is embarked within is on the battlefield), select up to three Aeldari units from your army and redeploy them. When doing so, you can set those units up in Strategic Reserves, regardless of how many units are already in Strategic Reserves."
+        }
+      ]
+    },
+    {
+      "card_name": "Solitaire",
+      "points": 115,
+      "primary_stats": {
+        "model": "Solitaire",
+        "M": "12\"",
+        "T": "3",
+        "SV": "6+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Solitaire",
+          "M": "12\"",
+          "T": "3",
+          "SV": "6+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This unit has a 4+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Solitaire Weapons",
+          "A": "9",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Precision"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Blitz",
+          "description": "Once per battle, in your Movement phase, before this model makes a Normal move it can use this ability. If it does, until the end of\nthe turn, add 2D6\" to this model’s Move characteristic and add 3 to the\nAttacks characteristic of this model’s Solitaire weapons."
+        },
+        {
+          "name": "Blur of Movement",
+          "description": "This model is eligible to declare a charge in a turn in which it Advanced."
+        },
+        {
+          "name": "Flip Belt",
+          "description": "Each time the bearer's unit makes a Normal, Advance, Fall Back or Charge move, ignore any vertical distance when determining the total distance the bearer can be moved during that move."
+        }
+      ]
+    },
+    {
+      "card_name": "Autarch",
+      "points": 85,
+      "primary_stats": {
+        "model": "Autarch",
+        "M": "7\"",
+        "T": "3",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Autarch",
+          "M": "7\"",
+          "T": "3",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Star Glaive",
+          "A": "4",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-3",
+          "D": "3",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Superlative Strategist",
+          "description": "While this model is leading a unit, you can re-roll Advance rolls made for that unit, and you can re-roll any rolls made for that unit while it is performing an Agile Manoeuvre."
+        },
+        {
+          "name": "Path of Command",
+          "description": "Once per battle round, one model from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that usage of that stratagem by 1CP."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Dark Reapers\n■ Dire Avengers\n■ Fire Dragons\n■ Guardian Defenders\n■ Howling Banshees\n■ Storm Guardians\n■ Striking Scorpions"
+        },
+        {
+          "name": "Invulnerable Save (Autarch)",
+          "description": "An Autarch has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Aspect Training",
+          "description": "While this model is leading a Howling Banshees unit, it has the Fights First ability.\nWhile this model is leading a Striking Scorpions unit, it has the Infiltrators, Scouts 7\" and Stealth abilities."
+        }
+      ]
+    },
+    {
+      "card_name": "Autarch Wayleaper",
+      "points": 80,
+      "primary_stats": {
+        "model": "Autarch Wayleaper",
+        "M": "14\"",
+        "T": "3",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Autarch Wayleaper",
+          "M": "14\"",
+          "T": "3",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Star Glaive",
+          "A": "4",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-3",
+          "D": "3",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Path of Command",
+          "description": "Once per battle round, one model from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that usage of that stratagem by 1CP."
+        },
+        {
+          "name": "Invulnerable Save (Autarch)",
+          "description": "An Autarch Wayleaper has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Indomitable Strength of Will",
+          "description": "While this model is leading a unit, each time you spend a Battle Focus token to enable that unit to perform an Agile Manoeuvre, roll one D6: on a 3+ you gain 1 Battle Focus token."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Swooping Hawks\n■ Warp Spiders"
+        }
+      ]
+    },
+    {
+      "card_name": "Death Jester",
+      "points": 90,
+      "primary_stats": {
+        "model": "Death Jester",
+        "M": "8\"",
+        "T": "3",
+        "SV": "6+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Death Jester",
+          "M": "8\"",
+          "T": "3",
+          "SV": "6+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This unit has a 4+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shrieker Cannon",
+          "range": "24\"",
+          "A": "3",
+          "BS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Jester's Blade",
+          "A": "4",
+          "WS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Death is Not Enough",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit (excluding Monsters and Vehicles) hit by one or more of those attacks. That enemy unit must take a Battle-shock test. If one or more of those attacks destroyed a model in that enemy unit, subtract 1 from that test."
+        },
+        {
+          "name": "Cruel Amusement",
+          "description": "In your Shooting phase, each time this model is selected to shoot, select one of the abilities below. Until the end of the phase, this model’s Shrieker Cannon has that ability:\n■ [IGNORES COVER]\n■ [PRECISION]\n■ [SUSTAINED HITS 3]"
+        },
+        {
+          "name": "Flip Belt",
+          "description": "Each time the bearer's unit makes a Normal, Advance, Fall Back or Charge move, ignore any vertical distance when determining the total distance the bearer can be moved during that move."
+        },
+        {
+          "name": "Travelling Players",
+          "description": "Unless otherwise stated, you cannot include more than one of this model in your army."
+        }
+      ]
+    },
+    {
+      "card_name": "Farseer",
+      "points": 70,
+      "primary_stats": {
+        "model": "Farseer",
+        "M": "7\"",
+        "T": "3",
+        "SV": "6+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Farseer",
+          "M": "7\"",
+          "T": "3",
+          "SV": "6+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Eldritch Storm",
+          "range": "24\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "D3",
+          "keywords": "Blast, Psychic"
+        },
+        {
+          "name": "Shuriken Pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Witchblade",
+          "A": "2",
+          "WS": "2+",
+          "S": "3",
+          "AP": "0",
+          "D": "2",
+          "keywords": "Anti-Infantry 2+, Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Branching Fates (Psychic)",
+          "description": "While this model is leading a unit, once per phase you can change the result of one Hit roll, one Wound roll, or one Damage roll made for a model in that unit (excluding Support Weapon models) to an unmodified 6."
+        },
+        {
+          "name": "Invulnerable Save (Farseer)",
+          "description": "A Farseer has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Guide (Psychic)",
+          "description": "At the end of your Movement phase, select one enemy unit within 18\" of and visible to this model. Until the start of your next Command phase, each time a friendly Aeldari model makes an attack that targets that enemy unit, add 1 to the Hit roll. Each unit can only be selected for this ability once per turn."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Guardian Defenders\n■ Storm Guardians\n■ Warlock Conclave"
+        }
+      ]
+    },
+    {
+      "card_name": "Farseer Skyrunner",
+      "points": 80,
+      "primary_stats": {
+        "model": "Farseer Skyrunner",
+        "M": "14\"",
+        "T": "4",
+        "SV": "6+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Farseer Skyrunner",
+          "M": "14\"",
+          "T": "4",
+          "SV": "6+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Eldritch Storm",
+          "range": "24\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "D3",
+          "keywords": "Blast, Psychic"
+        },
+        {
+          "name": "Shuriken Pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        },
+        {
+          "name": "Twin Shuriken Catapult",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Twin Linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Witchblade",
+          "A": "2",
+          "WS": "2+",
+          "S": "3",
+          "AP": "0",
+          "D": "2",
+          "keywords": "Anti-Infantry 2+, Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Invulnerable Save (Farseer)",
+          "description": "A Farseer Skyrunner has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Branching Fates (Psychic)",
+          "description": "While this model is leading a unit, once per phase you can change the result of one Hit roll, one Wound roll, or one Damage roll made for a model in that unit to an unmodified 6."
+        },
+        {
+          "name": "Misfortune (Psychic)",
+          "description": "At the end of your Movement phase, select one enemy unit within 18\" of and visible to this model. Until the start of your next Command phase, each time a model in that unit makes an attack, subtract 1 from the Wound roll. Each unit can only be selected for this ability once per turn."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Warlock Skyrunners\n■ Windriders"
+        }
+      ]
+    },
+    {
+      "card_name": "Shadowseer",
+      "points": 60,
+      "primary_stats": {
+        "model": "Shadowseer",
+        "M": "8\"",
+        "T": "3",
+        "SV": "6+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Shadowseer",
+          "M": "8\"",
+          "T": "3",
+          "SV": "6+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This unit has a 4+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Miststave",
+          "A": "4",
+          "WS": "2+",
+          "S": "5",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n■ Troupe"
+        },
+        {
+          "name": "Fog of Dreams (Psychic)",
+          "description": "While this model is leading a unit, that unit can only be selected as the target of a ranged attack if the attacking model is within 18\"."
+        },
+        {
+          "name": "Treacherous Illusion (Psychic)",
+          "description": "Melee weapons equipped by enemy models have the [Hazardous] ability while targeting this model's unit."
+        },
+        {
+          "name": "Travelling Players",
+          "description": "Unless otherwise stated, you cannot include more than one of this model in your army."
+        },
+        {
+          "name": "Flip Belt",
+          "description": "Each time the bearer's unit makes a Normal, Advance, Fall Back or Charge move, ignore any vertical distance when determining the total distance the bearer can be moved during that move."
+        }
+      ]
+    },
+    {
+      "card_name": "Spiritseer",
+      "points": 65,
+      "primary_stats": {
+        "model": "Spiritseer",
+        "M": "7\"",
+        "T": "3",
+        "SV": "6+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Spiritseer",
+          "M": "7\"",
+          "T": "3",
+          "SV": "6+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Witch Staff",
+          "A": "2",
+          "WS": "2+",
+          "S": "3",
+          "AP": "0",
+          "D": "D3",
+          "keywords": "Anti-infantry 2+, Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Invulnerable Save (Spiritseer)",
+          "description": "A Spiritseer has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Spirit Mark (Psychic)",
+          "description": "Once per turn, in your Movement phase, when this model starts or ends a move, select one friendly Wraith Construct unit within 6\" of this model (excluding Titanic units) and one enemy unit visible to this model. Until the start of your next Movement phase, weapons equipped by models in that friendly unit have the [Sustained Hits 1] ability while targeting that enemy unit."
+        },
+        {
+          "name": "Tears of Isha (Psychic)",
+          "description": "In your Command phase, select one friendly Wraith Construct unit within 6\" of this model. If one or more models in that unit are destroyed, you can return one destroyed model to that unit. Otherwise, one model in that unit regains up to D3 lost wounds. Each unit can only be selected for this ability once per turn."
+        },
+        {
+          "name": "Spiritseer",
+          "description": "While this model is within 3\" of one or more friendly Wraith Construct units, this model has the Lone Operative ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Troupe Master",
+      "points": 75,
+      "primary_stats": {
+        "model": "Troupe Master",
+        "M": "8\"",
+        "T": "3",
+        "SV": "6+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Troupe Master",
+          "M": "8\"",
+          "T": "3",
+          "SV": "6+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This unit has a 4+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Harlequin's Special Weapon",
+          "A": "6",
+          "WS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n■ Troupe"
+        },
+        {
+          "name": "Choreographer of War",
+          "description": "While this model is leading a unit, each time a model in that unit makes a Pile In or Consolidate move, it can move up to 6\" instead of 3\". In addition, it does not need to end that move closer to the closest enemy model, provided it ends as close as possible to the closest enemy unit."
+        },
+        {
+          "name": "Cegorach’s Favour:",
+          "description": "Each time this model makes a melee attack you can re-roll a Hit roll of 1 and add 1 to the Wound roll."
+        },
+        {
+          "name": "Flip Belt",
+          "description": "Each time the bearer's unit makes a Normal, Advance, Fall Back or Charge move, ignore any vertical distance when determining the total distance the bearer can be moved during that move."
+        },
+        {
+          "name": "Travelling Players",
+          "description": "Unless otherwise stated, you cannot include more than one of this model in your army."
+        }
+      ]
+    },
+    {
+      "card_name": "Warlock",
+      "points": 45,
+      "primary_stats": {
+        "model": "Warlock",
+        "M": "7\"",
+        "T": "3",
+        "SV": "6+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Warlock",
+          "M": "7\"",
+          "T": "3",
+          "SV": "6+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Destructor",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Psychic, Torrent"
+        },
+        {
+          "name": "Shuriken Pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Witchblade",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "2",
+          "keywords": "Anti-Infantry 2+, Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Guardian Defenders\n■ Storm Guardians\nYou can attach this model to a unit, even  if one Autarch or Farseer model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        },
+        {
+          "name": "Invulnerable Save (Warlock)",
+          "description": "A Warlock has a 4+ Invulnerable save"
+        },
+        {
+          "name": "Runes of Fortune (Psychic)",
+          "description": "Each time an enemy unit declares a charge, if one or more units with this ability are selected as a target of that charge, subtract 2 from the Charge roll."
+        },
+        {
+          "name": "Psychic Communion (Psychic)",
+          "description": "Each time this model is selected to shoot, until the end of the phase, add 1 to the Attacks and Strength characteristics of its Destructor weapon for each other friendly Aeldari Psyker  model within 6\" of this model (to a maximum of +2)."
+        }
+      ]
+    },
+    {
+      "card_name": "Corsair Voidreavers",
+      "points": 65,
+      "primary_stats": {
+        "model": "Corsair Voidreaver (x5)",
+        "M": "7\"",
+        "T": "3",
+        "SV": "4+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Corsair Voidreaver (x5)",
+          "M": "7\"",
+          "T": "3",
+          "SV": "4+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        },
+        {
+          "name": "Shuriken rifle (x4)",
+          "range": "24\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Rapid Fire 1"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon (x5)",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Power sword",
+          "A": "2",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Reavers of the Void",
+          "description": "Each time a model in this unit makes an attack, re-roll a Hit roll of 1. If the target of that attack is an enemy unit within range of an objective marker, you can re-roll the Hit roll instead."
+        }
+      ]
+    },
+    {
+      "card_name": "Guardian Defenders",
+      "points": 100,
+      "primary_stats": {
+        "model": "Guardian Defender (x10)",
+        "M": "7\"",
+        "T": "3",
+        "SV": "4+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Guardian Defender (x10)",
+          "M": "7\"",
+          "T": "3",
+          "SV": "4+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "2"
+        },
+        {
+          "model": "Heavy Weapon Platform",
+          "M": "7\"",
+          "T": "3",
+          "SV": "4+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Catapult (x10)",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault"
+        },
+        {
+          "name": "Shuriken Cannon",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon (x11)",
+          "A": "1",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Fleet of Foot",
+          "description": "This unit can perform the Fade Back Agile Manoeuvre without spending a Battle Focus token to do so. It can do so even if other units have done so in the same phase, and doing so does not prevent other units from performing the same Agile Manoeuvre in the same phase."
+        },
+        {
+          "name": "Crewed Platform",
+          "description": "When the last Guardian Defender model in this unit is destroyed, any remaining Heavy Weapon Platform models in this unit are also destroyed."
+        }
+      ]
+    },
+    {
+      "card_name": "Storm Guardians",
+      "points": 110,
+      "primary_stats": {
+        "model": "Storm Guardian (x10)",
+        "M": "7\"",
+        "T": "3",
+        "SV": "4+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Storm Guardian (x10)",
+          "M": "7\"",
+          "T": "3",
+          "SV": "4+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "2"
+        },
+        {
+          "model": "Serpent's Scale Platform",
+          "M": "7\"",
+          "T": "3",
+          "SV": "4+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Pistol (x10)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon (x11)",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Stormblades",
+          "description": "At the end of your Command phase, if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent's Level of Control over that objective marker is greater than yours at the end of a phase."
+        },
+        {
+          "name": "Crewed Platform",
+          "description": "When the last Storm Guardian model in this unit is destroyed, any remaining Serpent’s Scale Platform models in this unit are also destroyed."
+        },
+        {
+          "name": "Serpent Shield",
+          "description": "Models in the bearer’s unit have a 5+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Corsair Skyreavers",
+      "points": 75,
+      "primary_stats": {
+        "model": "Corsair Skyreaver (x5)",
+        "M": "12\"",
+        "T": "3",
+        "SV": "5+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Corsair Skyreaver (x5)",
+          "M": "12\"",
+          "T": "3",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        },
+        {
+          "name": "Shuriken Pistol (x4)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Corsair Blade (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Raid and Run",
+          "description": "At the end of the Fight phase, if this unit was eligible to fight this phase, and is not within Engagement Range of one or more enemy units, it can make a Normal move of up to D3+3\". Otherwise, if this unit was eligible to fight this phase, this unit can make a Fall Back move of up to D3+3\"."
+        }
+      ]
+    },
+    {
+      "card_name": "Corsair Voidscarred",
+      "points": 80,
+      "primary_stats": {
+        "model": "Corsair Voidscarred (x5)",
+        "M": "7\"",
+        "T": "3",
+        "SV": "4+",
+        "W": "1",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Corsair Voidscarred (x5)",
+          "M": "7\"",
+          "T": "3",
+          "SV": "4+",
+          "W": "1",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        },
+        {
+          "name": "Shuriken Pistol (x4)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Power sword (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Piratical Raiders",
+          "description": "At the start of the battle, select one unit from your opponent’s army. Each time a model in this unit makes an attack that targets that unit, that attack has the [LETHAL HITS] and [PRECISION] abilities."
+        }
+      ]
+    },
+    {
+      "card_name": "D-Cannon Platform",
+      "points": 125,
+      "primary_stats": {
+        "model": "D-Cannon Platform",
+        "M": "7\"",
+        "T": "6",
+        "SV": "4+",
+        "W": "5",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "D-Cannon Platform",
+          "M": "7\"",
+          "T": "6",
+          "SV": "4+",
+          "W": "5",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "D-cannon",
+          "range": "24\"",
+          "A": "D3",
+          "BS": "3+",
+          "S": "16",
+          "AP": "-4",
+          "D": "D6+2",
+          "keywords": "Blast, Devastating Wounds, Indirect Fire"
+        },
+        {
+          "name": "Shuriken Catapult",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Structural Collapse",
+          "description": "Each time this model makes an attack with its D-Cannon, re-roll a Damage roll of 1. If that attack targets a Titanic unit, you can re-roll the Damage roll instead."
+        },
+        {
+          "name": "Support Artillery",
+          "description": "At the start of the Declare Battle Formations step, this model can join one Guardian Defenders unit from your army (a unit cannot have more than one Support Weapon model joined to it). This model then counts as part of that Guardians unit for the rest of the battle, and that unit's Starting Strength is increased accordingly.\nThis model, and any unit it is joined to, cannot embark within a Transport."
+        },
+        {
+          "name": "Support Weapon",
+          "description": "Each time an attack targets this model's unit, it that unit contains one or more other models, until that attack is resolved, this model has a Toughness characteristic of 3."
+        }
+      ]
+    },
+    {
+      "card_name": "Dark Reapers",
+      "points": 90,
+      "primary_stats": {
+        "model": "Dark Reaper Exarch",
+        "M": "6\"",
+        "T": "3",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Dark Reaper Exarch",
+          "M": "6\"",
+          "T": "3",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Dark Reaper (x4)",
+          "M": "6\"",
+          "T": "3",
+          "SV": "3+",
+          "W": "1",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This unit has a 5+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Reaper Launcher - Starshot (x5)",
+          "range": "48\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "10",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Ignores Cover"
+        },
+        {
+          "name": "Reaper Launcher - Starswarm (x5)",
+          "range": "48\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Ignores Cover"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x5)",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Inescapable Accuracy",
+          "description": "Each time a model in this unit makes a ranged attack, you can ignore any or all modifiers to that attack’s Ballistic Skill characteristic and any or all modifiers to the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Dire Avengers",
+      "points": 75,
+      "primary_stats": {
+        "model": "Dire Avenger Exarch",
+        "M": "7\"",
+        "T": "3",
+        "SV": "4+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Dire Avenger Exarch",
+          "M": "7\"",
+          "T": "3",
+          "SV": "4+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Dire Avenger (x4)",
+          "M": "7\"",
+          "T": "3",
+          "SV": "4+",
+          "W": "1",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This unit has a 5+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Avenger Shuriken Catapult (x5)",
+          "range": "18\"",
+          "A": "4",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon (x5)",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Bladestorm",
+          "description": "Ranged weapons equipped by models in this unit have the [Sustained Hits 1] ability while targeting an enemy unit within half range."
+        }
+      ]
+    },
+    {
+      "card_name": "Fire Dragons",
+      "points": 120,
+      "primary_stats": {
+        "model": "Fire Dragon Exarch",
+        "M": "7\"",
+        "T": "3",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Fire Dragon Exarch",
+          "M": "7\"",
+          "T": "3",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Fire Dragon (x4)",
+          "M": "7\"",
+          "T": "3",
+          "SV": "3+",
+          "W": "1",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This unit has a 5+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Exarch's Dragon Fusion Gun",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Assault, Melta 6"
+        },
+        {
+          "name": "Dragon Fusion Gun (x4)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Assault, Melta 3"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x5)",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Assured Destruction",
+          "description": "In your Shooting phase, each time a model in this unit makes a ranged attack that targets a Monster or Vehicle unit, you can re-roll the Hit roll, you can re-roll the Wound roll and you can re-roll the Damage roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Howling Banshees",
+      "points": 95,
+      "primary_stats": {
+        "model": "Howling Banshee Exarch",
+        "M": "8\"",
+        "T": "3",
+        "SV": "4+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Howling Banshee Exarch",
+          "M": "8\"",
+          "T": "3",
+          "SV": "4+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Howling Banshee (x4)",
+          "M": "8\"",
+          "T": "3",
+          "SV": "4+",
+          "W": "1",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This unit has a 5+ Invulnerable Save. This invulnerable save is improved to 4+ against melee attacks.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Banshee Blade (x5)",
+          "A": "2",
+          "WS": "2+",
+          "S": "4",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Anti-Infantry 3+"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Acrobatic",
+          "description": "This unit is eligible to declare a charge in a turn in which it Advanced or Fell Back"
+        }
+      ]
+    },
+    {
+      "card_name": "Rangers",
+      "points": 55,
+      "primary_stats": {
+        "model": "Rangers (x5)",
+        "M": "7\"",
+        "T": "3",
+        "SV": "5+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Rangers (x5)",
+          "M": "7\"",
+          "T": "3",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save against ranged attacks only.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Long rifle (x5)",
+          "range": "36\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Heavy, Precision"
+        },
+        {
+          "name": "Shuriken Pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon (x5)",
+          "A": "1",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Path of the Outcast",
+          "description": "Once per turn, when an enemy unit ends a Normal, Advance or Fall Back move within 9\" of this unit, it can make a Normal move of up to D6\"."
+        }
+      ]
+    },
+    {
+      "card_name": "Shadow Weaver Platform",
+      "points": 75,
+      "primary_stats": {
+        "model": "Shadow Weaver Platform",
+        "M": "7\"",
+        "T": "6",
+        "SV": "4+",
+        "W": "5",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Shadow Weaver Platform",
+          "M": "7\"",
+          "T": "6",
+          "SV": "4+",
+          "W": "5",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shadow weaver",
+          "range": "48\"",
+          "A": "D6+2",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Blast, Indirect Fire"
+        },
+        {
+          "name": "Shuriken Catapult",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Monofilament Snare",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks made with its Shadow Weaver. Until the start of your next turn, that enemy unit it snared. While a unit is snared, each time that unit makes a Normal, Advance or Fall Back move, roll one D6 for each model in that unit: for each 1, that unit suffers 1 mortal wound."
+        },
+        {
+          "name": "Support Artillery",
+          "description": "At the start of the Declare Battle Formations step, this model can join one Guardian Defenders unit from your army (a unit cannot have more than one Support Weapon model joined to it). This model then counts as part of that Guardians unit for the rest of the battle, and that unit's Starting Strength is increased accordingly.\nThis model, and any unit it is joined to, cannot embark within a Transport."
+        },
+        {
+          "name": "Support Weapon",
+          "description": "Each time an attack targets this model's unit, it that unit contains one or more other models, until that attack is resolved, this model has a Toughness characteristic of 3."
+        }
+      ]
+    },
+    {
+      "card_name": "Striking Scorpions",
+      "points": 85,
+      "primary_stats": {
+        "model": "Striking Scorpion Exarch",
+        "M": "7\"",
+        "T": "3",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Striking Scorpion Exarch",
+          "M": "7\"",
+          "T": "3",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Striking Scorpion (x4)",
+          "M": "7\"",
+          "T": "3",
+          "SV": "3+",
+          "W": "1",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This unit has a 5+ Invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Scorpion chainsword (x5)",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Sustained Hits 1"
+        },
+        {
+          "name": "Scorpion's claw",
+          "A": "3",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Mandiblasters",
+          "description": "Each time a model in this unit makes a melee attack, if it made a Charge move this turn, an unmodified Hit roll of 5+ scores a Critical Hit."
+        }
+      ]
+    },
+    {
+      "card_name": "Swooping Hawks",
+      "points": 95,
+      "primary_stats": {
+        "model": "Swooping Hawk Exarch",
+        "M": "14\"",
+        "T": "3",
+        "SV": "4+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Swooping Hawk Exarch",
+          "M": "14\"",
+          "T": "3",
+          "SV": "4+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Swooping Hawk (x4)",
+          "M": "14\"",
+          "T": "3",
+          "SV": "4+",
+          "W": "1",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This unit has a 5+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Hawk's Talon",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Lasblaster (x4)",
+          "range": "24\"",
+          "A": "4",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Assault, Lethal Hits"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon (x5)",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Grenade Pack Flyover",
+          "description": "Once per turn, in your Movement phase, when this unit is set-up on the battlefield or ends a Normal, Advance or Fall Back move, it can use this ability. If it does, select one enemy unit within 8\" of and visible to this unit and roll one D6 for each Swooping Hawks model in this unit. For each 4+, that enemy unit suffers 1 mortal wound (to a maximum of 6 mortal wounds). Each time this unit uses this ability , until the end of the turn, you cannot target this unit with the Grenades Stratagem."
+        }
+      ]
+    },
+    {
+      "card_name": "Troupe",
+      "points": 85,
+      "primary_stats": {
+        "model": "Troupe (x5)",
+        "M": "8\"",
+        "T": "3",
+        "SV": "6+",
+        "W": "1",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Troupe (x5)",
+          "M": "8\"",
+          "T": "3",
+          "SV": "6+",
+          "W": "1",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This unit has a 4+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Harlequin's Blade (x5)",
+          "A": "5",
+          "WS": "3+",
+          "S": "3",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Dance of Death",
+          "description": "At the start of the Fight phase, select one of the following abilities for this unit to gain until the end of the phase:\n■ Hero's Prowess: Each time a model in this unit makes an attack, re-roll a Hit roll of 1.\n■ Villain's Doom: Each time a model in this unit makes an attack, add 1 to the Wound roll.\n■ Trickster's Grace: Each time an attack targets this unit, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Flip Belt",
+          "description": "Each time the bearer's unit makes a Normal, Advance, Fall Back or Charge move, ignore any vertical distance when determining the total distance the bearer can be moved during that move."
+        }
+      ]
+    },
+    {
+      "card_name": "Vibro Cannon Platform",
+      "points": 60,
+      "primary_stats": {
+        "model": "Vibro Cannon Platform",
+        "M": "7\"",
+        "T": "6",
+        "SV": "4+",
+        "W": "5",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Vibro Cannon Platform",
+          "M": "7\"",
+          "T": "6",
+          "SV": "4+",
+          "W": "5",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Catapult",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault"
+        },
+        {
+          "name": "Vibro Cannon",
+          "range": "48\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Sonic Destruction",
+          "description": "In your Shooting phase, each time this model makes an attack with its Vibro Cannon that targets an enemy unit, improve the Strength, Armour Penetration and Damage characteristics of that attack by 1 for each other friendly Vibro Cannon Platform model that made one or more attacks with its Vibro Cannon that also targeted that enemy unit this phase."
+        },
+        {
+          "name": "Support Artillery",
+          "description": "At the start of the Declare Battle Formations step, this model can join one Guardian Defenders unit from your army (a unit cannot have more than one Support Weapon model joined to it). This model then counts as part of that Guardians unit for the rest of the battle, and that unit's Starting Strength is increased accordingly.\nThis model, and any unit it is joined to, cannot embark within a Transport."
+        },
+        {
+          "name": "Support Weapon",
+          "description": "Each time an attack targets this model's unit, it that unit contains one or more other models, until that attack is resolved, this model has a Toughness characteristic of 3."
+        }
+      ]
+    },
+    {
+      "card_name": "Warlock Conclave",
+      "points": 55,
+      "primary_stats": {
+        "model": "Warlock (x2)",
+        "M": "7\"",
+        "T": "3",
+        "SV": "6+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Warlock (x2)",
+          "M": "7\"",
+          "T": "3",
+          "SV": "6+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This unit has a 4+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Destructor (x2)",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Psychic, Torrent"
+        },
+        {
+          "name": "Shuriken Pistol (x2)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Witchblade (x2)",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "2",
+          "keywords": "Anti-Infantry 2+, Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Protect (Psychic)",
+          "description": "While a Farseer model is leading this unit, each time an attack targets this unit, subtract 1 from the Wound roll."
+        },
+        {
+          "name": "Psychic Communion (Psychic)",
+          "description": "Each time this unit is selected to shoot, for each Warlock model in this unit, until the end of the phase, add 1 to the Attacks and Strength characteristics of that model's Destructor weapon for each other friendly Aeldari Psyker model within 6\" of this model (to a maximum of +2)."
+        },
+        {
+          "name": "Leader",
+          "description": "At the start of the Declare Battle Formations step, if this unit is not an Attached unit, this unit can join one Guardian Defenders or Storm Guardians unit from your army (a unit cannot have more than one Warlock Conclave unit joined to it). If it does, until the end of the battle, every model in this unit counts as being part of that Bodyguard unit, and that Bodyguard unit’s Starting Strength is increased accordingly."
+        }
+      ]
+    },
+    {
+      "card_name": "Warp Spiders",
+      "points": 105,
+      "primary_stats": {
+        "model": "Warp Spider Exarch",
+        "M": "12\"",
+        "T": "3",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Warp Spider Exarch",
+          "M": "12\"",
+          "T": "3",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Warp Spider (x4)",
+          "M": "12\"",
+          "T": "3",
+          "SV": "3+",
+          "W": "1",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This unit has a 5+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Exarch's Deathspinner",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "6",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        },
+        {
+          "name": "Death spinner (x4)",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon (x5)",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Flickerjump",
+          "description": "In your Movement phase, each time this unit is selected to make a Normal move, it can use this ability. If it does, until the end of the turn, this unit is not eligible to declare a charge and models in it have a Move characteristic of 24\". Each time this unit uses this ability, at the end of the phase, roll one D6 for each model in this unit: for each 1, this unit suffers 1 mortal wound."
+        }
+      ]
+    },
+    {
+      "card_name": "Wraithblades",
+      "points": 150,
+      "primary_stats": {
+        "model": "Wraithblade (x5)",
+        "M": "6\"",
+        "T": "6",
+        "SV": "2+",
+        "W": "3",
+        "LD": "8+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Wraithblade (x5)",
+          "M": "6\"",
+          "T": "6",
+          "SV": "2+",
+          "W": "3",
+          "LD": "8+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Ghostswords (x5)",
+          "A": "5",
+          "WS": "4+",
+          "S": "5",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Malevolent Souls",
+          "description": "Each time a model in this unit is destroyed by a melee attack, if that model has not fought this phase, roll one D6. On a 3+, do not remove it from play; that destroyed model can fight after the attacking model’s unit has finished making its attacks, and is then removed from play."
+        },
+        {
+          "name": "Psychic Guidance",
+          "description": "While this unit is within 12\" of one or more friendly Aeldari Psyker models, models in this unit have a Leadership characteristic of 6+ and each time a model in this unit makes an attack, add 1 to the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Wraithguard",
+      "points": 160,
+      "primary_stats": {
+        "model": "Wraithguard (x5)",
+        "M": "6\"",
+        "T": "6",
+        "SV": "2+",
+        "W": "3",
+        "LD": "8+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Wraithguard (x5)",
+          "M": "6\"",
+          "T": "6",
+          "SV": "2+",
+          "W": "3",
+          "LD": "8+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Wraithcannon (x5)",
+          "range": "18\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "14",
+          "AP": "-4",
+          "D": "D6+1",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon (x5)",
+          "A": "3",
+          "WS": "4+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "War Construct",
+          "description": "This unit is eligible to shoot in a turn in which it Fell Back."
+        },
+        {
+          "name": "Psychic Guidance",
+          "description": "While this unit is within 12\" of one or more friendly Aeldari Psyker models, models in this unit have a Leadership characteristic of 6+ and each time a model in this unit makes an attack, add 1 to the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Shining Spears",
+      "points": 110,
+      "primary_stats": {
+        "model": "Shining Spear Exarch",
+        "M": "14\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Shining Spear Exarch",
+          "M": "14\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "2"
+        },
+        {
+          "model": "Shining Spear (x2)",
+          "M": "14\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": "This unit has a 5+ Invulnerable Save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Twin Shuriken Catapult (x3)",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Twin Linked"
+        },
+        {
+          "name": "Laser Lance (x3)",
+          "range": "6\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Assault"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Laser Lance (x3)",
+          "A": "3",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Anti-Monster 3+, Anti-Vehicle 3+, Lance"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Extreme Mobility",
+          "description": "Each time this unit makes a Normal, Advance, Fall Back or Charge move, ignore any vertical distance when determining the total distance models in this unit can be moved during that move."
+        }
+      ]
+    },
+    {
+      "card_name": "Shroud Runners",
+      "points": 80,
+      "primary_stats": {
+        "model": "Shroud Runner (x3)",
+        "M": "14\"",
+        "T": "4",
+        "SV": "5+",
+        "W": "3",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Shroud Runner (x3)",
+          "M": "14\"",
+          "T": "4",
+          "SV": "5+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save against ranged attacks only.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Long rifle (x3)",
+          "range": "36\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Precision"
+        },
+        {
+          "name": "Scatter Laser (x3)",
+          "range": "36\"",
+          "A": "6",
+          "BS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Sustained Hits 1"
+        },
+        {
+          "name": "Shuriken Pistol (x3)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon (x3)",
+          "A": "1",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Target Acquisition",
+          "description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks made with a long rifle. Until the end of the phase, that enemy unit cannot have the Benefit of Cover."
+        }
+      ]
+    },
+    {
+      "card_name": "Skyweavers",
+      "points": 95,
+      "primary_stats": {
+        "model": "Skyweaver (x2)",
+        "M": "14\"",
+        "T": "4",
+        "SV": "4+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Skyweaver (x2)",
+          "M": "14\"",
+          "T": "4",
+          "SV": "4+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": "This unit has a 4+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Cannon (x2)",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Star Bolas (x2)",
+          "range": "12\"",
+          "A": "D3",
+          "BS": "3+",
+          "S": "7",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon (x2)",
+          "A": "4",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Acrobatic Grace",
+          "description": "Each time an attack targets this unit, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Warlock Skyrunners",
+      "points": 45,
+      "primary_stats": {
+        "model": "Warlock Skyrunner",
+        "M": "14\"",
+        "T": "4",
+        "SV": "6+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Warlock Skyrunner",
+          "M": "14\"",
+          "T": "4",
+          "SV": "6+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Destructor",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Psychic, Torrent"
+        },
+        {
+          "name": "Shuriken Pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Pistol"
+        },
+        {
+          "name": "Twin Shuriken Catapult",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Twin Linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Witchblade",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "2",
+          "keywords": "Anti-Infantry 2+, Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Psychic Communion (Psychic)",
+          "description": "Each time this unit is selected to shoot, for each Warlock model in this unit, until the end of the phase, add 1 to the Attacks and Strength characteristics of that model's Destructor weapon for each other friendly Aeldari Psyker model within 6\" of this model (to a maximum of +2)."
+        },
+        {
+          "name": "Leader",
+          "description": "At the start of the Declare Battle Formations step, if this unit is not an Attached unit, this unit can join one Windriders unit from your army (a unit cannot have more than one Warlock Skyrunners unit joined to it). If it does, until the end of the battle, every model in this unit counts as being part of that Bodyguard unit, and that Bodyguard unit’s Starting Strength is increased accordingly."
+        },
+        {
+          "name": "Runes of Battle (Psychic)",
+          "description": "Weapons equipped by models in this unit have the [Ignores Cover] ability."
+        },
+        {
+          "name": "Invulnerable Save (Warlock)",
+          "description": "A Warlock Skyrunner has a 4+ Invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Windriders",
+      "points": 80,
+      "primary_stats": {
+        "model": "Windriders (x3)",
+        "M": "14\"",
+        "T": "4",
+        "SV": "4+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Windriders (x3)",
+          "M": "14\"",
+          "T": "4",
+          "SV": "4+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": "This unit has a 6+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Twin Shuriken Catapult (x3)",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Twin Linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon (x3)",
+          "A": "3",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Swift Demise",
+          "description": "Each time a model in this unit makes a ranged attack, re-roll a Hit roll of 1. If the target of that attack is the closest eligible target, you can re-roll the Hit roll instead."
+        }
+      ]
+    },
+    {
+      "card_name": "Phantom Titan",
+      "points": 2100,
+      "primary_stats": {
+        "model": "Phantom Titan",
+        "M": "14\"",
+        "T": "14",
+        "SV": "2+",
+        "W": "55",
+        "LD": "6+",
+        "OC": "20"
+      },
+      "all_model_stats": [
+        {
+          "model": "Phantom Titan",
+          "M": "14\"",
+          "T": "14",
+          "SV": "2+",
+          "W": "55",
+          "LD": "6+",
+          "OC": "20"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 4+ invulnerable save against ranged attacks.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Voidstorm missile launcher",
+          "range": "48\"",
+          "A": "2D6",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": ""
+        },
+        {
+          "name": "D-bombard",
+          "range": "72\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "20",
+          "AP": "-4",
+          "D": "2D6",
+          "keywords": "Blast, Devastating Wounds"
+        },
+        {
+          "name": "Phantom pulsar",
+          "range": "120\"",
+          "A": "8",
+          "BS": "3+",
+          "S": "18",
+          "AP": "-4",
+          "D": "6",
+          "keywords": ""
+        },
+        {
+          "name": "Phantom starcannon",
+          "range": "36\"",
+          "A": "4",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Phantom feet",
+          "A": "4",
+          "WS": "3+",
+          "S": "12",
+          "AP": "-2",
+          "D": "4",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Damaged: 1-16 Wounds Remaining",
+          "description": "While this model has 1-16 wounds remaining, subtract 10 from this model’s Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Titanic Advance",
+          "description": "Each time this model makes a Normal, Advance or Fall Back move, it can move over models (excluding Titanic models) and terrain features that are 4\" or less in height as if they were not there."
+        },
+        {
+          "name": "Towering Wraith Construct",
+          "description": "Each time you target this model with a Stratagem, you must spend three times that Stratagem’s stated CP cost to do so."
+        },
+        {
+          "name": "Flawless Poise",
+          "description": "This model is eligible to shoot and declare a charge in a turn in which it Fell Back."
+        }
+      ]
+    },
+    {
+      "card_name": "Revenant Titan",
+      "points": 1100,
+      "primary_stats": {
+        "model": "Revenant Titan",
+        "M": "16\"",
+        "T": "13",
+        "SV": "2+",
+        "W": "30",
+        "LD": "6+",
+        "OC": "16"
+      },
+      "all_model_stats": [
+        {
+          "model": "Revenant Titan",
+          "M": "16\"",
+          "T": "13",
+          "SV": "2+",
+          "W": "30",
+          "LD": "6+",
+          "OC": "16"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 4+ invulnerable save against ranged attacks.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Cloudburst missile launcher",
+          "range": "36\"",
+          "A": "2D6",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Revenant Pulsar",
+          "range": "60\"",
+          "A": "6",
+          "BS": "3+",
+          "S": "14",
+          "AP": "-3",
+          "D": "4",
+          "keywords": "Assault"
+        },
+        {
+          "name": "Sonic Lance",
+          "range": "18\"",
+          "A": "D6+6",
+          "BS": "N/A",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Anti-Monster 4+, Anti-Vehicle 4+, Assault, Torrent"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Revenant feet",
+          "A": "8",
+          "WS": "3+",
+          "S": "10",
+          "AP": "-1",
+          "D": "3",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Damaged: 1-10 Wounds Remaining",
+          "description": "While this model has 1-10 wounds remaining, subtract 8 from this model’s Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Titanic Advance",
+          "description": "Each time this model makes a Normal, Advance or Fall Back move, it can move over models (excluding Titanic models) and terrain features that are 4\" or less in height as if they were not there."
+        },
+        {
+          "name": "Towering Wraith Construct",
+          "description": "Each time you target this model with a Stratagem, you must spend twice that Stratagem’s stated CP cost to do so."
+        },
+        {
+          "name": "Revenant Jet Pack",
+          "description": "Each time this model Advances, do not make an Advance roll for it. Instead, until the end of the phase, add 8\" to the Move characteristic of this model."
+        }
+      ]
+    },
+    {
+      "card_name": "Wraithknight",
+      "points": 435,
+      "primary_stats": {
+        "model": "Wraithknight",
+        "M": "12\"",
+        "T": "12",
+        "SV": "2+",
+        "W": "18",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Wraithknight",
+          "M": "12\"",
+          "T": "12",
+          "SV": "2+",
+          "W": "18",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Suncannon",
+          "range": "48\"",
+          "A": "D6+4",
+          "BS": "3+",
+          "S": "10",
+          "AP": "-3",
+          "D": "3",
+          "keywords": "Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Titanic Feet",
+          "A": "5",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Damaged: 1-6 Wounds Remaining",
+          "description": "While this model has 1-6 wounds remaining, subtract 5 from this model’s Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Titanic Strides",
+          "description": "Each time this model makes a Normal, Advance or Fall Back move, it can move through models (excluding Titanic models) and sections of terrain features that are 4\" or less in height. When doing so:\nIt can move within Engagement Range of enemy models, but cannot end that move within Engagement Range of them.\nIt can also move through sections of terrain features that are more than 4\" in height, but if it does, after it has moved, roll one D6: on a 1, this model is battle-shocked."
+        },
+        {
+          "name": "Point-blank Devastation",
+          "description": "Each time this model's Heavy Wraithcannon or Suncannon targets a unit within half range, you can re-roll the dice to determine the number of attacks made."
+        },
+        {
+          "name": "Scattershield",
+          "description": "The bearer has a 4+ invulnerable save and each time an attack is allocated to the bearer, subtract 1 from the Damage characteristic of that attack."
+        }
+      ]
+    },
+    {
+      "card_name": "Wraithknight with Ghostglaive",
+      "points": 420,
+      "primary_stats": {
+        "model": "Wraithknight",
+        "M": "12\"",
+        "T": "12",
+        "SV": "2+",
+        "W": "18",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Wraithknight",
+          "M": "12\"",
+          "T": "12",
+          "SV": "2+",
+          "W": "18",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Titanic Ghostglaive - Strike",
+          "A": "5",
+          "WS": "3+",
+          "S": "16",
+          "AP": "-3",
+          "D": "6",
+          "keywords": ""
+        },
+        {
+          "name": "Titanic Ghostglaive - Sweep",
+          "A": "15",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Damaged: 1-6 Wounds Remaining",
+          "description": "While this model has 1-6 wounds remaining, subtract 5 from this model’s Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Titanic Agility",
+          "description": "Each time this model makes a Normal, Advance or Fall Back move, it can move through models and terrain features. When doing so, it can move within Engagement Range of enemy models, but cannot end that move within Engagement Range of them."
+        },
+        {
+          "name": "Scattershield",
+          "description": "The bearer has a 4+ invulnerable save and each time an attack is allocated to the bearer, subtract 1 from the Damage characteristic of that attack."
+        }
+      ]
+    },
+    {
+      "card_name": "Wraithlord",
+      "points": 130,
+      "primary_stats": {
+        "model": "Wraithlord",
+        "M": "8\"",
+        "T": "10",
+        "SV": "2+",
+        "W": "10",
+        "LD": "8+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Wraithlord",
+          "M": "8\"",
+          "T": "10",
+          "SV": "2+",
+          "W": "10",
+          "LD": "8+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Catapult (x2)",
+          "range": "18\"",
+          "A": "2",
+          "BS": "4+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Wraithbone Fists",
+          "A": "4",
+          "WS": "4+",
+          "S": "7",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Fated Hero",
+          "description": "At the start of the battle, select one of the following keywords: Infantry, Monster, Mounted, Vehicle. Each time this model makes an attack that targets a unit with the selected keyword, re-roll a Hit roll of 1 and re-roll a Wound roll of 1."
+        },
+        {
+          "name": "Psychic Guidance",
+          "description": "While this model is within 12\" of one or more friendly Aeldari Psyker models, improve the Ballistic Skill and Weapon Skill characteristics of weapons equipped by this model by 1 and it has a Leadership characteristic of 6+."
+        }
+      ]
+    },
+    {
+      "card_name": "Crimson Hunter",
+      "points": 160,
+      "primary_stats": {
+        "model": "Crimson Hunter",
+        "M": "20+\"",
+        "T": "8",
+        "SV": "3+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Crimson Hunter",
+          "M": "20+\"",
+          "T": "8",
+          "SV": "3+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": "This unit has a 5+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Pulse Laser",
+          "range": "48\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-2",
+          "D": "D6",
+          "keywords": ""
+        },
+        {
+          "name": "Starcannon (x2)",
+          "range": "36\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Wraithbone Hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Skyhunter",
+          "description": "Each time this model makes a ranged attack that targets a unit that can Fly, add 1 to the Hit roll and add 1 to the Wound roll."
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Falcon",
+      "points": 130,
+      "primary_stats": {
+        "model": "Falcon",
+        "M": "14\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "12",
+        "LD": "7+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Falcon",
+          "M": "14\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "12",
+          "LD": "7+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Pulse Laser",
+          "range": "48\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-2",
+          "D": "D6",
+          "keywords": ""
+        },
+        {
+          "name": "Shuriken Cannon",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Twin Shuriken Catapult",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Twin Linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Wraithbone hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Fire Support",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the end of the turn, each time a friendly model that disembarked from this Transport this turn makes an attack that targets that enemy unit, you can re-roll the Wound roll"
+        }
+      ]
+    },
+    {
+      "card_name": "Fire Prism",
+      "points": 150,
+      "primary_stats": {
+        "model": "Fire Prism",
+        "M": "14\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "12",
+        "LD": "7+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Fire Prism",
+          "M": "14\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "12",
+          "LD": "7+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Prism Cannon - dispersed pulse",
+          "range": "60\"",
+          "A": "2D6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Prism Cannon - focused lances",
+          "range": "60\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "18",
+          "AP": "-4",
+          "D": "6",
+          "keywords": "Linked Fire"
+        },
+        {
+          "name": "Twin Shuriken Catapult",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Twin Linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Wraithbone Hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Crystal Matrix",
+          "description": "Each time this model is selected to shoot, you can re-roll one Hit roll and you can re-roll one Wound roll when resolving those attacks."
+        }
+      ]
+    },
+    {
+      "card_name": "Hemlock Wraithfighter",
+      "points": 155,
+      "primary_stats": {
+        "model": "Hemlock Wraithfighter",
+        "M": "20+\"",
+        "T": "8",
+        "SV": "3+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Hemlock Wraithfighter",
+          "M": "20+\"",
+          "T": "8",
+          "SV": "3+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Heavy D-Scythe (x2)",
+          "range": "18\"",
+          "A": "D6",
+          "BS": "4+",
+          "S": "12",
+          "AP": "-4",
+          "D": "2",
+          "keywords": "Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Wraithbone Hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Mindshock Pod (Aura, Psychic)",
+          "description": "While an enemy unit is within 9\" of this model, subtract 1 from Battle-shock and Leadership tests taken for that unit."
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Night Spinner",
+      "points": 190,
+      "primary_stats": {
+        "model": "Night Spinner",
+        "M": "14\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "12",
+        "LD": "7+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Night Spinner",
+          "M": "14\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "12",
+          "LD": "7+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Doomweaver",
+          "range": "48\"",
+          "A": "D6+3",
+          "BS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Blast, Indirect Fire, Twin Linked"
+        },
+        {
+          "name": "Twin Shuriken Catapult",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Twin Linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Wraithbone Hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Monofilament Web",
+          "description": "In your Shooting phase, after this model has shot, if one or more of those attacks made with its doomweaver scored a hit against an enemy unit, until the start of your next turn, that enemy unit is pinned. While a unit is pinned, subtract 2 from that unit's Move characteristic and subtract 2 from Charge rolls made for it."
+        }
+      ]
+    },
+    {
+      "card_name": "Starfangs",
+      "points": 75,
+      "primary_stats": {
+        "model": "Starfang",
+        "M": "14\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "6",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Starfang",
+          "M": "14\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "6",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Disintegrator Cannon",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Assault"
+        },
+        {
+          "name": "Starfang Grenade Launcher",
+          "range": "36\"",
+          "A": "D3",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Assault, Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Wraithbone Hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Hallucinogen Grenades",
+          "description": "At the start of your opponent’s Shooting phase, this unit can use this ability. If it does, select one Aeldari Infantry unit from your army visible to and within 36\" of this unit: until the end of the phase, that unit has the Stealth ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Voidweaver",
+      "points": 125,
+      "primary_stats": {
+        "model": "Voidweaver",
+        "M": "14\"",
+        "T": "6",
+        "SV": "4+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Voidweaver",
+          "M": "14\"",
+          "T": "6",
+          "SV": "4+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": "This unit has a 4+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Cannon (x2)",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Voidweaver Haywire Cannon",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Anti-vehicle 4+, Devastating Wounds"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon",
+          "A": "4",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Polychromatic Camoflage",
+          "description": "This unit can only be selected as the target of a ranged attack if the attacking model is within 18\"."
+        }
+      ]
+    },
+    {
+      "card_name": "Vypers",
+      "points": 75,
+      "primary_stats": {
+        "model": "Vyper",
+        "M": "14\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "6",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Vyper",
+          "M": "14\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "6",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bright Lance",
+          "range": "48\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+2",
+          "keywords": ""
+        },
+        {
+          "name": "Shuriken Cannon",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Wraithbone Hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Harassment Fire",
+          "description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the start of your next turn, that enemy unit is suppressed. While a unit is suppressed, each time a model in that unit makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "War Walkers",
+      "points": 85,
+      "primary_stats": {
+        "model": "War Walker",
+        "M": "10\"",
+        "T": "7",
+        "SV": "3+",
+        "W": "6",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "War Walker",
+          "M": "10\"",
+          "T": "7",
+          "SV": "3+",
+          "W": "6",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": "This unit has a 5+ Invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Cannon (x2)",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "War Walker feet",
+          "A": "3",
+          "WS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Crystalline Targeting",
+          "description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the end of the phase, each time a friendly Aeldari unit makes an attack that targets that enemy unit, improve the Armour Penetration characteristic of that attack by 1. Each unit can only be selected for that ability once per turn."
+        }
+      ]
+    },
+    {
+      "card_name": "Starweaver",
+      "points": 80,
+      "primary_stats": {
+        "model": "Starweaver",
+        "M": "14\"",
+        "T": "6",
+        "SV": "4+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Starweaver",
+          "M": "14\"",
+          "T": "6",
+          "SV": "4+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": "This unit has a 4+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Shuriken Cannon (x2)",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close Combat Weapon",
+          "A": "4",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Rapid Embarkation",
+          "description": "At the end of the Fight phase, if there are no models currently embarked within this Transport, you can select one friendly Harlequins Infantry unit that has 6 or fewer models that is wholly within 6\" of this Transport. Unless that unit is within Engagement Range of one or more enemy units, it can embark within this Transport."
+        }
+      ]
+    },
+    {
+      "card_name": "Wave Serpent",
+      "points": 125,
+      "primary_stats": {
+        "model": "Wave Serpent",
+        "M": "14\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "13",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Wave Serpent",
+          "M": "14\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "13",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": "This unit has a 5+ Invulnerable save",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Twin Shuriken Catapult",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Twin Linked"
+        },
+        {
+          "name": "Twin Shuriken Cannon",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Lethal Hits, Twin-Linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Wraithbone Hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Wave Serpent Shield",
+          "description": "Each time a ranged attack targets this model, if the Strength characteristic of that attack is greater than the Toughness characteristic of this model, subtract 1 from the Wound roll."
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    }
+  ]
+}

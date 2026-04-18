@@ -1,0 +1,1869 @@
+{
+  "faction": "Knights",
+  "source_file": "POINTS_KNIGHTS.html",
+  "extracted_date": "2026-04-13",
+  "total_cards": 22,
+  "units": [
+    {
+      "card_name": "Canis Rex",
+      "points": 415,
+      "primary_stats": {
+        "model": "Canis Rex",
+        "M": "10\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "26",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Canis Rex",
+          "M": "10\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "26",
+          "LD": "6+",
+          "OC": "10"
+        },
+        {
+          "model": "Sir Hekhtur",
+          "M": "6\"",
+          "T": "3",
+          "SV": "4+",
+          "W": "3",
+          "LD": "5+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Las-impulsor - high intensity",
+          "range": "24\"",
+          "A": "D6",
+          "BS": "2+",
+          "S": "14",
+          "AP": "-3",
+          "D": "4",
+          "keywords": "Blast, Sustained Hits 1"
+        },
+        {
+          "name": "Las-impulsor - low intensity",
+          "range": "36\"",
+          "A": "2D6",
+          "BS": "2+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Blast, Sustained Hits 1"
+        },
+        {
+          "name": "Questoris multi-laser",
+          "range": "36\"",
+          "A": "4",
+          "BS": "2+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Sustained Hits 1"
+        },
+        {
+          "name": "Hekhtur's pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Freedom's Hand - strike",
+          "A": "5",
+          "WS": "2+",
+          "S": "20",
+          "AP": "-3",
+          "D": "9",
+          "keywords": "Sustained Hits 1"
+        },
+        {
+          "name": "Freedom's Hand - sweep",
+          "A": "10",
+          "WS": "2+",
+          "S": "10",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Sustained Hits 1"
+        },
+        {
+          "name": "Close combat weapon",
+          "A": "2",
+          "WS": "2+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Chainbreaker",
+          "description": "Once per battle, at the start of any phase, you can select one friendly Imperium unit that is Battle-shocked and within 12\" of this model. That unit is no longer Battle-shocked."
+        },
+        {
+          "name": "Legendary Freeblade",
+          "description": "Once per turn, one unit from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP."
+        },
+        {
+          "name": "Invulnerable Save (5+*)",
+          "description": "This model has a 5+ invulnerable save against ranged attacks."
+        },
+        {
+          "name": "Damaged: 1-9 Wounds Remaining",
+          "description": "While this model has 1-9 wounds remaining, subtract 5 from this models Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Using Sir Hekhtur",
+          "description": "If your Canis Rex model is destroyed, this model is treated as a model disembarking from a destroyed Transport and must perform an Emergency Disembarkation. Sir Hekhtur cannot be selected as the target of any of your Stratagems other than Core Stratagems. Your Canis Rex unit is not considered to be destroyed until Sir Hekhtur is also destroyed."
+        }
+      ]
+    },
+    {
+      "card_name": "Cerastus Knight Acheron",
+      "points": 395,
+      "primary_stats": {
+        "model": "Cerastus Knight Acheron",
+        "M": "12\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "28",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Cerastus Knight Acheron",
+          "M": "12\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "28",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Acheron flame cannon",
+          "range": "18\"",
+          "A": "2D6",
+          "BS": "N/A",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Torrent, Ignores Cover"
+        },
+        {
+          "name": "Twin heavy bolter",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Sustained Hits 1, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Reaper chainfist - strike",
+          "A": "4",
+          "WS": "3+",
+          "S": "14",
+          "AP": "-4",
+          "D": "6",
+          "keywords": ""
+        },
+        {
+          "name": "Reaper chainfist - sweep",
+          "A": "12",
+          "WS": "3+",
+          "S": "9",
+          "AP": "-3",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Acheron’s Duty (Bondsman)",
+          "description": "While a model is affected by this ability, at the start of the Fight phase, each enemy unit within Engagement Range of one or more units with this ability must take a Battle-shock test, subtracting 1 from the result when they do."
+        }
+      ]
+    },
+    {
+      "card_name": "Cerastus Knight Atrapos",
+      "points": 405,
+      "primary_stats": {
+        "model": "Cerastus Knight Atrapos",
+        "M": "12\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "28",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Cerastus Knight Atrapos",
+          "M": "12\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "28",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Atrapos lascutter - high intensity (ranged)",
+          "range": "24\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "14",
+          "AP": "-3",
+          "D": "4",
+          "keywords": "Sustained Hits 1"
+        },
+        {
+          "name": "Atrapos lascutter - low intensity (ranged)",
+          "range": "36\"",
+          "A": "2D6",
+          "BS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Sustained Hits 1"
+        },
+        {
+          "name": "Graviton singularity cannon - singularity",
+          "range": "24\"",
+          "A": "D3",
+          "BS": "3+",
+          "S": "16",
+          "AP": "-4",
+          "D": "D6+1",
+          "keywords": "Blast, Devastating Wounds, Hazardous"
+        },
+        {
+          "name": "Graviton singularity cannon - contained",
+          "range": "24\"",
+          "A": "D3",
+          "BS": "3+",
+          "S": "16",
+          "AP": "-4",
+          "D": "D6+1",
+          "keywords": "Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Atrapos lascutter - high intensity (melee)",
+          "A": "6",
+          "WS": "3+",
+          "S": "14",
+          "AP": "-3",
+          "D": "4",
+          "keywords": "Sustained Hits 1"
+        },
+        {
+          "name": "Atrapos lascutter - low intensity (melee)",
+          "A": "12",
+          "WS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Sustained Hits 1"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Atrapos’ Duty (Bondsman)",
+          "description": "While a model is affected by this ability, each time that model makes an attack that targets a TITANIC or TOWERING model, you can re-roll the Hit roll and you can re-roll the Wound roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Cerastus Knight Castigator",
+      "points": 395,
+      "primary_stats": {
+        "model": "Cerastus Knight Castigator",
+        "M": "12\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "28",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Cerastus Knight Castigator",
+          "M": "12\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "28",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Castigator bolt cannon",
+          "range": "36\"",
+          "A": "18",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Tempest warblade - strike",
+          "A": "4",
+          "WS": "3+",
+          "S": "14",
+          "AP": "-4",
+          "D": "6",
+          "keywords": ""
+        },
+        {
+          "name": "Tempest warblade - sweep",
+          "A": "12",
+          "WS": "3+",
+          "S": "9",
+          "AP": "-3",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Castigator’s Duty (Bondsman)",
+          "description": "While a model is affected by this ability, its ranged weapons have the [SUSTAINED HITS 1] ability and the Armour Penetration characteristic of its ranged weapons is improved by 1."
+        }
+      ]
+    },
+    {
+      "card_name": "Cerastus Knight Lancer",
+      "points": 395,
+      "primary_stats": {
+        "model": "Cerastus Knight Lancer",
+        "M": "14\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "28",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Cerastus Knight Lancer",
+          "M": "14\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "28",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Cerastus shock lance",
+          "range": "12\"",
+          "A": "6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "2",
+          "keywords": "Assault, Sustained Hits 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Cerastus shock lance - strike",
+          "A": "5",
+          "WS": "2+",
+          "S": "20",
+          "AP": "-3",
+          "D": "8",
+          "keywords": "Lance"
+        },
+        {
+          "name": "Cerastus shock lance - sweep",
+          "A": "10",
+          "WS": "2+",
+          "S": "10",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Lancer’s Duty (Bondsman)",
+          "description": "While a model is affected by this ability, it is eligible to declare a charge in a turn in which it Advanced."
+        }
+      ]
+    },
+    {
+      "card_name": "Knight Castellan",
+      "points": 410,
+      "primary_stats": {
+        "model": "Knight Castellan",
+        "M": "8\"",
+        "T": "12",
+        "SV": "3+",
+        "W": "28",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Knight Castellan",
+          "M": "8\"",
+          "T": "12",
+          "SV": "3+",
+          "W": "28",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Plasma decimator - standard",
+          "range": "48\"",
+          "A": "D6+3",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Plasma decimator - supercharge",
+          "range": "48\"",
+          "A": "D6+3",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "3",
+          "keywords": "Blast, Hazardous"
+        },
+        {
+          "name": "Twin meltagun (x2)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Melta 2, Twin-Linked"
+        },
+        {
+          "name": "Volcano lance",
+          "range": "72\"",
+          "A": "D3",
+          "BS": "3+",
+          "S": "18",
+          "AP": "-5",
+          "D": "D6+8",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Shieldbreaker missile launcher (x2)",
+          "range": "72\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-6",
+          "D": "D6+1",
+          "keywords": "Anti-Titanic 4+, Devastating Wounds"
+        },
+        {
+          "name": "Twin siegebreaker cannon",
+          "range": "36\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast, Twin-Linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Titanic feet",
+          "A": "4",
+          "WS": "4+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Titan Hunter",
+          "description": "Each time a ranged attack made by this model is allocated to a Monster or Vehicle model, you can re-roll the Damage roll."
+        },
+        {
+          "name": "Invulnerable Save (5+*)",
+          "description": "This model has a 5+ invulnerable save against ranged attacks."
+        },
+        {
+          "name": "Damaged: 1-10 Wounds Remaining",
+          "description": "While this model has 1-10 wounds remaining, subtract 5 from this model's Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Ion Aegis (Aura)",
+          "description": "While a friendly Armiger model is within 6\" of this model, each time a ranged attack targets that model, it has the Benefit of Cover against that attack."
+        }
+      ]
+    },
+    {
+      "card_name": "Knight Crusader",
+      "points": 385,
+      "primary_stats": {
+        "model": "Knight Crusader",
+        "M": "10\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "26",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Knight Crusader",
+          "M": "10\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "26",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Avenger gatling cannon",
+          "range": "36\"",
+          "A": "18",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        },
+        {
+          "name": "Heavy flamer",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        },
+        {
+          "name": "Meltagun",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Melta 2"
+        },
+        {
+          "name": "Thermal cannon",
+          "range": "24\"",
+          "A": "2D3",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Blast, Melta 6"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Titanic feet",
+          "A": "4",
+          "WS": "4+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Crusader's Duty (Bondsman)",
+          "description": "While a model is affected by this ability, each time that model makes a ranged attack, add 1 to the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Knight Defender",
+      "points": 415,
+      "primary_stats": {
+        "model": "Knight Defender",
+        "M": "10\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "26",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Knight Defender",
+          "M": "10\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "26",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Conversion beam obliterator",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-2",
+          "D": "4",
+          "keywords": "Conversion, Sustained Hits D3"
+        },
+        {
+          "name": "Phosphor blaster",
+          "range": "24\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Ignores Cover, Rapid Fire 1"
+        },
+        {
+          "name": "Plasma executor - standard",
+          "range": "36\"",
+          "A": "D6+3",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Plasma executor - supercharge",
+          "range": "36\"",
+          "A": "D6+3",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-3",
+          "D": "3",
+          "keywords": "Blast, Hazardous"
+        },
+        {
+          "name": "Twin incendine combustor",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Titanic feet",
+          "A": "4",
+          "WS": "4+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Warden's Duty (Bondsman)",
+          "description": "While a model is affected by this ability, each time an attack is allocated to that model, subtract 1 from the Damage characteristic of that attack."
+        }
+      ]
+    },
+    {
+      "card_name": "Knight Destrier",
+      "points": 250,
+      "primary_stats": {
+        "model": "Knight Destrier",
+        "M": "12\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "18",
+        "LD": "6+",
+        "OC": "8"
+      },
+      "all_model_stats": [
+        {
+          "model": "Knight Destrier",
+          "M": "12\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "18",
+          "LD": "6+",
+          "OC": "8"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Questoris heavy stubber",
+          "range": "36\"",
+          "A": "6",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Rapid Fire 3"
+        },
+        {
+          "name": "Chastiser gatling cannon",
+          "range": "24\"",
+          "A": "12",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Assault"
+        },
+        {
+          "name": "Frag bombard",
+          "range": "24\"",
+          "A": "D6+3",
+          "BS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Assault, Blast, Rapid Fire D6+3"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Titanic feet",
+          "A": "4",
+          "WS": "4+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Damaged: 1-6 Wounds Remaining",
+          "description": "While this model has 1-6 wounds remaining, subtract 4 from this model's Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Thundercharge",
+          "description": "If this model is equipped with a thundershock spear and a bellatus reaper chainsword, add 2 to the Attacks characteristic of melee weapons equipped by this model."
+        },
+        {
+          "name": "Ram Jets",
+          "description": "Each time this unit is selected to make a Normal or Advance move, until the end of the phase, add D3\" to the Move characteristic of this model."
+        },
+        {
+          "name": "Saturation Fire",
+          "description": "Each time this model makes a ranged attack that targets a unit within range of one or more objective markers, that attack has the [IGNORES COVER] ability."
+        },
+        {
+          "name": "Invulnerable Save (5+*)",
+          "description": "This model has a 5+ invulnerable save against ranged attacks."
+        }
+      ]
+    },
+    {
+      "card_name": "Knight Errant",
+      "points": 355,
+      "primary_stats": {
+        "model": "Knight Errant",
+        "M": "10\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "26",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Knight Errant",
+          "M": "10\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "26",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Thermal cannon",
+          "range": "24\"",
+          "A": "2D3",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Blast, Melta 6"
+        },
+        {
+          "name": "Meltagun",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Melta 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Reaper chainsword - strike",
+          "A": "4",
+          "WS": "3+",
+          "S": "14",
+          "AP": "-4",
+          "D": "6",
+          "keywords": ""
+        },
+        {
+          "name": "Reaper chainsword - sweep",
+          "A": "12",
+          "WS": "3+",
+          "S": "9",
+          "AP": "-3",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Errant's Duty (Bondsman)",
+          "description": "While a model is affected by this ability, you can re-roll Advance rolls made for that model and ranged weapons equipped by that model have the [ASSAULT] ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Knight Gallant",
+      "points": 355,
+      "primary_stats": {
+        "model": "Knight Gallant",
+        "M": "12\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "26",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Knight Gallant",
+          "M": "12\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "26",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Meltagun",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Melta 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Reaper chainsword - sweep",
+          "A": "18",
+          "WS": "2+",
+          "S": "9",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Reaper chainsword - strike",
+          "A": "6",
+          "WS": "2+",
+          "S": "14",
+          "AP": "-4",
+          "D": "6",
+          "keywords": "Devastating Wounds"
+        },
+        {
+          "name": "Thunderstrike gauntlet - strike",
+          "A": "6",
+          "WS": "2+",
+          "S": "20",
+          "AP": "-3",
+          "D": "8",
+          "keywords": "Devastating Wounds"
+        },
+        {
+          "name": "Thunderstrike gauntlet - sweep",
+          "A": "12",
+          "WS": "2+",
+          "S": "10",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Gallant's Duty (Bondsman)",
+          "description": "While a model is affected by this ability, you can re-roll Charge rolls made for that model and each time that model makes a melee attack, you can re-roll the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Knight Paladin",
+      "points": 375,
+      "primary_stats": {
+        "model": "Knight Paladin",
+        "M": "10\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "26",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Knight Paladin",
+          "M": "10\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "26",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Questoris heavy stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Rapid Fire 3"
+        },
+        {
+          "name": "Rapid-fire battle cannon",
+          "range": "72\"",
+          "A": "D6+3",
+          "BS": "3+",
+          "S": "10",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Blast, Rapid Fire D6+3"
+        },
+        {
+          "name": "Meltagun",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Melta 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Reaper chainsword - strike",
+          "A": "4",
+          "WS": "3+",
+          "S": "14",
+          "AP": "-4",
+          "D": "6",
+          "keywords": ""
+        },
+        {
+          "name": "Reaper chainsword - sweep",
+          "A": "12",
+          "WS": "3+",
+          "S": "9",
+          "AP": "-3",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Paladin’s Duty (Bondsman)",
+          "description": "While a model is affected by this ability, weapons equipped by that model have the [LETHAL HITS] ability, and melee weapons equipped by that model have the [LANCE] ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Knight Preceptor",
+      "points": 365,
+      "primary_stats": {
+        "model": "Knight Preceptor",
+        "M": "10\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "26",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Knight Preceptor",
+          "M": "10\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "26",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Las-impulsor - high intensity",
+          "range": "24\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "14",
+          "AP": "-3",
+          "D": "4",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Las-impulsor - low intensity",
+          "range": "36\"",
+          "A": "2D6",
+          "BS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Preceptor multi-laser",
+          "range": "36\"",
+          "A": "4",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Reaper chainsword - strike",
+          "A": "4",
+          "WS": "3+",
+          "S": "14",
+          "AP": "-4",
+          "D": "6",
+          "keywords": ""
+        },
+        {
+          "name": "Reaper chainsword - sweep",
+          "A": "12",
+          "WS": "3+",
+          "S": "9",
+          "AP": "-3",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Mentor (Bondsman)",
+          "description": "Each time a model affected by this ability makes an attack that targets this model's quarry, you can re-roll the Wound roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Knight Valiant",
+      "points": 410,
+      "primary_stats": {
+        "model": "Knight Valiant",
+        "M": "8\"",
+        "T": "12",
+        "SV": "3+",
+        "W": "28",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Knight Valiant",
+          "M": "8\"",
+          "T": "12",
+          "SV": "3+",
+          "W": "28",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Conflagration cannon",
+          "range": "18\"",
+          "A": "3D6",
+          "BS": "N/A",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Ignores Cover, Torrent"
+        },
+        {
+          "name": "Thundercoil harpoon",
+          "range": "12\"",
+          "A": "D3",
+          "BS": "3+",
+          "S": "24",
+          "AP": "-6",
+          "D": "10",
+          "keywords": "Blast, Devastating Wounds"
+        },
+        {
+          "name": "Twin meltagun (x2)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Melta 2, Twin-Linked"
+        },
+        {
+          "name": "Shieldbreaker missile launcher (x2)",
+          "range": "72\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-6",
+          "D": "D6+1",
+          "keywords": "Anti-Titanic 4+, Devastating Wounds"
+        },
+        {
+          "name": "Twin siegebreaker cannon",
+          "range": "36\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast, Twin-Linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Titanic feet",
+          "A": "4",
+          "WS": "4+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Thundershock",
+          "description": "In your Shooting phase, each time you select a target for this model's thundercoil harpoon, roll one D6 for the target unit and one D6 for each other enemy unit within 6\" of the target unit. On a 4+, the unit being rolled for is struck by arcing energies; after resolving all of this model's attacks against the target unit, each unit struck by arcing energies suffers D3 mortal wounds."
+        },
+        {
+          "name": "Invulnerable Save (5+*)",
+          "description": "This model has a 5+ invulnerable save against ranged attacks."
+        },
+        {
+          "name": "Damaged: 1-10 Wounds Remaining",
+          "description": "While this model has 1-10 wounds remaining, subtract 5 from this model's Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Ion Aegis (Aura)",
+          "description": "While a friendly Armiger model is within 6\" of this model, each time a ranged attack targets that model, it has the Benefit of Cover against that attack."
+        }
+      ]
+    },
+    {
+      "card_name": "Knight Warden",
+      "points": 375,
+      "primary_stats": {
+        "model": "Knight Warden",
+        "M": "10\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "26",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Knight Warden",
+          "M": "10\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "26",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Avenger gatling cannon",
+          "range": "36\"",
+          "A": "18",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        },
+        {
+          "name": "Heavy flamer",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        },
+        {
+          "name": "Meltagun",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Melta 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Reaper chainsword - strike",
+          "A": "4",
+          "WS": "3+",
+          "S": "14",
+          "AP": "-4",
+          "D": "6",
+          "keywords": ""
+        },
+        {
+          "name": "Reaper chainsword - sweep",
+          "A": "12",
+          "WS": "3+",
+          "S": "9",
+          "AP": "-3",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Warden's Duty (Bondsman)",
+          "description": "While a model is affected by this ability, weapons equipped by that model have the [SUSTAINED HITS 1] ability, and ranged weapons equipped by that model have the [IGNORES COVER] ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Questoris Knight Magaera",
+      "points": 385,
+      "primary_stats": {
+        "model": "Questoris Knight Magaera",
+        "M": "10\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "26",
+        "LD": "+6",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Questoris Knight Magaera",
+          "M": "10\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "26",
+          "LD": "+6",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Lightning cannon",
+          "range": "48\"",
+          "A": "12",
+          "BS": "3+",
+          "S": "9",
+          "AP": "0",
+          "D": "2",
+          "keywords": "Sustained Hits 2"
+        },
+        {
+          "name": "Phased plasma-fusil",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Reaper chainsword - strike",
+          "A": "4",
+          "WS": "3+",
+          "S": "14",
+          "AP": "-4",
+          "D": "6",
+          "keywords": ""
+        },
+        {
+          "name": "Reaper chainsword - sweep",
+          "A": "12",
+          "WS": "3+",
+          "S": "9",
+          "AP": "-3",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Magaera’s Duty (Bondsman)",
+          "description": "While a model is affected by this ability, each time that model makes a ranged attack that targets the closest eligible target, improve the Strength and Armour Penetration characteristics of that attack by 1."
+        }
+      ]
+    },
+    {
+      "card_name": "Questoris Knight Styrix",
+      "points": 385,
+      "primary_stats": {
+        "model": "Questoris Knight Styrix",
+        "M": "10\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "26",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Questoris Knight Styrix",
+          "M": "10\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "26",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Graviton crusher",
+          "range": "18\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Anti-Vehicle 2+, Blast"
+        },
+        {
+          "name": "Volkite chierovile",
+          "range": "30\"",
+          "A": "12",
+          "BS": "3+",
+          "S": "12",
+          "AP": "0",
+          "D": "3",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Reaper chainsword - strike",
+          "A": "4",
+          "WS": "3+",
+          "S": "14",
+          "AP": "-4",
+          "D": "6",
+          "keywords": ""
+        },
+        {
+          "name": "Reaper chainsword - sweep",
+          "A": "12",
+          "WS": "3+",
+          "S": "9",
+          "AP": "-3",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Styrix’s Duty (Bondsman)",
+          "description": "While a model is affected by this ability, each time that model is selected to shoot or fight, after it has resolved all of its attacks, select one enemy unit hit by one or more of those attacks; that unit must take a Battle-shock test, subtracting one from the test when doing so."
+        }
+      ]
+    },
+    {
+      "card_name": "Acastus Knight Asterius",
+      "points": 765,
+      "primary_stats": {
+        "model": "Acastus Knight Asterius",
+        "M": "8\"",
+        "T": "13",
+        "SV": "2+",
+        "W": "30",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Acastus Knight Asterius",
+          "M": "8\"",
+          "T": "13",
+          "SV": "2+",
+          "W": "30",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Asterius volkite culverin (x2)",
+          "range": "24\"",
+          "A": "6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "2",
+          "keywords": "Devastating Wounds"
+        },
+        {
+          "name": "Karacnos mortar battery",
+          "range": "48\"",
+          "A": "D6+3",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Anti-Infantry 2+, Blast, Ignores Cover, Indirect Fire"
+        },
+        {
+          "name": "Twin conversion beam cannon (x2)",
+          "range": "48\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "16",
+          "AP": "-2",
+          "D": "6",
+          "keywords": "Conversion, Twin-linked, Sustained Hits D3"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Titanic feet",
+          "A": "6",
+          "WS": "4+",
+          "S": "10",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Sunderer of Fortresses",
+          "description": "Each time this model makes an attack that targets a VEHICLE, improve the Strength and Damage characteristics of that attack by 1. If that attack targets a FORTIFICATION, improve the Strength and Damage characteristics of that attack by 2 instead."
+        },
+        {
+          "name": "Damaged: 1-10 Wounds Remaining",
+          "description": "While this model has 1-10 wounds remaining, subtract 5 from this model's Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (5+*)",
+          "description": "This model has a 5+ invulnerable save against ranged attacks."
+        }
+      ]
+    },
+    {
+      "card_name": "Acastus Knight Porphyrion",
+      "points": 700,
+      "primary_stats": {
+        "model": "Acastus Knight Porphyrion",
+        "M": "8\"",
+        "T": "13",
+        "SV": "2+",
+        "W": "30",
+        "LD": "6+",
+        "OC": "10"
+      },
+      "all_model_stats": [
+        {
+          "model": "Acastus Knight Porphyrion",
+          "M": "8\"",
+          "T": "13",
+          "SV": "2+",
+          "W": "30",
+          "LD": "6+",
+          "OC": "10"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Twin magna lascannon (x2)",
+          "range": "72\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "18",
+          "AP": "-4",
+          "D": "D6+6",
+          "keywords": "Blast, Twin-linked"
+        },
+        {
+          "name": "Acastus autocannon (x2)",
+          "range": "48\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-1",
+          "D": "3",
+          "keywords": ""
+        },
+        {
+          "name": "Acastus ironstorm missile pod",
+          "range": "48\"",
+          "A": "D6+6",
+          "BS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast, Heavy, Indirect Fire"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Titanic feet",
+          "A": "6",
+          "WS": "4+",
+          "S": "10",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Bastion of Firepower",
+          "description": "Each time this model Remains Stationary, until the end of the turn, ranged weapons equipped by this model have the [LETHAL HITS] ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Armiger Helverin",
+      "points": 135,
+      "primary_stats": {
+        "model": "Armiger Helverin",
+        "M": "12\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "14",
+        "LD": "7+",
+        "OC": "6"
+      },
+      "all_model_stats": [
+        {
+          "model": "Armiger Helverin",
+          "M": "12\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "14",
+          "LD": "7+",
+          "OC": "6"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Armiger autocannon (x2)",
+          "range": "48\"",
+          "A": "4",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-1",
+          "D": "3",
+          "keywords": ""
+        },
+        {
+          "name": "Questoris heavy stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Rapid Fire 3"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured feet",
+          "A": "4",
+          "WS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Suppression Protocols",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit (excluding Monsters and Vehicles) hit by one or more of those attacks made with an Armiger autocannon. Until the start of your next turn, that enemy unit is suppressed. While that unit is suppressed, each time a model in that unit makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Damaged: 1-5 Wounds Remaining",
+          "description": "While this model has 1-5 wounds remaining, subtract 3 from this model's Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (5+*)",
+          "description": "This model has a 5+ invulnerable save against ranged attacks."
+        }
+      ]
+    },
+    {
+      "card_name": "Armiger Moirax",
+      "points": 150,
+      "primary_stats": {
+        "model": "Armiger Moirax",
+        "M": "12\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "14",
+        "LD": "7+",
+        "OC": "6"
+      },
+      "all_model_stats": [
+        {
+          "model": "Armiger Moirax",
+          "M": "12\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "14",
+          "LD": "7+",
+          "OC": "6"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Graviton pulsar",
+          "range": "24\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Anti-Vehicle 2+, Blast"
+        },
+        {
+          "name": "Volkite veuglaire",
+          "range": "36\"",
+          "A": "4",
+          "BS": "3+",
+          "S": "8",
+          "AP": "0",
+          "D": "2",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured feet",
+          "A": "4",
+          "WS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Protection Protocols",
+          "description": "You can target this unit with the Heroic Intervention Stratagem for 0CP, and can do so even if you have already targeted a different unit with that Stratagem this phase."
+        },
+        {
+          "name": "Invulnerable Save (5+*)",
+          "description": "This model has a 5+ invulnerable save against ranged attacks."
+        },
+        {
+          "name": "Damaged: 1-5 Wounds Remaining",
+          "description": "While this model has 1-5 wounds remaining, subtract 3 from this model's Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Armiger Warglaive",
+      "points": 140,
+      "primary_stats": {
+        "model": "Armiger Warglaive",
+        "M": "12\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "14",
+        "LD": "7+",
+        "OC": "6"
+      },
+      "all_model_stats": [
+        {
+          "model": "Armiger Warglaive",
+          "M": "12\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "14",
+          "LD": "7+",
+          "OC": "6"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Thermal spear",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Melta 4"
+        },
+        {
+          "name": "Questoris heavy stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Rapid Fire 3"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Reaper chain-cleaver - strike",
+          "A": "4",
+          "WS": "3+",
+          "S": "10",
+          "AP": "-3",
+          "D": "3",
+          "keywords": ""
+        },
+        {
+          "name": "Reaper chain-cleaver - sweep",
+          "A": "8",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Impetuous Glory",
+          "description": "Each time this model makes a charge move, until the end of the turn, add 1 to the Attacks characteristic of this model's reaper chain-cleaver - strike profile, and add 2 to the Attacks characteristic of this model's reaper chain-cleaver - sweep profile."
+        },
+        {
+          "name": "Damaged: 1-5 Wounds Remaining",
+          "description": "While this model has 1-5 wounds remaining, subtract 3 from this model's Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (5+*)",
+          "description": "This model has a 5+ invulnerable save against ranged attacks."
+        }
+      ]
+    }
+  ]
+}

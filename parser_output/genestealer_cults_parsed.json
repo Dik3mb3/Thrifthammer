@@ -1,0 +1,1510 @@
+{
+  "faction": "Genestealer Cults",
+  "source_file": "POINTS_Genestealer Cults.html",
+  "extracted_date": "2026-04-13",
+  "total_cards": 24,
+  "units": [
+    {
+      "card_name": "Abominant",
+      "points": 85,
+      "primary_stats": {
+        "model": "Abominant",
+        "M": "6\"",
+        "T": "6",
+        "SV": "5+",
+        "W": "5",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Abominant",
+          "M": "6\"",
+          "T": "6",
+          "SV": "5+",
+          "W": "5",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Power sledgehammer",
+          "A": "4",
+          "WS": "3+",
+          "S": "12",
+          "AP": "-2",
+          "D": "D6+1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n\nABERRANTS"
+        }
+      ]
+    },
+    {
+      "card_name": "Acolyte Iconward",
+      "points": 50,
+      "primary_stats": {
+        "model": "Acolyte Iconward",
+        "M": "6\"",
+        "T": "4",
+        "SV": "5+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Acolyte Iconward",
+          "M": "6\"",
+          "T": "4",
+          "SV": "5+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Autopistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Cult claws",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Nexus of Devotion",
+          "description": "While this model is leading a unit, models in that unit have the Feel No Pain 5+ ability. If that unit has the HYBRID METAMORPHS keyword, models in that unit have the Feel No Pain 4+ ability instead."
+        },
+        {
+          "name": "Summon the Cult",
+          "description": "Once per battle, when you have to remove a Cult Ambush marker because your opponent has moved too close to it, if one or more models from your army with this ability are on the battlefield, you can use this ability. If you do, instead of removing that marker, you can place it anywhere on the battlefield that is within 12\" of a model from your army with this ability and more than 9\" horizontally away from all enemy units (if this is not possible, this ability is not considered to have been used and that marker is removed as normal)."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nAcolyte Hybrids\nHybrid Metamorphs\nNeophyte Hybrids"
+        }
+      ]
+    },
+    {
+      "card_name": "Benefictus",
+      "points": 70,
+      "primary_stats": {
+        "model": "Benefictus",
+        "M": "6\"",
+        "T": "3",
+        "SV": "5+",
+        "W": "3",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Benefictus",
+          "M": "6\"",
+          "T": "3",
+          "SV": "5+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Psionic cascade - witchfire",
+          "range": "18\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Ignores Cover, Psychic"
+        },
+        {
+          "name": "Psionic cascade - focused witchfire",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Hazardous, Ignores Cover, Psychic"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nACOLYTE HYBRIDS\nHYBRID METAMORPHS\nNEOPHYTE HYBRIDS"
+        }
+      ]
+    },
+    {
+      "card_name": "Biophagus",
+      "points": 50,
+      "primary_stats": {
+        "model": "Biophagus",
+        "M": "6\"",
+        "T": "3",
+        "SV": "5+",
+        "W": "3",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Biophagus",
+          "M": "6\"",
+          "T": "3",
+          "SV": "5+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Autopistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Chemical vials",
+          "range": "6\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "1",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Anti-Infantry 2+"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Injector goad",
+          "A": "1",
+          "WS": "3+",
+          "S": "2",
+          "AP": "0",
+          "D": "D3",
+          "keywords": "Anti-infantry 2+"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nABERRANTS\nACOLYTE HYBRIDS WITH AUTOPISTOLS\nACOLYTE HYBRIDS WITH HANDFLAMERS\nHYBRID METAMORPHS\nNEOPHYTE HYBRIDS\n\nYou can attach this model to an ACOLYTE HYBRIDS or NEOPHYTE HYBRID unit, even if a PRIMUS, MAGUS, or ACOLYTE ICONWARD model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        }
+      ]
+    },
+    {
+      "card_name": "Clamavus",
+      "points": 50,
+      "primary_stats": {
+        "model": "Clamavus",
+        "M": "6\"",
+        "T": "3",
+        "SV": "5+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Clamavus",
+          "M": "6\"",
+          "T": "3",
+          "SV": "5+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Autopistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nACOLYTE HYBRIDS\nHYBRID METAMORPHS\nNEOPHYTE HYBRIDS\nYou can attach this model to an ACOLYTE HYBRIDS or NEOPHYTE HYBRID unit, even if a PRIMUS, MAGUS, or ACOLYTE ICONWARD model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        }
+      ]
+    },
+    {
+      "card_name": "Jackal Alphus",
+      "points": 55,
+      "primary_stats": {
+        "model": "Jackal Alphus",
+        "M": "12\"",
+        "T": "4",
+        "SV": "5+",
+        "W": "4",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Jackal Alphus",
+          "M": "12\"",
+          "T": "4",
+          "SV": "5+",
+          "W": "4",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Autopistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Cult sniper rifle",
+          "range": "36\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Heavy, Precision"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "3",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nATALAN JACKALS"
+        }
+      ]
+    },
+    {
+      "card_name": "Kelermorph",
+      "points": 60,
+      "primary_stats": {
+        "model": "Kelermorph",
+        "M": "6\"",
+        "T": "3",
+        "SV": "5+",
+        "W": "3",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Kelermorph",
+          "M": "6\"",
+          "T": "3",
+          "SV": "5+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Liberator autostubs",
+          "range": "12\"",
+          "A": "6",
+          "BS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Devastating Wounds, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "3",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Hypersensory Abilities",
+          "description": "Once per turn, in your opponent's Movement phase, when an enemy unit ends a Normal, Advance, or Fall Back move within 9\" of this model, if this unit is not within Engagement Range of one or more enemy units, it can shoot at that unit as if it were your Shooting phase, and then make a Normal move of up to D6\" (it cannot embark within a TRANSPORT as part of this move)"
+        },
+        {
+          "name": "Heroic Fusillade",
+          "description": "Once per turn, after one model from your army with this ability has shot, you can select one INFANTRY unit hit by one or more of those attacks. That unit must take a Battle-shock test."
+        },
+        {
+          "name": "Invulnerable Save (5+)",
+          "description": "This model has a 5+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Locus",
+      "points": 45,
+      "primary_stats": {
+        "model": "Locus",
+        "M": "6\"",
+        "T": "4",
+        "SV": "5+",
+        "W": "3",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Locus",
+          "M": "6\"",
+          "T": "4",
+          "SV": "5+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Locus blades",
+          "A": "5",
+          "WS": "2+",
+          "S": "5",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nACOLYTE HYBRIDS\nHYBRID METAMORPHS\nNEOPHYTE HYBRIDS\nYou can attach this model to an ACOLYTE HYBRIDS or NEOPHYTE HYBRID unit, even if a PRIMUS, MAGUS, or ACOLYTE ICONWARD model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        }
+      ]
+    },
+    {
+      "card_name": "Magus",
+      "points": 50,
+      "primary_stats": {
+        "model": "Magus",
+        "M": "6\"",
+        "T": "3",
+        "SV": "5+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Magus",
+          "M": "6\"",
+          "T": "3",
+          "SV": "5+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Autopistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Force stave",
+          "A": "3",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nACOLYTE HYBRIDS\nHYBRID METAMORPHS\nNEOPHYTE HYBRIDS"
+        }
+      ]
+    },
+    {
+      "card_name": "Nexos",
+      "points": 60,
+      "primary_stats": {
+        "model": "Nexos",
+        "M": "6\"",
+        "T": "3",
+        "SV": "5+",
+        "W": "3",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Nexos",
+          "M": "6\"",
+          "T": "3",
+          "SV": "5+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Autopistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nACOLYTE HYBRIDS\nHYBRID METAMORPHS\nNEOPHYTE HYBRIDS\nYou can attach this model to an ACOLYTE HYBRIDS or NEOPHYTE HYBRID unit, even if a PRIMUS, MAGUS, or ACOLYTE ICONWARD model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        }
+      ]
+    },
+    {
+      "card_name": "Patriarch",
+      "points": 75,
+      "primary_stats": {
+        "model": "Patriarch",
+        "M": "8\"",
+        "T": "5",
+        "SV": "4+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Patriarch",
+          "M": "8\"",
+          "T": "5",
+          "SV": "4+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Patriarch's claws",
+          "A": "5",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Devastating Wounds, Twin-linked"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nPURESTRAIN GENESTEALERS"
+        }
+      ]
+    },
+    {
+      "card_name": "Primus",
+      "points": 70,
+      "primary_stats": {
+        "model": "Primus",
+        "M": "6\"",
+        "T": "3",
+        "SV": "5+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Primus",
+          "M": "6\"",
+          "T": "3",
+          "SV": "5+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Scoped needle pistol",
+          "range": "18\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "1",
+          "AP": "0",
+          "D": "D3",
+          "keywords": "Anti-infantry 2+, Ignores Cover, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Cult bonesword",
+          "A": "5",
+          "WS": "2+",
+          "S": "5",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Toxin injector claw",
+          "A": "2",
+          "WS": "2+",
+          "S": "2",
+          "AP": "0",
+          "D": "D3",
+          "keywords": "Anti-infantry 2+, Extra Attacks"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Cult Demagogue",
+          "description": "While this model is leading a unit, each time a model in that unit makes an attack, you can add 1 to the Hit roll."
+        },
+        {
+          "name": "Decoys and Misdirection",
+          "description": "If your army includes one or more models with this ability, after both players have deployed their armies, select up to three GENESTEALER CULTS units from your army and redeploy them. When doing so, you can set those units up in Strategic Reserves if you wish, regardless of how many units are already in Strategic Reserves."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nAcolyte Hybrids\nHybrid Metamorphs\nNeophyte Hybrids"
+        },
+        {
+          "name": "Invulnerable Save (5+)",
+          "description": "This model has a 5+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Reductus Saboteur",
+      "points": 65,
+      "primary_stats": {
+        "model": "Reductus Saboteur",
+        "M": "6\"",
+        "T": "3",
+        "SV": "5+",
+        "W": "3",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Reductus Saboteur",
+          "M": "6\"",
+          "T": "3",
+          "SV": "5+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Autopistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Demolition charges",
+          "range": "8\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Assault, Blast, One Shot"
+        },
+        {
+          "name": "Remote explosives",
+          "range": "24\"",
+          "A": "D6+3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast, Indirect Fire"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "2",
+          "WS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Primed and Ready",
+          "description": "In your Shooting phase, you can select one model from your army with this ability as the target of the Grenade Stratagem for 0CP, provided that model has not already been the target of that Stratagem this phase."
+        },
+        {
+          "name": "Planted Explosives",
+          "description": "Once per battle, when an enemy unit ends a Normal, Advance or Fall Back move within 9\" of this model, this model can use its Reductus mine. If it does, roll one D6: on a 2+, that enemy unit suffers D3+3 mortal wounds. Only one model from your army with this ability can use it in the same battle round."
+        },
+        {
+          "name": "Invulnerable Save (5+)",
+          "description": "This model has a 5+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Sanctus",
+      "points": 50,
+      "primary_stats": {
+        "model": "Sanctus",
+        "M": "6\"",
+        "T": "3",
+        "SV": "5+",
+        "W": "3",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Sanctus",
+          "M": "6\"",
+          "T": "3",
+          "SV": "5+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Sanctus bio-dagger",
+          "A": "6",
+          "WS": "2+",
+          "S": "3",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Anti-infantry 3+, Precision"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Creeping Shadow",
+          "description": "If this model is equipped with a cult sniper rifle, once per turn when an enemy unit ends a Normal, Advance, or Fall Back move within 9\" of this model, if this model is not within Engagement Range of one or more enemy units, it can make a Normal move of up to 6\""
+        },
+        {
+          "name": "Psychic Spoor",
+          "description": "At the start of the first battle round, select one enemy unit to be this model’s prey. Each time this model makes an attack that targets its prey, you can re-roll the Hit roll and you can re-roll the Wound roll."
+        },
+        {
+          "name": "Cloaked Assassin",
+          "description": "If this model is equipped with a Sanctus Bio-dagger, enemy units cannot use the Fire Overwatch Stratagem to shoot at this model."
+        },
+        {
+          "name": "Invulnerable Save (5+)",
+          "description": "This model has a 5+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Acolyte Hybrids with Autopistols",
+      "points": 65,
+      "primary_stats": {
+        "model": "Acolyte Hybrid (x5)",
+        "M": "6\"",
+        "T": "4",
+        "SV": "5+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Acolyte Hybrid (x5)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Autopistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Cult claws and knife (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Claimed for the Cult",
+          "description": "At the start of your Command phase, roll one D6 for each objective marker that you control that has one or more units from your army with this ability within range of it. If one or more of the results is a 4+, you gain 1CP."
+        }
+      ]
+    },
+    {
+      "card_name": "Acolyte Hybrids with Hand Flamers",
+      "points": 70,
+      "primary_stats": {
+        "model": "Acolyte Hybrid (x5)",
+        "M": "6\"",
+        "T": "4",
+        "SV": "5+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Acolyte Hybrid (x5)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Hand flamer (x5)",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Ignores Cover, Pistol, Torrent"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Cult claws and knife (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Industrialised Destruction",
+          "description": "Each time a model in this unit makes an attack, re-roll a Wound Roll of 1. If the target of that attack is an enemy unit within range of an objective marker, you can re-roll the wound roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Neophyte Hybrids",
+      "points": 65,
+      "primary_stats": {
+        "model": "Neophyte Hybrid (x10)",
+        "M": "6\"",
+        "T": "3",
+        "SV": "5+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Neophyte Hybrid (x10)",
+          "M": "6\"",
+          "T": "3",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Autopistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Hybrid firearm (x10)",
+          "range": "24\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 1"
+        },
+        {
+          "name": "Autopistol (x9)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x10)",
+          "A": "1",
+          "WS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "A Plan Generations in the Making",
+          "description": "At the end of your Command phase, if this unit is within range of an objective marker you control, that objective marker remains under your control, even if you have no models within range of it, until your opponent controls it at the start or end of any turn."
+        }
+      ]
+    },
+    {
+      "card_name": "Aberrants",
+      "points": 135,
+      "primary_stats": {
+        "model": "Aberrant Hypermorph",
+        "M": "6\"",
+        "T": "6",
+        "SV": "5+",
+        "W": "3",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Aberrant Hypermorph",
+          "M": "6\"",
+          "T": "6",
+          "SV": "5+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "1"
+        },
+        {
+          "model": "Aberrant (x4)",
+          "M": "6\"",
+          "T": "6",
+          "SV": "5+",
+          "W": "3",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": "This unit has a 5+ Feel No Pain",
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Aberrant weapons (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "7",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Hulking Bodyguards",
+          "description": "While a CHARACTER is leading this unit, each time an attack targets this unit, if the Strength characteristic of that attack is greater than the Toughness characteristic of this unit, subtract 1 from the Wound roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Hybrid Metamorphs",
+      "points": 70,
+      "primary_stats": {
+        "model": "Hybrid Leader",
+        "M": "6\"",
+        "T": "4",
+        "SV": "5+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Hybrid Leader",
+          "M": "6\"",
+          "T": "4",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "1"
+        },
+        {
+          "model": "Hybrid Metamorph (x4)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Autopistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Leader's Bio-weapons",
+          "A": "5",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        },
+        {
+          "name": "Metamorph mutations - strike (x4)",
+          "A": "3",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        },
+        {
+          "name": "Metamorph mutations - sweep (x4)",
+          "A": "5",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Brood Surge",
+          "description": "Each time an enemy unit is selected to shoot, after that unit has shot, if any models from this unit were destroyed as a result of those attacks, this unit can make a Brood Surge move. To do so, roll one D6: this unit can be moved a number of inches up to the result, but it must end that move as close as possible to the closest enemy unit (excluding AIRCRAFT). When doing so those models can be within Engagement Range of that enemy unit.\nIf, at the start of the battle, no model in this unit is equipped with a hand flamer, each time this unit makes a Brood Surge move, it can be moved up to 6\" instead of up to D6\". A unit cannot make a Brood Surge move while it is Battle-shocked."
+        }
+      ]
+    },
+    {
+      "card_name": "Purestrain Genestealers",
+      "points": 75,
+      "primary_stats": {
+        "model": "Purestrain Genestealer (x5)",
+        "M": "8\"",
+        "T": "4",
+        "SV": "5+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Purestrain Genestealer (x5)",
+          "M": "8\"",
+          "T": "4",
+          "SV": "5+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Cult claws and talons (x5)",
+          "A": "4",
+          "WS": "2+",
+          "S": "4",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Swift and Deadly",
+          "description": "This unit is eligible to declare a charge in a turn in which it Advanced."
+        },
+        {
+          "name": "Invulnerable Save (5+)",
+          "description": "This model has a 5+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Atalan Jackals",
+      "points": 85,
+      "primary_stats": {
+        "model": "Atalan Jackal (x4)",
+        "M": "12\"",
+        "T": "4",
+        "SV": "5+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Atalan Jackal (x4)",
+          "M": "12\"",
+          "T": "4",
+          "SV": "5+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "1"
+        },
+        {
+          "model": "Atalan Wolfquad",
+          "M": "12\"",
+          "T": "4",
+          "SV": "5+",
+          "W": "4",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Atalan small arms (x5)",
+          "range": "12\"",
+          "A": "2",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Heavy stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 3"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x5)",
+          "A": "2",
+          "WS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Outrider Gangs",
+          "description": "Each time you use the Cult Ambush ability to set this unit back up on the battlefield, in addition to the normal rules, all of its models must be set up wholly within 9\" of a battlefield edge and at least one of its models must be touching one of your Cult Ambush markers (that marker is then removed from the battlefield). If this cannot be done, this unit cannot be set back up."
+        },
+        {
+          "name": "Demolition Run",
+          "description": "Once per battle round, in your Movement phase, when this unit ends a Normal, Advance, or Fall Back move, you can select one enemy unit within 6\" of and visible to this unit and roll one D6 for each ATALAN JACKALS model in this unit: for each 4+, that enemy unit suffers 1 mortal wound (to a maximum of 6 mortal wounds.)"
+        }
+      ]
+    },
+    {
+      "card_name": "Achilles Ridgerunners",
+      "points": 95,
+      "primary_stats": {
+        "model": "Achilles Ridge Runner",
+        "M": "12\"",
+        "T": "7",
+        "SV": "3+",
+        "W": "8",
+        "LD": "7+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Achilles Ridge Runner",
+          "M": "12\"",
+          "T": "7",
+          "SV": "3+",
+          "W": "8",
+          "LD": "7+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Twin heavy stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Twin-linked, Rapid Fire 3"
+        },
+        {
+          "name": "Heavy mining laser",
+          "range": "36\"",
+          "A": "D3",
+          "BS": "4+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Crossfire",
+          "description": "in your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the end of the turn, each time a friendly Genestealer Cults unit makes an attack that targets that enemy unit, improve the Armour Penetration characteristic of that attack by 1. The same enemy unit can only be affected by this ability once per turn."
+        },
+        {
+          "name": "Flare Launcher",
+          "description": "The bearer’s unit has the SMOKE keyword and you can target it with the Smokescreen Stratagem for 0CP."
+        }
+      ]
+    },
+    {
+      "card_name": "Goliath Rockgrinder",
+      "points": 120,
+      "primary_stats": {
+        "model": "Goliath Rockgrinder",
+        "M": "12\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "10",
+        "LD": "7+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Goliath Rockgrinder",
+          "M": "12\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "10",
+          "LD": "7+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Demolition charge cache",
+          "range": "8\"",
+          "A": "D6",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Assault, Blast, Hazardous"
+        },
+        {
+          "name": "Heavy stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 3"
+        },
+        {
+          "name": "Heavy mining laser",
+          "range": "36\"",
+          "A": "D3",
+          "BS": "4+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Drilldozer blade",
+          "A": "8",
+          "WS": "3+",
+          "S": "10",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Grinding Line-breaker",
+          "description": "Each time an enemy unit (excluding MONSTER and VEHICLES) that is within Engagement Range of this model Falls Back, all models in that enemy unit must take a Desperate Escape test. When doing so, if that enemy unit is Battle-shocked, subtract 1 from each of those tests."
+        },
+        {
+          "name": "Damaged: 1-3 Wounds Remaining",
+          "description": "While this model has 1-3 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Goliath Truck",
+      "points": 85,
+      "primary_stats": {
+        "model": "Goliath Truck",
+        "M": "12\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "10",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Goliath Truck",
+          "M": "12\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "10",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Demolition charge cache",
+          "range": "8\"",
+          "A": "D6",
+          "BS": "5+",
+          "S": "9",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Assault, Blast, Hazardous"
+        },
+        {
+          "name": "Heavy stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 3"
+        },
+        {
+          "name": "Twin autocannon",
+          "range": "48\"",
+          "A": "2",
+          "BS": "4+",
+          "S": "9",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Goliath wheels",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Fire Support",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit it scored one or more hits against this phase. Until the end of the phase, each time a friendly model that disembarked from this TRANSPORT this turn makes an attack that targets that enemy unit, you can re-roll the Wound roll."
+        }
+      ]
+    }
+  ]
+}
