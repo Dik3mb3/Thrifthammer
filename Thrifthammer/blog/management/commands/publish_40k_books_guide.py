@@ -53,6 +53,7 @@ class Command(BaseCommand):
         )
 
         # ── Image URLs (resolved after collectstatic) ──────────────────────────
+        collage_img      = self._static('images/blog/books-collage.jpg')
         horus_img        = self._static('images/blog/books-horus-rising.jpg')
         infinite_img     = self._static('images/blog/books-infinite-divine.jpg')
         eisenhorn_img    = self._static('images/blog/books-eisenhorn.jpg')
@@ -265,9 +266,10 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
                 'body': body,
                 'status': Post.STATUS_PUBLISHED,
                 'published_at': published_dt,
-                'featured_image_url': horus_img,
+                'featured_image_url': collage_img,
                 'featured_image_alt': (
-                    'Horus Rising audiobook cover — the best Warhammer 40K books reading guide'
+                    'Collage of the best Warhammer 40K book covers including Horus Rising, '
+                    'Eisenhorn, Ghazghkull Thraka, and more'
                 ),
                 'meta_title': 'Best Warhammer 40K Books: A Complete Reading Guide',
                 'meta_description': (

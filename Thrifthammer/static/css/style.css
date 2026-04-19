@@ -2872,7 +2872,7 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 /* ── Article hero image ── */
 .blog-article-img-wrap {
   width: 100%;
-  aspect-ratio: 21/9;
+  aspect-ratio: 16/9;
   overflow: hidden;
   border-radius: var(--rounded-xl);
   margin-bottom: var(--sp-6);
@@ -2882,6 +2882,7 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
   display: block;
 }
 
