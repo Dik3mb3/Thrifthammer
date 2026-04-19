@@ -22,7 +22,7 @@ BODY = """\
 
 <p>That's where you come in.</p>
 
-<p>Today, I want to walk through the ThriftHammer roadmap at a high level — what we're building next, why it matters, and most importantly, how you can help shape the future.</p>
+<p>Today, I want to walk through the ThriftHammer roadmap at a high level: what we're building next, why it matters, and most importantly, how you can help shape the future.</p>
 
 <h2>Why a Roadmap Matters</h2>
 
@@ -44,13 +44,13 @@ BODY = """\
 
 <h3>1. Price Intelligence &amp; Deal Tracking</h3>
 
-<p>This is the backbone of ThriftHammer — what sets it apart as a Warhammer price tracker and deal-finding tool.</p>
+<p>This is the backbone of ThriftHammer, what sets it apart as a Warhammer price tracker and deal-finding tool.</p>
 
 <p><strong>What you can do right now:</strong></p>
 <ul>
   <li>Compare prices across 4 major US retailers</li>
   <li>Avoid overpriced listings</li>
-  <li>Browse without hassle — no account required</li>
+  <li>Browse without hassle, no account required</li>
 </ul>
 
 <p><strong>What's coming next:</strong></p>
@@ -68,7 +68,7 @@ BODY = """\
 
 <p>This is the feature that can truly set ThriftHammer apart.</p>
 
-<p>Warhammer isn't just about buying one product — it's about building an army over time. Costs add up quickly, and most players don't have a clear way to optimise their spending.</p>
+<p>Warhammer isn't just about buying one product. It's about building an army over time. Costs add up quickly, and most players don't have a clear way to optimise their spending.</p>
 
 <p><strong>Current functionality:</strong></p>
 <ul>
@@ -93,7 +93,7 @@ BODY = """\
 
 <h3>3. Collection Tracking &amp; Savings Metrics</h3>
 
-<p>This pillar is about tracking your entire Warhammer collection — from active armies to your pile of shame.</p>
+<p>This pillar is about tracking your entire Warhammer collection, from active armies to your pile of shame.</p>
 
 <p><strong>Planned features:</strong></p>
 <ul>
@@ -119,7 +119,7 @@ BODY = """\
 <p><strong>What we need from you:</strong></p>
 <ul>
   <li>How do we improve alerts without becoming annoying?</li>
-  <li>What types of alerts are most useful — army-specific, game system, or individual products?</li>
+  <li>What types of alerts are most useful: army-specific, game system, or individual products?</li>
 </ul>
 
 <h3>5. Community &amp; User-Driven Features (Future Focus)</h3>
@@ -128,7 +128,7 @@ BODY = """\
 
 <p><strong>Ideas being explored:</strong></p>
 <ul>
-  <li>Community-driven deal lists (e.g. "Best Deals — Voted by the Community")</li>
+  <li>Community-driven deal lists (e.g. "Best Deals, Voted by the Community")</li>
   <li>Support for local game stores (FLGS)</li>
   <li>Retailer and product reviews</li>
   <li>Hobby-related tools</li>
@@ -150,7 +150,7 @@ BODY = """\
 
 <p>Leave a comment below or reach out directly at <a href="mailto:Thrifthammer.com@gmail.com">Thrifthammer.com@gmail.com</a>.</p>
 
-<p>We're excited about what's ahead and want to build this alongside the community. Thanks for being part of it — expect more updates soon.</p>
+<p>We're excited about what's ahead and want to build this alongside the community. Thanks for being part of it. Expect more updates soon.</p>
 """
 
 
@@ -188,7 +188,7 @@ class Command(BaseCommand):
             body=BODY,
             status=Post.STATUS_PUBLISHED,
             published_at=timezone.now(),
-            meta_title="ThriftHammer Roadmap — What We're Building Next",
+            meta_title="ThriftHammer Roadmap: What We're Building Next",
             meta_description=(
                 'ThriftHammer roadmap: price intelligence, army cost planning, '
                 'collection tracking, alerts, and community features. '

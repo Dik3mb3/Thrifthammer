@@ -214,7 +214,7 @@ BODY = """\
 <p>Before buying, check:</p>
 <ul>
   <li><a href="/army-calculator/">Combat Patrol and Combo box deals</a> (our Army Calculator tracks points and cost for every Combat Patrol box)</li>
-  <li>Starter box value — the 11th Edition Starter Box will likely be the best deal if you are interested in <a href="/factions/space-marines/">Space Marines</a> or <a href="/factions/orks/">Orks</a></li>
+  <li>Starter box value: the 11th Edition Starter Box will likely be the best deal if you are interested in <a href="/factions/space-marines/">Space Marines</a> or <a href="/factions/orks/">Orks</a></li>
   <li>Points per dollar</li>
 </ul>
 
@@ -251,8 +251,8 @@ class Command(BaseCommand):
             title='How to Choose Your Next Warhammer 40K Faction (Complete 2026 Guide)',
             excerpt=(
                 'Choosing the right Warhammer 40K faction is one of the most important '
-                'decisions in the hobby. This guide ranks the 5 key factors — cost, '
-                'playstyle, cool factor, hobby requirements, and competitiveness — '
+                'decisions in the hobby. This guide ranks the 5 key factors (cost, '
+                'playstyle, cool factor, hobby requirements, and competitiveness) '
                 'so you pick the right army the first time.'
             ),
             body=BODY,

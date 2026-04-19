@@ -362,7 +362,7 @@ class Command(BaseCommand):
             'title': 'The Best Budget Warhammer 40K Hobby Tools Every Player Should Own',
             'excerpt': (
                 'Warhammer 40K is already expensive. Your hobby tools should not be. '
-                'Here are the best budget hobby tools every player should own — sprue '
+                'Here are the best budget hobby tools every player should own: sprue '
                 'cutters, plastic glue, brushes, primer, and more.'
             ),
             'body': BODY,
@@ -371,7 +371,7 @@ class Command(BaseCommand):
                                               tzinfo=datetime.timezone.utc),
             'meta_title': 'Best Budget Warhammer 40K Hobby Tools (2026 Guide) | ThriftHammer',
             'meta_description': (
-                'The best budget Warhammer 40K hobby tools — sprue cutters, plastic glue, '
+                'The best budget Warhammer 40K hobby tools: sprue cutters, plastic glue, '
                 'brushes, primer, wet palette and more. Save money without sacrificing quality.'
             ),
             'featured_image_url': 'https://m.media-amazon.com/images/I/51vjKkXbAeL._AC_SL500_.jpg',

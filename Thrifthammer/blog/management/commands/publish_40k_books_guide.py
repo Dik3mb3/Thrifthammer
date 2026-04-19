@@ -88,7 +88,7 @@ class Command(BaseCommand):
 
         # ── Post body ──────────────────────────────────────────────────────────
         body = f"""
-<p>The Warhammer 40K universe is not just about epic battles and mighty villains — it is a vast setting filled with rich lore and incredible stories. Whether you are brand new to Warhammer 40K or a seasoned veteran, there are countless books to explore in this universe.</p>
+<p>The Warhammer 40K universe is not just about epic battles and mighty villains. It is a vast setting filled with rich lore and incredible stories. Whether you are brand new to Warhammer 40K or a seasoned veteran, there are countless books to explore in this universe.</p>
 
 <p>This guide highlights some of the best stories in the setting, exploring themes ranging from heroism and sacrifice to betrayal and Warhammer's favourite theme: grim irony. Brief synopses are provided for each to avoid spoilers.</p>
 
@@ -98,7 +98,7 @@ class Command(BaseCommand):
 
 <p>Warhammer books have become more mainstream over the last few decades, with <em>A Thousand Sons</em> becoming the first Warhammer book to reach the <strong>New York Times Bestseller list</strong> in 2010. However, collecting a full physical library can be difficult, especially for older out-of-print novels.</p>
 
-<p>All Amazon links in this guide are affiliate links — we earn a small commission at no extra cost to you. You can also find these books on
+<p>All Amazon links in this guide are affiliate links (we earn a small commission at no extra cost to you). You can also find these books on
 <a href="https://www.kobo.com" target="_blank" rel="noopener noreferrer">Kobo</a>,
 <a href="https://play.google.com/store/books" target="_blank" rel="noopener noreferrer">Google Play Books</a>,
 <a href="https://www.barnesandnoble.com" target="_blank" rel="noopener noreferrer">Barnes &amp; Noble</a>,
@@ -111,12 +111,12 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 
 <h2>The Best Series of 40K Novels</h2>
 
-<h3>Horus Heresy Series (2006–2024)</h3>
-{cover(horus_img, 'Horus Rising book cover — The Horus Heresy series by Dan Abnett')}
+<h3>Horus Heresy Series (2006-2024)</h3>
+{cover(horus_img, 'Horus Rising book cover, The Horus Heresy series by Dan Abnett')}
 <p><strong>Authors:</strong> Dan Abnett, Graham McNeill, Aaron Dembski-Bowden, John French, Chris Wraight</p>
 <p><strong>Synopsis:</strong> A father and son are pitted against each other due to the meddling of mysterious entities known as Chaos, resulting in a brutal civil war in the 31st millennium.</p>
 <p><strong>Sales pitch:</strong> The main Warhammer 40K series spanning over 50 novels. It spawned an entire standalone game system and remains Games Workshop's best-selling book series to date.</p>
-<p><strong>Best for:</strong> Loreheads and those already familiar with the 40K universe. The Horus Heresy's grim irony lands hardest once you already understand the current state of the Imperium — best read once you are hooked and ready to commit to a massive series. Start with <em>Horus Rising</em>, which remains one of the best entries even 20 years on.</p>
+<p><strong>Best for:</strong> Loreheads and those already familiar with the 40K universe. The Horus Heresy's grim irony lands hardest once you already understand the current state of the Imperium, so best read once you are hooked and ready to commit to a massive series. Start with <em>Horus Rising</em>, which remains one of the best entries even 20 years on.</p>
 {amz('https://www.amazon.com/s?k=Horus+Rising+Dan+Abnett+Black+Library', 'Find Horus Rising on Amazon →')}
 
 <hr>
@@ -128,14 +128,14 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <p><strong>Author:</strong> Robert Rath</p>
 <p><strong>Synopsis:</strong> Two ancient Necron rivals engage in a bitter 10,000-year feud over a mysterious artefact. Their petty rivalry escalates over time, reshaping the world around them as their obsession with outsmarting each other spirals out of control.</p>
 <p><strong>Sales pitch:</strong> A cosmic dramedy that successfully humanises the most inhuman faction in Warhammer 40K. This book is widely credited with driving the rising popularity of the Necron faction on the tabletop. It is that good.</p>
-<p><strong>Best for:</strong> Readers who want a little bit of everything. <em>The Infinite and the Divine</em> delivers the perfect formula of comedy, drama, and action — touching on all the grimdark and comedic aspects that make Warhammer great. If you are already familiar with 40K and do not know where to start, this is the book to read today.</p>
+<p><strong>Best for:</strong> Readers who want a little bit of everything. <em>The Infinite and the Divine</em> delivers the perfect formula of comedy, drama, and action, touching on all the grimdark and comedic aspects that make Warhammer great. If you are already familiar with 40K and do not know where to start, this is the book to read today.</p>
 {amz('https://www.amazon.com/s?k=The+Infinite+and+the+Divine+Robert+Rath+Warhammer', 'Find The Infinite and the Divine on Amazon →')}
 
 <hr>
 
 <h2>Best Novel for Beginners</h2>
 
-<h3>Eisenhorn Trilogy (2001–2002)</h3>
+<h3>Eisenhorn Trilogy (2001-2002)</h3>
 {cover(eisenhorn_img, 'Eisenhorn The Omnibus book cover by Dan Abnett')}
 <p><strong>Author:</strong> Dan Abnett</p>
 <p><strong>Synopsis:</strong> An inquisitor's investigation into heresy sets off a chain of events that slowly transforms him from a zealous protector of the Imperium to collaborating with the very people he once held in contempt.</p>
@@ -160,7 +160,7 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <h2>Most Underrated Novel</h2>
 
 <h3>Elemental Council (2024)</h3>
-{cover(elemental_img, 'Elemental Council audiobook cover — a T\'au Empire audiobook by Noah Van Nguyen')}
+{cover(elemental_img, 'Elemental Council audiobook cover, a T\'au Empire audiobook by Noah Van Nguyen')}
 <p><strong>Author:</strong> Noah Van Nguyen</p>
 <p><strong>Synopsis:</strong> A T'au-ruled Imperial planet is on the brink of rebellion. To outmanoeuvre a crafty insurgent leader, a team of different T'au caste members is assembled to quash the uprising.</p>
 <p><strong>Sales pitch:</strong> A hidden gem. A phenomenal mixture of action and political intrigue that expands the lore of a misunderstood and unique faction. If you have been disappointed by T'au books in the past, this is the standout novel the faction deserves.</p>
@@ -171,7 +171,7 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 
 <h2>Best Warhammer Fantasy Novel</h2>
 
-<h3>Gotrek &amp; Felix Series (1999–2015)</h3>
+<h3>Gotrek &amp; Felix Series (1999-2015)</h3>
 {cover(gotrek_img, 'Gotrek and Felix: The First Omnibus book cover by William King')}
 <p><strong>Authors:</strong> William King, Nathan Long</p>
 <p><strong>Synopsis:</strong> Poet and human swordsman Felix follows Dwarf Slayer Gotrek across the Old World, recording his adventures as Gotrek seeks to accomplish his life's goal: a glorious death in battle.</p>
@@ -184,11 +184,11 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <h2>Best Action Novel</h2>
 
 <h3>Titanicus (2008)</h3>
-{cover(titanicus_img, 'Titanicus audiobook cover by Dan Abnett — Sabbat Worlds')}
+{cover(titanicus_img, 'Titanicus audiobook cover by Dan Abnett, Sabbat Worlds')}
 <p><strong>Author:</strong> Dan Abnett</p>
 <p><strong>Synopsis:</strong> God-machines known as Titans clash in city-destroying battles as they fight to repel Chaos counterparts threatening the Imperium.</p>
-<p><strong>Sales pitch:</strong> Giant stompy robots fighting other giant stompy robots — with spikes and mutations. What could be more cinematic? Beneath the spectacle is a fascinating exploration of the Adeptus Mechanicus, a cult that worships machines and the mysterious Omnissiah.</p>
-<p><strong>Best for:</strong> Action readers and AdMech or Imperial Knights fans. On the surface, <em>Titanicus</em> is a classic action-heavy novel filled with cinematic destruction. But if you are interested in AdMech or Knight lore, it becomes far deeper — offering insight into factions not widely explored elsewhere.</p>
+<p><strong>Sales pitch:</strong> Giant stompy robots fighting other giant stompy robots, complete with spikes and mutations. What could be more cinematic? Beneath the spectacle is a fascinating exploration of the Adeptus Mechanicus, a cult that worships machines and the mysterious Omnissiah.</p>
+<p><strong>Best for:</strong> Action readers and AdMech or Imperial Knights fans. On the surface, <em>Titanicus</em> is a classic action-heavy novel filled with cinematic destruction. But if you are interested in AdMech or Knight lore, it becomes far deeper, offering insight into factions not widely explored elsewhere.</p>
 {amz('https://www.amazon.com/s?k=Titanicus+Dan+Abnett+Warhammer', 'Find Titanicus on Amazon →')}
 
 <hr>
@@ -199,7 +199,7 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 {cover(space_wolf_img, 'Space Wolf 20th Anniversary Edition book cover by William King')}
 <p><strong>Author:</strong> William King</p>
 <p><strong>Synopsis:</strong> A young warrior is taken from his tribal world and inducted into the Space Wolves chapter. He undergoes brutal physical and mental trials on his journey to becoming a Space Marine.</p>
-<p><strong>Sales pitch:</strong> A classic coming-of-age story with more brutality and far more action. <em>Space Wolf</em> explores identity, self-discipline, and loyalty — themes younger audiences can relate to. Do not worry, adults: this still retains all the core elements of a great Warhammer story.</p>
+<p><strong>Sales pitch:</strong> A classic coming-of-age story with more brutality and far more action. <em>Space Wolf</em> explores identity, self-discipline, and loyalty, themes younger audiences can relate to. Do not worry, adults: this still retains all the core elements of a great Warhammer story.</p>
 <p><strong>Best for:</strong> Young adults and newcomers. Most Warhammer books are not teen-friendly, often being too graphic or exploring very dark themes. <em>Space Wolf</em> strikes a balance, combining familiar YA themes with the grimdark edge of Warhammer. A solid entry point for adult newcomers too.</p>
 {amz('https://www.amazon.com/s?k=Space+Wolf+William+King+Warhammer', 'Find Space Wolf on Amazon →')}
 
@@ -208,10 +208,10 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <h2>Best Short Story</h2>
 
 <h3>The Last Church (2009)</h3>
-{cover(last_church_img, 'Tales of Heresy anthology cover — containing The Last Church by Graham McNeill', w=230, h=310)}
+{cover(last_church_img, 'Tales of Heresy anthology cover, containing The Last Church by Graham McNeill', w=230, h=310)}
 <p><strong>Author:</strong> Graham McNeill</p>
 <p><strong>Synopsis:</strong> On the eve of the Emperor's unification of Terra, a priest defends the last remaining church against a mysterious visitor who challenges the very foundation of religion.</p>
-<p><strong>Sales pitch:</strong> Tired of constant superhuman battles? <em>The Last Church</em> is a breath of fresh air. A philosophical debate disguised as a short story, it explores the merit and influence of religion on humanity. This is not a fun romp across the galaxy — it is a serious, reflective piece that stays with you.</p>
+<p><strong>Sales pitch:</strong> Tired of constant superhuman battles? <em>The Last Church</em> is a breath of fresh air. A philosophical debate disguised as a short story, it explores the merit and influence of religion on humanity. This is not a fun romp across the galaxy. It is a serious, reflective piece that stays with you.</p>
 <p><strong>Best for:</strong> Readers interested in themes and ideas. Perfect for anyone wanting a thought-provoking story that still hits hard. Especially impactful if you are already familiar with the Emperor of Mankind and the broader history of the Imperium.</p>
 {amz('https://www.amazon.com/s?k=Tales+of+Heresy+Warhammer+Black+Library', 'Find The Last Church (in Tales of Heresy) on Amazon →')}
 
@@ -222,8 +222,8 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <h3>Faction Codices</h3>
 <p><strong>Author:</strong> Games Workshop</p>
 <p><strong>Synopsis:</strong> Faction-specific rulebooks containing gameplay mechanics, artwork, and lore that flesh out the Warhammer 40K universe from the perspective of each faction.</p>
-<p><strong>Sales pitch:</strong> Some factions starve for lore. Most novels you will find lean heavily human-centric — Space Marines, Imperial Guard. Faction Codices are a great way to access faction-specific lore for underrepresented armies. If you enjoy grimdark artwork, the visuals alone make them worth flipping through.</p>
-<p><strong>Best for:</strong> Tabletop players and lore collectors. Older codices are packed with artwork and depth, making them great additions to any library. Browse eBay or secondhand stores — used codices can often be found at very reasonable prices.</p>
+<p><strong>Sales pitch:</strong> Some factions starve for lore. Most novels you will find lean heavily human-centric, focusing on Space Marines and Imperial Guard. Faction Codices are a great way to access faction-specific lore for underrepresented armies. If you enjoy grimdark artwork, the visuals alone make them worth flipping through.</p>
+<p><strong>Best for:</strong> Tabletop players and lore collectors. Older codices are packed with artwork and depth, making them great additions to any library. Browse eBay or secondhand stores, where used codices can often be found at very reasonable prices.</p>
 {amz('https://www.amazon.com/s?k=Warhammer+40K+Codex', 'Browse Codices on Amazon →')}
 
 <hr>
@@ -233,11 +233,11 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <p>A few additional series that came highly recommended by the communities I surveyed. These did not make my personal top list only because I have not finished them yet, but they are widely loved:</p>
 
 <ul>
-<li><a href="https://www.amazon.com/s?k=Gaunts+Ghosts+First+Only+Dan+Abnett" target="_blank" rel="noopener noreferrer"><strong>Gaunt's Ghosts Series (1999–2019)</strong></a> — Dan Abnett</li>
-<li><a href="https://www.amazon.com/s?k=Ciaphas+Cain+For+the+Emperor+Alex+Stewart" target="_blank" rel="noopener noreferrer"><strong>Ciaphas Cain Series (2003–2018)</strong></a> — Alex Stewart</li>
-<li><a href="https://www.amazon.com/s?k=Night+Lords+Soul+Hunter+Aaron+Dembski+Bowden" target="_blank" rel="noopener noreferrer"><strong>Night Lords Trilogy (2010–2012)</strong></a> — Aaron Dembski-Bowden</li>
-<li><a href="https://www.amazon.com/s?k=Fabius+Bile+Primogenitor+Joshua+Reynolds" target="_blank" rel="noopener noreferrer"><strong>Fabius Bile Series (2016–2020)</strong></a> — Joshua Reynolds</li>
-<li><a href="https://www.amazon.com/s?k=Path+of+the+Dark+Eldar+Andy+Chambers" target="_blank" rel="noopener noreferrer"><strong>Path of the Dark Eldar Series (2012–2014)</strong></a> — Andy Chambers</li>
+<li><a href="https://www.amazon.com/s?k=Gaunts+Ghosts+First+Only+Dan+Abnett" target="_blank" rel="noopener noreferrer"><strong>Gaunt's Ghosts Series (1999-2019)</strong></a> by Dan Abnett</li>
+<li><a href="https://www.amazon.com/s?k=Ciaphas+Cain+For+the+Emperor+Alex+Stewart" target="_blank" rel="noopener noreferrer"><strong>Ciaphas Cain Series (2003-2018)</strong></a> by Alex Stewart</li>
+<li><a href="https://www.amazon.com/s?k=Night+Lords+Soul+Hunter+Aaron+Dembski+Bowden" target="_blank" rel="noopener noreferrer"><strong>Night Lords Trilogy (2010-2012)</strong></a> by Aaron Dembski-Bowden</li>
+<li><a href="https://www.amazon.com/s?k=Fabius+Bile+Primogenitor+Joshua+Reynolds" target="_blank" rel="noopener noreferrer"><strong>Fabius Bile Series (2016-2020)</strong></a> by Joshua Reynolds</li>
+<li><a href="https://www.amazon.com/s?k=Path+of+the+Dark+Eldar+Andy+Chambers" target="_blank" rel="noopener noreferrer"><strong>Path of the Dark Eldar Series (2012-2014)</strong></a> by Andy Chambers</li>
 </ul>
 
 <hr>
@@ -246,7 +246,7 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 
 <p>Whichever series you choose to start with, you are in for a great journey. The Warhammer universe is so vast that there are countless entry points to explore. If you still cannot decide, lore videos on YouTube are a great way to get a feel for different factions and time periods before committing to a book.</p>
 
-<p>If you already play the tabletop game, start with the faction or system you enjoy most — whether that is 40K, Age of Sigmar, The Old World, Necromunda, or something else entirely. There are books tied to every Warhammer game system.</p>
+<p>If you already play the tabletop game, start with the faction or system you enjoy most, whether that is 40K, Age of Sigmar, The Old World, Necromunda, or something else entirely. There are books tied to every Warhammer game system.</p>
 
 <p>While there are definitely some weaker entries in the Warhammer library, there are dozens of fantastic books not mentioned here that could end up being your personal favourite. Have fun discovering the universe, and this list will be updated as more books get read and reviewed.</p>
 """
@@ -259,7 +259,7 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
                 'title': TITLE,
                 'author': 'ThriftHammer',
                 'excerpt': (
-                    'A curated guide to the best Warhammer 40K books — from the epic '
+                    'A curated guide to the best Warhammer 40K books, from the epic '
                     'Horus Heresy to hidden gems like Elemental Council. Picks for every '
                     'type of reader, from beginners to lore veterans.'
                 ),
@@ -274,7 +274,7 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
                 'meta_title': 'Best Warhammer 40K Books: A Complete Reading Guide',
                 'meta_description': (
                     'The best Warhammer 40K books for every type of reader. From Horus Rising '
-                    'to Eisenhorn — find the perfect entry point into the 40K universe.'
+                    'to Eisenhorn. Find the perfect entry point into the 40K universe.'
                 ),
             },
         )

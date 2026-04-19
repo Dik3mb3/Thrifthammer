@@ -279,7 +279,7 @@ class Command(BaseCommand):
                 title='The Hidden Costs of Warhammer 40K: What You Don\'t Expect and Eventually Pay For',
                 slug=SLUG,
                 excerpt=(
-                    'Dice, terrain, rulebooks, and Games Workshop surprises — '
+                    'Dice, terrain, rulebooks, and Games Workshop surprises: '
                     'the costs that catch new and experienced Warhammer 40K '
                     'players off guard, and how to manage them.'
                 ),
@@ -290,7 +290,7 @@ class Command(BaseCommand):
                 meta_title='The Hidden Costs of Warhammer 40K | ThriftHammer',
                 meta_description=(
                     'Discover the hidden costs in Warhammer 40K that surprise new '
-                    'and experienced players — from dice and terrain to GW pricing '
+                    'and experienced players, from dice and terrain to GW pricing '
                     'traps and edition subscriptions.'
                 ),
                 featured_image_url='',
