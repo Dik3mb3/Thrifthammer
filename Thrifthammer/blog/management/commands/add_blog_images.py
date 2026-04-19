@@ -26,6 +26,24 @@ BLOG_IMAGES = [
             'dice, a storage case, and the Space Marines codex'
         ),
     },
+    {
+        'slug': '40k-hot-takes-warm-spicy-and-scorching',
+        'static_path': 'images/blog/40k-hot-takes.png',
+        'alt': 'Warhammer 40K hot takes — warm, spicy, and scorching opinions',
+    },
+    {
+        'slug': 'warhammer-40k-launch-box-prices-economics-part-1',
+        'static_path': 'images/blog/economics-of-warhammer.png',
+        'alt': (
+            'Chart showing Warhammer 40K launch box prices across editions — '
+            'is Warhammer getting more expensive?'
+        ),
+    },
+    {
+        'slug': 'the-thrifthammer-roadmap-explained',
+        'static_path': 'images/blog/blog-roadmap.png',
+        'alt': 'ThriftHammer roadmap — upcoming features and planned improvements',
+    },
 ]
 
 BASE_URL = 'https://thrifthammer.com'
