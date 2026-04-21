@@ -64,6 +64,16 @@ BLOG_IMAGES = [
         'static_path': 'images/blog/blog-video-games.jpg',
         'alt': 'The 3 best and 3 worst Warhammer video games',
     },
+    {
+        'slug': 'best-budget-warhammer-40k-hobby-tools',
+        'static_path': 'images/blog/blog-hobby-supplies.jpg',
+        'alt': 'Best budget Warhammer 40K hobby tools and supplies every player should own',
+    },
+    {
+        'slug': 'top-5-warhammer-content-creators',
+        'static_path': 'images/blog/blog-best-content-creators.jpg',
+        'alt': 'Top 5 Warhammer content creators worth following on YouTube and social media',
+    },
 ]
 
 BASE_URL = 'https://thrifthammer.com'
