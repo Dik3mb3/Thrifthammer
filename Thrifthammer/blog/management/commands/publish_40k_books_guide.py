@@ -114,10 +114,10 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <h3>Horus Heresy Series (2006-2024)</h3>
 {cover(horus_img, 'Horus Rising book cover, The Horus Heresy series by Dan Abnett')}
 <p><strong>Authors:</strong> Dan Abnett, Graham McNeill, Aaron Dembski-Bowden, John French, Chris Wraight</p>
+<p><a href="https://amzn.to/4eEVOm6" target="_blank" rel="noopener noreferrer sponsored">Paperback</a> | <a href="https://amzn.to/4e08W58" target="_blank" rel="noopener noreferrer sponsored">E-Book</a> | <a href="https://amzn.to/4cFRbWA" target="_blank" rel="noopener noreferrer sponsored">Audiobook</a></p>
 <p><strong>Synopsis:</strong> A father and son are pitted against each other due to the meddling of mysterious entities known as Chaos, resulting in a brutal civil war in the 31st millennium.</p>
 <p><strong>Sales pitch:</strong> The main Warhammer 40K series spanning over 50 novels. It spawned an entire standalone game system and remains Games Workshop's best-selling book series to date.</p>
 <p><strong>Best for:</strong> Loreheads and those already familiar with the 40K universe. The Horus Heresy's grim irony lands hardest once you already understand the current state of the Imperium, so best read once you are hooked and ready to commit to a massive series. Start with <em>Horus Rising</em>, which remains one of the best entries even 20 years on.</p>
-{amz('https://www.amazon.com/s?k=Horus+Rising+Dan+Abnett+Black+Library', 'Find Horus Rising on Amazon →')}
 
 <hr>
 
@@ -126,10 +126,10 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <h3>The Infinite and the Divine (2020)</h3>
 {cover(infinite_img, 'The Infinite and the Divine book cover by Robert Rath')}
 <p><strong>Author:</strong> Robert Rath</p>
+<p><a href="https://amzn.to/41HSFdV" target="_blank" rel="noopener noreferrer sponsored">Paperback</a> | <a href="https://amzn.to/41Hcban" target="_blank" rel="noopener noreferrer sponsored">E-Book</a> | <a href="https://amzn.to/3QPzM6i" target="_blank" rel="noopener noreferrer sponsored">Audiobook</a></p>
 <p><strong>Synopsis:</strong> Two ancient Necron rivals engage in a bitter 10,000-year feud over a mysterious artefact. Their petty rivalry escalates over time, reshaping the world around them as their obsession with outsmarting each other spirals out of control.</p>
 <p><strong>Sales pitch:</strong> A cosmic dramedy that successfully humanises the most inhuman faction in Warhammer 40K. This book is widely credited with driving the rising popularity of the Necron faction on the tabletop. It is that good.</p>
 <p><strong>Best for:</strong> Readers who want a little bit of everything. <em>The Infinite and the Divine</em> delivers the perfect formula of comedy, drama, and action, touching on all the grimdark and comedic aspects that make Warhammer great. If you are already familiar with 40K and do not know where to start, this is the book to read today.</p>
-{amz('https://www.amazon.com/s?k=The+Infinite+and+the+Divine+Robert+Rath+Warhammer', 'Find The Infinite and the Divine on Amazon →')}
 
 <hr>
 
@@ -138,10 +138,10 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <h3>Eisenhorn Trilogy (2001-2002)</h3>
 {cover(eisenhorn_img, 'Eisenhorn The Omnibus book cover by Dan Abnett')}
 <p><strong>Author:</strong> Dan Abnett</p>
+<p><a href="https://amzn.to/4tzFDuY" target="_blank" rel="noopener noreferrer sponsored">Paperback</a> | <a href="https://amzn.to/41L6OqI" target="_blank" rel="noopener noreferrer sponsored">E-Book</a></p>
 <p><strong>Synopsis:</strong> An inquisitor's investigation into heresy sets off a chain of events that slowly transforms him from a zealous protector of the Imperium to collaborating with the very people he once held in contempt.</p>
 <p><strong>Sales pitch:</strong> Do you enjoy hard-boiled detective stories or police procedurals? The Eisenhorn Trilogy might be for you. An approachable and grounded mystery-thriller focused more on character development and uncovering secrets than on massive galactic battles.</p>
 <p><strong>Best for:</strong> Newcomers and non-Warhammer fans. Essentially a detective story, the Eisenhorn trilogy is one of the easiest entry points into the Warhammer setting, using familiar storytelling tropes that any reader can pick up and enjoy.</p>
-{amz('https://www.amazon.com/s?k=Eisenhorn+Omnibus+Dan+Abnett+Warhammer', 'Find the Eisenhorn Omnibus on Amazon →')}
 
 <hr>
 
@@ -150,10 +150,10 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <h3>Ghazghkull Thraka: Prophet of the Waaagh! (2021)</h3>
 {cover(ghazghkull_img, 'Ghazghkull Thraka: Prophet of the Waaagh! book cover by Nate Crowley')}
 <p><strong>Author:</strong> Nate Crowley</p>
+<p><a href="https://amzn.to/4mE2WkO" target="_blank" rel="noopener noreferrer sponsored">Paperback</a> | <a href="https://amzn.to/3QhCQbn" target="_blank" rel="noopener noreferrer sponsored">E-Book</a> | <a href="https://amzn.to/4vIAlij" target="_blank" rel="noopener noreferrer sponsored">Audiobook</a></p>
 <p><strong>Synopsis:</strong> A legendary grot tells the story of Ghazghkull Thraka and his rise from an Ork brute to uniting the Ork clans under one banner against the Imperium.</p>
 <p><strong>Sales pitch:</strong> Do you want more <em>krumpin'</em> in your Warhammer stories? Are you a Gork or Mork believer? Are you confused but intrigued by what any of that means? Read this dark comedy to find out.</p>
 <p><strong>Best for:</strong> Waaagh! enthusiasts and dark comedy fans. Chaotic storytelling, an unreliable narrator, and a completely unique perspective away from the usual Imperial viewpoint. If you want to dive into Ork culture and do not take Warhammer too seriously, this is a perfect entry point.</p>
-{amz('https://www.amazon.com/s?k=Ghazghkull+Thraka+Prophet+Waaagh+Nate+Crowley', 'Find Ghazghkull Thraka on Amazon →')}
 
 <hr>
 
@@ -162,10 +162,10 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <h3>Elemental Council (2024)</h3>
 {cover(elemental_img, 'Elemental Council audiobook cover, a T\'au Empire audiobook by Noah Van Nguyen')}
 <p><strong>Author:</strong> Noah Van Nguyen</p>
+<p><a href="https://amzn.to/4cWZYEE" target="_blank" rel="noopener noreferrer sponsored">Paperback</a> | <a href="https://amzn.to/4cx0yHW" target="_blank" rel="noopener noreferrer sponsored">E-Book</a> | <a href="https://amzn.to/4cDPPvx" target="_blank" rel="noopener noreferrer sponsored">Audiobook</a></p>
 <p><strong>Synopsis:</strong> A T'au-ruled Imperial planet is on the brink of rebellion. To outmanoeuvre a crafty insurgent leader, a team of different T'au caste members is assembled to quash the uprising.</p>
 <p><strong>Sales pitch:</strong> A hidden gem. A phenomenal mixture of action and political intrigue that expands the lore of a misunderstood and unique faction. If you have been disappointed by T'au books in the past, this is the standout novel the faction deserves.</p>
 <p><strong>Best for:</strong> Political intrigue readers. If you enjoy espionage, internal politics, and exploring ideological conflict, this book is for you. The parallels to real-world competing philosophies and societal conflicts make it feel surprisingly relevant.</p>
-{amz('https://www.amazon.com/s?k=Elemental+Council+Noah+Van+Nguyen+Warhammer+Tau', 'Find Elemental Council on Amazon →')}
 
 <hr>
 
@@ -174,10 +174,10 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <h3>Gotrek &amp; Felix Series (1999-2015)</h3>
 {cover(gotrek_img, 'Gotrek and Felix: The First Omnibus book cover by William King')}
 <p><strong>Authors:</strong> William King, Nathan Long</p>
+<p><a href="https://amzn.to/4clNJ4u" target="_blank" rel="noopener noreferrer sponsored">Paperback</a> | <a href="https://amzn.to/42g0I1E" target="_blank" rel="noopener noreferrer sponsored">E-Book</a></p>
 <p><strong>Synopsis:</strong> Poet and human swordsman Felix follows Dwarf Slayer Gotrek across the Old World, recording his adventures as Gotrek seeks to accomplish his life's goal: a glorious death in battle.</p>
 <p><strong>Sales pitch:</strong> An action-packed hack-and-slash adventure. A video game come to life, with constant, splashy, and enjoyable combat and a charming story that is easy for any reader to pick up.</p>
 <p><strong>Best for:</strong> Light reading. <em>Gotrek and Felix</em> will not pose many deep philosophical questions, but the series is an absolute blast. Experience bloody battles against trolls, dragons, and other horrors across the Warhammer Fantasy world. Easy to drop in and out of whenever 40K gets too heavy.</p>
-{amz('https://www.amazon.com/s?k=Gotrek+Felix+Warhammer+Fantasy+Omnibus', 'Find Gotrek & Felix on Amazon →')}
 
 <hr>
 
@@ -186,10 +186,10 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <h3>Titanicus (2008)</h3>
 {cover(titanicus_img, 'Titanicus audiobook cover by Dan Abnett, Sabbat Worlds')}
 <p><strong>Author:</strong> Dan Abnett</p>
+<p><a href="https://amzn.to/48f6ofN" target="_blank" rel="noopener noreferrer sponsored">E-Book</a> | <a href="https://amzn.to/4cWd4SI" target="_blank" rel="noopener noreferrer sponsored">Audiobook</a></p>
 <p><strong>Synopsis:</strong> God-machines known as Titans clash in city-destroying battles as they fight to repel Chaos counterparts threatening the Imperium.</p>
 <p><strong>Sales pitch:</strong> Giant stompy robots fighting other giant stompy robots, complete with spikes and mutations. What could be more cinematic? Beneath the spectacle is a fascinating exploration of the Adeptus Mechanicus, a cult that worships machines and the mysterious Omnissiah.</p>
 <p><strong>Best for:</strong> Action readers and AdMech or Imperial Knights fans. On the surface, <em>Titanicus</em> is a classic action-heavy novel filled with cinematic destruction. But if you are interested in AdMech or Knight lore, it becomes far deeper, offering insight into factions not widely explored elsewhere.</p>
-{amz('https://www.amazon.com/s?k=Titanicus+Dan+Abnett+Warhammer', 'Find Titanicus on Amazon →')}
 
 <hr>
 
@@ -201,7 +201,7 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <p><strong>Synopsis:</strong> A young warrior is taken from his tribal world and inducted into the Space Wolves chapter. He undergoes brutal physical and mental trials on his journey to becoming a Space Marine.</p>
 <p><strong>Sales pitch:</strong> A classic coming-of-age story with more brutality and far more action. <em>Space Wolf</em> explores identity, self-discipline, and loyalty, themes younger audiences can relate to. Do not worry, adults: this still retains all the core elements of a great Warhammer story.</p>
 <p><strong>Best for:</strong> Young adults and newcomers. Most Warhammer books are not teen-friendly, often being too graphic or exploring very dark themes. <em>Space Wolf</em> strikes a balance, combining familiar YA themes with the grimdark edge of Warhammer. A solid entry point for adult newcomers too.</p>
-{amz('https://www.amazon.com/s?k=Space+Wolf+William+King+Warhammer', 'Find Space Wolf on Amazon →')}
+<p><a href="https://amzn.to/4mGNc0g" target="_blank" rel="noopener noreferrer sponsored">E-Book</a></p>
 
 <hr>
 
@@ -213,7 +213,7 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <p><strong>Synopsis:</strong> On the eve of the Emperor's unification of Terra, a priest defends the last remaining church against a mysterious visitor who challenges the very foundation of religion.</p>
 <p><strong>Sales pitch:</strong> Tired of constant superhuman battles? <em>The Last Church</em> is a breath of fresh air. A philosophical debate disguised as a short story, it explores the merit and influence of religion on humanity. This is not a fun romp across the galaxy. It is a serious, reflective piece that stays with you.</p>
 <p><strong>Best for:</strong> Readers interested in themes and ideas. Perfect for anyone wanting a thought-provoking story that still hits hard. Especially impactful if you are already familiar with the Emperor of Mankind and the broader history of the Imperium.</p>
-{amz('https://www.amazon.com/s?k=Tales+of+Heresy+Warhammer+Black+Library', 'Find The Last Church (in Tales of Heresy) on Amazon →')}
+<p><a href="https://amzn.to/4sMMlwD" target="_blank" rel="noopener noreferrer sponsored">E-Book</a></p>
 
 <hr>
 
@@ -224,7 +224,6 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <p><strong>Synopsis:</strong> Faction-specific rulebooks containing gameplay mechanics, artwork, and lore that flesh out the Warhammer 40K universe from the perspective of each faction.</p>
 <p><strong>Sales pitch:</strong> Some factions starve for lore. Most novels you will find lean heavily human-centric, focusing on Space Marines and Imperial Guard. Faction Codices are a great way to access faction-specific lore for underrepresented armies. If you enjoy grimdark artwork, the visuals alone make them worth flipping through.</p>
 <p><strong>Best for:</strong> Tabletop players and lore collectors. Older codices are packed with artwork and depth, making them great additions to any library. Browse eBay or secondhand stores, where used codices can often be found at very reasonable prices.</p>
-{amz('https://www.amazon.com/s?k=Warhammer+40K+Codex', 'Browse Codices on Amazon →')}
 
 <hr>
 
@@ -233,12 +232,14 @@ For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_b
 <p>A few additional series that came highly recommended by the communities I surveyed. These did not make my personal top list only because I have not finished them yet, but they are widely loved:</p>
 
 <ul>
-<li><a href="https://www.amazon.com/s?k=Gaunts+Ghosts+First+Only+Dan+Abnett" target="_blank" rel="noopener noreferrer"><strong>Gaunt's Ghosts Series (1999-2019)</strong></a> by Dan Abnett</li>
-<li><a href="https://www.amazon.com/s?k=Ciaphas+Cain+For+the+Emperor+Alex+Stewart" target="_blank" rel="noopener noreferrer"><strong>Ciaphas Cain Series (2003-2018)</strong></a> by Alex Stewart</li>
-<li><a href="https://www.amazon.com/s?k=Night+Lords+Soul+Hunter+Aaron+Dembski+Bowden" target="_blank" rel="noopener noreferrer"><strong>Night Lords Trilogy (2010-2012)</strong></a> by Aaron Dembski-Bowden</li>
-<li><a href="https://www.amazon.com/s?k=Fabius+Bile+Primogenitor+Joshua+Reynolds" target="_blank" rel="noopener noreferrer"><strong>Fabius Bile Series (2016-2020)</strong></a> by Joshua Reynolds</li>
-<li><a href="https://www.amazon.com/s?k=Path+of+the+Dark+Eldar+Andy+Chambers" target="_blank" rel="noopener noreferrer"><strong>Path of the Dark Eldar Series (2012-2014)</strong></a> by Andy Chambers</li>
+<li><a href="https://amzn.to/4u4uPoS" target="_blank" rel="noopener noreferrer sponsored"><strong>Gaunt's Ghosts Series (1999-2019)</strong></a> by Dan Abnett</li>
+<li><a href="https://amzn.to/3OOrKtU" target="_blank" rel="noopener noreferrer sponsored"><strong>Ciaphas Cain Series (2003-2018)</strong></a> by Alex Stewart</li>
+<li><a href="https://amzn.to/4tZFNvE" target="_blank" rel="noopener noreferrer sponsored"><strong>Night Lords Trilogy (2010-2012)</strong></a> by Aaron Dembski-Bowden</li>
+<li><a href="https://amzn.to/48NQ4Tt" target="_blank" rel="noopener noreferrer sponsored"><strong>Fabius Bile Series (2016-2020)</strong></a> by Joshua Reynolds</li>
+<li><a href="https://amzn.to/4tkxaf9" target="_blank" rel="noopener noreferrer sponsored"><strong>Path of the Dark Eldar Series (2012-2014)</strong></a> by Andy Chambers</li>
 </ul>
+
+<p>Shoutout to <a href="https://www.reddit.com/r/DealHammer/" target="_blank" rel="noopener noreferrer">r/DealHammer</a> and <a href="https://www.reddit.com/r/Warhammer/" target="_blank" rel="noopener noreferrer">r/Warhammer</a> for the help.</p>
 
 <hr>
 
