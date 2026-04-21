@@ -42,7 +42,27 @@ BLOG_IMAGES = [
     {
         'slug': 'the-thrifthammer-roadmap-explained',
         'static_path': 'images/blog/blog-roadmap.png',
-        'alt': 'ThriftHammer roadmap — upcoming features and planned improvements',
+        'alt': 'ThriftHammer roadmap, upcoming features and planned improvements',
+    },
+    {
+        'slug': 'best-starter-warhammer-40k-armies-2026',
+        'static_path': 'images/blog/blog-best-starter-armies.jpg',
+        'alt': 'Best starter Warhammer 40K armies for new players in 2026',
+    },
+    {
+        'slug': '5-warhammer-kit-hacks-more-minis-for-your-money',
+        'static_path': 'images/blog/blog-best-warhammer-kits.jpg',
+        'alt': 'Warhammer kit hacks to get more miniatures for your money',
+    },
+    {
+        'slug': 'best-value-miniature-paints',
+        'static_path': 'images/blog/blog-mini-paints.png',
+        'alt': 'Best value miniature paints for Warhammer, compared by cost per ml',
+    },
+    {
+        'slug': '3-best-3-worst-warhammer-video-games',
+        'static_path': 'images/blog/blog-video-games.jpg',
+        'alt': 'The 3 best and 3 worst Warhammer video games',
     },
 ]
 
