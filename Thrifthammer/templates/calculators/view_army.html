@@ -220,7 +220,7 @@
         </div>
         {% elif unit.product_slug and not user.is_authenticated %}
         <p style="font-size:0.82rem;color:var(--text-muted);margin:0;">
-          <a href="{% url 'accounts:login' %}?next={{ request.path }}">Log in</a> to add to Watchlist or Collection.
+          <a href="{% url 'accounts:login' %}?next={{ request.path }}" rel="nofollow">Log in</a> to add to Watchlist or Collection.
         </p>
         {% endif %}
 

@@ -209,7 +209,7 @@
           </form>
           {% else %}
           <p class="comments-login-cta">
-            <a href="{% url 'accounts:login' %}?next={{ request.path }}#comments">Log in</a>
+            <a href="{% url 'accounts:login' %}?next={{ request.path }}#comments" rel="nofollow">Log in</a>
             or <a href="{% url 'accounts:register' %}">create an account</a> to leave a comment.
           </p>
           {% endif %}

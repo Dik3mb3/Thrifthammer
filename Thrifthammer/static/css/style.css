@@ -4022,3 +4022,16 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   .faction-index-card--live:hover { transform: none; }
   .faction-index-group { margin-bottom: var(--sp-8); }
 }
+
+/* ── Accessibility ──────────────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
