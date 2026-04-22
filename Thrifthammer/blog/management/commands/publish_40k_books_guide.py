@@ -98,14 +98,7 @@ class Command(BaseCommand):
 
 <p>Warhammer books have become more mainstream over the last few decades, with <em>A Thousand Sons</em> becoming the first Warhammer book to reach the <strong>New York Times Bestseller list</strong> in 2010. However, collecting a full physical library can be difficult, especially for older out-of-print novels.</p>
 
-<p>All Amazon links in this guide are affiliate links (we earn a small commission at no extra cost to you). You can also find these books on
-<a href="https://www.kobo.com" target="_blank" rel="noopener noreferrer">Kobo</a>,
-<a href="https://play.google.com/store/books" target="_blank" rel="noopener noreferrer">Google Play Books</a>,
-<a href="https://www.barnesandnoble.com" target="_blank" rel="noopener noreferrer">Barnes &amp; Noble</a>,
-<a href="https://libbyapp.com" target="_blank" rel="noopener noreferrer">Libby</a>,
-<a href="https://www.hoopladigital.com" target="_blank" rel="noopener noreferrer">Hoopla</a>, and
-<a href="https://www.ebooks.com" target="_blank" rel="noopener noreferrer">eBooks.com</a>.
-For secondhand physical copies, <a href="https://www.thriftbooks.com" target="_blank" rel="noopener noreferrer">ThriftBooks.com</a> is an excellent resource (we have no affiliation with them).</p>
+<p>All Amazon links in this guide are affiliate links (we earn a small commission at no extra cost to you).</p>
 
 <hr>
 
