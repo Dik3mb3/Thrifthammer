@@ -668,7 +668,7 @@ class EbayBrowseAPI:
         #                 named characters (e.g. alternative Howling Banshees exarch)
         #   'alternative', 'proxy', 'sculpt', 'sculpted', 'conversion', 'custom',
         #   'resin', 'kitbash', 'kitbashed' — already covered above
-        'kromlech', 'artel',
+        'kromlech', 'artel', 'crooked',
         # Non-GW toy/collectible terms — not genuine Warhammer miniature kits
         'minifigure', 'minifigures', 'minifigs', 'minifig', 'figurine', 'figurines',
         # JOYTOY: GW-licensed third-party maker of pre-painted, pre-assembled
