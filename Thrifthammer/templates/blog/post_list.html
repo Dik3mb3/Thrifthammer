@@ -55,7 +55,7 @@
   {# ── Latest row — 3 posts below hero ── #}
   {% if latest_posts %}
   <div class="blog-latest-row">
-    <h2 class="blog-section-label">Latest</h2>
+    <h3 class="blog-section-label">Latest</h3>
     <div class="blog-latest-grid">
       {% for post in latest_posts %}
       <a href="{{ post.get_absolute_url }}" class="blog-latest-card">
@@ -89,7 +89,7 @@
   {# ── Stream grid — 4-column borderless ── #}
   {% if stream_posts %}
   <div class="blog-stream-row">
-    <h2 class="blog-section-label">More Articles</h2>
+    <h3 class="blog-section-label">More Articles</h3>
     <div class="blog-stream">
       {% for post in stream_posts %}
       <a href="{{ post.get_absolute_url }}" class="blog-stream-card">
