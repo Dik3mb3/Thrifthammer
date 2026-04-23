@@ -466,15 +466,29 @@ def product_detail(request, slug):
         # For short product names ("Rhino", "Kahl", "Wulfen") we append the
         # faction or a Warhammer qualifier to hit ≥30 chars while staying ≤60.
         # Faction first (most specific long-tail signal), then generic fallback.
-        _base_title = f"{product.name} | ThriftHammer"
-        if len(_base_title) < 30:
+        # For names already over 60 chars we trim at a word boundary so Google's
+        # snippet cut falls cleanly ("…" added) rather than mid-word.
+        _SUFFIX = ' | ThriftHammer'        # 16 chars
+        _MAX    = 60
+        _MIN    = 30
+        _name   = product.name
+
+        # Trim overlong product names to fit cleanly within the 60-char budget.
+        _max_name_len = _MAX - len(_SUFFIX)          # = 44
+        if len(_name) > _max_name_len:
+            # Cut at last space within the budget, then append ellipsis.
+            _trimmed = _name[:_max_name_len - 1].rsplit(' ', 1)[0]
+            _name = _trimmed + '…'
+
+        _base_title = f"{_name}{_SUFFIX}"
+        if len(_base_title) < _MIN:
             if product.faction:
-                _candidate = f"{product.name} — {product.faction.name} | ThriftHammer"
-                if len(_candidate) <= 60:
+                _candidate = f"{_name} — {product.faction.name}{_SUFFIX}"
+                if len(_candidate) <= _MAX:
                     _base_title = _candidate
-            if len(_base_title) < 30:
-                _candidate = f"{product.name} — Warhammer | ThriftHammer"
-                if len(_candidate) <= 60:
+            if len(_base_title) < _MIN:
+                _candidate = f"{_name} — Warhammer{_SUFFIX}"
+                if len(_candidate) <= _MAX:
                     _base_title = _candidate
         page_title = _base_title
 

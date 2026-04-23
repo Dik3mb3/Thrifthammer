@@ -5,6 +5,8 @@ Each faction page surfaces the best current deals for that faction,
 a quick-stats snapshot, an SEO synopsis, and related blog posts.
 """
 
+from urllib.parse import quote as urlquote
+
 from django.db.models import Min, Q
 from django.utils import timezone
 from django.views.generic import DetailView, TemplateView
@@ -129,7 +131,7 @@ class FactionDetailView(DetailView):
                     'min_price': product.min_price,
                     'discount_pct': round(discount_pct, 1),
                     'retailer': best_price_obj.retailer,
-                    'buy_url': best_price_obj.url,
+                    'buy_url': urlquote(best_price_obj.url or '', safe=':/?=#&%+'),
                     'in_stock': best_price_obj.in_stock,
                 })
 
