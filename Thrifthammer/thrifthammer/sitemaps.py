@@ -140,6 +140,10 @@ class FactionSitemap(Sitemap):
     def location(self, obj):
         return f'/factions/{obj.slug}/'
 
+    def lastmod(self, obj):
+        """Signal to Google when the faction page content last changed."""
+        return obj.updated_at
+
 
 class BlogPostSitemap(Sitemap):
     """Sitemap entry for every published blog post."""
