@@ -4,7 +4,10 @@
 
 {% block meta_description %}<meta name="description" content="{% if tag_in_path and active_tag %}Browse all Warhammer {{ active_tag.name }} articles on ThriftHammer — guides, top 10 lists, and savings tips.{% else %}Guides, Top 10 lists, and savings tips to help you build more and spend less on Warhammer 40,000. New posts every week from ThriftHammer.{% endif %}">{% endblock %}
 
-{% block canonical %}<link rel="canonical" href="https://thrifthammer.com/blog/{% if tag_in_path and active_tag %}tag/{{ active_tag.slug }}/{% endif %}">{% endblock %}
+{# Canonical falls through to base.html: https://thrifthammer.com{{ request.path }}  #}
+{# request.path = /blog/ or /blog/tag/<slug>/ — query params (page=) excluded.      #}
+{# Avoids fragile {% if tag_in_path and active_tag %} that collapsed to /blog/ when  #}
+{# active_tag was unexpectedly None, causing Google to see the wrong canonical.       #}
 
 {% block content %}
 <div class="page-content blog-list-page">

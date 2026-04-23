@@ -7,7 +7,7 @@
 {% else %}<link rel="canonical" href="https://thrifthammer.com/products/">
 {% endif %}{% endblock %}
 
-{% block robots %}{% if query %}<meta name="robots" content="noindex, follow">{% endif %}{% endblock %}
+{% block robots %}{% if query or (not products and (selected_category or selected_faction)) %}<meta name="robots" content="noindex, follow">{% endif %}{% endblock %}
 
 {% block title %}{% if selected_faction_obj %}{{ selected_faction_obj.name }} Kits — Best Prices | ThriftHammer{% elif selected_category_obj %}{{ selected_category_obj.name }} Kits — Best Prices | ThriftHammer{% elif query %}Search: {{ query }} | ThriftHammer{% else %}Browse Warhammer 40K Products | ThriftHammer{% endif %}{% endblock %}
 
