@@ -3,7 +3,7 @@
 
 {% block title %}{{ page_title }}{% endblock %}
 
-{% block meta_description %}<meta name="description" content="Compare prices on {{ product.name }}{% if product.faction %} ({{ product.faction.name }}){% endif %}. Cheapest deal from US retailers.{% if product.msrp %} MSRP ${{ product.msrp }}.{% endif %}">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if product.description %}{{ product.description|striptags|truncatechars:155 }}{% else %}Compare prices on {{ product.name }}{% if product.faction %} ({{ product.faction.name }}){% elif product.category %} — {{ product.category.name }}{% endif %}. Find the cheapest deal from US Warhammer retailers.{% if product.msrp %} MSRP ${{ product.msrp }}.{% endif %} Prices updated daily.{% endif %}">{% endblock %}
 
 {% block extra_head %}
 {# ── Open Graph ── #}

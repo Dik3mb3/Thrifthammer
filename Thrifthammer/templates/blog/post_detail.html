@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ post.effective_meta_title }}{% if not post.meta_title %} | ThriftHammer{% endif %}{% endblock %}
+{% block title %}{{ post.effective_meta_title }}{% if 'ThriftHammer' not in post.effective_meta_title %} | ThriftHammer{% endif %}{% endblock %}
 
 {% block meta_description %}{% if post.effective_meta_description %}<meta name="description" content="{{ post.effective_meta_description }}">{% endif %}{% endblock %}
 
