@@ -14,6 +14,7 @@ Performance strategy:
 - Autocomplete limited to 10 results, cached 5 minutes.
 """
 
+import json
 import logging
 
 from django.conf import settings
@@ -424,6 +425,42 @@ def product_detail(request, slug):
             if cp.price and not cp.not_available
         ]
 
+        # Build JSON-LD using json.dumps() so the output is always valid JSON.
+        # The template's |escapejs filter converts ' → \' which is valid in JS
+        # string literals but is an invalid escape sequence in JSON — causing
+        # "Unparsable structured data" errors in Google Search Console for any
+        # product whose name, description, or retailer URL contains an apostrophe.
+        schema_dict: dict = {
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            'name': product.name,
+            'brand': {'@type': 'Brand', 'name': 'Games Workshop'},
+        }
+        if product.category:
+            schema_dict['category'] = product.category.name
+        if product.image_url:
+            schema_dict['image'] = product.image_url
+        if product.description:
+            schema_dict['description'] = product.description[:200]
+        if product.gw_sku:
+            schema_dict['sku'] = product.gw_sku
+        if schema_prices:
+            schema_dict['offers'] = [
+                {
+                    '@type': 'Offer',
+                    'seller': {'@type': 'Organization', 'name': cp.retailer.name},
+                    'price': float(cp.price),
+                    'priceCurrency': 'USD',
+                    'availability': (
+                        'https://schema.org/InStock' if cp.in_stock
+                        else 'https://schema.org/OutOfStock'
+                    ),
+                    'url': cp.url or '',
+                }
+                for cp in schema_prices
+            ]
+        json_ld = json.dumps(schema_dict, ensure_ascii=False)
+
         cached_ctx = {
             'product':          product,
             'current_prices':   current_prices,
@@ -431,6 +468,7 @@ def product_detail(request, slug):
             'related_products': related_products,
             'savings':          savings,
             'gw_ref_price':     gw_ref_price,
+            'json_ld':          json_ld,
         }
         cache.set(cache_key, cached_ctx, timeout=1800)  # 30 minutes
 

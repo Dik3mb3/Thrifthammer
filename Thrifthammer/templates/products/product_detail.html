@@ -19,28 +19,10 @@
 {% if product.image_url %}<meta name="twitter:image" content="{{ product.image_url }}">{% endif %}
 {# ── Canonical ── #}
 {# ── JSON-LD Product structured data (helps Google show price in search results) ── #}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": "{{ product.name|escapejs }}",
-  "brand": { "@type": "Brand", "name": "Games Workshop" }{% if product.category %},
-  "category": "{{ product.category.name|escapejs }}"{% endif %}{% if product.image_url %},
-  "image": "{{ product.image_url|escapejs }}"{% endif %}{% if product.description %},
-  "description": "{{ product.description|truncatechars:200|escapejs }}"{% endif %}{% if product.gw_sku %},
-  "sku": "{{ product.gw_sku|escapejs }}"{% endif %}{% if schema_prices %},
-  "offers": [
-    {% for cp in schema_prices %}{
-      "@type": "Offer",
-      "seller": { "@type": "Organization", "name": "{{ cp.retailer.name|escapejs }}" },
-      "price": {{ cp.price|floatformat:'2' }},
-      "priceCurrency": "USD",
-      "availability": "{% if cp.in_stock %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
-      "url": "{{ cp.url|escapejs }}"
-    }{% if not forloop.last %},{% endif %}{% endfor %}
-  ]{% endif %}
-}
-</script>
+{# Built in the view with json.dumps() — guarantees valid JSON for all product    #}
+{# names, including those with apostrophes (T'au, C'tan, etc.) which would break  #}
+{# the old |escapejs approach (' → \' is valid JS but invalid JSON).              #}
+<script type="application/ld+json">{{ json_ld }}</script>
 {% endblock %}
 
 {% block content %}
