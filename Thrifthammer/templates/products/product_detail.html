@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load price_filters %}
 
-{% block title %}{{ product.name }} | ThriftHammer{% endblock %}
+{% block title %}{{ page_title }}{% endblock %}
 
 {% block meta_description %}<meta name="description" content="Compare prices on {{ product.name }}{% if product.faction %} ({{ product.faction.name }}){% endif %}. Cheapest deal from US retailers.{% if product.msrp %} MSRP ${{ product.msrp }}.{% endif %}">{% endblock %}
 

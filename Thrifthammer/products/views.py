@@ -461,6 +461,23 @@ def product_detail(request, slug):
             ]
         json_ld = json.dumps(schema_dict, ensure_ascii=False)
 
+        # ── SEO title enrichment ──────────────────────────────────────────────
+        # Google treats titles under 30 chars as too short and may rewrite them.
+        # For short product names ("Rhino", "Kahl", "Wulfen") we append the
+        # faction or a Warhammer qualifier to hit ≥30 chars while staying ≤60.
+        # Faction first (most specific long-tail signal), then generic fallback.
+        _base_title = f"{product.name} | ThriftHammer"
+        if len(_base_title) < 30:
+            if product.faction:
+                _candidate = f"{product.name} — {product.faction.name} | ThriftHammer"
+                if len(_candidate) <= 60:
+                    _base_title = _candidate
+            if len(_base_title) < 30:
+                _candidate = f"{product.name} — Warhammer | ThriftHammer"
+                if len(_candidate) <= 60:
+                    _base_title = _candidate
+        page_title = _base_title
+
         cached_ctx = {
             'product':          product,
             'current_prices':   current_prices,
@@ -469,6 +486,7 @@ def product_detail(request, slug):
             'savings':          savings,
             'gw_ref_price':     gw_ref_price,
             'json_ld':          json_ld,
+            'page_title':       page_title,
         }
         cache.set(cache_key, cached_ctx, timeout=1800)  # 30 minutes
 
