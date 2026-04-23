@@ -1,15 +1,19 @@
 {% extends "base.html" %}
 
-{% block title %}Warhammer Blog — Tips, Guides &amp; Savings | ThriftHammer{% endblock %}
+{% block title %}{% if tag_in_path and active_tag %}{{ active_tag.name }} Warhammer Articles | ThriftHammer{% else %}Warhammer Blog — Tips, Guides &amp; Savings | ThriftHammer{% endif %}{% endblock %}
 
-{% block meta_description %}<meta name="description" content="Guides, Top 10 lists, and savings tips to help you build more and spend less on Warhammer 40,000. New posts every week from ThriftHammer.">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if tag_in_path and active_tag %}Browse all Warhammer {{ active_tag.name }} articles on ThriftHammer — guides, top 10 lists, and savings tips.{% else %}Guides, Top 10 lists, and savings tips to help you build more and spend less on Warhammer 40,000. New posts every week from ThriftHammer.{% endif %}">{% endblock %}
 
-{% block canonical %}<link rel="canonical" href="https://thrifthammer.com/blog/">{% endblock %}
+{% block canonical %}<link rel="canonical" href="https://thrifthammer.com/blog/{% if tag_in_path and active_tag %}tag/{{ active_tag.slug }}/{% endif %}">{% endblock %}
 
 {% block content %}
 <div class="page-content blog-list-page">
 
+  {% if tag_in_path and active_tag %}
+  <h1>{{ active_tag.name }}</h1>
+  {% else %}
   <h1 class="sr-only">Warhammer Blog — Tips, Guides &amp; Savings</h1>
+  {% endif %}
 
   {% if hero_post or latest_posts or stream_posts %}
 
@@ -33,7 +37,7 @@
       {% if hero_post.tags.all %}
       <span class="blog-cat-badge">{{ hero_post.tags.all.0.name }}</span>
       {% endif %}
-      <h2 class="blog-hero-full-title">{{ hero_post.title }}</h2>
+      <h3 class="blog-hero-full-title">{{ hero_post.title }}</h3>
       <div class="blog-hero-full-byline">
         <span class="blog-hero-full-author">{{ hero_post.author|default:"ThriftHammer" }}</span>
         <span aria-hidden="true">·</span>
@@ -48,7 +52,7 @@
   {# ── Latest row — 3 posts below hero ── #}
   {% if latest_posts %}
   <div class="blog-latest-row">
-    <p class="blog-section-label">Latest</p>
+    <h2 class="blog-section-label">Latest</h2>
     <div class="blog-latest-grid">
       {% for post in latest_posts %}
       <a href="{{ post.get_absolute_url }}" class="blog-latest-card">
@@ -69,7 +73,7 @@
           {% endif %}
         </div>
         <div class="blog-latest-info">
-          <h2 class="blog-latest-title">{{ post.title }}</h2>
+          <h3 class="blog-latest-title">{{ post.title }}</h3>
           <span class="blog-latest-author">{{ post.author|default:"ThriftHammer" }}</span>
           <time class="blog-latest-date" datetime="{{ post.published_at|date:'Y-m-d' }}">{{ post.published_at|date:"j F Y" }}</time>
         </div>
@@ -82,7 +86,7 @@
   {# ── Stream grid — 4-column borderless ── #}
   {% if stream_posts %}
   <div class="blog-stream-row">
-    <p class="blog-section-label">More Articles</p>
+    <h2 class="blog-section-label">More Articles</h2>
     <div class="blog-stream">
       {% for post in stream_posts %}
       <a href="{{ post.get_absolute_url }}" class="blog-stream-card">
@@ -102,7 +106,7 @@
           <span class="blog-stream-cat">{{ post.tags.all.0.name }}</span>
           {% endif %}
         </div>
-        <h2 class="blog-stream-title">{{ post.title }}</h2>
+        <h3 class="blog-stream-title">{{ post.title }}</h3>
         <span class="blog-stream-author">{{ post.author|default:"ThriftHammer" }}</span>
         <time class="blog-stream-date" datetime="{{ post.published_at|date:'Y-m-d' }}">{{ post.published_at|date:"j F Y" }}</time>
       </a>

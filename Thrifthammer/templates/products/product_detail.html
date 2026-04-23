@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load price_filters %}
 
-{% block title %}{{ product.name }} — Best Price | ThriftHammer{% endblock %}
+{% block title %}{{ product.name }} | ThriftHammer{% endblock %}
 
-{% block meta_description %}<meta name="description" content="Compare prices on {{ product.name }}{% if product.faction %} ({{ product.faction.name }}){% endif %}. Find the cheapest deal across US Warhammer retailers.{% if product.msrp %} MSRP ${{ product.msrp }}.{% endif %}">{% endblock %}
+{% block meta_description %}<meta name="description" content="Compare prices on {{ product.name }}{% if product.faction %} ({{ product.faction.name }}){% endif %}. Cheapest deal from US retailers.{% if product.msrp %} MSRP ${{ product.msrp }}.{% endif %}">{% endblock %}
 
 {% block extra_head %}
 {# ── Open Graph ── #}
@@ -85,6 +85,7 @@
       {# Heading + badges #}
       <div class="product-info-header">
         <h1>{{ product.name }}</h1>
+        <h2 class="sr-only">{{ product.name }} Pricing</h2>
         <div class="product-meta">
           {% if product.category %}
           <span class="badge badge-default">{{ product.category.name }}</span>
@@ -175,7 +176,7 @@
       {# Description #}
       {% if product.description %}
       <div class="product-description">
-        <h2>About This Kit</h2>
+        <h3>About This Kit</h3>
         <p>{{ product.description }}</p>
       </div>
       {% endif %}

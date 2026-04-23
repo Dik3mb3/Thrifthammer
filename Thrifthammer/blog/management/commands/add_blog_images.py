@@ -21,10 +21,7 @@ BLOG_IMAGES = [
     {
         'slug': 'hidden-costs-warhammer-40k',
         'static_path': 'images/blog/hidden-costs-warhammer.png',
-        'alt': (
-            'Games Workshop Warhammer 40K products including painted miniatures, '
-            'dice, a storage case, and the Space Marines codex'
-        ),
+        'alt': 'Warhammer 40K painted miniatures, dice, storage case and Space Marines codex',
     },
     {
         'slug': '40k-hot-takes-warm-spicy-and-scorching',

@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
 {% block canonical %}
-{% if selected_faction %}<link rel="canonical" href="https://thrifthammer.com/army-calculator/{{ selected_faction.slug }}/">
+{% if selected_faction and selected_faction.slug != 'space-marines' %}<link rel="canonical" href="https://thrifthammer.com/army-calculator/{{ selected_faction.slug }}/">
 {% else %}<link rel="canonical" href="https://thrifthammer.com/army-calculator/">
 {% endif %}{% endblock %}
 
 {% block title %}{% if selected_faction %}{{ selected_faction.name }} Army Cost Calculator — ThriftHammer{% else %}Warhammer 40K Army Cost Calculator — ThriftHammer{% endif %}{% endblock %}
 
-{% block meta_description %}<meta name="description" content="{% if selected_faction %}Build a {{ selected_faction.name }} army list and calculate the real cost. Compare unit prices across US retailers and find the best deals on every kit.{% else %}Calculate the total cost of your Warhammer 40,000 army using real retailer prices. Pick your faction, add units, and instantly see how much your army costs across US stores.{% endif %}">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if selected_faction %}Build a {{ selected_faction.name }} army list and calculate the real cost. Compare unit prices across US retailers and find the best deals on every kit.{% else %}Calculate the real cost of your Warhammer 40K army. Pick your faction, add units and compare prices across US retailers instantly.{% endif %}">{% endblock %}
 
 {% block extra_head %}
 <meta property="og:title" content="{% if selected_faction %}{{ selected_faction.name }} Army Cost Calculator — ThriftHammer{% else %}40K Army Cost Calculator — ThriftHammer{% endif %}">
@@ -20,7 +20,8 @@
 
   {# ── Header ── #}
   <div style="margin-bottom:var(--sp-5);">
-    <h1 class="section-title">40K Army Cost Calculator</h1>
+    <h1 class="section-title">{% if selected_faction %}{{ selected_faction.name }} Army Cost Calculator{% else %}40K Army Cost Calculator{% endif %}</h1>
+    {% if selected_faction %}<h2 class="sr-only">{{ selected_faction.name }} Army Calculator</h2>{% else %}<h2 class="sr-only">Choose Your Faction</h2>{% endif %}
     <div class="gold-rule"></div>
     <p style="color:var(--text-muted);font-size:0.9rem;max-width:600px;">
       Select your faction, build your roster unit by unit, and see the real cost across all tracked US retailers in real time.

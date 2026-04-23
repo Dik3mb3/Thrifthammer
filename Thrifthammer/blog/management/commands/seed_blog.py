@@ -255,8 +255,8 @@ POSTS = [
         ),
         'meta_title': 'Best Value Miniature Paints: Cost Per ML Compared',
         'meta_description': (
-            'Citadel, Vallejo, Army Painter, Pro Acryl, and AK Interactive compared by cost per ml '
-            'and starter set value. Find the best miniature paint for your budget.'
+            'Citadel, Vallejo, Army Painter, Pro Acryl, and AK Interactive compared by cost per ml. '
+            'Find the best miniature paint for your budget.'
         ),
         'tags': ['Painting', 'Budget Tips', 'Guides', 'Hobby'],
         'body': """<p>Painting miniatures is one of the most expensive parts of the hobby. Between base colors, washes, metallics, and specialty paints, many hobbyists end up spending hundreds of dollars per year on paints alone.</p>

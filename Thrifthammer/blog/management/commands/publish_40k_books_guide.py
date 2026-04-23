@@ -261,10 +261,7 @@ class Command(BaseCommand):
                 'status': Post.STATUS_PUBLISHED,
                 'published_at': published_dt,
                 'featured_image_url': collage_img,
-                'featured_image_alt': (
-                    'Collage of the best Warhammer 40K book covers including Horus Rising, '
-                    'Eisenhorn, Ghazghkull Thraka, and more'
-                ),
+                'featured_image_alt': 'Best Warhammer 40K book covers including Horus Rising, Eisenhorn and Ghazghkull Thraka',
                 'meta_title': 'Best Warhammer 40K Books: A Complete Reading Guide',
                 'meta_description': (
                     'The best Warhammer 40K books for every type of reader. From Horus Rising '

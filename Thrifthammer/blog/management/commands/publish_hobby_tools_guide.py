@@ -193,7 +193,7 @@ accessible.</p>
 paint struggles to stick to models and can chip easily over time.</p>
 
 <p>Primer improves paint quality, prevents chipping, and makes painting significantly easier.
-Use <a href="/products/?q=citadel+primer">Citadel primer</a> or one of these budget alternatives
+Use <a href="/products/?category=paint-supplies">Citadel primer</a> or one of these budget alternatives
 to get the same results at a lower cost.</p>
 
 <div class="blog-product-pair">

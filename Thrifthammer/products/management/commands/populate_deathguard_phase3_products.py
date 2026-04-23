@@ -144,7 +144,7 @@ PRODUCTS = [
     ),
     (
         'death-guard-chosen-of-mortarion',
-        'Death Guard Malignant Plaguecaster, Noxious Blightbringer & Plague Marine Champion',
+        'Death Guard Chosen of Mortarion',
         'prod4570149-99120102114',
         73.50,
         '99120102114_DGChosenofMortarionLead.jpg',
