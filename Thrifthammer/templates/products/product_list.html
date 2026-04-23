@@ -25,7 +25,7 @@
 
   {# ── Page header ── #}
   <div style="margin-bottom:var(--sp-5);">
-    <h1 class="section-title">Browse Products</h1>
+    <h1 class="section-title">{% if selected_faction_obj %}{{ selected_faction_obj.name }} Kits{% elif selected_category_obj %}{{ selected_category_obj.name }} Kits{% else %}Browse Warhammer Products{% endif %}</h1>
     {% if selected_faction_obj %}<h2 class="sr-only">{{ selected_faction_obj.name }} Products</h2>{% elif selected_category_obj %}<h2 class="sr-only">{{ selected_category_obj.name }} Products</h2>{% elif query %}<h2 class="sr-only">Search Results for "{{ query }}"</h2>{% else %}<h2 class="sr-only">All Warhammer Products</h2>{% endif %}
     <div class="gold-rule"></div>
   </div>
