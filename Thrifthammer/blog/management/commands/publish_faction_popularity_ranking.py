@@ -46,7 +46,7 @@ BODY = """\
 <ul>
   <li>Largest faction Reddit community</li>
   <li>Number of faction hashtags on Instagram</li>
-  <li>Tournament representation over the last 2 years (to normalize for shifts in the meta)</li>
+  <li><a href="https://www.stat-check.com/the-meta" target="_blank" rel="noopener noreferrer">Tournament representation</a> over the last 2 years (to normalize for shifts in the meta)</li>
 </ul>
 
 <p>I then averaged each faction's ranking across these categories to create an overall "popularity score."</p>
