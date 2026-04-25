@@ -82,21 +82,7 @@
         <span class="blog-breadcrumbs-current">{{ post.title|truncatechars:50 }}</span>
       </nav>
 
-      {# Featured image #}
-      {% if post.featured_image_url %}
-      <div class="blog-article-img-wrap">
-        <img
-          src="{{ post.featured_image_url }}"
-          alt="{{ post.featured_image_alt|default:post.title }}"
-          class="blog-article-img"
-          loading="eager"
-          fetchpriority="high"
-          width="1200" height="560"
-        >
-      </div>
-      {% endif %}
-
-      {# Article header #}
+      {# Article header — title first so it's visible above the fold #}
       <header class="blog-article-header">
         <h1 class="blog-article-title">{{ post.title }}</h1>
 
@@ -116,6 +102,20 @@
           <span>{{ post.reading_time }} min read</span>
         </div>
       </header>
+
+      {# Featured image — below the title so the H1 is always visible on load #}
+      {% if post.featured_image_url %}
+      <div class="blog-article-img-wrap">
+        <img
+          src="{{ post.featured_image_url }}"
+          alt="{{ post.featured_image_alt|default:post.title }}"
+          class="blog-article-img"
+          loading="eager"
+          fetchpriority="high"
+          width="1200" height="560"
+        >
+      </div>
+      {% endif %}
 
       {# Article body #}
       <div class="blog-article-body prose">
