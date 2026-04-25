@@ -178,30 +178,16 @@ jobs:
               $FLAGS
           fi
 
-           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "tau_empire"; then
-            echo "========================================="
-            echo "Running: sync_cross_faction_units --faction tau_empire"
-            echo "========================================="
-            python manage.py sync_cross_faction_units --faction "tau_empire" $FLAGS
-            echo "========================================="
-            echo "Running: import_faction_stats --faction tau_empire"
-            echo "========================================="
-            python manage.py import_faction_stats \
-              --faction "tau_empire" \
-              --json ../parser_output/tau_parsed.json \
-              --mapping ../parser_output/tau_mapping.csv \
-              $FLAGS
-          fi
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "tyranids"; then
             echo "========================================="
-            echo "Running: sync_cross_faction_units --faction tyranids"
+            echo "Running: sync_cross_faction_units --faction Tyranids"
             echo "========================================="
-            python manage.py sync_cross_faction_units --faction "tyranids" $FLAGS
+            python manage.py sync_cross_faction_units --faction "Tyranids" $FLAGS
             echo "========================================="
-            echo "Running: import_faction_stats --faction tyranids"
+            echo "Running: import_faction_stats --faction Tyranids"
             echo "========================================="
             python manage.py import_faction_stats \
-              --faction "tyranids" \
+              --faction "Tyranids" \
               --json ../parser_output/tyranids_parsed.json \
               --mapping ../parser_output/tyranids_mapping.csv \
               $FLAGS
