@@ -2882,6 +2882,7 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 .blog-article-img-wrap {
   position: relative;
   width: 100%;
+  max-height: 340px;
   aspect-ratio: 16/9;
   overflow: hidden;
   border-radius: var(--rounded-xl);
