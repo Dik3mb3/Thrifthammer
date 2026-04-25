@@ -107,6 +107,18 @@ jobs:
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "tau_empire"; then
             run_seed seed_tau_stats
+            echo "========================================="
+            echo "Running: sync_cross_faction_units --faction T'au Empire"
+            echo "========================================="
+            python manage.py sync_cross_faction_units --faction "T'au Empire" $FLAGS
+            echo "========================================="
+            echo "Running: import_faction_stats --faction T'au Empire"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "T'au Empire" \
+              --json ../parser_output/tau_parsed.json \
+              --mapping ../parser_output/tau_mapping.csv \
+              $FLAGS
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "genestealer_cults"; then
