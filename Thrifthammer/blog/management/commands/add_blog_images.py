@@ -71,6 +71,11 @@ BLOG_IMAGES = [
         'static_path': 'images/blog/blog-best-content-creators.jpg',
         'alt': 'Top 5 Warhammer content creators worth following on YouTube and social media',
     },
+    {
+        'slug': 'warhammer-40k-faction-popularity-ranking',
+        'static_path': 'images/blog/blog-faction-popularity-ranking.jpg',
+        'alt': 'Most popular Warhammer 40K factions ranked by Reddit, Instagram, and tournament data',
+    },
 ]
 
 BASE_URL = 'https://thrifthammer.com'
