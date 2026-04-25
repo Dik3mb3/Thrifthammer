@@ -106,7 +106,7 @@ jobs:
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "tau_empire"; then
-            run_seed seed_tau_empire_stats
+            run_seed seed_tau_stats
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "genestealer_cults"; then
