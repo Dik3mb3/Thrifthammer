@@ -47,6 +47,32 @@ jobs:
           DJANGO_DEBUG: 'False'
           RAILWAY_ENVIRONMENT: production
         run: |
+          # ---------------------------------------------------------------
+          # INPUT SLUG → EXACT DB FACTION NAME MAPPING
+          # The --faction arg must match Faction.name exactly in the DB.
+          # Run locally to verify: python manage.py shell -c
+          #   "from calculators.models import Faction; [print(repr(f.name)) for f in Faction.objects.order_by('name')]"
+          #
+          #   Input slug          DB faction name
+          #   votann              Leagues of Votann
+          #   admech              Adeptus Mechanicus
+          #   aeldari             Aeldari
+          #   guard               Astra Militarum
+          #   custodes            Custodes
+          #   drukhari            Drukhari
+          #   grey_knights        Grey Knights
+          #   necrons             Necrons
+          #   orks                Orks
+          #   sisters_of_battle   Sisters of Battle
+          #   tau_empire          T'au Empire          ← apostrophe, exact
+          #   tyranids            Tyranids
+          #   genestealer_cults   Genestealer Cults
+          #   imperial_knights    Imperial Knights
+          #   blood_angels        Blood Angels
+          #   space_wolves        Space Wolves
+          #   dark_angels         Dark Angels
+          #   deathwatch          Deathwatch
+          # ---------------------------------------------------------------
           FLAGS=""
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
             FLAGS="--dry-run"
