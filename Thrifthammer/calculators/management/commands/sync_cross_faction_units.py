@@ -278,6 +278,174 @@ CROSS_FACTION_UNITS = {
         ],
     },
 
+    # ── Chaos Space Marines subfactions ───────────────────────────────────────
+    #
+    # The four god-marked legions are CSM subfactions exactly as Blood Angels /
+    # Space Wolves / Dark Angels are SM subfactions.  Shared daemon engines and
+    # vehicles live in the DB under faction=Chaos Space Marines; each legion
+    # needs its own UnitType row (different points, faction-appropriate name)
+    # pointing to the same product for pricing.
+    #
+    # Daemon Prince: one physical kit builds the winged and non-winged versions.
+    # We create two UnitType rows per faction — one per configuration — both
+    # pointing to the same product so pricing is shared across all of them.
+    #
+    # Helbrute: DB product is named "Chaos Helbrute"; every legion calls it
+    # "Helbrute" in their own army list.
+    #
+    # Defiler: DB product is named "Chaos Defiler"; legions call it "Defiler".
+    #
+    # Chaos Predator: one dual-build kit; creates both Annihilator and
+    # Destructor UnitType rows pointing to the same product (same pattern as
+    # the SM Predator in the DA section above).
+    # ─────────────────────────────────────────────────────────────────────────
+
+    # ── Death Guard ──────────────────────────────────────────────────────────
+    # DG-exclusive units (Blightlord Terminators, Foetid Bloat-drone, Plague
+    # Marines, Poxwalkers, Deathshroud, Myphitic Blight-hauler, Plagueburst
+    # Crawler, etc.) are already tagged faction=death-guard in the DB so
+    # populate_units creates their UnitType rows automatically.  Only add units
+    # here whose products live under faction=chaos-space-marines.
+    "Death Guard": {
+        "parent_faction": "Chaos Space Marines",
+        "units": [
+
+            # ── Characters ───────────────────────────────────────────────────
+            # Product is "Daemon Prince" (slug: daemon-prince-of-chaos);
+            # DG army list calls the two configurations:
+            {"parent": "Daemon Prince",
+             "name":   "Daemon Prince of Nurgle"},
+            {"parent": "Daemon Prince",
+             "name":   "Daemon Prince of Nurgle with Wings"},
+
+            # ── Infantry ─────────────────────────────────────────────────────
+            {"parent": "Chaos Spawn"},
+
+            # ── Vehicles / Daemon Engines ─────────────────────────────────────
+            # "Chaos Helbrute" in CSM; DG army list calls it "Helbrute":
+            {"parent": "Chaos Helbrute",
+             "name":   "Helbrute"},
+            # "Chaos Defiler" in CSM; DG army list calls it "Defiler":
+            {"parent": "Chaos Defiler",
+             "name":   "Defiler"},
+
+            # ── Transports ───────────────────────────────────────────────────
+            {"parent": "Chaos Land Raider"},
+            # One dual-build kit — create both configs pointing to same product:
+            {"parent": "Chaos Predator",
+             "name":   "Chaos Predator Annihilator"},
+            {"parent": "Chaos Predator",
+             "name":   "Chaos Predator Destructor"},
+            {"parent": "Chaos Rhino"},
+        ],
+    },
+
+    # ── Thousand Sons ─────────────────────────────────────────────────────────
+    # TS-exclusive units (Magnus, Ahriman, Rubric Marines, Scarab Occult
+    # Terminators, Exalted Sorcerers, Mutalith Vortex Beast, Tzaangors, etc.)
+    # are tagged faction=thousand-sons — populate_units handles them.
+    # Add only units whose products live under faction=chaos-space-marines.
+    "Thousand Sons": {
+        "parent_faction": "Chaos Space Marines",
+        "units": [
+
+            # ── Characters ───────────────────────────────────────────────────
+            {"parent": "Daemon Prince",
+             "name":   "Daemon Prince of Tzeentch"},
+            {"parent": "Daemon Prince",
+             "name":   "Daemon Prince of Tzeentch with Wings"},
+
+            # ── Infantry ─────────────────────────────────────────────────────
+            {"parent": "Chaos Spawn"},
+
+            # ── Vehicles / Daemon Engines ─────────────────────────────────────
+            {"parent": "Chaos Helbrute",
+             "name":   "Helbrute"},
+            {"parent": "Chaos Defiler",
+             "name":   "Defiler"},
+            {"parent": "Forgefiend"},
+            {"parent": "Heldrake"},
+            {"parent": "Maulerfiend"},
+
+            # ── Transports ───────────────────────────────────────────────────
+            {"parent": "Chaos Land Raider"},
+            {"parent": "Chaos Predator",
+             "name":   "Chaos Predator Annihilator"},
+            {"parent": "Chaos Predator",
+             "name":   "Chaos Predator Destructor"},
+            {"parent": "Chaos Rhino"},
+            {"parent": "Chaos Vindicator"},
+        ],
+    },
+
+    # ── World Eaters ──────────────────────────────────────────────────────────
+    # WE-exclusive units (Angron, Khârn, Lord Invocatus, Khorne Berzerkers,
+    # Eightbound, Jakhals, Lord on Juggernaut, Goremongers, etc.) are tagged
+    # faction=world-eaters — populate_units handles them.
+    "World Eaters": {
+        "parent_faction": "Chaos Space Marines",
+        "units": [
+
+            # ── Characters ───────────────────────────────────────────────────
+            {"parent": "Daemon Prince",
+             "name":   "Daemon Prince of Khorne"},
+            {"parent": "Daemon Prince",
+             "name":   "Daemon Prince of Khorne with Wings"},
+            # DB product is "Master of Executions" (slug: chaos-master-of-executions):
+            {"parent": "Master of Executions"},
+
+            # ── Infantry ─────────────────────────────────────────────────────
+            {"parent": "Chaos Spawn"},
+
+            # ── Vehicles / Daemon Engines ─────────────────────────────────────
+            {"parent": "Chaos Helbrute",
+             "name":   "Helbrute"},
+            {"parent": "Chaos Defiler",
+             "name":   "Defiler"},
+            {"parent": "Forgefiend"},
+            {"parent": "Heldrake"},
+            {"parent": "Maulerfiend"},
+
+            # ── Transports ───────────────────────────────────────────────────
+            {"parent": "Chaos Land Raider"},
+            {"parent": "Chaos Predator",
+             "name":   "Chaos Predator Annihilator"},
+            {"parent": "Chaos Predator",
+             "name":   "Chaos Predator Destructor"},
+            {"parent": "Chaos Rhino"},
+        ],
+    },
+
+    # ── Emperor's Children ────────────────────────────────────────────────────
+    # EC-exclusive units (Fulgrim, Lucius, Lord Exultant, Lord Kakophonist,
+    # Sorcerer, Infractors, Tormentors, Flawless Blades, etc.) are tagged
+    # faction=emperors-children — populate_units handles them.
+    "Emperor's Children": {
+        "parent_faction": "Chaos Space Marines",
+        "units": [
+
+            # ── Characters ───────────────────────────────────────────────────
+            {"parent": "Daemon Prince",
+             "name":   "Daemon Prince of Slaanesh"},
+            {"parent": "Daemon Prince",
+             "name":   "Daemon Prince of Slaanesh with Wings"},
+
+            # ── Infantry ─────────────────────────────────────────────────────
+            {"parent": "Chaos Spawn"},
+            # DB product is "Chaos Terminator Squad"; EC army list calls them
+            # "Chaos Terminators":
+            {"parent": "Chaos Terminator Squad",
+             "name":   "Chaos Terminators"},
+
+            # ── Vehicles / Daemon Engines ─────────────────────────────────────
+            {"parent": "Heldrake"},
+
+            # ── Transports ───────────────────────────────────────────────────
+            {"parent": "Chaos Land Raider"},
+            {"parent": "Chaos Rhino"},
+        ],
+    },
+
     # ── Dark Angels ───────────────────────────────────────────────────────────
     # SM kits that appear in the Dark Angels army list.  DA-exclusive units
     # (44-xx SKUs: Asmodai, Azrael, Belial, Deathwing Knights, Ravenwing, etc.)
