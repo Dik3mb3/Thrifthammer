@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       factions:
-        description: 'Which factions to seed (comma-separated: votann,admech,aeldari,guard,chaos_space_marines,custodes,drukhari,grey_knights,necrons,orks,sisters_of_battle,tau_empire,tyranids,genestealer_cults,imperial_knights,blood_angels,space_wolves,dark_angels,deathwatch — or "all"). Maintenance: delete_codex_units, delete_legacy_guard_units, assign_missing_skus, sync_cross_faction_units'
+        description: 'Which factions to seed (comma-separated: votann,admech,aeldari,guard,chaos_space_marines,custodes,death_guard,drukhari,grey_knights,necrons,orks,sisters_of_battle,tau_empire,tyranids,genestealer_cults,imperial_knights,blood_angels,space_wolves,dark_angels,deathwatch — or "all"). Maintenance: delete_codex_units, delete_legacy_guard_units, assign_missing_skus, sync_cross_faction_units'
         type: string
         default: 'all'
       dry_run:
@@ -245,6 +245,21 @@ jobs:
               --faction "Chaos Space Marines" \
               --json ../parser_output/chaos_space_marine_parsed.json \
               --mapping ../parser_output/chaos_space_marine_mapping.csv \
+              $FLAGS
+          fi
+
+           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "death_guard"; then
+            echo "========================================="
+            echo "Running: sync_cross_faction_units --faction Death Guard"
+            echo "========================================="
+            python manage.py sync_cross_faction_units --faction "Death Guard" $FLAGS
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Death Guard"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Death Guard" \
+              --json ../parser_output/death_guard_parsed.json \
+              --mapping ../parser_output/death_guard_mapping.csv \
               $FLAGS
           fi
 
