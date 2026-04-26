@@ -32,6 +32,7 @@ import base64
 import logging
 import math
 import re
+import shlex
 import time
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
@@ -177,7 +178,7 @@ class EbayBrowseAPI:
         # appearing in eBay results (e.g. "-plastic" stops Plastic Glue listings
         # from showing up when searching for Super Glue).
         raw_negatives = getattr(product, 'ebay_negative_keywords', '') or ''
-        extra_negatives = raw_negatives.split() if raw_negatives else None
+        extra_negatives = shlex.split(raw_negatives) if raw_negatives else None
 
         query = self._build_search_query(search_name, extra_negatives)
         items = self.search_items(query, max_results=10)
@@ -472,12 +473,17 @@ class EbayBrowseAPI:
         # Product-specific negative keywords: exclude similarly-named products
         # that our keyword validator cannot distinguish (e.g. Plastic Glue vs
         # Super Glue both contain "citadel" + "glue" and pass the 65% threshold).
-        # Sourced from Product.ebay_negative_keywords — space-separated words.
+        # Sourced from Product.ebay_negative_keywords — parsed with shlex so
+        # quoted phrases like "Chaos Marines" are treated as a single exclusion
+        # and emitted as eBay's -"phrase" syntax; single words use plain -word.
         if extra_negatives:
-            for word in extra_negatives:
-                word = word.strip()
-                if word:
-                    query = f'{query} -{word}'
+            for phrase in extra_negatives:
+                phrase = phrase.strip()
+                if phrase:
+                    if ' ' in phrase:
+                        query = f'{query} -"{phrase}"'
+                    else:
+                        query = f'{query} -{phrase}'
 
         return query.strip()
 
@@ -885,7 +891,7 @@ class EbayBrowseAPI:
         _raw_neg = getattr(product, 'ebay_negative_keywords', '') or ''
         if _raw_neg:
             _result_item_id = result.get('item_id', '')
-            for _neg_kw in _raw_neg.lower().split():
+            for _neg_kw in shlex.split(_raw_neg.lower()):
                 # Pure-digit tokens are treated as blocked eBay item IDs rather
                 # than title keywords (item IDs never appear in listing titles).
                 if _neg_kw.isdigit():
@@ -1183,7 +1189,7 @@ class EbayBrowseAPI:
             # Grimaldus and his three Cenobyte Servitors").
             raw_negatives = getattr(product, 'ebay_negative_keywords', '') or ''
             if raw_negatives:
-                for neg_kw in raw_negatives.lower().split():
+                for neg_kw in shlex.split(raw_negatives.lower()):
                     if re.search(r'\b' + re.escape(neg_kw) + r'\b', short_desc):
                         logger.debug(
                             '[ebay] Rejected (negative keyword "%s" in description): "%s"',
@@ -1276,7 +1282,7 @@ class EbayBrowseAPI:
         _raw_neg = getattr(product, 'ebay_negative_keywords', '') or ''
         if _raw_neg:
             _result_item_id = result.get('item_id', '')
-            for _neg_kw in _raw_neg.lower().split():
+            for _neg_kw in shlex.split(_raw_neg.lower()):
                 if _neg_kw.isdigit():
                     if _result_item_id and _neg_kw == _result_item_id:
                         reasons.append(f'blocked item ID {_result_item_id}')
@@ -1379,7 +1385,7 @@ class EbayBrowseAPI:
             # Product-specific negative keywords applied to description (word-boundary)
             raw_negatives = getattr(product, 'ebay_negative_keywords', '') or ''
             if raw_negatives:
-                for neg_kw in raw_negatives.lower().split():
+                for neg_kw in shlex.split(raw_negatives.lower()):
                     if re.search(r'\b' + re.escape(neg_kw) + r'\b', short_desc):
                         reasons.append(
                             f'negative keyword "{neg_kw}" in description'

@@ -37,6 +37,7 @@ Usage:
     python manage.py update_ebay_prices --delay 1.0
 """
 
+import shlex
 import time
 from decimal import Decimal
 
@@ -60,7 +61,7 @@ def _debug_search(ebay_api, product, stdout, style):
     from products.ebay_api_client import EbayBrowseAPI
     search_name = product.ebay_search_name or product.name
     raw_negatives = getattr(product, 'ebay_negative_keywords', '') or ''
-    extra_negatives = raw_negatives.split() if raw_negatives else None
+    extra_negatives = shlex.split(raw_negatives) if raw_negatives else None
     query = EbayBrowseAPI._build_search_query(search_name, extra_negatives)
     stdout.write(f'    DEBUG query: "{query}"')
 
