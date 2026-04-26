@@ -230,8 +230,8 @@ jobs:
             echo "========================================="
             python manage.py import_faction_stats \
               --faction "Tyranids" \
-              --json ../parser_output/chaos_space_marines_parsed.json \
-              --mapping ../parser_output/chaos_space_marines_mapping.csv \
+              --json ../parser_output/chaos_space_marine_parsed.json \
+              --mapping ../parser_output/chaos_space_marine_mapping.csv \
               $FLAGS
           fi
 
