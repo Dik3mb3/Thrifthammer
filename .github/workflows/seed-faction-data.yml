@@ -73,6 +73,19 @@ jobs:
           #   dark_angels         Dark Angels
           #   deathwatch          Deathwatch
           #   chaos_space_marines Chaos Space Marines
+          #   death_guard         Death Guard
+          #   thousand_sons       Thousand Sons
+          #   world_eaters        World Eaters
+          #   emperors_children   Emperor's Children   ← apostrophe in DB name, exact
+          #   chaos_knights       Chaos Knights
+          #   space_marines       Space Marines
+          #   black_templars      Black Templars
+          #   ultramarines        Ultramarines
+          #   imperial_fists      Imperial Fists
+          #   iron_hands          Iron Hands
+          #   salamanders         Salamanders
+          #   raven_guard         Raven Guard
+          #   white_scars         White Scars
           # ---------------------------------------------------------------
           FLAGS=""
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
@@ -220,16 +233,16 @@ jobs:
               $FLAGS
           fi
 
-           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "chaos_space_marines"; then
+          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "chaos_space_marines"; then
             echo "========================================="
-            echo "Running: sync_cross_faction_units --faction Chaos_space_marines"
+            echo "Running: sync_cross_faction_units --faction Chaos Space Marines"
             echo "========================================="
-            python manage.py sync_cross_faction_units --faction "Chaos_space_marines" $FLAGS
+            python manage.py sync_cross_faction_units --faction "Chaos Space Marines" $FLAGS
             echo "========================================="
-            echo "Running: import_faction_stats --faction Chaos_space_marines"
+            echo "Running: import_faction_stats --faction Chaos Space Marines"
             echo "========================================="
             python manage.py import_faction_stats \
-              --faction "Tyranids" \
+              --faction "Chaos Space Marines" \
               --json ../parser_output/chaos_space_marine_parsed.json \
               --mapping ../parser_output/chaos_space_marine_mapping.csv \
               $FLAGS
