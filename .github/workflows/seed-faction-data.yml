@@ -262,6 +262,51 @@ jobs:
               --mapping ../parser_output/death_guard_mapping.csv \
               $FLAGS
           fi
+          
+           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "thousand_sons"; then
+            echo "========================================="
+            echo "Running: sync_cross_faction_units --faction Thousand Sons"
+            echo "========================================="
+            python manage.py sync_cross_faction_units --faction "Thousand Sons" $FLAGS
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Thousand Sons"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Thousand Sons" \
+              --json ../parser_output/thousand_sons_parsed.json \
+              --mapping ../parser_output/thousand_sons_mapping.csv \
+              $FLAGS
+          fi
+
+          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "world_eaters"; then
+            echo "========================================="
+            echo "Running: sync_cross_faction_units --faction World Eaters"
+            echo "========================================="
+            python manage.py sync_cross_faction_units --faction "World Eaters" $FLAGS
+            echo "========================================="
+            echo "Running: import_faction_stats --faction World Eaters"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "World Eaters" \
+              --json ../parser_output/world_eaters_parsed.json \
+              --mapping ../parser_output/world_eaters_mapping.csv \
+              $FLAGS
+          fi
+
+          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "emperors_children"; then
+            echo "========================================="
+            echo "Running: sync_cross_faction_units --faction Emperor's Children"
+            echo "========================================="
+            python manage.py sync_cross_faction_units --faction "Emperor's Children" $FLAGS
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Emperor's Children"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Emperor's Children" \
+              --json ../parser_output/ec_parsed.json \
+              --mapping ../parser_output/ec_mapping.csv \
+              $FLAGS
+          fi
 
           if echo "$FACTIONS" | grep -q "sync_cross_faction_units"; then
             run_seed "sync_cross_faction_units"
