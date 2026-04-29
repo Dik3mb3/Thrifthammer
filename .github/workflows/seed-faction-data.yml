@@ -288,8 +288,8 @@ jobs:
             echo "========================================="
             python manage.py import_faction_stats \
               --faction "World Eaters" \
-              --json ../parser_output/world_eaters_parsed.json \
-              --mapping ../parser_output/world_eaters_mapping.csv \
+              --json ../parser_output/worldeaters_parsed.json \
+              --mapping ../parser_output/worldeaters_mapping.csv \
               $FLAGS
           fi
 
