@@ -1,0 +1,1555 @@
+{
+  "faction": "Ec",
+  "source_file": "POINTS_EC.html",
+  "extracted_date": "2026-04-29",
+  "total_cards": 23,
+  "units": [
+    {
+      "card_name": "Fulgrim",
+      "points": 340,
+      "primary_stats": {
+        "model": "Fulgrim",
+        "M": "16\"",
+        "T": "11",
+        "SV": "2+",
+        "W": "16",
+        "LD": "5+",
+        "OC": "6"
+      },
+      "all_model_stats": [
+        {
+          "model": "Fulgrim",
+          "M": "16\"",
+          "T": "11",
+          "SV": "2+",
+          "W": "16",
+          "LD": "5+",
+          "OC": "6"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Malefic lash",
+          "range": "12\"",
+          "A": "6",
+          "BS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Sustained Hits 1"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Daemonic blades - strike",
+          "A": "6",
+          "WS": "2+",
+          "S": "14",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Sustained Hits 1"
+        },
+        {
+          "name": "Daemonic blades - sweep",
+          "A": "12",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Sustained Hits 1"
+        },
+        {
+          "name": "Serpentine tail",
+          "A": "6",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Extra Attacks"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Beguiling Form",
+          "description": "Each time a model makes an attack that targets this unit, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Daemonic Speed",
+          "description": "This model has the Fights First ability."
+        },
+        {
+          "name": "Enthralling Hypnosis (Aura)",
+          "description": "While an enemy unit is within 6\" of this model, each time that unit is selected to Fall Back, it must take a Leadership test. If that test is failed, that unit must Remain Stationary this phase instead."
+        }
+      ]
+    },
+    {
+      "card_name": "Lucius the Eternal",
+      "points": 150,
+      "primary_stats": {
+        "model": "Lucius the Eternal",
+        "M": "8\"",
+        "T": "5",
+        "SV": "2+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Lucius the Eternal",
+          "M": "8\"",
+          "T": "5",
+          "SV": "2+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Blade of the Laer",
+          "A": "6",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-3",
+          "D": "3",
+          "keywords": "Precision"
+        },
+        {
+          "name": "Lash of Torment",
+          "A": "10",
+          "WS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Sustained Hits 1"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nFlawless Blades"
+        },
+        {
+          "name": "Duellist’s Hubris",
+          "description": "At the start of the Fight phase, if this model is not leading a unit, until the end of the phase, it has the Fights First ability."
+        },
+        {
+          "name": "A Challenge Worthy of Skill",
+          "description": "Each time this model makes an attack that targets a Character, Monster or Walker unit, you can re-roll the Hit roll and re-roll the Wound roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Shalaxi Helbane",
+      "points": 340,
+      "primary_stats": {
+        "model": "Shalaxi Helbane",
+        "M": "14\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "20",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Shalaxi Helbane",
+          "M": "14\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "20",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Lash of Slaanesh",
+          "range": "12\"",
+          "A": "6",
+          "BS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Assault"
+        },
+        {
+          "name": "Pavane of Slaanesh - witchfire",
+          "range": "18\"",
+          "A": "D6",
+          "BS": "2+",
+          "S": "9",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Devastating Wounds, Psychic"
+        },
+        {
+          "name": "Pavane of Slaanesh - focused witchfire",
+          "range": "18\"",
+          "A": "D6",
+          "BS": "2+",
+          "S": "9",
+          "AP": "-2",
+          "D": "D3",
+          "keywords": "Hazardous, Devastating Wounds, Psychic, Sustained Hits 3"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Snapping claws",
+          "A": "4",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Devastating Wounds, Extra Attacks"
+        },
+        {
+          "name": "Soulpiercer",
+          "A": "6",
+          "WS": "2+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+2",
+          "keywords": "Precision"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "No Prey Can Evade",
+          "description": "You can re-roll Advance and Charge rolls made for this model."
+        },
+        {
+          "name": "Monarch of the Hunt",
+          "description": "At the start of the first battle round, select one enemy unit to be this model's quarry. Each time this model makes a melee attack that targets its quarry, you can re-roll the Hit roll and you can re-roll the Wound roll. Each time this model's quarry is destroyed, select one new enemy unit to be this model's quarry."
+        }
+      ]
+    },
+    {
+      "card_name": "Daemon Prince of Slaanesh",
+      "points": 180,
+      "primary_stats": {
+        "model": "Daemon Prince of Slaanesh",
+        "M": "10\"",
+        "T": "10",
+        "SV": "2+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Daemon Prince of Slaanesh",
+          "M": "10\"",
+          "T": "10",
+          "SV": "2+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Infernal cannon",
+          "range": "24\"",
+          "A": "3",
+          "BS": "2+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Hellforged weapons - strike",
+          "A": "6",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        },
+        {
+          "name": "Hellforged weapons - sweep",
+          "A": "14",
+          "WS": "2+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Lord of Excess",
+          "description": "While this model is within 3\" of one or more friendly Slaanesh Infantry, this model has the Lone Operative ability."
+        },
+        {
+          "name": "Excessive Vigour (Aura)",
+          "description": "While a friendly Slaanesh unit is within 6\" of this model, if that unit made a Charge move this turn, improve the Armour Penetration characteristic of melee weapons equipped by that unit by 1."
+        },
+        {
+          "name": "Ecstatic Death",
+          "description": "If this model is destroyed by a melee attack, if it has not fought this phase, roll one D6: on a 2+, do not remove it from play. This model can fight after the attacking unit has finished making its attacks, and is then removed from play."
+        }
+      ]
+    },
+    {
+      "card_name": "Daemon Prince of Slaanesh with Wings",
+      "points": 215,
+      "primary_stats": {
+        "model": "Daemon Prince of Slaanesh with Wings",
+        "M": "14\"",
+        "T": "9",
+        "SV": "2+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Daemon Prince of Slaanesh with Wings",
+          "M": "14\"",
+          "T": "9",
+          "SV": "2+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Infernal cannon",
+          "range": "24\"",
+          "A": "3",
+          "BS": "2+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Hellforged weapons - strike",
+          "A": "6",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        },
+        {
+          "name": "Hellforged weapons - sweep",
+          "A": "14",
+          "WS": "2+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Daemonic Destruction",
+          "description": "Each time this model ends a Charge move, select one enemy unit within Engagement Range of this model and roll one D6 for each of this model's remaining wounds: for each 4+, that enemy unit suffers 1 mortal wound (to a maximum of 6 mortal wounds)."
+        },
+        {
+          "name": "Stimulated by Pain",
+          "description": "Each time an attack is allocated to this model, subtract 1 from the Damage characteristic of that attack."
+        }
+      ]
+    },
+    {
+      "card_name": "Keeper of Secrets",
+      "points": 240,
+      "primary_stats": {
+        "model": "Keeper of Secrets",
+        "M": "14\"",
+        "T": "10",
+        "SV": "5+",
+        "W": "18",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Keeper of Secrets",
+          "M": "14\"",
+          "T": "10",
+          "SV": "5+",
+          "W": "18",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Phantasmagoria - witchfire",
+          "range": "18\"",
+          "A": "6",
+          "BS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Devastating Wounds, Psychic"
+        },
+        {
+          "name": "Phantasmagoria - focused witchfire",
+          "range": "18\"",
+          "A": "9",
+          "BS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Devastating Wounds, Hazardous, Psychic"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Snapping claws",
+          "A": "4",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Devastating Wounds, Extra Attacks"
+        },
+        {
+          "name": "Witstealer sword",
+          "A": "6",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Daemon Lord of Slaanesh (Aura)",
+          "description": "While a friendly Legions of Excess unit is within 6\" of this model, improve the Armour Penetration of melee weapons in that unit by 1."
+        },
+        {
+          "name": "Mesmerising Form",
+          "description": "Each time an attack targets this model, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Damaged: 1-6 wounds remaining",
+          "description": "While this model has 1-6 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Lord Exultant",
+      "points": 80,
+      "primary_stats": {
+        "model": "Lord Exultant",
+        "M": "7\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Lord Exultant",
+          "M": "7\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Plasma pistol - standard",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "7",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Plasma pistol - supercharge",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Hazardous, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "6",
+          "WS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Phoenix power spear",
+          "A": "5",
+          "WS": "2+",
+          "S": "7",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Lance"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Perfectionists",
+          "description": "While this model is leading a unit, weapons equipped by models in that unit have the [LETHAL HITS] ability."
+        },
+        {
+          "name": "Euphoric Strikes",
+          "description": "Once per battle, at the start of the Fight phase, this model can use this ability. If it does so, until the end of the phase, add 3 to the Attacks characteristic of melee weapons equipped by this model and improve the Armour Penetration characteristic of those weapons by 1."
+        },
+        {
+          "name": "Lord of the Host",
+          "description": "If this model is attached to an Emperor's Children Battleline unit during the Declare Battle Formations step, this model has the Infiltrators and Scouts 6\" ability."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units: Infractors; Tormentors"
+        }
+      ]
+    },
+    {
+      "card_name": "Lord Kakophonist",
+      "points": 70,
+      "primary_stats": {
+        "model": "Lord Kakophonist",
+        "M": "6\"",
+        "T": "5",
+        "SV": "2+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Lord Kakophonist",
+          "M": "6\"",
+          "T": "5",
+          "SV": "2+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Screamer pistol",
+          "range": "12\"",
+          "A": "3",
+          "BS": "2+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Ignores Cover, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Power sword",
+          "A": "6",
+          "WS": "2+",
+          "S": "5",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units: Emperor's Children Terminator Squad; Noise Marines"
+        },
+        {
+          "name": "Obsessive Annunciation",
+          "description": "While this model is leading a unit, ranged weapons equipped by that unit have the [SUSTAINED HITS 1] ability."
+        },
+        {
+          "name": "Doom Siren",
+          "description": "In your Shooting phase, after this model's unit has shot, select one enemy Infantry unit hit by one or more of those attacks and roll three D6: for each 4+, that enemy unit suffers 1 mortal wound. If an enemy suffers one or more mortal wounds as a result of this ability, it must take a Battle-shock test."
+        }
+      ]
+    },
+    {
+      "card_name": "Sorcerer",
+      "points": 60,
+      "primary_stats": {
+        "model": "Sorcerer",
+        "M": "7\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Sorcerer",
+          "M": "7\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Agonising Energies - witchfire",
+          "range": "18\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Psychic"
+        },
+        {
+          "name": "Agonising Energies - focused witchfire",
+          "range": "18\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "D3",
+          "keywords": "Devastating Wounds, Hazardous, Psychic"
+        },
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Force weapon",
+          "A": "4",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "D3",
+          "keywords": "Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units: Infractors; Noise Marines; Tormentors"
+        },
+        {
+          "name": "Warped Interference (Psychic)",
+          "description": "While this model is leading a unit, each time a ranged attack targets that unit, models in it have the Benefit of Cover against that attack."
+        },
+        {
+          "name": "Wracking Agonies (Psychic)",
+          "description": "In your Shooting phase, after this model has shot, select one INFANTRY unit hit by one or more of those attacks made with its Agonising Energies. Until the start of your next turn, that unit is wracked with agonies. While a unit is wracked with agonies, subtract 2\" from its Move characteristic and subtract 2 from charge rolls made for it."
+        }
+      ]
+    },
+    {
+      "card_name": "Daemonettes",
+      "points": 90,
+      "primary_stats": {
+        "model": "Daemonettes",
+        "M": "9\"",
+        "T": "3",
+        "SV": "7+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Daemonettes",
+          "M": "9\"",
+          "T": "3",
+          "SV": "7+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Slashing claws (x10)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Horrifying Beauty",
+          "description": "At the start of the Fight phase, each enemy unit in Engagement Range of one or more units from your army with this ability must take a Battle-shock test, subtracting 1 from that test if that enemy unit is Below Half-strength."
+        }
+      ]
+    },
+    {
+      "card_name": "Infractors",
+      "points": 85,
+      "primary_stats": {
+        "model": "Infractors",
+        "M": "7\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Infractors",
+          "M": "7\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Power sword",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Precision"
+        },
+        {
+          "name": "Duelling sabre (x4)",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Precision"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Excessive Assault",
+          "description": "Each time a model in this unit targets an enemy unit with a melee attack, re-roll a Wound roll of 1. If that enemy unit is within range of an objective marker, you can re-roll the Wound roll instead."
+        }
+      ]
+    },
+    {
+      "card_name": "Tormentors",
+      "points": 85,
+      "primary_stats": {
+        "model": "Tormentors",
+        "M": "7\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Tormentors",
+          "M": "7\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol, Precision"
+        },
+        {
+          "name": "Boltgun (x4)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Precision"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Power sword",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Close combat weapon (x4)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Objective Defiled",
+          "description": "At the end of your Command phase, if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent's Level of Control over that objective marker is greater than yours at the end of a phase."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Terminators",
+      "points": 145,
+      "primary_stats": {
+        "model": "Chaos Terminators",
+        "M": "6\"",
+        "T": "5",
+        "SV": "2+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Terminators",
+          "M": "6\"",
+          "T": "5",
+          "SV": "2+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Combi-bolter (x5)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Accursed weapon (x5)",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Lethal Obsession",
+          "description": "In your Shooting phase, each time this unit is selected to shoot, if it makes one or more shooting attacks and all of those attacks target the same enemy unit, until the end of the turn, each time this unit declares a charge, if that enemy unit is a target of that charge, you can re-roll the Charge roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Flawless Blades",
+      "points": 100,
+      "primary_stats": {
+        "model": "Flawless Blades",
+        "M": "8\"",
+        "T": "5",
+        "SV": "3+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Flawless Blades",
+          "M": "8\"",
+          "T": "5",
+          "SV": "3+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x3)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Blissblade (x3)",
+          "A": "4",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-3",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Daemonic Patrons",
+          "description": "Each time this unit is selected to fight, it can call upon daemonic patrons. If it does, until the end of the phase, each time a model in this unit makes an attack. an unmodified Wound roll of 3+ scores a Critical Wound. At the end of the Fight phase, if this unit called upon daemonic patrons this phase and no enemy models were destroyed by attacks made by models in this unit this phase, one model in this unit is destroyed."
+        }
+      ]
+    },
+    {
+      "card_name": "Noise Marines",
+      "points": 145,
+      "primary_stats": {
+        "model": "Disharmonist",
+        "M": "6\"",
+        "T": "5",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Disharmonist",
+          "M": "6\"",
+          "T": "5",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Noise Marines (x5)",
+          "M": "6\"",
+          "T": "5",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Sonic blaster (x6)",
+          "range": "18\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Ignores Cover"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x6)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Terrifying Crescendo",
+          "description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the start of your next Shooting phase, each time a Battle-shock or Leadership test is taken for that enemy unit, subtract 1 from that test."
+        }
+      ]
+    },
+    {
+      "card_name": "Seekers",
+      "points": 80,
+      "primary_stats": {
+        "model": "Seeker (x4)",
+        "M": "14\"",
+        "T": "4",
+        "SV": "7+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Seeker (x4)",
+          "M": "14\"",
+          "T": "4",
+          "SV": "7+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Lashing tongues (x5)",
+          "A": "2",
+          "WS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Extra Attacks, Lethal Hits"
+        },
+        {
+          "name": "Slashing claws (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Unholy Speed",
+          "description": "You can re-roll Advance and Charge rolls made for this unit."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Spawn",
+      "points": 70,
+      "primary_stats": {
+        "model": "Chaos Spawn",
+        "M": "10\"",
+        "T": "5",
+        "SV": "4+",
+        "W": "4",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Spawn",
+          "M": "10\"",
+          "T": "5",
+          "SV": "4+",
+          "W": "4",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Hideous Mutations (x2)",
+          "A": "D6+2",
+          "WS": "4+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Scuttling Horrors",
+          "description": "Once per turn, when an enemy unit ends a Normal, Advance or Fall Back move within 9\" of this unit, this unit can make a Normal move of up to 6\"."
+        }
+      ]
+    },
+    {
+      "card_name": "Fiends",
+      "points": 95,
+      "primary_stats": {
+        "model": "Fiends (x3)",
+        "M": "12\"",
+        "T": "5",
+        "SV": "7+",
+        "W": "4",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Fiends (x3)",
+          "M": "12\"",
+          "T": "5",
+          "SV": "7+",
+          "W": "4",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Barbed tail and dissecting claws (x3)",
+          "A": "5",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Soporific Musk",
+          "description": "Each time an enemy unit (excluding Monsters and Vehicles) within Engagement Range of one or more units from your army with this ability Falls Back, models in that unit must take Desperate Escape tests. When doing so, if that enemy unit is also Battle-shocked, subtract 1 from each of those Desperate Escape tests."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Land Raider",
+      "points": 220,
+      "primary_stats": {
+        "model": "Chaos Land Raider",
+        "M": "10\"",
+        "T": "12",
+        "SV": "2+",
+        "W": "16",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Land Raider",
+          "M": "10\"",
+          "T": "12",
+          "SV": "2+",
+          "W": "16",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Soulshatter lascannon (x2)",
+          "range": "48\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": ""
+        },
+        {
+          "name": "Twin heavy bolter",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Sustained Hits 1, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured tracks",
+          "A": "6",
+          "WS": "4+",
+          "S": "8",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Assault Ramp",
+          "description": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn."
+        },
+        {
+          "name": "Damaged: 1-5 wounds remaining",
+          "description": "While this model has 1-5 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Defiler",
+      "points": 250,
+      "primary_stats": {
+        "model": "Defiler",
+        "M": "12\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "18",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Defiler",
+          "M": "12\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "18",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Hades battle cannon",
+          "range": "48\"",
+          "A": "D6+3",
+          "BS": "3+",
+          "S": "10",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Excruciator cannon (x2)",
+          "range": "36\"",
+          "A": "6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        },
+        {
+          "name": "Heavy baleflamer",
+          "range": "12\"",
+          "A": "D6+3",
+          "BS": "N/A",
+          "S": "7",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Ignores Cover, Torrent"
+        },
+        {
+          "name": "Heavy missile launcher - frag",
+          "range": "48\"",
+          "A": "2D6",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Heavy missile launcher - krak",
+          "range": "48\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "10",
+          "AP": "-2",
+          "D": "D6+1",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Shearing claws - strike",
+          "A": "5",
+          "WS": "3+",
+          "S": "16",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Precision"
+        },
+        {
+          "name": "Shearing claws - sweep",
+          "A": "10",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Scuttling Walker",
+          "description": "Each time this unit makes a Normal, Advance or Fall Back move, it can move through models (excluding Titanic models) and terrain features. When doing so, it can move within Engagement Range of enemy models, but cannot end that move within Engagement Range of them, and any Desperate Escape test is automatically passed."
+        },
+        {
+          "name": "Revel in Desecration",
+          "description": "Each time this model makes an attack that targets an enemy unit that is not below Half-strength, add 1 to the Hit roll."
+        },
+        {
+          "name": "Damaged: 1-6 wounds remaining",
+          "description": "While this model has 1-6 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (5+)",
+          "description": "This model has a 5+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Heldrake",
+      "points": 195,
+      "primary_stats": {
+        "model": "Heldrake",
+        "M": "20\"+",
+        "T": "10",
+        "SV": "3+",
+        "W": "14",
+        "LD": "7+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Heldrake",
+          "M": "20\"+",
+          "T": "10",
+          "SV": "3+",
+          "W": "14",
+          "LD": "7+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": "This model has a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Hades autocannon",
+          "range": "36\"",
+          "A": "6",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Heldrake claws",
+          "A": "5",
+          "WS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Anti-FLY 2+, Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Airborne Predator",
+          "description": "Each time this model ends a Normal move, you can select one enemy unit that it moved over during that move and roll two D6, adding 1 to each result if that enemy unit can FLY: for each 4+, that enemy unit suffers D3 mortal wounds."
+        },
+        {
+          "name": "Damaged: 1-4 wounds remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Maulerfiend",
+      "points": 130,
+      "primary_stats": {
+        "model": "Maulerfiend",
+        "M": "10\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Maulerfiend",
+          "M": "10\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": "This model has a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Maulerfiend fists",
+          "A": "6",
+          "WS": "3+",
+          "S": "14",
+          "AP": "-2",
+          "D": "D6+1",
+          "keywords": ""
+        },
+        {
+          "name": "Lasher tendrils",
+          "A": "6",
+          "WS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Extra Attacks"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Glutton for Punishment",
+          "description": "Each time this model makes an attack, if it is below its Starting Strength, add 1 to the Hit roll. If this model is also Below Half-Strength, add 1 to the Wound roll as well."
+        },
+        {
+          "name": "Damaged: 1-4 wounds remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Rhino",
+      "points": 80,
+      "primary_stats": {
+        "model": "Chaos Rhino",
+        "M": "12\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Rhino",
+          "M": "12\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Combi-bolter",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured tracks",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Assault Vehicle",
+          "description": "Units can disembark from this Vehicle after it has Advanced. Units that do so count as having made a Normal move that phase, and cannot declare a charge in the same turn, but can otherwise act normally."
+        }
+      ]
+    }
+  ]
+}

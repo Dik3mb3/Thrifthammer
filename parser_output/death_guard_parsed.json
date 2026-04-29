@@ -1,0 +1,2309 @@
+{
+  "faction": "Death Guard",
+  "source_file": "POINTS_DEATH GUARD  (2).html",
+  "extracted_date": "2026-04-26",
+  "total_cards": 36,
+  "units": [
+    {
+      "card_name": "Mortarion",
+      "points": 380,
+      "primary_stats": {
+        "model": "Mortarion",
+        "M": "10\"",
+        "T": "12",
+        "SV": "2+",
+        "W": "16",
+        "LD": "5+",
+        "OC": "6"
+      },
+      "all_model_stats": [
+        {
+          "model": "Mortarion",
+          "M": "10\"",
+          "T": "12",
+          "SV": "2+",
+          "W": "16",
+          "LD": "5+",
+          "OC": "6"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Lantern",
+          "range": "24\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "10",
+          "AP": "-3",
+          "D": "3",
+          "keywords": "Pistol, Sustained Hits D3"
+        },
+        {
+          "name": "Rotwind",
+          "range": "24\"",
+          "A": "D6+3",
+          "BS": "2+",
+          "S": "7",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Blast, Devastating Wounds, Lethal Hits, Psychic"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Silence - strike",
+          "A": "5",
+          "WS": "2+",
+          "S": "14",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Devastating Wounds, Lethal Hits"
+        },
+        {
+          "name": "Silence - sweep",
+          "A": "15",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Lethal Hits, Sustained Hits 1"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Host of Plagues",
+          "description": "At the end of your Movement phase, roll one D6 for each enemy unit within 6\" of this model, adding 1 to the result if that unit is Afflicted; on a 3+, that enemy unit suffers D3 mortal wounds."
+        },
+        {
+          "name": "Lord of the Death Guard",
+          "description": "Once per turn, this model can use one of the Lord of the Death Guard abilties."
+        },
+        {
+          "name": "Damaged: 1-6 wounds remaining",
+          "description": "While this model has 1-6 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Rotigus",
+      "points": 265,
+      "primary_stats": {
+        "model": "Rotigus",
+        "M": "7\"",
+        "T": "12",
+        "SV": "5+",
+        "W": "22",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Rotigus",
+          "M": "7\"",
+          "T": "12",
+          "SV": "5+",
+          "W": "22",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Streams of brackish filth",
+          "range": "12\"",
+          "A": "2D6",
+          "BS": "N/A",
+          "S": "8",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Devastating Wounds, Ignores Cover, Torrent"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Gnarlrod - strike",
+          "A": "7",
+          "WS": "2+",
+          "S": "10",
+          "AP": "-3",
+          "D": "3",
+          "keywords": "Lethal Hits, Psychic"
+        },
+        {
+          "name": "Gnarlrod - sweep",
+          "A": "14",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Lethal Hits, Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Virulent Blessing (Psychic)",
+          "description": "At the start of the Fight phase, you can select one enemy unit within 24\" of and visible to this model. Until the end of the phase, each time an attack made by a Plague Legions model is allocated to a model in that unit, add 1 to the Damage characteristic of that attack."
+        },
+        {
+          "name": "Deluge of Nurgle (Aura)",
+          "description": "While an enemy unit is within 6\" of this model, subtract 2 from the Move characteristic and subtract 1 from the Objective Control characteristic of models in that unit."
+        },
+        {
+          "name": "Damaged: 1-7 wounds remaining",
+          "description": "While this model has 1-7 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Typhus",
+      "points": 100,
+      "primary_stats": {
+        "model": "Typhus",
+        "M": "5\"",
+        "T": "7",
+        "SV": "2+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Typhus",
+          "M": "5\"",
+          "T": "7",
+          "SV": "2+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Lakrimae - strike",
+          "A": "6",
+          "WS": "2+",
+          "S": "9",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Lakrimae - sweep",
+          "A": "12",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Blightlord Terminators\n■ Deathshroud Terminators\n■ Poxwalkers"
+        },
+        {
+          "name": "The Destroyer Hive",
+          "description": "While this model is leading a unit, each time a melee attack targets that unit, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Eater Plague (Psychic)",
+          "description": "In your Shooting phase, you can select one enemy unit within 18\" of and visible to this Psyker (excluding units with the Lone Operative ability that are not part of an Attached unit and are not within 12\" of this Psyker and roll one D6: on a 1, this Psyker's unit suffers D3 mortal wounds; on a 2-5, that enemy unit suffers D6 mortal wounds; on a 6, that enemy unit suffers D3+3 mortal wounds."
+        }
+      ]
+    },
+    {
+      "card_name": "Biologus Putrifier",
+      "points": 60,
+      "primary_stats": {
+        "model": "Biologus Putrifier",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Biologus Putrifier",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Hyper blight grenades",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Assault, Blast, Lethal Hits"
+        },
+        {
+          "name": "Injector pistol",
+          "range": "3\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Anti-INFANTRY 2+, Pistol, Precision"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Plague knives",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Extraction of Fresh Disease",
+          "description": "The first time this model's unit destroys an enemy unit as a result of a melee attack, until the end of the battle, add 6 to the Objective Control characteristic of this model."
+        },
+        {
+          "name": "Foul Infusion",
+          "description": "While this model is leading a unit, weapons equipped by models in that unit have the [Lethal Hits] ability. In addition, each time a model in that unit makes an attack, a Critical Hit is scored on an unmodified Hit roll of 5+, instead of only on a 6."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit: Plague Marines\nYou can attach this model to a Plague Marines unit, even if one other Leader unit has already been attached to it (you cannot attach more than one of the same Leader to the same unit). If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        }
+      ]
+    },
+    {
+      "card_name": "Daemon Prince of Nurgle",
+      "points": 195,
+      "primary_stats": {
+        "model": "Daemon Prince of Nurgle",
+        "M": "8\"",
+        "T": "12",
+        "SV": "2+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Daemon Prince of Nurgle",
+          "M": "8\"",
+          "T": "12",
+          "SV": "2+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Infernal cannon",
+          "range": "24\"",
+          "A": "3",
+          "BS": "2+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Hellforged weapons - strike",
+          "A": "7",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Hellforged weapons - sweep",
+          "A": "14",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Death Guard Defenders",
+          "description": "While this model is within 3\" of one or more friendly Death Guard Infantry units, this model has the Lone Operative ability."
+        },
+        {
+          "name": "Fevered Strategist",
+          "description": "Once per Battle Round, one model from your army with this ability can use it when a friendly Death Guard unit within 12\" of that model is targeted with a Stratagem. If it does, reduce the CP cost of that Stratagem by 1CP."
+        },
+        {
+          "name": "Miasma of Pestilence (Aura)",
+          "description": "While a friendly Death Guard unit is within 6\" of this model, each time a ranged attack targets that unit, models in that unit have the Benefit of Cover against that attack."
+        }
+      ]
+    },
+    {
+      "card_name": "Daemon Prince of Nurgle with wings",
+      "points": 180,
+      "primary_stats": {
+        "model": "Death Guard Daemon Prince with wings",
+        "M": "12\"",
+        "T": "11",
+        "SV": "2+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Death Guard Daemon Prince with wings",
+          "M": "12\"",
+          "T": "11",
+          "SV": "2+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Infernal cannon",
+          "range": "24\"",
+          "A": "3",
+          "BS": "2+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Hellforged weapons - strike",
+          "A": "7",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Hellforged weapons - sweep",
+          "A": "14",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Horrifying Visage",
+          "description": "Each time this model ends a Charge move, select one enemy unit within Engagement Range of it. That unit must take a Battle-shock test, subtracting 1 from that test."
+        },
+        {
+          "name": "Enfeebling Miasma (Aura)",
+          "description": "While an enemy unit (excluding Monsters* and Vehicles) is within 6\" of this model, each time that unit is selected to Fall Back, models in that enemy unit must take Desperate Escape tests. When doing so, if that enemy unit is Battle-shocked, subtract 1 from each of those Desperate Escape tests."
+        }
+      ]
+    },
+    {
+      "card_name": "Foul Blightspawn",
+      "points": 75,
+      "primary_stats": {
+        "model": "Foul Blightspawn",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Foul Blightspawn",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Plague sprayer",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "7",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Anti-INFANTRY 2+, Ignores Cover, Torrent"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Putrefying Stink",
+          "description": "Enemy models cannot start or end an Advance move within 9\" of this model."
+        },
+        {
+          "name": "Blinding Spray",
+          "description": "In the Fight phase, you can select one model from your army with this ability to use this ability. If you do, until the end of that phase, that model's unit has the Fights First ability. Each model can only be selected for this ability once per battle."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit: Plague Marines\nYou can attach this model to a Plague Marines unit, even if one other Leader unit has already been attached to it (you cannot attach more than one of the same Leader to the same unit). If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        }
+      ]
+    },
+    {
+      "card_name": "Great Unclean One",
+      "points": 250,
+      "primary_stats": {
+        "model": "Great Unclean One",
+        "M": "7\"",
+        "T": "12",
+        "SV": "5+",
+        "W": "20",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Great Unclean One",
+          "M": "7\"",
+          "T": "12",
+          "SV": "5+",
+          "W": "20",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Plague flail",
+          "range": "6\"",
+          "A": "D6+1",
+          "BS": "3+",
+          "S": "7",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        },
+        {
+          "name": "Putrid vomit",
+          "range": "12\"",
+          "A": "D6+3",
+          "BS": "N/A",
+          "S": "5",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Bilesword - strike",
+          "A": "6",
+          "WS": "2+",
+          "S": "10",
+          "AP": "-2",
+          "D": "D6+1",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Bilesword - sweep",
+          "A": "12",
+          "WS": "2+",
+          "S": "7",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Daemon Lord of Nurgle (Aura)",
+          "description": "While a friendly Plague Legions unit is within 6\" of this model, add 1 to the Toughness characteristic of models in that unit."
+        },
+        {
+          "name": "Nurgle’s Rot (Psychic)",
+          "description": "At the end of your Movement phase, you can select one enemy unit within 12\" of this model. Until the start of your next Movement phase, that unit is rotted. While a unit is rotted, subtract 1 from the Toughness characteristic of models in that unit."
+        },
+        {
+          "name": "Damaged: 1-7 wounds remaining",
+          "description": "While this model has 1-7 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Icon Bearer",
+      "points": 45,
+      "primary_stats": {
+        "model": "Icon Bearer",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "4",
+        "LD": "5+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Icon Bearer",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "4",
+          "LD": "5+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Boltgun",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Plague knife",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Unclean Icon",
+          "description": "While this model is leading a unit, add 1 to the Objective Control characteristic of models in that unit."
+        },
+        {
+          "name": "Blessed Icon of Disease",
+          "description": "Once per battle, at the start of any phase, you can select one friendly Death Guard unit that is Battle-shocked and within 12\" of this model. That unit is no longer Battle-shocked."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit: Plague Marines\nYou can attach this model to a Plague Marines unit, even if one other Leader unit has already been attached to it (you cannot attach more than one of the same Leader to the same unit). If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        }
+      ]
+    },
+    {
+      "card_name": "Lord of Contagion",
+      "points": 120,
+      "primary_stats": {
+        "model": "Lord of Contagion",
+        "M": "5\"",
+        "T": "7",
+        "SV": "2+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Lord of Contagion",
+          "M": "5\"",
+          "T": "7",
+          "SV": "2+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Manreaper - strike",
+          "A": "5",
+          "WS": "2+",
+          "S": "9",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Manreaper - sweep",
+          "A": "10",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Vector of Disease",
+          "description": "While this model is leading a unit, melee weapons equipped by models in that unit have the [Sustained Hits 1] and [Lance] abilties."
+        },
+        {
+          "name": "Unholy Resilience",
+          "description": "The first time a model with this ability is destroyed in a battle round, roll one D6 at the end of the phase. On a 2+, set that model back up on the battlefield, as close as possible to where it was destroyed and not within Engagement Range of any enemy units, with 3 wounds remaining. Each model can only be set up in this way once per battle."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nBlightlord Terminators\nDeathshroud Terminators"
+        }
+      ]
+    },
+    {
+      "card_name": "Lord of Poxes",
+      "points": 75,
+      "primary_stats": {
+        "model": "Lord of Poxes",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Lord of Poxes",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Plasma pistol - standard",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "7",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Plasma pistol - supercharge",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Hazardous, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Great plague blade",
+          "A": "6",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Devastating Wounds, Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nPlague Marines"
+        },
+        {
+          "name": "Gift of Poxes",
+          "description": "Add 3\" to the range of this model's Contagion Range."
+        },
+        {
+          "name": "Shroud of Disease",
+          "description": "While this model is leading a unit, that unit cannot be targeted by ranged attacks unless the attacking unit is within 18\"."
+        }
+      ]
+    },
+    {
+      "card_name": "Lord of Virulence",
+      "points": 100,
+      "primary_stats": {
+        "model": "Lord of Virulence",
+        "M": "5\"",
+        "T": "7",
+        "SV": "2+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Lord of Virulence",
+          "M": "5\"",
+          "T": "7",
+          "SV": "2+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Twin plague spewer",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Anti-INFANTRY 2+, Ignores Cover, Torrent, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Power fist",
+          "A": "5",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Virulent Aura",
+          "description": "While this model is leading a unit, each time a model in that unit makes a ranged attack, you can re-roll the Wound roll."
+        },
+        {
+          "name": "Blight Bombardment",
+          "description": "At the start of your Shooting phase, select one enemy unit within 30\" of and visible to this model. Until the end of the phase, each time a friendly Death Guard unit makes a ranged attack that targets that unit, re-roll a Hit roll of 1 (if that attack is made with a Blast weapon, you can re-roll the Hit roll instead)."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nBlightlord Terminators\nDeathshroud Terminators"
+        }
+      ]
+    },
+    {
+      "card_name": "Malignant Plaguecaster",
+      "points": 60,
+      "primary_stats": {
+        "model": "Malignant Plaguecaster",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Malignant Plaguecaster",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Lethal Hits, Pistol"
+        },
+        {
+          "name": "Plague Wind - witchfire",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "4",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Psychic, Torrent"
+        },
+        {
+          "name": "Plague Wind - focused witchfire",
+          "range": "12\"",
+          "A": "D6+3",
+          "BS": "N/A",
+          "S": "6",
+          "AP": "-2",
+          "D": "D3",
+          "keywords": "Hazardous, Psychic, Torrent"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Corrupted staff",
+          "A": "4",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Lethal Hits, Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Gift of Contagion (Psychic)",
+          "description": "While this model is leading a unit, each time a model in that unit makes an attack which targets a unit which is Afflicted, that attack has the [Sustained Hits 1] ability."
+        },
+        {
+          "name": "Pestilent Fallout (Psychic)",
+          "description": "In your Shooting phase, after this model has shot, select one enemy Infantry unit hit by one or more of those attacks made with its Plague Wind. Until the end of your opponent's next turn, that unit is enfeebled. While a unit is enfeebled, subtract 2\" from the Move characteristic of models in that unit."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\nPlague Marines, Poxwalkers"
+        }
+      ]
+    },
+    {
+      "card_name": "Noxious Blightbringer",
+      "points": 50,
+      "primary_stats": {
+        "model": "Noxious Blightbringer",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Noxious Blightbringer",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Plasma pistol - standard",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "7",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Plasma pistol - supercharge",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Hazardous, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Cursed plague bell",
+          "A": "5",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "2",
+          "keywords": "Anti-PSYKER 2+, Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Sickening Vitality",
+          "description": "While this model is leading a unit, add 1\" to the Move characteristic of models in that unit and you can re-roll Advance and Charge rolls made for that unit."
+        },
+        {
+          "name": "Tocsin of Misery (Aura)",
+          "description": "In the Battle-shock step of your opponent's Command phase, if an enemy unit that is below its Starting Strength is within 9\" of this model, that enemy unit must take a Battle-shock test, subtracting 1 from that test if it is a Psyker unit."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units: Plague Marines, Poxwalkers\nYou can attach this model to a Plague Marines or Poxwalkers unit, even if one other Leader unit has already been attached to it (you cannot attach more than one of the same Leader to the same unit). If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        }
+      ]
+    },
+    {
+      "card_name": "Plague Surgeon",
+      "points": 50,
+      "primary_stats": {
+        "model": "Plague Surgeon",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Plague Surgeon",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Lethal Hits, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Balesword",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Tainted Narthecium",
+          "description": "While this model is leading a unit, in your Command phase, you can return 1 destroyed Bodyguard model to that unit."
+        },
+        {
+          "name": "Inflamed Infections",
+          "description": "At the start of the Fight phase, select one enemy unit within Engagement Range of this model. Until the end of the phase, each time this model makes an attack that targets that unit, an unmodified Hit roll of 5+ scores a Critical Hit. If that unit is below Half-strength, an unmodified Hit roll of 4+ scores a Critical Hit instead."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit: Plague Marines\nYou can attach this model to a Plague Marines unit, even if one other Leader unit has already been attached to it (you cannot attach more than one of the same Leader to the same unit). If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        }
+      ]
+    },
+    {
+      "card_name": "Tallyman",
+      "points": 50,
+      "primary_stats": {
+        "model": "Tallyman",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Tallyman",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Plasma pistol - standard",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "7",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Plasma pistol - supercharge",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Hazardous, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Malicious Calculations",
+          "description": "While this model is leading a unit, each time a model in that unit makes an attack, you can ignore any or all modifiers to that attack's Ballistic Skill or Weapon Skill characteristics and/or any or all modifiers to the Hit roll."
+        },
+        {
+          "name": "Seven-fold Chant",
+          "description": "In your Command phase, if this model is on the battlefield, roll 2D6: on a 7+, you gain 1CP."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit: Plague Marines\nYou can attach this model to a Plague Marines unit, even if one other Leader unit has already been attached to it (you cannot attach more than one of the same Leader to the same unit). If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        }
+      ]
+    },
+    {
+      "card_name": "Plague Marines",
+      "points": 95,
+      "primary_stats": {
+        "model": "Plague Marine",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Plague Marine",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Boltgun (x5)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Plague knives (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Infused with the Blessings of Nurgle",
+          "description": "In your Shooting phase, each time this unit is selected to shoot, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the start of your next turn, that unit is Afflicted."
+        }
+      ]
+    },
+    {
+      "card_name": "Plaguebearers",
+      "points": 110,
+      "primary_stats": {
+        "model": "Plaguebearers",
+        "M": "5\"",
+        "T": "5",
+        "SV": "7+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Plaguebearers",
+          "M": "5\"",
+          "T": "5",
+          "SV": "7+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Plaguesword (x10)",
+          "A": "2",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Infected Outbreak",
+          "description": "If you control an objective marker at the end of your Command phase and this unit is within range of that objective marker, that objective marker remains under your control, even if you have no models within range of it, until your opponent controls it at the start or end of any turn."
+        }
+      ]
+    },
+    {
+      "card_name": "Blightlord Terminators",
+      "points": 115,
+      "primary_stats": {
+        "model": "Blightlord Terminators",
+        "M": "5\"",
+        "T": "7",
+        "SV": "2+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Blightlord Terminators",
+          "M": "5\"",
+          "T": "7",
+          "SV": "2+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Combi-bolter (x3)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Lethal Hits, Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Bubotic blade (x3)",
+          "A": "3",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Blistering Fusillade",
+          "description": "If this unit has a Starting Strength of 5 or more, or if a Character is leading this unit, then each time a model in this unit makes a ranged attack that targets an Afflicted unit, improve the Strength and Armour Penetration characteristics of that attack by 1."
+        }
+      ]
+    },
+    {
+      "card_name": "Deathshroud Terminators",
+      "points": 160,
+      "primary_stats": {
+        "model": "Deathshroud Terminators",
+        "M": "5\"",
+        "T": "7",
+        "SV": "2+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Deathshroud Terminators",
+          "M": "5\"",
+          "T": "7",
+          "SV": "2+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Plaguespurt gauntlet (x3)",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Anti-INFANTRY 4+, Ignores Cover, Pistol, Torrent"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Manreaper - strike (x3)",
+          "A": "4",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Manreaper - sweep (x3)",
+          "A": "8",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Silent Bodyguard",
+          "description": "While a Character model is leading this unit, that Character model has the Feel No Pain 4+ ability."
+        },
+        {
+          "name": "Death Approaches",
+          "description": "In your Movement phase, when this unit is set up on the battlefield using the Deep Strike ability, it can be set up anywhere on the battlefield that is more than 6\" horizontally away from all Afflicted enemy units, and more than 9\" horizontally away from any other enemy units."
+        }
+      ]
+    },
+    {
+      "card_name": "Poxwalkers",
+      "points": 65,
+      "primary_stats": {
+        "model": "Poxwalkers",
+        "M": "5\"",
+        "T": "4",
+        "SV": "7+",
+        "W": "1",
+        "LD": "8+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Poxwalkers",
+          "M": "5\"",
+          "T": "4",
+          "SV": "7+",
+          "W": "1",
+          "LD": "8+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Improvised weapons (x10)",
+          "A": "2",
+          "WS": "5+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Curse of the Walking Pox",
+          "description": "Each time a Poxwalker model in this unit makes an attack that destroys an enemy model (excluding Monster and Vehicle models), after this unit has resolved its attacks, you can return one destroyed Poxwalker model to this unit.\nWhile Typhus is leading this unit, enemy models destroyed as a result of Typhus’ Eater Plague ability count as enemy models destroyed by an attack made by a Poxwalker model in this unit for the purposes of this ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Nurglings",
+      "points": 40,
+      "primary_stats": {
+        "model": "Nurglings",
+        "M": "5\"",
+        "T": "3",
+        "SV": "7+",
+        "W": "4",
+        "LD": "8+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Nurglings",
+          "M": "5\"",
+          "T": "3",
+          "SV": "7+",
+          "W": "4",
+          "LD": "8+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Diseased claws and teeth (x3)",
+          "A": "4",
+          "WS": "5+",
+          "S": "2",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Mischief Makers (Aura)",
+          "description": "Each time an enemy unit (excluding Titanic units) within Engagement Range of one or more units with this ability is selected to fight, until the end of the phase, each time a model in that enemy unit makes a melee attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Plague Drones",
+      "points": 115,
+      "primary_stats": {
+        "model": "Plague Drones",
+        "M": "10\"",
+        "T": "8",
+        "SV": "6+",
+        "W": "5",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Plague Drones",
+          "M": "10\"",
+          "T": "8",
+          "SV": "6+",
+          "W": "5",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Death's heads (x3)",
+          "range": "12\"",
+          "A": "D3",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast, Lethal Hits"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Foul mouthparts (x3)",
+          "A": "2",
+          "WS": "4+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Extra Attacks, Lethal Hits"
+        },
+        {
+          "name": "Plaguesword (x3)",
+          "A": "2",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Death’s Heads",
+          "description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks. Until the end of the turn, each time a friendly NURGLE LEGIONES DAEMONICA unit makes an attack that targets that unit, you can re-roll the Wound roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Beasts of Nurgle",
+      "points": 65,
+      "primary_stats": {
+        "model": "Beasts of Nurgle",
+        "M": "6\"",
+        "T": "9",
+        "SV": "6+",
+        "W": "7",
+        "LD": "7+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Beasts of Nurgle",
+          "M": "6\"",
+          "T": "9",
+          "SV": "6+",
+          "W": "7",
+          "LD": "7+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Putrid appendages",
+          "A": "6",
+          "WS": "4+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Grotesque Regeneration",
+          "description": "At the end of each phase, if a Beasts of Nurgle model in this unit has lost any wounds but is not destroyed, that model regains all of its lost wounds."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Spawn",
+      "points": 80,
+      "primary_stats": {
+        "model": "Chaos Spawn",
+        "M": "8\"",
+        "T": "7",
+        "SV": "4+",
+        "W": "4",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Spawn",
+          "M": "8\"",
+          "T": "7",
+          "SV": "4+",
+          "W": "4",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Hideous Mutations (x2)",
+          "A": "D6+2",
+          "WS": "4+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Lethal Ichor",
+          "description": "Each time a melee attack is allocated to a model in this unit, after the attacking unit has finished making its attacks, roll one D6 (to a maximum of six D6 per attacking unit): for each 4+, the attacking unit suffers 1 mortal wound."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Land Raider",
+      "points": 220,
+      "primary_stats": {
+        "model": "Chaos Land Raider",
+        "M": "10\"",
+        "T": "12",
+        "SV": "2+",
+        "W": "16",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Land Raider",
+          "M": "10\"",
+          "T": "12",
+          "SV": "2+",
+          "W": "16",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Soulshatter lascannon (x2)",
+          "range": "48\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": ""
+        },
+        {
+          "name": "Twin heavy bolter",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Lethal Hits, Sustained Hits 1, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured tracks",
+          "A": "6",
+          "WS": "4+",
+          "S": "8",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Assault Ramp",
+          "description": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn."
+        },
+        {
+          "name": "Damaged: 1-5 wounds remaining",
+          "description": "While this model has 1-5 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Predator Annihilator",
+      "points": 135,
+      "primary_stats": {
+        "model": "Chaos Predator Annihilator",
+        "M": "10\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "11",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Predator Annihilator",
+          "M": "10\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "11",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Predator twin lascannon",
+          "range": "48\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "14",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured tracks",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Metalophagic Infection",
+          "description": "In your Shooting phase, after this model has shot, select one enemy Monster or Vehicle unit hit by one or more of those attacks. Roll one D6, adding 1 to the result if that unit is Afflicted; on a 5+, that unit suffers D3 mortal wounds."
+        },
+        {
+          "name": "Damaged: 1-4 wounds remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Predator Destructor",
+      "points": 145,
+      "primary_stats": {
+        "model": "Chaos Predator Destructor",
+        "M": "10\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "11",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Predator Destructor",
+          "M": "10\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "11",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Predator autocannon",
+          "range": "48\"",
+          "A": "4",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Lethal Hits, Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured tracks",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Hail of Corrosive Disease",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit (excluding Monsters and Vehicles) hit by one or more of those attacks. Until the end of the phase, each time a friending Death Guard unit makes a ranged attack that targets that enemy unit, improve the Armour Penetration characteristic of that attack by 1. The same enemy unit can only be affected by this ability once per phase."
+        },
+        {
+          "name": "Damaged: 1-4 wounds remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Defiler",
+      "points": 250,
+      "primary_stats": {
+        "model": "Defiler",
+        "M": "12\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "18",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Defiler",
+          "M": "12\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "18",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Shearing claws - strike",
+          "A": "5",
+          "WS": "3+",
+          "S": "16",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Shearing claws - sweep",
+          "A": "10",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Scuttling Walker",
+          "description": "Each time this unit makes a Normal, Advance or Fall Back move, it can move through models (excluding Titanic models) and terrain features. When doing so, it can move within Engagement Range of enemy models, but cannot end that move within Engagement Range of them, and any Desperate Escape test is automatically passed."
+        },
+        {
+          "name": "Barrage of Filth",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the end of the phase, that unit cannot have the Benefit of Cover."
+        },
+        {
+          "name": "Damaged: 1-6 wounds remaining",
+          "description": "While this model has 1-6 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (5+)",
+          "description": "This model has a 5+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Foetid Bloat-drone",
+      "points": 100,
+      "primary_stats": {
+        "model": "Foetid Bloat-drone",
+        "M": "10\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Foetid Bloat-drone",
+          "M": "10\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": "This model has a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Plague probe",
+          "A": "3",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Fleshmower",
+          "A": "10",
+          "WS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Hovering Death",
+          "description": "This model is eligible to shoot and declare a charge in a turn in which it Fell Back."
+        }
+      ]
+    },
+    {
+      "card_name": "Foetid Bloat-drone with heavy blight launcher",
+      "points": 120,
+      "primary_stats": {
+        "model": "Foetid Bloat-drone with heavy blight launcher",
+        "M": "10\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Foetid Bloat-drone with heavy blight launcher",
+          "M": "10\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": "This model has a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Heavy blight launcher",
+          "range": "36\"",
+          "A": "D6+2",
+          "BS": "3+",
+          "S": "10",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Blast, Lethal Hits"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Plague probe",
+          "A": "3",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Explosive Blight",
+          "description": "In your Shooting phase, each time this model makes an attack that destroys an enemy unit, before removing the last model in that unit from play, roll a D6, adding 1 to the result if that unit is Afflicted; on a 5+, each enemy unit within 6\" of that model is Afflicted until the start of your next turn."
+        }
+      ]
+    },
+    {
+      "card_name": "Helbrute",
+      "points": 115,
+      "primary_stats": {
+        "model": "Helbrute",
+        "M": "7\"",
+        "T": "9",
+        "SV": "2+",
+        "W": "8",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Helbrute",
+          "M": "7\"",
+          "T": "9",
+          "SV": "2+",
+          "W": "8",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Combi-bolter",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Lethal Hits, Rapid Fire 2"
+        },
+        {
+          "name": "Multi-melta",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Lethal Hits, Melta 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "5",
+          "WS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Helbrute fist",
+          "A": "5",
+          "WS": "3+",
+          "S": "12",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Diseased Malice",
+          "description": "Each time this model makes an attack that targets an Afflicted unit, add 1 to the Wound roll."
+        },
+        {
+          "name": "Froth-spattered Frenzy",
+          "description": "If this model is equipped with two melee weapons in addition to its close combat weapon, add 2 to the Attacks characteristic of those two weapons."
+        }
+      ]
+    },
+    {
+      "card_name": "Myphitic Blight-hauler",
+      "points": 100,
+      "primary_stats": {
+        "model": "Myphitic Blight-haulers",
+        "M": "10\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Myphitic Blight-haulers",
+          "M": "10\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bile spurt",
+          "range": "12\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Missile launcher - frag",
+          "range": "48\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Missile launcher - krak",
+          "range": "48\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-2",
+          "D": "D6",
+          "keywords": ""
+        },
+        {
+          "name": "Multi-melta",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Lethal Hits, Melta 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Gnashing maw",
+          "A": "4",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Tank Hunters",
+          "description": "In your Shooting phase, each time a model in this unit makes a attack that targets a Monster or Vehicle unit, add 1 to the Hit roll and add 1 to the Wound roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Plagueburst Crawler",
+      "points": 210,
+      "primary_stats": {
+        "model": "Plagueburst Crawler",
+        "M": "10\"",
+        "T": "10",
+        "SV": "2+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Plagueburst Crawler",
+          "M": "10\"",
+          "T": "10",
+          "SV": "2+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": "This model has a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Plagueburst mortar",
+          "range": "48\"",
+          "A": "D6+3",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Blast, Indirect Fire, Lethal Hits"
+        },
+        {
+          "name": "Heavy slugger",
+          "range": "36\"",
+          "A": "4",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Lethal Hits"
+        },
+        {
+          "name": "Entropy cannon (x2)",
+          "range": "36\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "10",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Lethal Hits"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured tracks",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Spore-laced Shock Waves",
+          "description": "In your Shooting phase, each time you select a target for this model's Plagueburst mortar, roll one D6 for the target unit and every other enemy unit within 3\" of the target unit, adding 1 to that roll if the unit being rolled for is Afflicted. On a 6+, the unit being rolled for is struck by spores; after resolving all of this model's attacks against the target unit, each unit struck by spores suffers D3 mortal wounds."
+        },
+        {
+          "name": "Damaged: 1-4 wounds remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Rhino",
+      "points": 85,
+      "primary_stats": {
+        "model": "Chaos Rhino",
+        "M": "12\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Rhino",
+          "M": "12\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Combi-bolter",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Lethal Hits, Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured tracks",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Fire Support",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks. Until the end of the phase, each time a friendly model that disembarked from this Transport this turn makes an attack that targets that unit, you can re-roll the Wound roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Miasmic Malignifier",
+      "points": 105,
+      "primary_stats": {
+        "model": "Miasmic Malignifier",
+        "M": "-",
+        "T": "10",
+        "SV": "3+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Miasmic Malignifier",
+          "M": "-",
+          "T": "10",
+          "SV": "3+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Miasmic gouts",
+          "range": "9\"",
+          "A": "2D6",
+          "BS": "N/A",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        }
+      ],
+      "melee_weapons": [],
+      "abilities": [
+        {
+          "name": "Putrescent Fog (Aura)",
+          "description": "Enemy units that are set up on the battlefield as Reinforcements cannot be set up within 12\" of this model."
+        },
+        {
+          "name": "Diseased Cover",
+          "description": "Each time a ranged attack is allocated to a model, if that model is not fully visible to every model in the attacking unit because of this Fortification, that model has the Benefit of Cover against that attack."
+        },
+        {
+          "name": "Deployment",
+          "description": "Both parts of this Fortification must be deployed within 1\" of each other. Both parts are then treated as a single model for all rules purposes."
+        },
+        {
+          "name": "Fortification",
+          "description": "While an enemy unit is only within Engagement Range of one or more Fortifications from your army:\n\nThat unit can still be selected as the target of ranged attacks, but each time such an attack is made, unless it is made with a Pistol, subtract 1 from the Hit roll.\nModels in that unit do not need to take Desperate Escape tests due to Falling Back while Battle-shocked, except for those that will move over enemy models when doing so."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1893 @@
+{
+  "faction": "Worldeaters",
+  "source_file": "POINTS_WORLDEATERS.html",
+  "extracted_date": "2026-04-29",
+  "total_cards": 30,
+  "units": [
+    {
+      "card_name": "Angron",
+      "points": 340,
+      "primary_stats": {
+        "model": "Angron",
+        "M": "14\"",
+        "T": "11",
+        "SV": "2+",
+        "W": "16",
+        "LD": "5+",
+        "OC": "6"
+      },
+      "all_model_stats": [
+        {
+          "model": "Angron",
+          "M": "14\"",
+          "T": "11",
+          "SV": "2+",
+          "W": "16",
+          "LD": "5+",
+          "OC": "6"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Samni’arius and Spinegrinder - strike",
+          "A": "8",
+          "WS": "2+",
+          "S": "14",
+          "AP": "-3",
+          "D": "D6+2",
+          "keywords": "Devastating Wounds"
+        },
+        {
+          "name": "Samni’arius and Spinegrinder - sweep",
+          "A": "16",
+          "WS": "2+",
+          "S": "7",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Reborn in Blood",
+          "description": "At the start of the battle round, when you make a Blessings of Khorne roll, if this model is destroyed, you can use a triple 6 from that roll to use this ability instead of activating any Blessings of Khorne at the start of that battle round. If you do, this model is no longer destroyed and in the Reinforcements step of your next Movement phase, it is set up anywhere on the battlefield using its Deep Strike ability, with 8 wounds remaining."
+        },
+        {
+          "name": "Wrathful Presence",
+          "description": "At the start of the battle round, select one Wrathful Presence ability. Until the start of the next battle round, this model has that ability."
+        },
+        {
+          "name": "Damaged: 1-6 wounds remaining",
+          "description": "While this model has 1-6 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Khârn the Betrayer",
+      "points": 100,
+      "primary_stats": {
+        "model": "Khârn the Betrayer",
+        "M": "8\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Khârn the Betrayer",
+          "M": "8\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Plasma pistol - standard",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "7",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Plasma pistol - supercharge",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Hazardous, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Gorechild",
+          "A": "8",
+          "WS": "2+",
+          "S": "7",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Legendary Killer",
+          "description": "While this model is leading a unit, each time a model in that unit makes a melee attack, re-roll a Hit roll of 1 and re-roll a Wound roll of 1."
+        },
+        {
+          "name": "The Betrayer",
+          "description": "At the end of your Charge phase, if this model is leading a unit and that unit is not within Engagement Range of one or more enemy units, you must take a Leadership test for this model. If that test is failed, one Bodyguard model of your choice in that unit is destroyed."
+        },
+        {
+          "name": "Berserker Frenzy",
+          "description": "The first time this model is destroyed, at the end of the phase, roll one D6: on a 2+, set this model back up on the battlefield as close as possible to where it was destroyed and not within Engagement Range of any enemy units, with 3 wounds remaining."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit: Khorne Berserkers"
+        }
+      ]
+    },
+    {
+      "card_name": "Lord Invocatus",
+      "points": 110,
+      "primary_stats": {
+        "model": "Lord Invocatus",
+        "M": "10\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "8",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Lord Invocatus",
+          "M": "10\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "8",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Bladed horn",
+          "A": "4",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Extra Attacks, Lance"
+        },
+        {
+          "name": "Coward's Bane",
+          "A": "7",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units: Eightbound, Exalted Eightbound, Khorne Berserkers"
+        },
+        {
+          "name": "Fire Riders",
+          "description": "While this model is leading a unit, models in that unit have the Deep Strike ability and each time a model in that unit makes a Normal, Advance, Fall Back or Charge move, it can move horizontally through models and terrain features. When making a Normal, Advance or Fall Back move, models in that unit can move within Engagement Range of enemy models, but cannot end that move within Engagement Range of them and any Desperate Escape test is automatically passed."
+        },
+        {
+          "name": "Bloody Stampede",
+          "description": "Each time this model's unit ends a Charge move, select one enemy unit within Engagement Range of this model, then roll one D6: on a 2-3, that enemy unit suffers 1 mortal wound; on a 4-5, that enemy unit suffers D3 mortal wounds; on a 6, that enemy unit suffers D3+3 mortal wounds."
+        }
+      ]
+    },
+    {
+      "card_name": "Skarbrand",
+      "points": 305,
+      "primary_stats": {
+        "model": "Skarbrand",
+        "M": "10\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "20",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Skarbrand",
+          "M": "10\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "20",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bellow of endless fury",
+          "range": "12\"",
+          "A": "2D6",
+          "BS": "N/A",
+          "S": "8",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Slaughter and Carnage - strike",
+          "A": "8",
+          "WS": "2+",
+          "S": "16",
+          "AP": "-4",
+          "D": "6",
+          "keywords": ""
+        },
+        {
+          "name": "Slaughter and Carnage - sweep",
+          "A": "16",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Rage Embodied (Aura)",
+          "description": "While a friendly Blood Legions unit is within 6\" of this model, add 1 to the Attacks characteristic of melee weapons equipped by models in that unit."
+        },
+        {
+          "name": "Murderlust",
+          "description": "This unit is eligible to declare a charge in a turn in which it Advanced."
+        },
+        {
+          "name": "Damaged: 1-7 wounds remaining",
+          "description": "While this model has 1-7 wounds remaining, add 2 to the Attacks characteristic of this model’s Slaughter and Carnage."
+        }
+      ]
+    },
+    {
+      "card_name": "Bloodthirster",
+      "points": 305,
+      "primary_stats": {
+        "model": "Bloodthirster",
+        "M": "12\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "18",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Bloodthirster",
+          "M": "12\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "18",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Hellfire breath",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        },
+        {
+          "name": "Bloodflail",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "16",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Axe of Khorne - strike",
+          "A": "8",
+          "WS": "2+",
+          "S": "14",
+          "AP": "-4",
+          "D": "D3+1",
+          "keywords": ""
+        },
+        {
+          "name": "Axe of Khorne - sweep",
+          "A": "16",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Daemon Lord of Khorne (Aura)",
+          "description": "While a friendly Blood Legions unit is within 6\" of this model, each time a model in that unit makes a melee attack, add 1 to the Hit roll."
+        },
+        {
+          "name": "Relentless Carnage",
+          "description": "At the end of the Fight phase, you can select one enemy unit within Engagement Range of this model and roll eight D6: for each 4+, that enemy unit suffers 1 mortal wound."
+        },
+        {
+          "name": "Damaged: 1-6 wounds remaining",
+          "description": "While this model has 1-6 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Daemon Prince of Khorne",
+      "points": 200,
+      "primary_stats": {
+        "model": "Daemon Prince of Khorne",
+        "M": "10\"",
+        "T": "10",
+        "SV": "2+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Daemon Prince of Khorne",
+          "M": "10\"",
+          "T": "10",
+          "SV": "2+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Infernal cannon",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Rapid Fire 1"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Hellforged weapons - strike",
+          "A": "8",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        },
+        {
+          "name": "Hellforged weapons - sweep",
+          "A": "16",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Lord of Murder",
+          "description": "While this model is within 3\" of one or more friendly World Eaters Infantry units, this model has the Lone Operative ability."
+        },
+        {
+          "name": "Devastating Assault",
+          "description": "Each time this model makes a Charge move, until the end of the turn, its hellforged weapons have the [DEVASTATING WOUNDS] ability."
+        },
+        {
+          "name": "Direct the Slaughter",
+          "description": "Once per battle round, one model from your army with this ability can use it when a friendly World Eaters unit within 12\" of this model is targeted with a Stratagem. If it does, reduce the CP cost of that Stratagem by 1CP."
+        }
+      ]
+    },
+    {
+      "card_name": "Daemon Prince of Khorne with wings",
+      "points": 180,
+      "primary_stats": {
+        "model": "Daemon Prince of Khorne with wings",
+        "M": "14\"",
+        "T": "9",
+        "SV": "2+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Daemon Prince of Khorne with wings",
+          "M": "14\"",
+          "T": "9",
+          "SV": "2+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Infernal cannon",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Rapid Fire 1"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Hellforged weapons - strike",
+          "A": "8",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        },
+        {
+          "name": "Hellforged weapons - sweep",
+          "A": "16",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Bloodied Terror",
+          "description": "At the start of the Fight phase, each enemy unit within Engagement Range of this model must take a Battle-shock test, subtracting 1 if that enemy unit is Below Half-strength."
+        },
+        {
+          "name": "Swooping Predator",
+          "description": "Each time this model ends a Normal or Advance move, you can select one enemy unit that it moved over during that move and roll 6 D6: for each 4+, that enemy unit suffers 1 mortal wound."
+        }
+      ]
+    },
+    {
+      "card_name": "Lord on Juggernaut",
+      "points": 105,
+      "primary_stats": {
+        "model": "Lord on Juggernaut",
+        "M": "10\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "7",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Lord on Juggernaut",
+          "M": "10\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "7",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": "This model has a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Plasma pistol - standard",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "7",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Plasma pistol - supercharge",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Hazardous, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Bladed horn",
+          "A": "4",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Extra Attacks, Lance"
+        },
+        {
+          "name": "Exalted chainblade",
+          "A": "7",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Aggressive Advance",
+          "description": "While this model is leading a unit, models in that unit have a Move characteristic of 10\" and each time a model in that unit makes a Normal, Advance, Fall Back or Charge move, it can move horizontally though terrain features."
+        },
+        {
+          "name": "Crush All Who Stand Before Us",
+          "description": "Each time this model's unit is selected to fight, you can use this ability. When determining which models in this unit are eligible to fight, any models in it that are within 3\" of one or more enemy models are eligible to fight. When resolving those attacks, such models can target one of those enemy units that is within 3\" of them and within Engagement Range of their unit."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units: Eightbound, Exalted Eightbound, Khorne Berserkers"
+        }
+      ]
+    },
+    {
+      "card_name": "Master of Executions",
+      "points": 60,
+      "primary_stats": {
+        "model": "Master of Executions",
+        "M": "8\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Master of Executions",
+          "M": "8\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Axe of dismemberment",
+          "A": "5",
+          "WS": "2+",
+          "S": "7",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Devastating Wounds, Precision"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit: Khorne Berserkers"
+        },
+        {
+          "name": "A Worthy Skull",
+          "description": "Each time this model makes a melee attack that targets a Character unit, you can re-roll the Hit roll and you can re-roll the Wound roll. Each time this model's unit destroys a Character model, you gain 1CP."
+        },
+        {
+          "name": "Forwards, For Blood!",
+          "description": "While this model is leading a unit, you can re-roll Advance rolls made for that unit and each time that unit makes a Blood Surge move, you can re-roll the D6 used to determine how far models in that unit move."
+        }
+      ]
+    },
+    {
+      "card_name": "Slaughterbound",
+      "points": 100,
+      "primary_stats": {
+        "model": "Slaughterbound",
+        "M": "10\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Slaughterbound",
+          "M": "10\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "This model has a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Lacerator and daemonic claw",
+          "A": "6",
+          "WS": "2+",
+          "S": "10",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Rage Eternal",
+          "description": "While this model is leading a unit, in your Command phase, you can return one destroyed Bodyguard model to that unit."
+        },
+        {
+          "name": "Possessed Lord",
+          "description": "Once per battle, at the start of the Fight phase, this model can use this ability. If it does, until the end of the phase, add 3 to the Attacks characteristic of melee weapons equipped by this model and those weapons have the [Devastating Wounds] ability."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units: Eightbound, Exalted Eightbound"
+        },
+        {
+          "name": "Lord of the Eightbound",
+          "description": "If this model is attached to a World Eaters Possessed unit during the Declare Battle Formations step, this model has the Deep Strike and Scouts 6\" abilities."
+        }
+      ]
+    },
+    {
+      "card_name": "Bloodletters",
+      "points": 90,
+      "primary_stats": {
+        "model": "Bloodletters",
+        "M": "8\"",
+        "T": "4",
+        "SV": "7+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Bloodletters",
+          "M": "8\"",
+          "T": "4",
+          "SV": "7+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Hellblade (x10)",
+          "A": "2",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Bane of Cowards",
+          "description": "Each time an enemy unit (excluding Monsters and Vehicles) within Engagement Range of one or more units from your army with this ability Falls Back, models in that enemy unit must take Desperate Escape tests. When doing so, if that enemy unit is also Battle-shocked, subtract 1 from each of those Desperate Escape tests."
+        }
+      ]
+    },
+    {
+      "card_name": "Khorne Berzerkers",
+      "points": 180,
+      "primary_stats": {
+        "model": "Khorne Berzerker",
+        "M": "8\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Khorne Berzerker",
+          "M": "8\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x10)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Chainblade (x10)",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Blood Surge",
+          "description": "In your opponent's Shooting phase, each time an enemy unit has shot, if any models from this unit were destroyed as a result of those attacks, this unit can make a Blood Surge move. To do so, roll one D6 and add 2 to the roll: models in this unit move a number of inches up to this result, but this unit must finish that move as close as possible to the closest enemy unit (excluding Aircraft). When doing so, those models can be moved within Engagement Range of that enemy unit. This unit cannot make a Blood Surge move while it is Battle-shocked or within Engagement Range of one or more enemy units, and can only make one Blood Surge move per phase."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Terminators",
+      "points": 175,
+      "primary_stats": {
+        "model": "Chaos Terminators",
+        "M": "7\"",
+        "T": "5",
+        "SV": "2+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Terminators",
+          "M": "7\"",
+          "T": "5",
+          "SV": "2+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "Model in this unit have a 4+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Combi-bolter (x5)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 4"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Accursed weapon (x5)",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Bloody Fury",
+          "description": "Each time a model in this unit makes a ranged attack that targets the closest enemy unit, you can re-roll the Hit roll. Each time this unit declares a charge that targets the closest enemy unit, you can re-roll the Charge roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Eightbound",
+      "points": 135,
+      "primary_stats": {
+        "model": "Eightbound",
+        "M": "10\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Eightbound",
+          "M": "10\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Chainblades (x3)",
+          "A": "5",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Beacons of Rage (Aura)",
+          "description": "While a friendly World Eaters unit is within 6\" of this unit, each time a model in that unit makes a melee attack that targets a unit (excluding Monsters and Vehicles), add 1 to the Hit roll. If that attack targets a unit that is Below Half-strength, add 1 to the Wound roll as well."
+        }
+      ]
+    },
+    {
+      "card_name": "Exalted Eightbound",
+      "points": 140,
+      "primary_stats": {
+        "model": "Exalted Eightbound",
+        "M": "10\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Exalted Eightbound",
+          "M": "10\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Chainblades (x3)",
+          "A": "4",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Anti-MONSTER 3+, Anti-VEHICLE 3+"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Rend and Tear",
+          "description": "Each time a model in this unit makes a melee attack that targets a Monster or Vehicle unit, until the end of the phase, improve the Damage characteristic of that attack by 1."
+        }
+      ]
+    },
+    {
+      "card_name": "Goremongers",
+      "points": 75,
+      "primary_stats": {
+        "model": "Goremongers",
+        "M": "9\"",
+        "T": "4",
+        "SV": "6+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Goremongers",
+          "M": "9\"",
+          "T": "4",
+          "SV": "6+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Autopistol (x8)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Chainblade (x8)",
+          "A": "3",
+          "WS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Lance"
+        },
+        {
+          "name": "Close combat weapon (x8)",
+          "A": "2",
+          "WS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Loping Speed",
+          "description": "Once per turn, when an enemy unit ends a Normal, Advance or Fall Back move within 9\" of this unit, if this unit is not within Engagement Range of one or more enemy units, it can make a Normal move of up to D6\"."
+        }
+      ]
+    },
+    {
+      "card_name": "Jakhals",
+      "points": 65,
+      "primary_stats": {
+        "model": "Jakhal",
+        "M": "7\"",
+        "T": "4",
+        "SV": "6+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Jakhal",
+          "M": "7\"",
+          "T": "4",
+          "SV": "6+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Autopistol (x9)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Chainblades (x9)",
+          "A": "3",
+          "WS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Paired manglers",
+          "A": "4",
+          "WS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Objective Ravaged",
+          "description": "At the end of your Command phase, if this unit is within range of an objective marker you control, that objective marker remains under your control until your opponent's Level of Control over that objective marker is greater than yours at the end of a phase."
+        }
+      ]
+    },
+    {
+      "card_name": "Bloodcrushers",
+      "points": 110,
+      "primary_stats": {
+        "model": "Bloodcrushers",
+        "M": "10\"",
+        "T": "7",
+        "SV": "3+",
+        "W": "4",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Bloodcrushers",
+          "M": "10\"",
+          "T": "7",
+          "SV": "3+",
+          "W": "4",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Bladed horn (x3)",
+          "A": "4",
+          "WS": "4+",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Extra Attacks, Lance"
+        },
+        {
+          "name": "Hellblade (x3)",
+          "A": "2",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Brass Stampede",
+          "description": "Each time this unit ends a Charge move, select one enemy unit within Engagement Range of this unit and roll one D6 for each model in this unit: for each 4+, that enemy unit suffers D3 mortal wounds."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Spawn",
+      "points": 90,
+      "primary_stats": {
+        "model": "Chaos Spawn",
+        "M": "10\"",
+        "T": "5",
+        "SV": "4+",
+        "W": "4",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Spawn",
+          "M": "10\"",
+          "T": "5",
+          "SV": "4+",
+          "W": "4",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Hideous Mutations (x2)",
+          "A": "D6+4",
+          "WS": "4+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "To Slake Its Rage",
+          "description": "This unit is eligible to declare a charge in a turn in which it Advanced."
+        }
+      ]
+    },
+    {
+      "card_name": "Flesh Hounds",
+      "points": 75,
+      "primary_stats": {
+        "model": "Flesh Hounds",
+        "M": "12\"",
+        "T": "4",
+        "SV": "7+",
+        "W": "2",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Flesh Hounds",
+          "M": "12\"",
+          "T": "4",
+          "SV": "7+",
+          "W": "2",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "Models in this unit have a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Burning roar",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Gore-drenched fangs (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Hunters from the Warp",
+          "description": "At the end of your opponent’s turn, if this unit is not within Engagement Range of one or more enemy units, you can remove it from the battlefield and place it into Strategic Reserves."
+        },
+        {
+          "name": "Collar of Khorne",
+          "description": "The bearer has the Feel No Pain 3+ ability against Psychic Attacks."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Land Raider",
+      "points": 220,
+      "primary_stats": {
+        "model": "Chaos Land Raider",
+        "M": "10\"",
+        "T": "12",
+        "SV": "2+",
+        "W": "16",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Land Raider",
+          "M": "10\"",
+          "T": "12",
+          "SV": "2+",
+          "W": "16",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Soulshatter lascannon (x2)",
+          "range": "48\"",
+          "A": "2",
+          "BS": "4+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Rapid Fire 2"
+        },
+        {
+          "name": "Twin heavy bolter",
+          "range": "36\"",
+          "A": "3",
+          "BS": "4+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Rapid Fire 2, Sustained Hits 1, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured tracks",
+          "A": "9",
+          "WS": "3+",
+          "S": "8",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Assault Ramp",
+          "description": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn."
+        },
+        {
+          "name": "Damaged: 1-5 wounds remaining",
+          "description": "While this model has 1-5 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Predator Annihilator",
+      "points": 145,
+      "primary_stats": {
+        "model": "Chaos Predator Annihilator",
+        "M": "10\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "11",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Predator Annihilator",
+          "M": "10\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "11",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Predator twin lascannon",
+          "range": "48\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "14",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Rapid Fire 2, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured tracks",
+          "A": "6",
+          "WS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Blood-hungry Annihilator",
+          "description": "Each time this model makes a ranged attack that targets the closest eligible Monster or Vehicle target within 18\", you can re-roll the Wound roll and you can re-roll the Damage roll."
+        },
+        {
+          "name": "Damaged: 1-4 wounds remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Predator Destructor",
+      "points": 145,
+      "primary_stats": {
+        "model": "Chaos Predator Destructor",
+        "M": "10\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "11",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Predator Destructor",
+          "M": "10\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "11",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Predator autocannon",
+          "range": "48\"",
+          "A": "4",
+          "BS": "4+",
+          "S": "9",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Rapid Fire 6"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured tracks",
+          "A": "6",
+          "WS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Punishing Suppression",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more of those attacks (excluding Monsters and *Vehicles). Until the start of your next turn, that enemy unit is suppressed. While a unit is suppressed, each time a model in that unit makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Damaged: 1-4 wounds remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Defiler",
+      "points": 250,
+      "primary_stats": {
+        "model": "Defiler",
+        "M": "14\"",
+        "T": "11",
+        "SV": "3+",
+        "W": "18",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Defiler",
+          "M": "14\"",
+          "T": "11",
+          "SV": "3+",
+          "W": "18",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Hades battle cannon",
+          "range": "48\"",
+          "A": "D6+3",
+          "BS": "4+",
+          "S": "10",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Blast, Rapid Fire 3"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Shearing claws - strike",
+          "A": "6",
+          "WS": "3+",
+          "S": "16",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": ""
+        },
+        {
+          "name": "Shearing claws - sweep",
+          "A": "12",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Scuttling Walker",
+          "description": "Each time this unit makes a Normal, Advance or Fall Back move, it can move through models (excluding Titanic models) and terrain features. When doing so, it can move within Engagement Range of enemy models, but cannot end that move within Engagement Range of them, and any Desperate Escape test is automatically passed."
+        },
+        {
+          "name": "Unleash Wrath",
+          "description": "At the end of your opponent's Movement phase, you can select one enemy unit that was set up on the battlefield within 12\" of this model; this model can then either:\n\nShoot at that unit, but only if it is an eligible target.\nDeclare a charge against that unit (note that even if this charge is successful, this model does not receive any Charge bonus this turn)."
+        },
+        {
+          "name": "Damaged: 1-6 wounds remaining",
+          "description": "While this model has 1-6 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Invulnerable Save (5+)",
+          "description": "This model has a 5+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Forgefiend",
+      "points": 165,
+      "primary_stats": {
+        "model": "Forgefiend",
+        "M": "10\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Forgefiend",
+          "M": "10\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": "This model has a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Hades autocannon (x2)",
+          "range": "36\"",
+          "A": "6",
+          "BS": "4+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Rapid Fire 4"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Forgefiend jaws",
+          "A": "8",
+          "WS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Furious Onslaught",
+          "description": "Each time this model makes a ranged attack that targets the closest eligible target within 18\", you can re-roll the Hit roll."
+        },
+        {
+          "name": "Damaged: 1-4 wounds remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Helbrute",
+      "points": 120,
+      "primary_stats": {
+        "model": "Helbrute",
+        "M": "9\"",
+        "T": "9",
+        "SV": "2+",
+        "W": "8",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Helbrute",
+          "M": "9\"",
+          "T": "9",
+          "SV": "2+",
+          "W": "8",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Missile launcher - frag",
+          "range": "48\"",
+          "A": "D6",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast, Rapid Fire 3"
+        },
+        {
+          "name": "Missile launcher - krak",
+          "range": "48\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "9",
+          "AP": "-2",
+          "D": "D6",
+          "keywords": "Rapid Fire 1"
+        },
+        {
+          "name": "Multi-melta",
+          "range": "18\"",
+          "A": "2",
+          "BS": "4+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Melta 2, Rapid Fire 1"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "6",
+          "WS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Frenzy",
+          "description": "In your opponent's Shooting phase, and in the Fight phase, each time an enemy unit targets this model, after that unit has finished making its attacks, this model can either shoot or fight, but when resolving those attacks it can only target that enemy unit (and only if it is an eligible target)."
+        },
+        {
+          "name": "Devoted to Destruction",
+          "description": "If this model is equipped with 2 melee weapons in addition to its close combat weapon, add 2 to the Attacks characteristic of those two weapons."
+        }
+      ]
+    },
+    {
+      "card_name": "Heldrake",
+      "points": 200,
+      "primary_stats": {
+        "model": "Heldrake",
+        "M": "20\"+",
+        "T": "9",
+        "SV": "3+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Heldrake",
+          "M": "20\"+",
+          "T": "9",
+          "SV": "3+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": "This model has a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Hades autocannon",
+          "range": "36\"",
+          "A": "6",
+          "BS": "4+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Rapid Fire 4"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Heldrake claws",
+          "A": "6",
+          "WS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Anti-FLY 2+, Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Airborne Predator",
+          "description": "Each time this model makes an attack that targets a unit that can Fly, add 1 to the Hit roll."
+        },
+        {
+          "name": "Damaged: 1-4 wounds remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Khorne Lord of Skulls",
+      "points": 505,
+      "primary_stats": {
+        "model": "Khorne Lord of Skulls",
+        "M": "12\"",
+        "T": "13",
+        "SV": "3+",
+        "W": "24",
+        "LD": "6+",
+        "OC": "8"
+      },
+      "all_model_stats": [
+        {
+          "model": "Khorne Lord of Skulls",
+          "M": "12\"",
+          "T": "13",
+          "SV": "3+",
+          "W": "24",
+          "LD": "6+",
+          "OC": "8"
+        }
+      ],
+      "invuln_save": "This model has a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Hades gatling cannon",
+          "range": "48\"",
+          "A": "12",
+          "BS": "4+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Rapid Fire 6, Sustained Hits 1"
+        },
+        {
+          "name": "Gorestorm cannon",
+          "range": "24\"",
+          "A": "D6+3",
+          "BS": "4+",
+          "S": "10",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Blast, Rapid Fire 3"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Great cleaver of Khorne - strike",
+          "A": "6",
+          "WS": "3+",
+          "S": "16",
+          "AP": "-4",
+          "D": "8",
+          "keywords": ""
+        },
+        {
+          "name": "Great cleaver of Khorne - sweep",
+          "A": "18",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Idol of Blessed Blood",
+          "description": "At the start of the battle round, if this unit is on the battlefield, when you make a Blessings of Khorne roll, roll one additional D6."
+        },
+        {
+          "name": "Damaged: 1-8 wounds remaining",
+          "description": "While this model has 1-8 wounds remaining, subtract 4 from this model’s Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Maulerfiend",
+      "points": 150,
+      "primary_stats": {
+        "model": "Maulerfiend",
+        "M": "12\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Maulerfiend",
+          "M": "12\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": "This model has a 5+ invulnerable save.",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Maulerfiend fists",
+          "A": "8",
+          "WS": "3+",
+          "S": "14",
+          "AP": "-2",
+          "D": "D6+1",
+          "keywords": ""
+        },
+        {
+          "name": "Lasher tendrils",
+          "A": "6",
+          "WS": "3+",
+          "S": "7",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Extra Attacks"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "The Scent of Blood",
+          "description": "Each time this model declares a charge that targets one or more units below Starting Strength, add 1 to the Charge roll. If one or more of the targets of that charge are Below Half-strength, add 2 to the Charge roll instead."
+        },
+        {
+          "name": "Savage Exaltation",
+          "description": "Each time this model makes a melee attack that targets an enemy unit that is below its Starting Strength, add 1 to the Hit roll and, if that attack targets an enemy unit that is Below Half-Strength, add 1 to the Wound roll as well."
+        },
+        {
+          "name": "Damaged: 1-4 wounds remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaos Rhino",
+      "points": 85,
+      "primary_stats": {
+        "model": "Chaos Rhino",
+        "M": "12\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaos Rhino",
+          "M": "12\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Combi-bolter",
+          "range": "24\"",
+          "A": "2",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 4"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured tracks",
+          "A": "6",
+          "WS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Meet Any Challenge",
+          "description": "In your opponent's Movement phase, each time an enemy unit is set up or ends a Normal, Advance or Fall Back move within 9\" of this model, any units embarked within it can disembark."
+        }
+      ]
+    }
+  ]
+}
