@@ -1,0 +1,16 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ThriftHammer",
+      "runtimeExecutable": "venv/Scripts/python.exe",
+      "runtimeArgs": ["manage.py", "runserver", "8000"],
+      "port": 8000,
+      "cwd": "${workspaceRoot}/Thrifthammer",
+      "env": {
+        "DJANGO_DEBUG": "true",
+        "DJANGO_ALLOWED_HOSTS": "*"
+      }
+    }
+  ]
+}
