@@ -1,4 +1,5 @@
 """
+# deploy-trigger: 2026-04-29
 Management command: populate_ec_products
 
 Creates the Emperor's Children faction and all EC-range product entries,
