@@ -64,7 +64,8 @@ def ability(name, desc):
 #   Revenant Titan,
 #   Troupe Master,
 #   Striking Scorpions,
-#   Ynnari units              → no db_name in CSV (skip)
+#   Other Ynnari army units   → no db_name in CSV (skip)
+# Yvraine, The Visarch, The Yncarne → seeded in the Ynnari section below
 
 AELDARI_UNITS = [
 
@@ -1195,6 +1196,69 @@ AELDARI_UNITS = [
                  'Psyker models, improve the Ballistic Skill and Weapon Skill '
                  'characteristics of weapons equipped by this model by 1 and it '
                  'has a Leadership characteristic of 6+.'),
+     ]),
+
+    # -- Ynnari ---------------------------------------------------------------
+
+    ('Yvraine', 100,
+     stat('8"', 3, '6+', 4, '6+', 1, invuln='4+'),
+     [
+         rng('Storm of Whispers', '12"', 'D6+3', '2+', 2, -2, 1,
+             'Anti-Infantry 2+, Devastating Wounds, Psychic'),
+         mel('Kha-vir', 5, '2+', 4, -3, 2,
+             'Devastating Wounds'),
+     ],
+     [
+         ability('Herald of Ynnead',
+                 'At the start of the Fight phase, select one enemy unit within '
+                 'Engagement Range of this model. Until the end of the phase, '
+                 'each time a friendly Aeldari model makes an attack that targets '
+                 'that unit, you can re-roll a Wound roll of 1.'),
+         ability('Word of the Phoenix (Psychic)',
+                 'While this model is leading a unit, in your Command phase, '
+                 'roll one D6: on a 2+, D3+1 destroyed Bodyguard models '
+                 '(excluding Support Weapon models) are returned to that unit '
+                 'with their full wounds remaining.'),
+     ]),
+
+    ('The Visarch', 90,
+     stat('8"', 3, '2+', 5, '6+', 1, invuln='4+'),
+     [
+         mel('Asu-var - quicksilver stance', 8, '2+', 4, -1, 1,
+             'Sustained Hits 2'),
+         mel('Asu-var - duellist stance', 6, '2+', 5, -2, 2,
+             'Devastating Wounds, Precision'),
+         mel('Asu-var - mythic stance', 4, '2+', 3, -4, 3,
+             'Anti-Epic Hero 2+, Precision'),
+     ],
+     [
+         ability('Way of the Blade',
+                 'While this model is leading a unit, models in that unit have '
+                 'the Fights First ability.'),
+         ability("Yvraine's Champion",
+                 'While this model is leading a unit, other Character models '
+                 'attached to that unit have the Feel No Pain 4+ ability.'),
+     ]),
+
+    ('The Yncarne', 260,
+     stat('10"', 10, '2+', 12, '6+', 3, invuln='4+'),
+     [
+         rng('Swirling soul energy', '12"', 'D6+3', 'N/A', 7, -1, 'D3',
+             'Ignores Cover, Psychic, Torrent'),
+         mel('Vilith-zhar - Strike', 5, '2+', 12, -4, 'D6+1'),
+         mel('Vilith-zhar - Sweep', 10, '2+', 6, -4, 1),
+     ],
+     [
+         ability('Inevitable Death',
+                 "Once in each of your opponent's turns, if this model is on the "
+                 'battlefield when another friendly Aeldari unit is destroyed, '
+                 'just after removing the last model in that unit, you can remove '
+                 'this model from the battlefield and set it up as close as '
+                 'possible to where that destroyed model was destroyed and not '
+                 'within Engagement Range of one or more enemy units.'),
+         ability('Ethereal Form',
+                 'Each time this model destroys an enemy unit it regains up to '
+                 'D3 lost wounds.'),
      ]),
 ]
 
