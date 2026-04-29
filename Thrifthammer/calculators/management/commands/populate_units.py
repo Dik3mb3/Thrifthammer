@@ -650,7 +650,9 @@ class Command(BaseCommand):
                 defaults={
                     'name': bt_name,
                     'category': role,
-                    'points_cost': 0,
+                    # points_cost excluded — preserved on update so GitHub Actions
+                    # seeded values (import_faction_stats / seed_*_stats) are not
+                    # wiped on every Procfile deploy. New entries start at 0 via model default.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -679,7 +681,9 @@ class Command(BaseCommand):
                 defaults={
                     'name': bt_name,
                     'category': role,
-                    'points_cost': 0,
+                    # points_cost excluded — preserved on update so GitHub Actions
+                    # seeded values (import_faction_stats / seed_*_stats) are not
+                    # wiped on every Procfile deploy. New entries start at 0 via model default.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -793,7 +797,9 @@ class Command(BaseCommand):
                 defaults={
                     'name': ba_name,
                     'category': role,
-                    'points_cost': 0,
+                    # points_cost excluded — preserved on update so GitHub Actions
+                    # seeded values (import_faction_stats / seed_*_stats) are not
+                    # wiped on every Procfile deploy. New entries start at 0 via model default.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -821,7 +827,9 @@ class Command(BaseCommand):
                 defaults={
                     'name': ba_name,
                     'category': role,
-                    'points_cost': 0,
+                    # points_cost excluded — preserved on update so GitHub Actions
+                    # seeded values (import_faction_stats / seed_*_stats) are not
+                    # wiped on every Procfile deploy. New entries start at 0 via model default.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -932,7 +940,9 @@ class Command(BaseCommand):
                 defaults={
                     'name': da_name,
                     'category': role,
-                    'points_cost': 0,
+                    # points_cost excluded — preserved on update so GitHub Actions
+                    # seeded values (import_faction_stats / seed_*_stats) are not
+                    # wiped on every Procfile deploy. New entries start at 0 via model default.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -960,7 +970,9 @@ class Command(BaseCommand):
                 defaults={
                     'name': da_name,
                     'category': role,
-                    'points_cost': 0,
+                    # points_cost excluded — preserved on update so GitHub Actions
+                    # seeded values (import_faction_stats / seed_*_stats) are not
+                    # wiped on every Procfile deploy. New entries start at 0 via model default.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -1074,7 +1086,9 @@ class Command(BaseCommand):
                 defaults={
                     'name': dw_name,
                     'category': role,
-                    'points_cost': 0,
+                    # points_cost excluded — preserved on update so GitHub Actions
+                    # seeded values (import_faction_stats / seed_*_stats) are not
+                    # wiped on every Procfile deploy. New entries start at 0 via model default.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -1102,7 +1116,9 @@ class Command(BaseCommand):
                 defaults={
                     'name': dw_name,
                     'category': role,
-                    'points_cost': 0,
+                    # points_cost excluded — preserved on update so GitHub Actions
+                    # seeded values (import_faction_stats / seed_*_stats) are not
+                    # wiped on every Procfile deploy. New entries start at 0 via model default.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,

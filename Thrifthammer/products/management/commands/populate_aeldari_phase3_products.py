@@ -623,7 +623,9 @@ class Command(BaseCommand):
                 defaults={
                     'name': name,
                     'category': role,
-                    'points_cost': 0,
+                    # points_cost excluded — preserved on update so GitHub Actions
+                    # seeded values (seed_aeldari_stats) are not wiped on every
+                    # Procfile deploy. New entries start at 0 via model default.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
