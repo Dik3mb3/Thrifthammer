@@ -217,7 +217,8 @@ class Command(BaseCommand):
 
         # ── Load mapping CSV ─────────────────────────────────────────────
         required_cols = {'card_name', 'db_name', 'include'}
-        rows = []
+        rows = []           # include == "Yes" — seed stats + ensure active
+        excluded_rows = []  # include != "Yes" — deactivate in army calculator
 
         # utf-8-sig strips the UTF-8 BOM that Excel sometimes adds
         with mapping_path.open(encoding='utf-8-sig') as fh:
@@ -232,13 +233,16 @@ class Command(BaseCommand):
             for row in reader:
                 if (row.get('include') or '').strip().lower() == 'yes':
                     rows.append(row)
+                else:
+                    excluded_rows.append(row)
 
         self.stdout.write(
-            f'Found {len(rows)} included units in {mapping_path.name}.'
+            f'Found {len(rows)} included, {len(excluded_rows)} excluded '
+            f'in {mapping_path.name}.'
         )
 
         # ── Seed loop ────────────────────────────────────────────────────
-        updated = skipped = 0
+        updated = skipped = deactivated = 0
 
         with transaction.atomic():
             for row in rows:
@@ -295,7 +299,9 @@ class Command(BaseCommand):
                     updated += 1
                     continue
 
-                # Write stats
+                # Write stats; also ensure the unit is visible in the calculator
+                # (re-activates a unit if it was previously hidden by this command)
+                unit.is_active      = True
                 unit.points_cost    = points
                 unit.stat_movement  = _safe_str(ps.get('M'))
                 unit.stat_toughness = _safe_str(ps.get('T'))
@@ -357,13 +363,58 @@ class Command(BaseCommand):
                 self.stdout.write(f'  OK: {unit.name} ({points}pts)')
                 updated += 1
 
+            # ── Deactivate excluded units ─────────────────────────────────
+            # Units in the mapping with include != "Yes" are hidden from the
+            # army calculator by setting is_active=False.  Units NOT in the
+            # mapping at all are left untouched — this only affects rows that
+            # are explicitly listed in the CSV with a non-"Yes" include value.
+            for row in excluded_rows:
+                card_name = (row.get('card_name') or '').strip()
+                db_name   = (row.get('db_name')   or '').strip()
+
+                # Same two-step lookup as the include loop
+                unit = None
+                for lookup_name in dict.fromkeys([db_name, card_name]):
+                    if not lookup_name:
+                        continue
+                    try:
+                        unit = UnitType.objects.get(
+                            name=lookup_name, faction=faction,
+                        )
+                        break
+                    except UnitType.DoesNotExist:
+                        continue
+
+                if unit is None:
+                    continue  # Not in DB yet — nothing to deactivate
+
+                if dry_run:
+                    status = 'already hidden' if not unit.is_active else 'would hide'
+                    self.stdout.write(
+                        f'  DRY-RUN DEACTIVATE ({status}): {unit.name!r}'
+                    )
+                    deactivated += 1
+                    continue
+
+                if not unit.is_active:
+                    continue  # Already hidden — no-op
+
+                unit.is_active = False
+                unit.save(update_fields=['is_active'])
+                self.stdout.write(self.style.WARNING(
+                    f'  HIDDEN: {unit.name!r} (include != Yes — removed from calculator)'
+                ))
+                deactivated += 1
+
             if dry_run:
                 transaction.set_rollback(True)
 
         verb = 'would update' if dry_run else 'updated'
+        hide_verb = 'would hide' if dry_run else 'hidden'
         self.stdout.write(
             self.style.SUCCESS(
                 f'\n{faction_name} import complete: '
-                f'{updated} {verb}, {skipped} skipped.'
+                f'{updated} {verb}, {skipped} skipped, '
+                f'{deactivated} {hide_verb} from calculator.'
             )
         )
