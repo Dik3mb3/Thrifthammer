@@ -69,7 +69,7 @@ import re
 import time
 from decimal import Decimal, InvalidOperation
 
-import requests
+from curl_cffi import requests as curl_requests
 from bs4 import BeautifulSoup
 from django.utils import timezone
 
@@ -294,7 +294,11 @@ class AmazonScraper:
         self._ua_index += 1
         self._products_since_rotation = 0
 
-        session = requests.Session()
+        # curl_cffi impersonates Chrome's exact TLS fingerprint — the primary
+        # reason Amazon blocks Python requests is TLS fingerprint detection, not
+        # just headers.  impersonate="chrome120" makes the SSL handshake
+        # indistinguishable from real Chrome.
+        session = curl_requests.Session(impersonate='chrome120')
 
         # Base headers present for all browser types
         base_headers = {
@@ -343,7 +347,7 @@ class AmazonScraper:
             self.session.get('https://www.amazon.com/', timeout=10)
             logger.debug('[amazon] Session warmed up (home page visited)')
             time.sleep(1.5 + random.uniform(0, 1.0))
-        except requests.RequestException as exc:
+        except curl_requests.RequestException as exc:
             logger.debug('[amazon] Warm-up request failed (non-fatal): %s', exc)
 
     # -------------------------------------------------------------------------
@@ -493,7 +497,7 @@ class AmazonScraper:
                 timeout=15,
                 headers={'Referer': 'https://www.amazon.com/'},
             )
-        except requests.RequestException as exc:
+        except curl_requests.RequestException as exc:
             logger.warning('[amazon] Request failed for %s: %s', url[:80], exc)
             return None
 
@@ -535,7 +539,7 @@ class AmazonScraper:
 
         Returns (Decimal price, bool in_stock) or None if still blocked/failed.
         """
-        session = requests.Session()
+        session = curl_requests.Session(impersonate='chrome110')
         session.headers.update({
             'User-Agent':                _MOBILE_USER_AGENT,
             'Accept':                    'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -549,7 +553,7 @@ class AmazonScraper:
 
         try:
             response = session.get(url, timeout=15)
-        except requests.RequestException as exc:
+        except curl_requests.RequestException as exc:
             logger.warning('[amazon] [fallback] Request failed for %s: %s', url[:80], exc)
             return None
 

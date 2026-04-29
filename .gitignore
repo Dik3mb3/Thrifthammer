@@ -16,3 +16,7 @@ db.sqlite3
 # Virtual environments
 venv/
 .venv/
+
+# Local production secrets / helper scripts (never commit these)
+.env.production
+/*.ps1
