@@ -437,6 +437,9 @@ CROSS_FACTION_UNITS = {
              "name":   "Daemon Prince of Slaanesh"},
             {"parent": "Daemon Prince",
              "name":   "Daemon Prince of Slaanesh with Wings"},
+            # EC army list includes the CSM Sorcerer kit (on-foot version):
+            {"parent": "Chaos Space Marines Sorcerer",
+             "name":   "Sorcerer"},
 
             # ── Infantry ─────────────────────────────────────────────────────
             {"parent": "Chaos Spawn"},
@@ -446,7 +449,11 @@ CROSS_FACTION_UNITS = {
              "name":   "Chaos Terminators"},
 
             # ── Vehicles / Daemon Engines ─────────────────────────────────────
+            # "Chaos Defiler" in CSM; EC army list calls it "Defiler":
+            {"parent": "Chaos Defiler",
+             "name":   "Defiler"},
             {"parent": "Heldrake"},
+            {"parent": "Maulerfiend"},
 
             # ── Transports ───────────────────────────────────────────────────
             {"parent": "Chaos Land Raider"},
