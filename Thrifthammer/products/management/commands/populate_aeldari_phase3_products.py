@@ -618,10 +618,15 @@ class Command(BaseCommand):
 
             role = 'combo_box' if _is_combo_box(name) else _assign_role(name)
             _, u_created = UnitType.objects.update_or_create(
-                product=product,
+                name=name,
                 faction=aeldari_faction,
                 defaults={
-                    'name': name,
+                    # Key on (name, faction) — not (product, faction) — so that
+                    # existing UnitTypes created with product=NULL (e.g. Ynnari
+                    # characters seeded by populate_units before phase-3 existed)
+                    # are found and updated rather than triggering an IntegrityError
+                    # on the unique (name, faction) constraint.
+                    'product': product,
                     'category': role,
                     # points_cost excluded — preserved on update so GitHub Actions
                     # seeded values (seed_aeldari_stats) are not wiped on every

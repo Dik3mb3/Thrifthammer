@@ -15,6 +15,10 @@ from django.db import transaction
 
 from calculators.models import UnitAbility, UnitType, WeaponProfile
 
+# Faction filter — prevents MultipleObjectsReturned once units with the same
+# name (e.g. Daemon Prince) exist across several factions.
+FACTION_NAME = 'Aeldari'
+
 
 # -- Helpers ------------------------------------------------------------------
 
@@ -759,6 +763,25 @@ AELDARI_UNITS = [
                  'Grenades Stratagem.'),
      ]),
 
+    ('Warp Spiders', 105,
+     stat('12"', 3, '3+', 2, '6+', 1, invuln='5+'),
+     [
+         rng("Exarch's Deathspinner", '12"', 'D6', 'N/A', 6, -2, 1,
+             'Ignores Cover, Torrent'),
+         rng('Death spinner (x4)', '12"', 'D6', 'N/A', 4, -1, 1,
+             'Ignores Cover, Torrent'),
+         mel('Close Combat Weapon (x5)', 2, '3+', 3, 0, 1),
+     ],
+     [
+         ability('Flickerjump',
+                 'Once per turn, in your Movement phase, when this unit makes '
+                 'a Normal move, you can use this ability. If you do, each '
+                 'model in this unit can move up to 24" until the end of the '
+                 'turn, and this unit is not eligible to declare a charge this '
+                 'turn. At the end of the Movement phase, roll one D6 for each '
+                 'model in this unit: on a 1, this unit suffers 1 mortal wound.'),
+     ]),
+
     ('Harlequin Troupe', 85,
      stat('8"', 3, '6+', 1, '6+', 1, invuln='4+'),
      [
@@ -1197,7 +1220,7 @@ class Command(BaseCommand):
         with transaction.atomic():
             for db_name, pts, stats, weapons, abilities in AELDARI_UNITS:
                 try:
-                    unit = UnitType.objects.get(name=db_name)
+                    unit = UnitType.objects.get(name=db_name, faction__name=FACTION_NAME)
                 except UnitType.DoesNotExist:
                     self.stdout.write(self.style.WARNING(
                         f'  SKIP (not found): {db_name}'
