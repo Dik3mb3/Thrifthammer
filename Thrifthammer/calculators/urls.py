@@ -1,8 +1,6 @@
 """URL configuration for the calculators app."""
 
 from django.urls import path
-from django.views.generic import RedirectView
-
 from . import views
 
 app_name = 'calculators'
@@ -12,8 +10,7 @@ _calc = views.ArmyCalculatorView.as_view()
 urlpatterns = [
     # ── Main calculator (Space Marines / generic) ─────────────────────────────
     path('', _calc, name='space_marines'),
-    # Legacy redirect: old /army-calculator/space-marines/ URL → root
-    path('space-marines/', RedirectView.as_view(url='/army-calculator/', permanent=True)),
+    path('space-marines/', _calc, {'faction': 'space-marines'}, name='space_marines_faction'),
 
     # ── Faction-specific calculator URLs (SEO-friendly) ───────────────────────
     # The third positional arg to path() passes URL kwargs into self.kwargs,
