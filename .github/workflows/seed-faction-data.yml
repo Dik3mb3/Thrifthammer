@@ -131,6 +131,14 @@ jobs:
             echo "========================================="
             python manage.py sync_cross_faction_units --faction "Grey Knights" $FLAGS
             run_seed seed_grey_knights_stats
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Grey Knights"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Grey Knights" \
+              --json ../parser_output/grey_knights_parsed.json \
+              --mapping ../parser_output/grey_knights_mapping.csv \
+              $FLAGS
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "necrons"; then
