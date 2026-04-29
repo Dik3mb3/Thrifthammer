@@ -357,6 +357,10 @@ jobs:
             run_seed "sync_cross_faction_units"
           fi
 
+          if echo "$FACTIONS" | grep -q "cleanup_wings_duplicates"; then
+            run_seed apply_batch_fixes_apr2026ab
+          fi
+
           if echo "$FACTIONS" | grep -q "delete_codex_units"; then
             run_seed delete_codex_units
           fi
