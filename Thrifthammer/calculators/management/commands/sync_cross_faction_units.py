@@ -124,6 +124,9 @@ CROSS_FACTION_UNITS = {
             {"parent": "Drop Pods"},
             {"parent": "Space Marine Land Raider",
              "name":   "Land Raider"},
+            # BA army list has both Land Raider and Land Raider Crusader (same kit):
+            {"parent": "Space Marine Land Raider Crusader",
+             "name":   "Land Raider Crusader"},
             {"parent": "Land Raider Redeemer"},
             {"parent": "Razorback"},
             # SM stores Rhino under legacy 'dedicated_transport' category:
@@ -243,8 +246,11 @@ CROSS_FACTION_UNITS = {
              "name":    "Predator Annihilator"},
             {"parent": "Space Marine Redemptor Dreadnought",
              "name":   "Redemptor Dreadnought"},
+            # SW army list has both Repulsor and Repulsor Executioner:
             {"parent": "Space Marine Repulsor Executioner",
              "name":   "Repulsor"},
+            {"parent": "Space Marine Repulsor Executioner",
+             "name":   "Repulsor Executioner"},
             {"parent": "Space Marine Primaris Eliminators",
              "name":   "Eliminator Squad"},
             {"parent": "Storm Speeder Hailstrike"},
@@ -266,9 +272,11 @@ CROSS_FACTION_UNITS = {
             # ── Transports ───────────────────────────────────────────────────
             {"parent": "Drop Pods",
              "name":   "Drop Pod"},
-            # SW card_name "Land Raider" maps to SM "Space Marine Land Raider Crusader":
+            # SW army list has both Land Raider and Land Raider Crusader (same kit):
             {"parent": "Space Marine Land Raider Crusader",
              "name":   "Land Raider"},
+            {"parent": "Space Marine Land Raider Crusader",
+             "name":   "Land Raider Crusader"},
             {"parent": "Land Raider Redeemer"},
             {"parent": "Razorback"},
             # SM stores Rhino under legacy 'dedicated_transport' category:
@@ -316,7 +324,7 @@ CROSS_FACTION_UNITS = {
             {"parent": "Daemon Prince",
              "name":   "Daemon Prince of Nurgle"},
             {"parent": "Daemon Prince",
-             "name":   "Daemon Prince of Nurgle with Wings"},
+             "name":   "Daemon Prince of Nurgle with wings"},
 
             # ── Infantry ─────────────────────────────────────────────────────
             {"parent": "Chaos Spawn"},
@@ -353,7 +361,7 @@ CROSS_FACTION_UNITS = {
             {"parent": "Daemon Prince",
              "name":   "Daemon Prince of Tzeentch"},
             {"parent": "Daemon Prince",
-             "name":   "Daemon Prince of Tzeentch with Wings"},
+             "name":   "Daemon Prince of Tzeentch with wings"},
 
             # ── Infantry ─────────────────────────────────────────────────────
             {"parent": "Chaos Spawn"},
@@ -390,7 +398,7 @@ CROSS_FACTION_UNITS = {
             {"parent": "Daemon Prince",
              "name":   "Daemon Prince of Khorne"},
             {"parent": "Daemon Prince",
-             "name":   "Daemon Prince of Khorne with Wings"},
+             "name":   "Daemon Prince of Khorne with wings"},
             # DB product is "Master of Executions" (slug: chaos-master-of-executions):
             {"parent": "Master of Executions"},
 
