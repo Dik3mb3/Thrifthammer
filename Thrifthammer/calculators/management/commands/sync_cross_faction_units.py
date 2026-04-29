@@ -454,6 +454,47 @@ CROSS_FACTION_UNITS = {
         ],
     },
 
+    # ── Grey Knights ──────────────────────────────────────────────────────────
+    # GK-exclusive units (Strike Squad, Paladins, Interceptors, Dreadknight,
+    # Purgation/Purifier Squads, Grand Master Voldus, Castellan Crowe, etc.)
+    # are tagged faction=grey-knights — populate_units handles them.
+    # Add only units whose physical kits are shared with Space Marines.
+    "Grey Knights": {
+        "parent_faction": "Space Marines",
+        "units": [
+
+            # ── Characters ───────────────────────────────────────────────────
+            # GK "Brother-Captain" uses the SM Captain in Terminator Armour kit:
+            {"parent": "Captain in Terminator Armour",
+             "name":   "Brother-Captain"},
+            # GK "Brotherhood Chaplain" uses the SM Chaplain in Terminator Armour kit:
+            {"parent": "Space Marine Chaplain in Terminator Armour",
+             "name":   "Brotherhood Chaplain"},
+            # GK "Brotherhood Librarian" uses the SM Librarian in Terminator Armour kit:
+            {"parent": "Librarian in Terminator Armour",
+             "name":   "Brotherhood Librarian"},
+            # GK "Brotherhood Techmarine" uses the SM Techmarine kit:
+            {"parent": "Techmarine",
+             "name":   "Brotherhood Techmarine"},
+
+            # ── Vehicles ─────────────────────────────────────────────────────
+            {"parent": "Stormhawk Interceptor"},
+            {"parent": "Stormraven Gunship"},
+            {"parent": "Stormtalon Gunship"},
+            {"parent": "Venerable Dreadnought"},
+
+            # ── Transports ───────────────────────────────────────────────────
+            # GK "Land Raider" uses the Land Raider Redeemer kit:
+            {"parent": "Land Raider Redeemer",
+             "name":   "Land Raider"},
+            {"parent": "Land Raider Redeemer"},
+            {"parent": "Space Marine Land Raider Crusader",
+             "name":   "Land Raider Crusader"},
+            {"parent": "Razorback"},
+            {"parent": "Rhino"},
+        ],
+    },
+
     # ── Dark Angels ───────────────────────────────────────────────────────────
     # SM kits that appear in the Dark Angels army list.  DA-exclusive units
     # (44-xx SKUs: Asmodai, Azrael, Belial, Deathwing Knights, Ravenwing, etc.)
