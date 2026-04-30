@@ -517,15 +517,15 @@ class Command(BaseCommand):
             else:
                 role = _assign_role(product.name)
 
-            unit, created = UnitType.objects.update_or_create(
+            unit, created = UnitType.objects.get_or_create(
                 product=product,
                 faction=product.faction,    # lookup key — one row per (product, faction) pair
                 defaults={
                     'name': product.name,
                     'category': role,
-                    # points_cost intentionally excluded — preserved on update so that
-                    # seed_*_points commands are not wiped on every deploy.
-                    # New entries start at 0 via the model field default.
+                    # points_cost intentionally excluded — starts at 0 via model default.
+                    # get_or_create only applies defaults on creation, so subsequent
+                    # deploys never overwrite names set by import_faction_stats.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -644,15 +644,14 @@ class Command(BaseCommand):
                 ))
                 continue
 
-            unit, created = UnitType.objects.update_or_create(
+            unit, created = UnitType.objects.get_or_create(
                 product=product,
                 faction=bt_faction,
                 defaults={
                     'name': bt_name,
                     'category': role,
-                    # points_cost excluded — preserved on update so GitHub Actions
-                    # seeded values (import_faction_stats / seed_*_stats) are not
-                    # wiped on every Procfile deploy. New entries start at 0 via model default.
+                    # get_or_create only applies defaults on creation — subsequent
+                    # deploys never overwrite names set by import_faction_stats.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -675,15 +674,14 @@ class Command(BaseCommand):
                 ))
                 continue
 
-            unit, created = UnitType.objects.update_or_create(
+            unit, created = UnitType.objects.get_or_create(
                 product=product,
                 faction=bt_faction,
                 defaults={
                     'name': bt_name,
                     'category': role,
-                    # points_cost excluded — preserved on update so GitHub Actions
-                    # seeded values (import_faction_stats / seed_*_stats) are not
-                    # wiped on every Procfile deploy. New entries start at 0 via model default.
+                    # get_or_create only applies defaults on creation — subsequent
+                    # deploys never overwrite names set by import_faction_stats.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -791,15 +789,14 @@ class Command(BaseCommand):
                 ))
                 continue
 
-            unit, created = UnitType.objects.update_or_create(
+            unit, created = UnitType.objects.get_or_create(
                 product=product,
                 faction=ba_faction,
                 defaults={
                     'name': ba_name,
                     'category': role,
-                    # points_cost excluded — preserved on update so GitHub Actions
-                    # seeded values (import_faction_stats / seed_*_stats) are not
-                    # wiped on every Procfile deploy. New entries start at 0 via model default.
+                    # get_or_create only applies defaults on creation — subsequent
+                    # deploys never overwrite names set by import_faction_stats.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -821,15 +818,14 @@ class Command(BaseCommand):
                 ))
                 continue
 
-            unit, created = UnitType.objects.update_or_create(
+            unit, created = UnitType.objects.get_or_create(
                 product=product,
                 faction=ba_faction,
                 defaults={
                     'name': ba_name,
                     'category': role,
-                    # points_cost excluded — preserved on update so GitHub Actions
-                    # seeded values (import_faction_stats / seed_*_stats) are not
-                    # wiped on every Procfile deploy. New entries start at 0 via model default.
+                    # get_or_create only applies defaults on creation — subsequent
+                    # deploys never overwrite names set by import_faction_stats.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -934,15 +930,14 @@ class Command(BaseCommand):
                 ))
                 continue
 
-            unit, created = UnitType.objects.update_or_create(
+            unit, created = UnitType.objects.get_or_create(
                 product=product,
                 faction=da_faction,
                 defaults={
                     'name': da_name,
                     'category': role,
-                    # points_cost excluded — preserved on update so GitHub Actions
-                    # seeded values (import_faction_stats / seed_*_stats) are not
-                    # wiped on every Procfile deploy. New entries start at 0 via model default.
+                    # get_or_create only applies defaults on creation — subsequent
+                    # deploys never overwrite names set by import_faction_stats.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -964,15 +959,14 @@ class Command(BaseCommand):
                 ))
                 continue
 
-            unit, created = UnitType.objects.update_or_create(
+            unit, created = UnitType.objects.get_or_create(
                 product=product,
                 faction=da_faction,
                 defaults={
                     'name': da_name,
                     'category': role,
-                    # points_cost excluded — preserved on update so GitHub Actions
-                    # seeded values (import_faction_stats / seed_*_stats) are not
-                    # wiped on every Procfile deploy. New entries start at 0 via model default.
+                    # get_or_create only applies defaults on creation — subsequent
+                    # deploys never overwrite names set by import_faction_stats.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -1080,15 +1074,14 @@ class Command(BaseCommand):
                 ))
                 continue
 
-            unit, created = UnitType.objects.update_or_create(
+            unit, created = UnitType.objects.get_or_create(
                 product=product,
                 faction=dw_faction,
                 defaults={
                     'name': dw_name,
                     'category': role,
-                    # points_cost excluded — preserved on update so GitHub Actions
-                    # seeded values (import_faction_stats / seed_*_stats) are not
-                    # wiped on every Procfile deploy. New entries start at 0 via model default.
+                    # get_or_create only applies defaults on creation — subsequent
+                    # deploys never overwrite names set by import_faction_stats.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
@@ -1110,15 +1103,14 @@ class Command(BaseCommand):
                 ))
                 continue
 
-            unit, created = UnitType.objects.update_or_create(
+            unit, created = UnitType.objects.get_or_create(
                 product=product,
                 faction=dw_faction,
                 defaults={
                     'name': dw_name,
                     'category': role,
-                    # points_cost excluded — preserved on update so GitHub Actions
-                    # seeded values (import_faction_stats / seed_*_stats) are not
-                    # wiped on every Procfile deploy. New entries start at 0 via model default.
+                    # get_or_create only applies defaults on creation — subsequent
+                    # deploys never overwrite names set by import_faction_stats.
                     'typical_quantity': 1,
                     'description': '',
                     'is_active': True,
