@@ -62,16 +62,53 @@ class Command(BaseCommand):
             for p in Product.objects.filter(is_active=True).only('id', 'gw_sku', 'name')
         }
 
-        updated   = 0
-        skipped   = 0
-        not_found = 0
+        updated    = 0
+        skipped    = 0
+        not_found  = 0
+        marked_na  = 0
 
         for sku, entry in data.items():
-            status = entry.get('status', '')
+            status    = entry.get('status', '')
             price_str = entry.get('price')
-            url   = entry.get('url', '')
-            name  = entry.get('name', sku)
+            url       = entry.get('url', '')
+            name      = entry.get('name', sku)
 
+            # ── Definitive unavailability from Amazon ─────────────────────
+            # 'unavailable' = Amazon returned "Currently unavailable" page.
+            # 'no_price'    = page loaded but no purchasable price found.
+            # Both mean the listing is not purchasable right now.
+            # Mark not_available=True so the site shows "—" instead of a
+            # stale price.  Scraper failures (blocked/timeout/error) are
+            # skipped without touching the DB — they may be transient.
+            if status in ('unavailable', 'no_price'):
+                product = sku_map.get(sku)
+                if product:
+                    existing = CurrentPrice.objects.filter(
+                        product=product, retailer=amazon,
+                    ).first()
+                    if existing and not existing.not_available:
+                        if not dry_run:
+                            existing.not_available = True
+                            existing.save(update_fields=['not_available'])
+                        self.stdout.write(self.style.WARNING(
+                            f'  [N/A]  {sku:8s} {name} — '
+                            f'status={status}, marked not_available'
+                        ))
+                        marked_na += 1
+                    else:
+                        self.stdout.write(
+                            f'  [skip] {sku:8s} {name} — '
+                            f'status={status}, already not_available or no record'
+                        )
+                else:
+                    self.stdout.write(
+                        f'  [skip] {sku:8s} {name} — '
+                        f'status={status}, product not in DB'
+                    )
+                skipped += 1
+                continue
+
+            # ── Transient scraper failures — skip without DB changes ──────
             if status != 'ok' or not price_str:
                 self.stdout.write(
                     f'  [skip] {sku:8s} {name} — status={status}'
@@ -117,5 +154,9 @@ class Command(BaseCommand):
 
         label = '[DRY RUN] ' if dry_run else ''
         self.stdout.write(self.style.SUCCESS(
-            f'\n{label}Done!  Updated: {updated}  Skipped: {skipped}  Not found: {not_found}'
+            f'\n{label}Done!  '
+            f'Updated: {updated}  '
+            f'Marked N/A: {marked_na}  '
+            f'Skipped: {skipped}  '
+            f'Not found: {not_found}'
         ))
