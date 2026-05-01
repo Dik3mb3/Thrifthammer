@@ -365,6 +365,21 @@ jobs:
               $FLAGS
           fi
 
+          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "salamanders"; then
+            echo "========================================="
+            echo "Running: sync_cross_faction_units --faction Salamanders"
+            echo "========================================="
+            python manage.py sync_cross_faction_units --faction "Salamanders" $FLAGS
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Salamanders"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Salamanders" \
+              --json ../parser_output/salamanders_parsed.json \
+              --mapping ../parser_output/salamanders_mapping.csv \
+              $FLAGS
+          fi
+
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "deathwatch"; then
             echo "========================================="
             echo "Running: sync_cross_faction_units --faction Deathwatch"
