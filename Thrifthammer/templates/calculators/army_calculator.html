@@ -310,20 +310,7 @@
       </div>
       {% endif %}
 
-      {# Prebuilt armies #}
-      {% if prebuilt_armies %}
-      <div class="ab-prebuilt-card">
-        <div class="ab-section-label">Sample Armies</div>
-        {% for army in prebuilt_armies %}
-        <button type="button" class="ab-prebuilt-btn" data-pb-idx="{{ forloop.counter0 }}">
-          <span>{{ army.name }}</span>
-          <span class="ab-prebuilt-pts">{{ army.points_total }} pts</span>
-        </button>
-        {% endfor %}
-      </div>
-      {% endif %}
-
-      {# Saved armies #}
+{# Saved armies #}
       {% if saved_armies %}
       <div class="ab-saved-card">
         <div class="ab-section-label">My Saved Lists</div>
