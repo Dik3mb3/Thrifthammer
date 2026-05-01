@@ -103,26 +103,74 @@ jobs:
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "votann"; then
             run_seed seed_votann_stats
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Leagues of Votann"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Leagues of Votann" \
+              --json ../parser_output/votann_parsed.json \
+              --mapping ../parser_output/votann_mapping.csv \
+              $FLAGS
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "admech"; then
             run_seed seed_admech_stats
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Adeptus Mechanicus"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Adeptus Mechanicus" \
+              --json ../parser_output/admech_parsed.json \
+              --mapping ../parser_output/admech_mapping.csv \
+              $FLAGS
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "aeldari"; then
             run_seed seed_aeldari_stats
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Aeldari"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Aeldari" \
+              --json ../parser_output/aeldari_(1)_parsed.json \
+              --mapping ../parser_output/aeldari_(1)_mapping.csv \
+              $FLAGS
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "guard"; then
             run_seed seed_guard_stats
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Astra Militarum"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Astra Militarum" \
+              --json ../parser_output/guard_parsed.json \
+              --mapping ../parser_output/guard_mapping.csv \
+              $FLAGS
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "custodes"; then
             run_seed seed_custodes_stats
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Custodes"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Custodes" \
+              --json ../parser_output/custodes_(1)_parsed.json \
+              --mapping ../parser_output/custodes_(1)_mapping.csv \
+              $FLAGS
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "drukhari"; then
             run_seed seed_drukhari_stats
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Drukhari"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Drukhari" \
+              --json ../parser_output/drukhari_parsed.json \
+              --mapping ../parser_output/drukhari_mapping.csv \
+              $FLAGS
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "grey_knights"; then
@@ -143,18 +191,38 @@ jobs:
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "necrons"; then
             run_seed seed_necrons_stats
-          fi
-
-          if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "aeldari"; then
-            run_seed seed_aeldari_stats
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Necrons"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Necrons" \
+              --json ../parser_output/necrons_parsed.json \
+              --mapping ../parser_output/necrons_mapping.csv \
+              $FLAGS
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "orks"; then
             run_seed seed_orks_stats
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Orks"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Orks" \
+              --json ../parser_output/orks_parsed.json \
+              --mapping ../parser_output/orks_mapping.csv \
+              $FLAGS
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "sisters_of_battle"; then
             run_seed seed_sisters_of_battle_stats
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Sisters of Battle"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Sisters of Battle" \
+              --json ../parser_output/sisters_of_battle_parsed.json \
+              --mapping ../parser_output/sisters_of_battle_mapping.csv \
+              $FLAGS
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "tau_empire"; then
@@ -175,10 +243,26 @@ jobs:
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "genestealer_cults"; then
             run_seed seed_genestealer_cults_stats
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Genestealer Cults"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Genestealer Cults" \
+              --json ../parser_output/genestealer_cults_parsed.json \
+              --mapping ../parser_output/genestealer_cults_mapping.csv \
+              $FLAGS
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "imperial_knights"; then
             run_seed seed_imperial_knights_stats
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Imperial Knights"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Imperial Knights" \
+              --json ../parser_output/knights_parsed.json \
+              --mapping ../parser_output/knights_mapping.csv \
+              $FLAGS
           fi
 
           # space_marines uses comma-wrapping to avoid matching chaos_space_marines
