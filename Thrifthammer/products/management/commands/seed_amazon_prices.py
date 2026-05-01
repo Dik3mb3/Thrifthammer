@@ -99,7 +99,7 @@ AMAZON_DATA = {
     '55-23': ('53.47',  'https://www.amazon.com/dp/B09LG1SKWF', True),   # Sword Brethren
 
     # ── Blades of Khorne ──────────────────────────────────────────────────
-    '97-08': ('',       'https://www.amazon.com/dp/B0DHXCGWN7', False),  # Bloodletters
+    '97-08': ('',       'https://www.amazon.com/Warhammer-Daemons-Chaos-Khorne-Bloodletters/dp/B076F9VWXX/ref=sr_1_1?crid=3TZY4PZOUVBE3&dib=eyJ2IjoiMSJ9.FEi69s2jROlFANV2lQeApFwcAEkGnnyUMGUh-KvAPetUajz6_g1N30pppFLkKiIumtwm9rMEbZpb43yoOeKfnIl18PxVYoZGH43bplFky6Fi87Xk4qSDHzz3Rrn44YJKjocYk3TGW4GIb-w6KPCHpGH1xmcWLW2WPBZZQoUckDC8FK0q8y9UN28Rivh-PGLgTKjofYmpvjSo2VTQ4dJG6TThOu82sQJd1f-S0wKZPWrtp0EcMEGovgKDyDXA_qRMg_m0zlc2a-rdE2NaMjd_VKGe9QOaQWNzBLEToNV74EU.f5itZrUrjDOg_wGC4oFtx_k1raiJeYwWWdZ4gjcbsa0&dib_tag=se&keywords=Blades+of+Khorne+Bloodletters&qid=1777641970&sprefix=blades+of+khorne+bloodletters%2Caps%2C249&sr=8-1', False),  # Bloodletters
     '83-30': ('69.48',  'https://www.amazon.com/dp/B013QJBOGK', True),   # Bloodreavers  ✓ FIXED
 
     # ── Cerastus Knights ──────────────────────────────────────────────────
