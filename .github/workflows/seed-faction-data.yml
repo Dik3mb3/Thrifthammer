@@ -132,8 +132,8 @@ jobs:
             echo "========================================="
             python manage.py import_faction_stats \
               --faction "Aeldari" \
-              --json ../parser_output/aeldari_(1)_parsed.json \
-              --mapping ../parser_output/aeldari_(1)_mapping.csv \
+              --json ../parser_output/aeldari_parsed.json \
+              --mapping ../parser_output/aeldari_mapping.csv \
               $FLAGS
           fi
 
@@ -156,8 +156,8 @@ jobs:
             echo "========================================="
             python manage.py import_faction_stats \
               --faction "Custodes" \
-              --json ../parser_output/custodes_(1)_parsed.json \
-              --mapping ../parser_output/custodes_(1)_mapping.csv \
+              --json ../parser_output/custodes_parsed.json \
+              --mapping ../parser_output/custodes_mapping.csv \
               $FLAGS
           fi
 
