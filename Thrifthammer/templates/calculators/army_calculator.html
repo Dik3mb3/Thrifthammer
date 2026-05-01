@@ -2,523 +2,717 @@
 
 {% block canonical %}
 {% if selected_faction and selected_faction.slug != 'space-marines' %}<link rel="canonical" href="https://thrifthammer.com/army-calculator/{{ selected_faction.slug }}/">
-{% else %}<link rel="canonical" href="https://thrifthammer.com/army-calculator/">
-{% endif %}{% endblock %}
+{% else %}<link rel="canonical" href="https://thrifthammer.com/army-calculator/">{% endif %}
+{% endblock %}
 
-{% block title %}{% if selected_faction %}{{ selected_faction.name }} Army Cost Calculator — ThriftHammer{% else %}Warhammer 40K Army Cost Calculator — ThriftHammer{% endif %}{% endblock %}
+{% block title %}{% if selected_faction %}{{ selected_faction.name }} Army Builder — ThriftHammer{% else %}Warhammer 40K Army Builder — ThriftHammer{% endif %}{% endblock %}
 
-{% block meta_description %}<meta name="description" content="{% if selected_faction %}Build a {{ selected_faction.name }} army list and calculate the real cost. Compare unit prices across US retailers and find the best deals on every kit.{% else %}Calculate the real cost of your Warhammer 40K army. Pick your faction, add units and compare prices across US retailers instantly.{% endif %}">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if selected_faction %}Build a {{ selected_faction.name }} army list and see the real US retail cost. Compare unit prices across retailers and find the best deals on every kit.{% else %}Build your Warhammer 40K army list and calculate the real cost. Pick your faction, add units, and compare prices across US retailers instantly.{% endif %}">{% endblock %}
+
+{% block robots %}{% if not selected_faction %}<meta name="robots" content="index, follow">{% endif %}{% endblock %}
 
 {% block extra_head %}
-<meta property="og:title" content="{% if selected_faction %}{{ selected_faction.name }} Army Cost Calculator — ThriftHammer{% else %}40K Army Cost Calculator — ThriftHammer{% endif %}">
-<meta property="og:description" content="{% if selected_faction %}Build a {{ selected_faction.name }} army list and calculate the real cost. Compare unit prices across US retailers and find the best deals on every kit.{% else %}Build your 40K army list and see the real cost. Compare prices across US retailers for every unit in your roster.{% endif %}">
+<meta property="og:title" content="{% if selected_faction %}{{ selected_faction.name }} Army Builder — ThriftHammer{% else %}40K Army Builder — ThriftHammer{% endif %}">
+<meta property="og:description" content="{% if selected_faction %}Build a {{ selected_faction.name }} army list and see the real US retail cost across all tracked retailers.{% else %}Build your 40K army list and see the real cost. Compare prices across US retailers for every unit.{% endif %}">
 <meta property="og:type" content="website">
 {% endblock %}
 
 {% block content %}
-<div class="page-content">
+{{ prebuilt_armies_list|json_script:"ab-prebuilt-data" }}
 
-  {# ── Header ── #}
-  <div style="margin-bottom:var(--sp-5);">
-    <h1 class="section-title">{% if selected_faction %}{{ selected_faction.name }} Army Cost Calculator{% else %}40K Army Cost Calculator{% endif %}</h1>
-    {% if selected_faction %}<h2 class="sr-only">{{ selected_faction.name }} Army Calculator</h2>{% else %}<h2 class="sr-only">Choose Your Faction</h2>{% endif %}
-    <div class="gold-rule"></div>
-    <p style="color:var(--text-muted);font-size:0.9rem;max-width:600px;">
-      Select your faction, build your roster unit by unit, and see the real cost across all tracked US retailers in real time.
-    </p>
-  </div>
+<div class="ab-shell">
 
-  {# ── Faction filter bar ── #}
+  {# ── Faction pill bar ── #}
   {% if available_factions %}
-  <div class="calc-faction-bar" role="navigation" aria-label="Select faction">
-    {% for faction in available_factions %}
-    <a href="/army-calculator/{{ faction.slug }}/"
-       class="calc-faction-btn{% if selected_faction.slug == faction.slug %} active{% endif %}">
-      {{ faction.name }}
-    </a>
-    {% endfor %}
+  <div class="ab-faction-bar-wrap" role="navigation" aria-label="Select faction">
+    <div class="ab-faction-bar">
+      {% for faction in available_factions %}
+      <a href="/army-calculator/{{ faction.slug }}/"
+         class="ab-faction-pill{% if selected_faction.slug == faction.slug %} ab-faction-pill--active{% endif %}">
+        {{ faction.name }}
+      </a>
+      {% endfor %}
+    </div>
   </div>
   {% endif %}
 
-  <div class="calc-layout">
+  {% if selected_faction %}
 
-    {# ===== Unit picker ===== #}
-    <div class="unit-picker">
-      {% if not selected_faction %}
-      <div style="text-align:center;padding:var(--sp-12) var(--sp-4);color:var(--text-muted);">
-        <p style="font-size:1rem;margin-bottom:var(--sp-2);">Select a faction above to see units and prices.</p>
-        <p style="font-size:0.85rem;">More factions coming soon.</p>
-      </div>
-      {% else %}
-      {# ── Expand / Collapse All datasheets ── #}
-      {% if selected_faction %}
-      <div style="display:flex;justify-content:flex-end;margin-bottom:var(--sp-3);">
-        <button type="button" id="toggle-all-datasheets" class="btn-datasheet-toggle" style="font-size:0.78rem;padding:4px 12px;">
-          ▶ Expand All Stats
-        </button>
-      </div>
-      {% endif %}
+  {# ── Panel overlay for mobile bottom sheet ── #}
+  <div class="ab-panel-overlay" id="ab-panel-overlay" aria-hidden="true"></div>
 
-      {% for cat_key, cat in ordered_categories %}
-      <div class="unit-category" data-category="{{ cat_key }}">
-        <div class="unit-category-header">{{ cat.label }}</div>
+  {# ── Page header ── #}
+  <div class="ab-page-header">
+    <div>
+      <h1 class="ab-page-title">{{ selected_faction.name }}</h1>
+      <p class="ab-page-sub">Army Builder</p>
+    </div>
+    {% if points_last_updated %}
+    <span class="ab-data-date">Points updated {{ points_last_updated|date:"N j, Y" }}</span>
+    {% endif %}
+  </div>
+
+  {# ── Search + category pills ── #}
+  <div class="ab-controls">
+    <input type="search" id="ab-search" class="ab-search" placeholder="Search units..." autocomplete="off" aria-label="Search units">
+    <div class="ab-pills-wrap" role="tablist" aria-label="Filter by role">
+      <div class="ab-pills" id="ab-pills">
+        <button class="ab-pill ab-pill--active" data-cat="all" role="tab" aria-selected="true">All</button>
+        {% for cat_key, cat in ordered_categories %}{% if cat.units %}
+        <button class="ab-pill" data-cat="{{ cat_key }}" role="tab" aria-selected="false">{{ cat.label }}</button>
+        {% endif %}{% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {# ── Two-panel layout ── #}
+  <div class="ab-layout">
+
+    {# ── Left: Unit Pool ── #}
+    <div class="ab-unit-pool" id="ab-unit-pool">
+
+      <div class="ab-pool-meta">
+        <button type="button" id="ab-expand-all" class="ab-expand-all-btn">Expand All Stats</button>
+      </div>
+
+      {% for cat_key, cat in ordered_categories %}{% if cat.units %}
+      <div class="ab-cat-group" data-cat="{{ cat_key }}" id="ab-cat-{{ cat_key }}">
+        <div class="ab-cat-header">{{ cat.label }}</div>
+
         {% for unit in cat.units %}
-        {% with ranged_weapons=unit.weapon_profiles.all|dictsort:"order" melee_weapons=unit.weapon_profiles.all abilities=unit.abilities.all %}
-        <div class="unit-row" id="unit-row-{{ unit.pk }}" data-unit-id="{{ unit.pk }}"
-             data-name="{{ unit.name|escapejs }}"
+        <div class="ab-unit-card"
+             id="ab-unit-{{ unit.pk }}"
+             data-unit-id="{{ unit.pk }}"
+             data-cat="{{ cat_key }}"
+             data-name="{{ unit.name|lower|escapejs }}"
              data-points="{{ unit.points_cost|default:0 }}"
              data-typical-qty="{{ unit.typical_quantity }}"
-             data-price="{% if unit.product %}{{ unit.product.get_cheapest_price.price|default:'' }}{% endif %}"
-             data-msrp="{% if unit.product %}{{ unit.product.msrp|default:'' }}{% endif %}">
+             data-price="{% if unit.product %}{% with best=unit.product.get_cheapest_price %}{% if best %}{{ best.price }}{% endif %}{% endwith %}{% endif %}"
+             data-msrp="{% if unit.product and unit.product.msrp %}{{ unit.product.msrp }}{% endif %}">
 
-          {# ── Unit header row ── #}
-          <div class="unit-row-header">
-            <span class="unit-name">{{ unit.name }}</span>
-            <span class="unit-pts">{{ unit.points_cost }}pts{% if unit.typical_quantity > 1 %} × {{ unit.typical_quantity }}{% endif %}</span>
-            <span class="unit-price">
-              {% if unit.product %}
-                {% with best=unit.product.get_cheapest_price %}
-                  {% if best %}<span style="color:var(--accent-green-lt);">${{ best.price }}</span>{% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
-                {% endwith %}
-              {% else %}
-                <span style="color:var(--text-muted);" title="No product linked">—</span>
-              {% endif %}
-            </span>
-            <div class="unit-row-actions">
-              {% if unit.stat_movement or unit.weapon_profiles.exists %}
-              <button type="button" class="btn-datasheet-toggle" aria-label="View datasheet" title="View stats &amp; weapons">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-                Stats
-              </button>
-              {% endif %}
-              <div class="unit-qty" style="display:none;">
-                <button type="button" class="decrease-qty" title="Decrease">−</button>
-                <span class="qty-display">1</span>
-                <button type="button" class="increase-qty" title="Increase">+</button>
-                <button type="button" class="remove-unit" title="Remove">✕</button>
+          {# Card main row #}
+          <div class="ab-card-main">
+
+            {# Left: info #}
+            <div class="ab-card-info">
+              <div class="ab-card-name">{{ unit.name }}</div>
+
+              <div class="ab-card-tags">
+                <span class="ab-cat-badge ab-cat-badge--{{ cat_key }}">{{ cat.label }}</span>
+                {% if unit.stat_movement %}
+                <span class="ab-stat-peek">M{{ unit.stat_movement }} T{{ unit.stat_toughness }} Sv{{ unit.stat_save }} W{{ unit.stat_wounds }}</span>
+                {% endif %}
               </div>
-              <button type="button" class="btn btn-primary btn-sm add-unit-btn" style="min-width:52px;">Add</button>
-            </div>
-          </div>
 
-          {# ── Datasheet panel (hidden by default) ── #}
+              <div class="ab-card-price-row">
+                {% if unit.product %}
+                  {% with best=unit.product.get_cheapest_price %}
+                  {% if best %}
+                    <span class="ab-best-price">${{ best.price }}</span>
+                    {% if unit.product.msrp and unit.product.msrp > best.price %}
+                    <span class="ab-discount-badge">% off GW</span>
+                    {% endif %}
+                    {% if unit.product.msrp %}
+                    <span class="ab-msrp-label">GW ${{ unit.product.msrp }}</span>
+                    {% endif %}
+                  {% else %}
+                    <span class="ab-no-price">No price available</span>
+                  {% endif %}
+                  {% endwith %}
+                {% else %}
+                  <span class="ab-no-price">No product linked</span>
+                {% endif %}
+              </div>
+            </div>
+
+            {# Right: points + actions #}
+            <div class="ab-card-right">
+              <div class="ab-pts-display">
+                <span class="ab-pts-num">{{ unit.points_cost }}{% if unit.typical_quantity > 1 %}<span class="ab-pts-x">x{{ unit.typical_quantity }}</span>{% endif %}</span>
+                <span class="ab-pts-label">pts</span>
+              </div>
+              <div class="ab-card-actions">
+                <button type="button" class="ab-add-btn" data-unit-id="{{ unit.pk }}">Add</button>
+                <div class="ab-qty-wrap" style="display:none;" data-unit-id="{{ unit.pk }}">
+                  <button type="button" class="ab-qty-btn ab-dec" data-unit-id="{{ unit.pk }}" aria-label="Decrease quantity">-</button>
+                  <span class="ab-qty-num" data-unit-id="{{ unit.pk }}">1</span>
+                  <button type="button" class="ab-qty-btn ab-inc" data-unit-id="{{ unit.pk }}" aria-label="Increase quantity">+</button>
+                  <button type="button" class="ab-qty-rem" data-unit-id="{{ unit.pk }}">Remove</button>
+                </div>
+              </div>
+            </div>
+
+          </div>{# /ab-card-main #}
+
+          {# Datasheet toggle + panel #}
           {% if unit.stat_movement or unit.weapon_profiles.exists or unit.abilities.exists %}
-          <div class="unit-datasheet" style="display:none;">
+          <button type="button" class="ab-datasheet-toggle" data-unit-id="{{ unit.pk }}">Stats &amp; Weapons</button>
+
+          <div class="ab-datasheet" id="ab-ds-{{ unit.pk }}" style="display:none;" aria-hidden="true">
 
             {# Stat line #}
             {% if unit.stat_movement %}
-            <div class="datasheet-stats">
-              <div class="stat-block"><span class="stat-label">M</span><span class="stat-value">{{ unit.stat_movement }}</span></div>
-              <div class="stat-block"><span class="stat-label">T</span><span class="stat-value">{{ unit.stat_toughness }}</span></div>
-              <div class="stat-block"><span class="stat-label">Sv</span><span class="stat-value">{{ unit.stat_save }}</span></div>
-              <div class="stat-block"><span class="stat-label">W</span><span class="stat-value">{{ unit.stat_wounds }}</span></div>
-              <div class="stat-block"><span class="stat-label">Ld</span><span class="stat-value">{{ unit.stat_leadership }}</span></div>
-              <div class="stat-block"><span class="stat-label">OC</span><span class="stat-value">{{ unit.stat_oc }}</span></div>
-              {% if unit.stat_invuln %}<div class="stat-block stat-block--special"><span class="stat-label">Inv</span><span class="stat-value">{{ unit.stat_invuln }}</span></div>{% endif %}
-              {% if unit.stat_fnp %}<div class="stat-block stat-block--special"><span class="stat-label">FNP</span><span class="stat-value">{{ unit.stat_fnp }}</span></div>{% endif %}
+            <div class="ab-stat-grid">
+              <div class="ab-stat-cell"><span class="ab-stat-val">{{ unit.stat_movement }}</span><span class="ab-stat-key">M</span></div>
+              <div class="ab-stat-cell"><span class="ab-stat-val">{{ unit.stat_toughness }}</span><span class="ab-stat-key">T</span></div>
+              <div class="ab-stat-cell"><span class="ab-stat-val">{{ unit.stat_save }}</span><span class="ab-stat-key">Sv</span></div>
+              <div class="ab-stat-cell"><span class="ab-stat-val">{{ unit.stat_wounds }}</span><span class="ab-stat-key">W</span></div>
+              <div class="ab-stat-cell"><span class="ab-stat-val">{{ unit.stat_leadership }}</span><span class="ab-stat-key">Ld</span></div>
+              <div class="ab-stat-cell"><span class="ab-stat-val">{{ unit.stat_oc }}</span><span class="ab-stat-key">OC</span></div>
+              {% if unit.stat_invuln %}<div class="ab-stat-cell ab-stat-cell--special"><span class="ab-stat-val">{{ unit.stat_invuln }}</span><span class="ab-stat-key">Inv</span></div>{% endif %}
+              {% if unit.stat_fnp %}<div class="ab-stat-cell ab-stat-cell--special"><span class="ab-stat-val">{{ unit.stat_fnp }}</span><span class="ab-stat-key">FNP</span></div>{% endif %}
             </div>
             {% endif %}
 
             {# Ranged weapons #}
-            {% with ranged=unit.weapon_profiles.all %}
-            {% if ranged %}
-            {% with has_ranged=False %}{% endwith %}
-            <div class="datasheet-weapons">
-              <div class="weapons-type-label">Ranged Weapons</div>
-              <table class="weapons-table">
-                <colgroup>
-                  <col class="wt-col-name"><col class="wt-col-range"><col class="wt-col-a">
-                  <col class="wt-col-skill"><col class="wt-col-s"><col class="wt-col-ap">
-                  <col class="wt-col-d"><col class="wt-col-kw">
-                </colgroup>
-                <thead><tr><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th></tr></thead>
-                <tbody>
-                {% for w in ranged %}{% if w.weapon_type == 'ranged' %}
-                <tr>
-                  <td class="weapon-name">{{ w.name }}</td>
-                  <td>{{ w.range }}</td>
-                  <td>{{ w.attacks }}</td>
-                  <td>{{ w.skill }}</td>
-                  <td>{{ w.strength }}</td>
-                  <td>{{ w.ap }}</td>
-                  <td>{{ w.damage }}</td>
-                  <td class="weapon-keywords">{% if w.keywords %}{{ w.keywords }}{% else %}—{% endif %}</td>
-                </tr>
-                {% endif %}{% endfor %}
-                </tbody>
-              </table>
+            {% with weapons=unit.weapon_profiles.all %}{% if weapons %}
+            {% with has_ranged=False %}{% for w in weapons %}{% if w.weapon_type == 'ranged' %}{% with has_ranged=True %}{% endwith %}{% endif %}{% endfor %}{% endwith %}
+            <div class="ab-weapons-section">
+              <div class="ab-weapons-label">Ranged Weapons</div>
+              <div class="ab-weapons-scroll">
+                <table class="ab-weapons-table">
+                  <thead><tr><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th></tr></thead>
+                  <tbody>
+                  {% for w in weapons %}{% if w.weapon_type == 'ranged' %}
+                  <tr>
+                    <td class="ab-wep-name">{{ w.name }}</td>
+                    <td>{{ w.range }}</td><td>{{ w.attacks }}</td><td>{{ w.skill }}</td>
+                    <td>{{ w.strength }}</td><td>{{ w.ap }}</td><td>{{ w.damage }}</td>
+                    <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}—{% endif %}</td>
+                  </tr>
+                  {% endif %}{% endfor %}
+                  </tbody>
+                </table>
+              </div>
             </div>
-            {% endif %}
-            {% endwith %}
 
             {# Melee weapons #}
-            {% with melee=unit.weapon_profiles.all %}
-            {% if melee %}
-            <div class="datasheet-weapons">
-              <div class="weapons-type-label">Melee Weapons</div>
-              <table class="weapons-table">
-                <colgroup>
-                  <col class="wt-col-name"><col class="wt-col-range"><col class="wt-col-a">
-                  <col class="wt-col-skill"><col class="wt-col-s"><col class="wt-col-ap">
-                  <col class="wt-col-d"><col class="wt-col-kw">
-                </colgroup>
-                <thead><tr><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th></tr></thead>
-                <tbody>
-                {% for w in melee %}{% if w.weapon_type == 'melee' %}
-                <tr>
-                  <td class="weapon-name">{{ w.name }}</td>
-                  <td>Melee</td>
-                  <td>{{ w.attacks }}</td>
-                  <td>{{ w.skill }}</td>
-                  <td>{{ w.strength }}</td>
-                  <td>{{ w.ap }}</td>
-                  <td>{{ w.damage }}</td>
-                  <td class="weapon-keywords">{% if w.keywords %}{{ w.keywords }}{% else %}—{% endif %}</td>
-                </tr>
-                {% endif %}{% endfor %}
-                </tbody>
-              </table>
+            <div class="ab-weapons-section">
+              <div class="ab-weapons-label">Melee Weapons</div>
+              <div class="ab-weapons-scroll">
+                <table class="ab-weapons-table">
+                  <thead><tr><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th></tr></thead>
+                  <tbody>
+                  {% for w in weapons %}{% if w.weapon_type == 'melee' %}
+                  <tr>
+                    <td class="ab-wep-name">{{ w.name }}</td>
+                    <td>Melee</td><td>{{ w.attacks }}</td><td>{{ w.skill }}</td>
+                    <td>{{ w.strength }}</td><td>{{ w.ap }}</td><td>{{ w.damage }}</td>
+                    <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}—{% endif %}</td>
+                  </tr>
+                  {% endif %}{% endfor %}
+                  </tbody>
+                </table>
+              </div>
             </div>
-            {% endif %}
-            {% endwith %}
+            {% endif %}{% endwith %}
 
             {# Abilities #}
             {% if unit.abilities.exists %}
-            <div class="datasheet-abilities">
-              <div class="weapons-type-label">Abilities</div>
-              <div class="abilities-grid">
-                {% for ab in unit.abilities.all %}
-                <div class="ability-card">
-                  <span class="ability-name">{{ ab.name }}</span>
-                  <span class="ability-desc">{{ ab.description }}</span>
+            <div class="ab-abilities-section">
+              <div class="ab-weapons-label">Abilities</div>
+              <div class="ab-abilities-grid">
+                {% for ability in unit.abilities.all %}
+                <div class="ab-ability-card">
+                  <span class="ab-ability-name">{{ ability.name }}</span>
+                  <span class="ab-ability-desc">{{ ability.description }}</span>
                 </div>
                 {% endfor %}
               </div>
             </div>
             {% endif %}
 
-          </div>
+          </div>{# /ab-datasheet #}
           {% endif %}
 
-        </div>
-        {% endwith %}
+        </div>{# /ab-unit-card #}
         {% endfor %}
-      </div>
-      {% empty %}
-      <div class="card" style="text-align:center;padding:var(--sp-8);">
-        <p style="color:var(--text-muted);margin-bottom:var(--sp-3);">
-          {% if selected_faction %}
-            No units found for <strong>{{ selected_faction.name }}</strong> yet.
-            Units are added as product SKUs are tagged in the admin.
-          {% else %}
-            No units found. Select a faction above or add units via the admin.
-          {% endif %}
-        </p>
-        {% if not selected_faction %}
-        <a href="{% url 'products:list' %}?category=warhammer-40000" class="btn btn-secondary">
-          Browse 40K Products
-        </a>
-        {% endif %}
-      </div>
-      {% endfor %}
-      {% endif %}
-    </div>
+      </div>{# /ab-cat-group #}
+      {% endif %}{% endfor %}
 
-    {# ===== Sidebar ===== #}
-    <aside class="calc-sidebar">
-
-      {# Points data freshness note #}
-      {% if points_last_updated %}
-      <p style="font-size:0.72rem;color:var(--text-muted);text-align:center;margin-bottom:var(--sp-3);">
-        Points data updated {{ points_last_updated|date:"N j, Y" }}
-      </p>
+      {% if not ordered_categories %}
+      <div class="ab-empty">No units found for {{ selected_faction.name }} yet.</div>
       {% endif %}
 
-      {# Totals card #}
-      <div class="totals-card">
-        <h3>Army Totals</h3>
-        <div class="total-row points">
-          <span class="label">Points</span>
-          <span class="value" id="total-points">0</span>
-        </div>
-        <hr class="totals-divider">
-        <div class="total-row cost">
-          <span class="label">Best Price</span>
-          <span class="value" id="total-cost">$0.00</span>
-        </div>
-        <div class="total-row">
-          <span class="label">GW MSRP</span>
-          <span class="value" id="total-retail">$0.00</span>
-        </div>
-        <div class="total-row savings">
-          <span class="label">You Save</span>
-          <span class="value" id="total-savings">$0.00</span>
-        </div>
+    </div>{# /ab-unit-pool #}
 
-        <div class="selected-units">
-          <h4>Selected Units</h4>
-          <div id="selected-units-list">
-            <p class="no-units-msg">No units added yet.</p>
+    {# ── Right: Army Panel (sidebar on desktop, bottom sheet on mobile) ── #}
+    <aside class="ab-army-panel" id="ab-army-panel" aria-label="Army summary">
+
+      {# Mobile-only handle and close button #}
+      <div class="ab-sheet-handle ab-mobile-only"></div>
+      <div class="ab-sheet-top ab-mobile-only">
+        <span class="ab-sheet-title">My Army</span>
+        <button type="button" class="ab-sheet-close" id="ab-sheet-close">Close</button>
+      </div>
+
+      {# Points budget #}
+      <div class="ab-budget-card">
+        <div class="ab-budget-top">
+          <label class="ab-budget-label" for="ab-budget">Points Budget</label>
+          <div class="ab-budget-input-row">
+            <input type="number" id="ab-budget" class="ab-budget-input" value="2000" min="0" max="99999" step="250" aria-label="Points budget">
+            <span class="ab-budget-pts-label">pts</span>
           </div>
         </div>
+        <div class="ab-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="ab-progress-track">
+          <div class="ab-progress-fill" id="ab-progress-fill"></div>
+        </div>
+        <div class="ab-budget-status">
+          <span><span id="ab-pts-used">0</span> / <span id="ab-pts-budget">2000</span> pts</span>
+          <span class="ab-pts-remaining" id="ab-pts-remaining">(2000 remaining)</span>
+        </div>
       </div>
 
-      {# Save army (logged-in only) #}
-      {% if user.is_authenticated %}
-      <div class="totals-card">
-        <h3>Save List</h3>
-        <input type="text" id="army-name-input" class="army-name-input input"
-               placeholder="Enter army name…" maxlength="200">
-        <div class="save-actions">
-          <label>
-            <input type="checkbox" id="army-public-toggle"> Make shareable (anyone with link)
-          </label>
-          <button type="button" id="save-army-btn" class="btn btn-primary btn-full">Save Army List</button>
-          <p id="save-status" style="font-size:0.8rem;color:var(--text-muted);display:none;margin-top:var(--sp-2);"></p>
+      {# Totals #}
+      <div class="ab-totals-card">
+        <div class="ab-total-row">
+          <span class="ab-total-label">Units Selected</span>
+          <span class="ab-total-val" id="ab-unit-count">0</span>
         </div>
+        <div class="ab-total-row">
+          <span class="ab-total-label">Best Price Total</span>
+          <span class="ab-total-val ab-val-price" id="ab-total-price">$0.00</span>
+        </div>
+        <div class="ab-total-row">
+          <span class="ab-total-label">GW MSRP</span>
+          <span class="ab-total-val ab-val-msrp" id="ab-total-msrp">$0.00</span>
+        </div>
+        <div class="ab-total-row ab-total-row--savings">
+          <span class="ab-total-label">You Save</span>
+          <span class="ab-total-val ab-val-savings" id="ab-total-savings">$0.00</span>
+        </div>
+      </div>
+
+      {# Roster #}
+      <div class="ab-roster">
+        <div class="ab-roster-header">Roster</div>
+        <div id="ab-roster-list">
+          <div class="ab-roster-empty" id="ab-roster-empty">No units added yet.</div>
+        </div>
+      </div>
+
+      {# Save / Login #}
+      {% if user.is_authenticated %}
+      <div class="ab-save-card">
+        <input type="text" id="ab-army-name" class="ab-army-name-input" placeholder="Name your list..." maxlength="200" aria-label="Army list name">
+        <label class="ab-public-label">
+          <input type="checkbox" id="ab-army-public"> Shareable link
+        </label>
+        <button type="button" id="ab-save-btn" class="ab-save-btn">Save Army List</button>
+        <div class="ab-save-status" id="ab-save-status" aria-live="polite"></div>
       </div>
       {% else %}
-      <div class="totals-card" style="text-align:center;">
-        <p style="color:var(--text-muted);font-size:0.875rem;margin-bottom:var(--sp-4);">
-          <a href="{% url 'accounts:login' %}">Log in</a> to save and share your army lists.
-        </p>
-        <a href="{% url 'accounts:register' %}" class="btn btn-secondary btn-full">Create Free Account</a>
+      <div class="ab-login-card">
+        <p>Sign in to save and share your army lists.</p>
+        <a href="{% url 'accounts:login' %}?next={{ request.path }}" rel="nofollow" class="ab-login-link">Sign In</a>
+        <a href="{% url 'accounts:register' %}" rel="nofollow" class="ab-register-link">Create Free Account</a>
       </div>
       {% endif %}
 
+      {# Prebuilt armies #}
+      {% if prebuilt_armies %}
+      <div class="ab-prebuilt-card">
+        <div class="ab-section-label">Sample Armies</div>
+        {% for army in prebuilt_armies %}
+        <button type="button" class="ab-prebuilt-btn" data-pb-idx="{{ forloop.counter0 }}">
+          <span>{{ army.name }}</span>
+          <span class="ab-prebuilt-pts">{{ army.points_total }} pts</span>
+        </button>
+        {% endfor %}
+      </div>
+      {% endif %}
 
-      {# User's saved armies #}
+      {# Saved armies #}
       {% if saved_armies %}
-      <div class="totals-card saved-armies-section">
-        <h4>My Saved Lists</h4>
+      <div class="ab-saved-card">
+        <div class="ab-section-label">My Saved Lists</div>
         {% for army in saved_armies %}
-        <a class="saved-army-link" href="{{ army.get_absolute_url }}">
-          {{ army.name }} — <span style="color:var(--text-muted);">{{ army.points_total }}pts</span>
+        <a href="{{ army.get_absolute_url }}" class="ab-saved-item">
+          <span class="ab-saved-name">{{ army.name }}</span>
+          <span class="ab-saved-pts">{{ army.points_total }} pts</span>
         </a>
         {% endfor %}
-        <a href="{% url 'calculators:my_armies' %}" style="font-size:0.8rem;color:var(--accent-gold-lt);display:block;margin-top:var(--sp-3);">
-          View all my lists →
-        </a>
+        <a href="{% url 'calculators:my_armies' %}" class="ab-saved-all">View all lists</a>
       </div>
       {% endif %}
 
-    </aside>
+    </aside>{# /ab-army-panel #}
+
+  </div>{# /ab-layout #}
+
+  {# ── Mobile sticky bottom bar ── #}
+  <div class="ab-mobile-bar" id="ab-mobile-bar" aria-label="Army summary bar">
+    <div class="ab-mobile-bar-inner">
+      <div class="ab-mobile-stats">
+        <span id="ab-mob-pts">0 pts</span>
+        <span class="ab-mob-sep">|</span>
+        <span id="ab-mob-price">$0.00</span>
+        <span class="ab-mob-sep">|</span>
+        <span id="ab-mob-units">0 units</span>
+      </div>
+      <button type="button" class="ab-mob-toggle" id="ab-mob-toggle">View Army</button>
+    </div>
   </div>
 
-</div>
+  {% else %}
+
+  {# ── No faction selected ── #}
+  <div class="ab-no-faction">
+    <h1 class="ab-page-title">Army Builder</h1>
+    <p class="ab-no-faction-sub">Select a faction above to start building your list and calculating real US retail costs.</p>
+  </div>
+
+  {% endif %}
+
+</div>{# /ab-shell #}
 {% endblock %}
 
 {% block extra_js %}
 <script>
-/* army-calculator.js — vanilla JS army list manager
-   Security: all user-visible text goes through escHtml() */
 (function () {
-  "use strict";
+  'use strict';
 
-  var selectedUnits = {};
+  /* ── Utilities ── */
+  const $ = id => document.getElementById(id);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+  const fmt = n => '$' + parseFloat(n || 0).toFixed(2);
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
-  function qs(sel) { return document.querySelector(sel); }
-  function qsa(sel) { return Array.from(document.querySelectorAll(sel)); }
-  function fmt(num) { return "$" + parseFloat(num || 0).toFixed(2); }
+  /* ── Save URL ── */
+  const SAVE_URL = "{% url 'calculators:save_army' %}";
 
-  function escHtml(s) {
-    return String(s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
+  /* ── State ── */
+  const state = {
+    units: {},          // id -> {id,name,qty,points,typQty,price,msrp,cat}
+    budget: 2000,
+    activeCat: 'all',
+    searchQuery: '',
+  };
 
-  function updateDisplay() {
-    var points = 0, cost = 0, retail = 0, lines = [];
+  /* ── Computed ── */
+  const totalPts   = () => Object.values(state.units).reduce((s, u) => s + u.points * u.typQty * u.qty, 0);
+  const totalPrice = () => Object.values(state.units).reduce((s, u) => s + parseFloat(u.price || 0) * u.qty, 0);
+  const totalMsrp  = () => Object.values(state.units).reduce((s, u) => s + parseFloat(u.msrp  || 0) * u.qty, 0);
+  const unitCount  = () => Object.values(state.units).reduce((s, u) => s + u.qty, 0);
 
-    Object.values(selectedUnits).forEach(function (u) {
-      var unitPts  = u.points * u.typicalQty * u.quantity;
-      var unitCost = parseFloat(u.price  || 0) * u.quantity;
-      var unitRetail = parseFloat(u.msrp || 0) * u.quantity;
-      points += unitPts; cost += unitCost; retail += unitRetail;
-      lines.push(
-        '<p class="selected-unit-line">' +
-        escHtml(u.name) + ' ×' + u.quantity +
-        ' <span style="color:var(--accent-green-lt)">' + fmt(unitCost) + '</span>' +
-        ' <span style="color:var(--text-muted)">(' + unitPts + 'pts)</span></p>'
-      );
-    });
+  /* ── setText helper ── */
+  function setText(id, val) { const el = $(id); if (el) el.textContent = val; }
 
-    qs('#total-points').textContent  = points;
-    qs('#total-cost').textContent    = fmt(cost);
-    qs('#total-retail').textContent  = fmt(retail);
-    qs('#total-savings').textContent = fmt(retail - cost);
-
-    var listEl = qs('#selected-units-list');
-    listEl.innerHTML = lines.length ? lines.join('') : '<p class="no-units-msg">No units added yet.</p>';
-  }
-
-  function addUnit(unitId) {
-    var row = qs('#unit-row-' + unitId);
-    if (!row) return;
-    if (!selectedUnits[unitId]) {
-      selectedUnits[unitId] = {
-        id: unitId,
-        name: row.dataset.name,
-        quantity: 1,
-        points: parseInt(row.dataset.points, 10) || 0,
-        typicalQty: parseInt(row.dataset.typicalQty, 10) || 1,
-        price: row.dataset.price || '0',
-        msrp: row.dataset.msrp || '0',
-      };
-    } else {
-      selectedUnits[unitId].quantity = Math.min(20, selectedUnits[unitId].quantity + 1);
+  /* ── Progress bar ── */
+  function updateProgress() {
+    const used   = totalPts();
+    const budget = state.budget;
+    const pct    = budget > 0 ? Math.min(100, (used / budget) * 100) : 0;
+    const fill   = $('ab-progress-fill');
+    if (fill) {
+      fill.style.width = pct + '%';
+      fill.classList.remove('ab-progress-fill--warn', 'ab-progress-fill--over');
+      if (pct >= 100) fill.classList.add('ab-progress-fill--over');
+      else if (pct >= 80) fill.classList.add('ab-progress-fill--warn');
     }
-    syncRowUI(unitId); updateDisplay();
-  }
-
-  function removeUnit(unitId) {
-    delete selectedUnits[unitId];
-    syncRowUI(unitId); updateDisplay();
-  }
-
-  function syncRowUI(unitId) {
-    var row = qs('#unit-row-' + unitId);
-    if (!row) return;
-    var addBtn     = row.querySelector('.add-unit-btn');
-    var qtyBlock   = row.querySelector('.unit-qty');
-    var qtyDisplay = row.querySelector('.qty-display');
-    if (selectedUnits[unitId]) {
-      addBtn.style.display = 'none';
-      qtyBlock.style.display = 'flex';
-      qtyDisplay.textContent = selectedUnits[unitId].quantity;
-      row.classList.add('selected');
-    } else {
-      addBtn.style.display = '';
-      qtyBlock.style.display = 'none';
-      row.classList.remove('selected');
+    const track = $('ab-progress-track');
+    if (track) track.setAttribute('aria-valuenow', Math.round(pct));
+    setText('ab-pts-used', used);
+    const remEl = $('ab-pts-remaining');
+    if (remEl) {
+      const rem = budget - used;
+      remEl.textContent = rem >= 0 ? '(' + rem + ' remaining)' : '(' + Math.abs(rem) + ' over budget)';
+      remEl.style.color = rem < 0 ? 'var(--accent-red-lt)' : '';
     }
   }
 
-  function loadPrebuiltArmy(unitsJson) {
-    var units;
-    try { units = (typeof unitsJson === 'string') ? JSON.parse(unitsJson) : unitsJson; }
-    catch (e) { return; }
-    Object.keys(selectedUnits).forEach(function (id) { delete selectedUnits[id]; syncRowUI(id); });
-    units.forEach(function (u) {
-      var id = u.unit_type_id;
-      var row = qs('#unit-row-' + id);
-      if (!row) return;
-      selectedUnits[id] = {
-        id: id, name: row.dataset.name || u.name,
-        quantity: u.quantity || 1,
-        points: parseInt(row.dataset.points, 10) || 0,
-        typicalQty: parseInt(row.dataset.typicalQty, 10) || 1,
-        price: row.dataset.price || '0',
-        msrp: row.dataset.msrp || '0',
-      };
-      syncRowUI(id);
+  /* ── Roster ── */
+  function renderRoster() {
+    const listEl = $('ab-roster-list');
+    const emptyEl = $('ab-roster-empty');
+    if (!listEl) return;
+    const units = Object.values(state.units);
+    if (!units.length) {
+      if (emptyEl) emptyEl.style.display = 'block';
+      $$('.ab-roster-line').forEach(el => el.remove());
+      return;
+    }
+    if (emptyEl) emptyEl.style.display = 'none';
+    // Track existing lines
+    const existing = {};
+    $$('.ab-roster-line[data-uid]').forEach(el => { existing[el.dataset.uid] = el; });
+    // Remove stale lines
+    Object.keys(existing).forEach(id => { if (!state.units[id]) existing[id].remove(); });
+    // Add / update lines
+    units.forEach(u => {
+      const linePts = u.points * u.typQty * u.qty;
+      let line = existing[u.id];
+      if (!line) {
+        line = document.createElement('div');
+        line.className = 'ab-roster-line';
+        line.dataset.uid = u.id;
+        listEl.appendChild(line);
+      }
+      line.innerHTML =
+        '<span class="ab-roster-unit-name">' + esc(u.name) + '</span>' +
+        '<span class="ab-roster-qty">x' + u.qty + '</span>' +
+        '<span class="ab-roster-pts">' + linePts + ' pts</span>';
     });
-    updateDisplay();
+  }
+
+  /* ── Full render ── */
+  function render() {
+    const pts   = totalPts();
+    const price = totalPrice();
+    const msrp  = totalMsrp();
+    const count = unitCount();
+    const savings = Math.max(0, msrp - price);
+
+    setText('ab-unit-count',  count + ' unit' + (count !== 1 ? 's' : ''));
+    setText('ab-total-price', fmt(price));
+    setText('ab-total-msrp',  fmt(msrp));
+    setText('ab-total-savings', fmt(savings));
+    setText('ab-pts-budget',  state.budget);
+    updateProgress();
+    renderRoster();
+
+    // Mobile bar
+    setText('ab-mob-pts',   pts + ' pts');
+    setText('ab-mob-price', fmt(price));
+    setText('ab-mob-units', count + ' unit' + (count !== 1 ? 's' : ''));
+  }
+
+  /* ── Sync a single card to state ── */
+  function syncCard(id) {
+    const card   = document.getElementById('ab-unit-' + id);
+    if (!card) return;
+    const addBtn = card.querySelector('.ab-add-btn');
+    const qtyWrap = card.querySelector('.ab-qty-wrap');
+    const qtyNum  = card.querySelector('.ab-qty-num');
+    const sel = !!state.units[id];
+    card.classList.toggle('ab-unit-card--selected', sel);
+    if (addBtn)  addBtn.style.display  = sel ? 'none' : '';
+    if (qtyWrap) qtyWrap.style.display = sel ? 'flex' : 'none';
+    if (qtyNum && sel) qtyNum.textContent = state.units[id].qty;
+  }
+
+  /* ── Add / remove / change qty ── */
+  function addUnit(id) {
+    const card = document.getElementById('ab-unit-' + id);
+    if (!card) return;
+    if (!state.units[id]) {
+      state.units[id] = {
+        id,
+        name:   card.dataset.name,
+        qty:    1,
+        points: parseInt(card.dataset.points, 10) || 0,
+        typQty: parseInt(card.dataset.typicalQty, 10) || 1,
+        price:  card.dataset.price || '0',
+        msrp:   card.dataset.msrp  || '0',
+        cat:    card.dataset.cat,
+      };
+    } else {
+      state.units[id].qty = Math.min(20, state.units[id].qty + 1);
+    }
+    syncCard(id); render();
+  }
+
+  function removeUnit(id) {
+    delete state.units[id];
+    syncCard(id); render();
+  }
+
+  function changeQty(id, delta) {
+    if (!state.units[id]) return;
+    const newQty = state.units[id].qty + delta;
+    if (newQty <= 0) { removeUnit(id); return; }
+    state.units[id].qty = Math.min(20, newQty);
+    syncCard(id); render();
+  }
+
+  /* ── Filter ── */
+  function filterUnits() {
+    const q   = state.searchQuery.trim().toLowerCase();
+    const cat = state.activeCat;
+    $$('.ab-cat-group').forEach(group => {
+      let visible = false;
+      group.querySelectorAll('.ab-unit-card').forEach(card => {
+        const matchesCat    = cat === 'all' || card.dataset.cat === cat;
+        const matchesSearch = !q || card.dataset.name.includes(q);
+        const show = matchesCat && matchesSearch;
+        card.style.display = show ? '' : 'none';
+        if (show) visible = true;
+      });
+      group.style.display = visible ? '' : 'none';
+    });
+  }
+
+  /* ── Prebuilt armies ── */
+  function loadPrebuilt(units) {
+    Object.keys(state.units).forEach(id => { delete state.units[id]; syncCard(id); });
+    units.forEach(u => {
+      const id   = String(u.unit_type_id);
+      const card = document.getElementById('ab-unit-' + id);
+      if (!card) return;
+      state.units[id] = {
+        id, name: card.dataset.name,
+        qty:    u.quantity || 1,
+        points: parseInt(card.dataset.points, 10) || 0,
+        typQty: parseInt(card.dataset.typicalQty, 10) || 1,
+        price:  card.dataset.price || '0',
+        msrp:   card.dataset.msrp  || '0',
+        cat:    card.dataset.cat,
+      };
+      syncCard(id);
+    });
+    render();
+  }
+
+  /* Load prebuilt data from embedded JSON */
+  const prebuiltDataEl = document.getElementById('ab-prebuilt-data');
+  const prebuiltData   = prebuiltDataEl ? JSON.parse(prebuiltDataEl.textContent || '[]') : [];
+  $$('.ab-prebuilt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.pbIdx, 10);
+      const army = prebuiltData[idx];
+      if (army && army.units) loadPrebuilt(army.units);
+    });
+  });
+
+  /* ── Save army ── */
+  function getCsrf() {
+    const m = document.cookie.match(/csrftoken=([^;]+)/);
+    return m ? m[1] : '';
   }
 
   function saveArmy() {
-    var name = (qs('#army-name-input') || {}).value || '';
-    var isPublic = (qs('#army-public-toggle') || {}).checked || false;
-    var statusEl = qs('#save-status');
-
-    if (!name.trim()) {
-      if (statusEl) { statusEl.style.display = 'block'; statusEl.textContent = 'Please enter an army name.'; }
-      return;
-    }
-    var unitList = Object.values(selectedUnits).map(function (u) { return { id: u.id, quantity: u.quantity }; });
-    if (!unitList.length) {
-      if (statusEl) { statusEl.style.display = 'block'; statusEl.textContent = 'Add some units first!'; }
-      return;
-    }
-    if (statusEl) { statusEl.style.display = 'block'; statusEl.textContent = 'Saving…'; }
-
-    fetch("{% url 'calculators:save_army' %}", {
+    const nameEl   = $('ab-army-name');
+    const statusEl = $('ab-save-status');
+    const publicEl = $('ab-army-public');
+    const name     = nameEl ? nameEl.value.trim() : '';
+    if (!name) { if (statusEl) statusEl.textContent = 'Please enter a name for your list.'; return; }
+    const unitList = Object.values(state.units).map(u => ({ id: u.id, quantity: u.qty }));
+    if (!unitList.length) { if (statusEl) statusEl.textContent = 'Add some units first.'; return; }
+    if (statusEl) statusEl.textContent = 'Saving...';
+    fetch(SAVE_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
-      body: JSON.stringify({ name: name, units: unitList, is_public: isPublic }),
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+      body: JSON.stringify({ name, units: unitList, is_public: publicEl ? publicEl.checked : false }),
     })
-    .then(function (r) { return r.json(); })
-    .then(function (data) {
+    .then(r => r.json())
+    .then(data => {
       if (data.success) {
-        statusEl.textContent = 'Saved! ';
-        var link = document.createElement('a');
-        link.href = data.url; link.textContent = 'View list →';
-        statusEl.appendChild(link);
+        if (statusEl) statusEl.innerHTML = 'Saved. <a href="' + data.url + '">View list</a>';
       } else {
         if (statusEl) statusEl.textContent = data.error || 'Save failed.';
       }
     })
-    .catch(function () { if (statusEl) statusEl.textContent = 'Network error. Please try again.'; });
+    .catch(() => { if (statusEl) statusEl.textContent = 'Network error. Try again.'; });
   }
 
-  function getCookie(name) {
-    var value = '; ' + document.cookie;
-    var parts = value.split('; ' + name + '=');
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return '';
-  }
-
-  /* Datasheet toggle — individual */
-  document.addEventListener('click', function (e) {
-    var btn = e.target.closest('.btn-datasheet-toggle');
-    if (!btn || btn.id === 'toggle-all-datasheets') return;
-    var row = btn.closest('.unit-row');
-    var sheet = row && row.querySelector('.unit-datasheet');
-    if (sheet) {
-      var isOpen = sheet.style.display !== 'none';
-      sheet.style.display = isOpen ? 'none' : 'block';
-      btn.classList.toggle('active', !isOpen);
+  /* ── Discount badges (JS-calculated) ── */
+  $$('.ab-unit-card').forEach(card => {
+    const price = parseFloat(card.dataset.price || 0);
+    const msrp  = parseFloat(card.dataset.msrp  || 0);
+    if (price > 0 && msrp > 0 && msrp > price) {
+      const pct   = Math.round((msrp - price) / msrp * 100);
+      const badge = card.querySelector('.ab-discount-badge');
+      if (badge) badge.textContent = pct + '% off GW';
     }
   });
 
-  /* Expand / Collapse All */
-  var toggleAllBtn = qs('#toggle-all-datasheets');
-  if (toggleAllBtn) {
-    var allExpanded = false;
-    toggleAllBtn.addEventListener('click', function () {
-      allExpanded = !allExpanded;
-      qsa('.unit-datasheet').forEach(function (sheet) {
-        sheet.style.display = allExpanded ? 'block' : 'none';
-      });
-      qsa('.btn-datasheet-toggle:not(#toggle-all-datasheets)').forEach(function (btn) {
-        btn.classList.toggle('active', allExpanded);
-      });
-      toggleAllBtn.textContent = allExpanded ? '▼ Collapse All Stats' : '▶ Expand All Stats';
+  /* ── Budget input ── */
+  const budgetInput = $('ab-budget');
+  if (budgetInput) {
+    budgetInput.addEventListener('input', () => {
+      state.budget = parseInt(budgetInput.value, 10) || 0;
+      updateProgress();
     });
   }
 
-  /* Event delegation */
-  document.addEventListener('click', function (e) {
-    var row = e.target.closest('.unit-row');
-    if (!row) return;
-    var unitId = row.dataset.unitId;
-    if (e.target.closest('.btn-datasheet-toggle')) return; // handled above
-    if (e.target.classList.contains('add-unit-btn')) {
-      addUnit(unitId);
-    } else if (e.target.classList.contains('increase-qty')) {
-      if (selectedUnits[unitId]) {
-        selectedUnits[unitId].quantity = Math.min(20, selectedUnits[unitId].quantity + 1);
-        syncRowUI(unitId); updateDisplay();
+  /* ── Search ── */
+  const searchInput = $('ab-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      state.searchQuery = searchInput.value;
+      filterUnits();
+    });
+  }
+
+  /* ── Category pills ── */
+  $$('.ab-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      $$('.ab-pill').forEach(p => { p.classList.remove('ab-pill--active'); p.setAttribute('aria-selected', 'false'); });
+      pill.classList.add('ab-pill--active');
+      pill.setAttribute('aria-selected', 'true');
+      state.activeCat = pill.dataset.cat;
+      filterUnits();
+    });
+  });
+
+  /* ── Expand all toggle ── */
+  let allExpanded = false;
+  const expandBtn = $('ab-expand-all');
+  if (expandBtn) {
+    expandBtn.addEventListener('click', () => {
+      allExpanded = !allExpanded;
+      $$('.ab-datasheet').forEach(ds => {
+        ds.style.display = allExpanded ? 'block' : 'none';
+        ds.setAttribute('aria-hidden', String(!allExpanded));
+      });
+      $$('.ab-datasheet-toggle').forEach(btn => btn.classList.toggle('ab-open', allExpanded));
+      expandBtn.textContent = allExpanded ? 'Collapse All Stats' : 'Expand All Stats';
+    });
+  }
+
+  /* ── Event delegation for card interactions ── */
+  document.addEventListener('click', e => {
+    // Datasheet toggle
+    const dsToggle = e.target.closest('.ab-datasheet-toggle');
+    if (dsToggle) {
+      const uid = dsToggle.dataset.unitId;
+      const ds  = document.getElementById('ab-ds-' + uid);
+      if (ds) {
+        const open = ds.style.display !== 'none';
+        ds.style.display = open ? 'none' : 'block';
+        ds.setAttribute('aria-hidden', String(open));
+        dsToggle.classList.toggle('ab-open', !open);
       }
-    } else if (e.target.classList.contains('decrease-qty')) {
-      if (selectedUnits[unitId]) {
-        selectedUnits[unitId].quantity -= 1;
-        if (selectedUnits[unitId].quantity <= 0) removeUnit(unitId);
-        else { syncRowUI(unitId); updateDisplay(); }
-      }
-    } else if (e.target.classList.contains('remove-unit')) {
-      removeUnit(unitId);
+      return;
     }
+    // Add
+    if (e.target.classList.contains('ab-add-btn')) { addUnit(e.target.dataset.unitId); return; }
+    // Dec
+    if (e.target.classList.contains('ab-dec'))     { changeQty(e.target.dataset.unitId, -1); return; }
+    // Inc
+    if (e.target.classList.contains('ab-inc'))     { changeQty(e.target.dataset.unitId, +1); return; }
+    // Remove
+    if (e.target.classList.contains('ab-qty-rem')) { removeUnit(e.target.dataset.unitId); return; }
   });
 
-  qsa('.prebuilt-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () { loadPrebuiltArmy(btn.dataset.units); });
-  });
-
-  var saveBtn = qs('#save-army-btn');
+  /* ── Save button ── */
+  const saveBtn = $('ab-save-btn');
   if (saveBtn) saveBtn.addEventListener('click', saveArmy);
 
-  updateDisplay();
+  /* ── Mobile bottom sheet ── */
+  const overlay  = $('ab-panel-overlay');
+  const panel    = $('ab-army-panel');
+  const mobBtn   = $('ab-mob-toggle');
+  const closeBtn = $('ab-sheet-close');
+
+  function openPanel() {
+    if (overlay) overlay.classList.add('ab-overlay-open');
+    if (panel)   panel.classList.add('ab-sheet-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePanel() {
+    if (overlay) overlay.classList.remove('ab-overlay-open');
+    if (panel)   panel.classList.remove('ab-sheet-open');
+    document.body.style.overflow = '';
+  }
+  if (mobBtn)   mobBtn.addEventListener('click', openPanel);
+  if (overlay)  overlay.addEventListener('click', closePanel);
+  if (closeBtn) closeBtn.addEventListener('click', closePanel);
+
+  /* ── Initial render ── */
+  render();
+
 })();
 </script>
 {% endblock %}

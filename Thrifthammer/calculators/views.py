@@ -187,6 +187,10 @@ class ArmyCalculatorView(TemplateView):
         context.update({
             'ordered_categories': ordered_categories,
             'prebuilt_armies': prebuilt_armies,
+            'prebuilt_armies_list': [
+                {'name': a.name, 'points': a.points_total, 'units': a.units_data}
+                for a in prebuilt_armies
+            ],
             'saved_armies': saved_armies,
             'available_factions': available_factions,
             'selected_faction': selected_faction,
