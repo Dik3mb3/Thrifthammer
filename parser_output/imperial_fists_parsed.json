@@ -1,0 +1,6069 @@
+{
+  "faction": "Imperial Fists",
+  "source_file": "Imperial Fists.html",
+  "extracted_date": "2026-05-01",
+  "total_cards": 84,
+  "units": [
+    {
+      "card_name": "Darnath Lysander",
+      "points": 100,
+      "primary_stats": {
+        "model": "Darnath Lysander",
+        "M": "5\"",
+        "T": "5",
+        "SV": "2+",
+        "W": "7",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Darnath Lysander",
+          "M": "5\"",
+          "T": "5",
+          "SV": "2+",
+          "W": "7",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Fist of Dorn",
+          "A": "5",
+          "WS": "2+",
+          "S": "10",
+          "AP": "-3",
+          "D": "3",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Icon of Obstinacy",
+          "description": "Each time an attack targets this model's unit, if the Strength characteristic of that attack is greater than or equal to the Toughness characteristic of that unit, subtract 1 from the Wound roll."
+        },
+        {
+          "name": "Rampart",
+          "description": "Once per battle, at the start of any phase, this model can use this ability. If it does, until the end of the phase, this model has a 2+ invulnerable save."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Terminator Assault Squad\n■ Terminator Squad"
+        },
+        {
+          "name": "Inspiring Commander",
+          "description": "‘If you include this model in your army, until the end of the battle, non-Character models in Terminator Assault Squad and Terminator Squad units from your army have an Objective Control characteristic of 2 while they are not Battle-shocked."
+        }
+      ]
+    },
+    {
+      "card_name": "Tor Garadon",
+      "points": 90,
+      "primary_stats": {
+        "model": "Tor Garadon",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Tor Garadon",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Artificer Grav Gun",
+          "range": "18\"",
+          "A": "2",
+          "BS": "2+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Anti-vehicle 2+"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Hand of Defiance",
+          "A": "5",
+          "WS": "2+",
+          "S": "12",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Signum Array",
+          "description": "While this model is leading a unit, ranged weapons equipped by models in that unit have the [IGNORES COVER] ability."
+        },
+        {
+          "name": "Siege Captain",
+          "description": "Each time this model makes an attack that targets a Monster, Vehicle, or Fortification unit, improve the Strength, Armour Penetration and Damage characteristics of that attack by 2."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Aggressor Squad\n■ Eradicator Squad\n■ Heavy Intercessor Squad"
+        }
+      ]
+    },
+    {
+      "card_name": "Ancient",
+      "points": 50,
+      "primary_stats": {
+        "model": "Primaris Ancient",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Primaris Ancient",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Bolt Rifle",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Heavy"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "5",
+          "WS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Unbreakable Duty",
+          "description": "While this model is within range of an objective marker and/or within 6\" of the centre of the battlefield, this model has the Feel No Pain 4+ ability."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Assault Intercessor Squad\n■ Devastator Squad\n■ Hellblaster Squad\n■ Infernus Squad\n■ Intercessor Squad\n■ Sternguard Veteran Squad\n■ Desolation Squad\n■ Tactical Squad\nYou can attach this model to one of the above units even if one Captain, Chapter Master or Lieutenant model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        },
+        {
+          "name": "Astartes Banner",
+          "description": "While this model is leading a unit, add 1 to the Objective Control characteristic of models in that unit."
+        }
+      ]
+    },
+    {
+      "card_name": "Ancient in Terminator Armor",
+      "points": 75,
+      "primary_stats": {
+        "model": "Ancient in Terminator Armor",
+        "M": "5\"",
+        "T": "5",
+        "SV": "2+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Ancient in Terminator Armor",
+          "M": "5\"",
+          "T": "5",
+          "SV": "2+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Storm bolter",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Chainfist",
+          "A": "4",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Anti Vehicle 3+"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Keep the Banner High",
+          "description": "While this model is leading a unit, each time a model in that unit makes an attack, add 1 to the Hit roll if that unit is below its Starting Strength, and add 1 to the Wound roll as well if that unit is Below Half-strength"
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Terminator Squad\n■ Terminator Assault Squad\nYou can attach this model to one of the above units even if one Captain, Chapter Master or Lieutenant model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        },
+        {
+          "name": "Astartes Banner",
+          "description": "While this model is leading a unit, add 1 to the Objective Control characteristic of models in that unit."
+        }
+      ]
+    },
+    {
+      "card_name": "Apothecary",
+      "points": 50,
+      "primary_stats": {
+        "model": "Primaris Apothecary",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Primaris Apothecary",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Absolver bolt pistol",
+          "range": "18\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Reductor Pistol",
+          "range": "3\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-4",
+          "D": "2",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Narthecium",
+          "description": "While this model is leading a unit, in your Command phase, you can return 1 destroyed model (excluding Character models) to that unit."
+        },
+        {
+          "name": "Gene Seed Recovery",
+          "description": "When this model’s Bodyguard unit is destroyed, roll one D6: on a 2+, you gain 1CP."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Assault Intercessor Squad\n■ Desolation Squad\n■ Devastator Squad\n■ Hellblaster Squad\n■ Infernus Squad\n■ Intercessor Squad\n■ Sternguard Veteran Squad\n■ Tactical Squad\nYou can attach this model to one of the above units even if one Captain, Chapter Master or Lieutenant model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        }
+      ]
+    },
+    {
+      "card_name": "Apothecary Biologis",
+      "points": 70,
+      "primary_stats": {
+        "model": "Apothecary Biologis",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Apothecary Biologis",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Absolver bolt pistol",
+          "range": "18\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Surgical Precision",
+          "description": "While this model is leading a unit, weapons equipped by models in that unit have the [LETHAL HITS] ability."
+        },
+        {
+          "name": "Vivispectrum",
+          "description": "If this model’s unit destroys an enemy unit as the result of a melee attack, until the end of the battle, this model has an Objective Control characteristic of 9."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Aggressor Squad\n■ Eradicator Squad\n■ Heavy Intercessor Squad\nYou can attach this model to one of the above units even if one Captain or Chapter Master model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        }
+      ]
+    },
+    {
+      "card_name": "Bladeguard Ancient",
+      "points": 45,
+      "primary_stats": {
+        "model": "Bladeguard Ancient",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Bladeguard Ancient",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Heavy Bolt Pistol",
+          "range": "18\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "5",
+          "WS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Deeds of Heroism",
+          "description": "Once per battle, when this model is selected to fight, it can use this ability. If it does, until the end of the phase, add 1 to the Attacks characteristic of melee weapons equipped by models in this model’s unit"
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n■ Bladeguard Veteran Squad\nYou can attach this model to the above unit even if one Captain, Chapter Master or Lieutenant model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        },
+        {
+          "name": "Astartes Banner",
+          "description": "While this model is leading a unit, add 1 to the Objective Control characteristic of models in that unit."
+        }
+      ]
+    },
+    {
+      "card_name": "Captain",
+      "points": 80,
+      "primary_stats": {
+        "model": "Captain",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Captain",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Master-crafted bolter",
+          "range": "24\"",
+          "A": "2",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "6",
+          "WS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Assault Intercessor Squad\n■ Bladeguard Veteran Squad*\n■ Hellblaster Squad*\n■ Infernus Squad\n■ Intercessor Squad\n■ Sternguard Veteran Squad\n■ Company Heroes\n■ Tactical Squad\n\nThis model cannot be attached to a Bladeguard Veteran Squad unless it is equipped with a relic shield, and cannot be attached to a Hellblaster Squad unless it is equipped with a plasma pistol."
+        },
+        {
+          "name": "Finest Hour",
+          "description": "Once per battle, at the start of the Fight phase, this model can use this ability. If it does, until the end of the phase, add 3 to the Attacks characteristic of melee weapons equipped by this model and those weapons have the [DEVASTATING WOUNDS] ability."
+        },
+        {
+          "name": "Rites of Battle",
+          "description": "Once per battle round, one unit from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP."
+        }
+      ]
+    },
+    {
+      "card_name": "Captain in Gravis Armour",
+      "points": 80,
+      "primary_stats": {
+        "model": "Captain in Gravis Armour",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Captain in Gravis Armour",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Master-crafted Heavy Bolt Rifle",
+          "range": "30\"",
+          "A": "2",
+          "BS": "2+",
+          "S": "5",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Assault, Heavy"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Master-crafted power weapon",
+          "A": "6",
+          "WS": "2+",
+          "S": "5",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Refuse to Yield",
+          "description": "Each time an attack is allocated to this model, halve the Damage characteristic of that attack."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Aggressor Squad\n■ Eradicator Squad\n■ Heavy Intercessor Squad"
+        },
+        {
+          "name": "Rites of Battle",
+          "description": "Once per battle round, one unit from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP."
+        }
+      ]
+    },
+    {
+      "card_name": "Captain in Phobos Armour",
+      "points": 70,
+      "primary_stats": {
+        "model": "Captain in Phobos Armour",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Captain in Phobos Armour",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Instigator Bolt Carbine",
+          "range": "24\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Precision"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Combat Knife",
+          "A": "6",
+          "WS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Master of Deceit",
+          "description": "After both players have deployed their armies, if your army includes one or more models with this ability, you can select up to three friendly ADEPTUS ASTARTES INFANTRY units and redeploy all of those units. When doing so, any of those units can be placed into Strategic Reserves, regardless of how many units are already in Strategic Reserves."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Eliminator Squad\n■ Incursor Squad\n■ Infiltrator Squad\n■ Reiver Squad\n■ Scout Squad"
+        },
+        {
+          "name": "Rites of Battle",
+          "description": "Once per battle round, one unit from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP."
+        }
+      ]
+    },
+    {
+      "card_name": "Captain in Terminator Armour",
+      "points": 95,
+      "primary_stats": {
+        "model": "Captain in Terminator Armour",
+        "M": "5\"",
+        "T": "5",
+        "SV": "2+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Captain in Terminator Armour",
+          "M": "5\"",
+          "T": "5",
+          "SV": "2+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Storm bolter",
+          "range": "24\"",
+          "A": "2",
+          "BS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Relic Weapon",
+          "A": "6",
+          "WS": "2+",
+          "S": "5",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Relic Terminator Squad\n■ Terminator Assault Squad\n■ Terminator Squad"
+        },
+        {
+          "name": "Unstoppable Valour",
+          "description": "You can re-roll Charge rolls made for this model’s unit."
+        },
+        {
+          "name": "Rites of Battle",
+          "description": "Once per battle round, one unit from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP."
+        }
+      ]
+    },
+    {
+      "card_name": "Captain with Jump Pack",
+      "points": 75,
+      "primary_stats": {
+        "model": "Captain with Jump Pack",
+        "M": "12\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Captain with Jump Pack",
+          "M": "12\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Heavy Bolt Pistol",
+          "range": "18\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Astartes Chainsword",
+          "A": "7",
+          "WS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Angel's Wrath",
+          "description": "While this model is leading a unit, each time that unit ends a Charge move, until the end of the turn, add 1 to the Strength characteristic of melee  weapons equipped by models in that unit."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Assault Intercessors with Jump Packs\n■ Vanguard Veteran Squad with Jump Packs"
+        },
+        {
+          "name": "Rites of Battle",
+          "description": "Once per battle round, one unit from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaplain",
+      "points": 60,
+      "primary_stats": {
+        "model": "Chaplain",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "5+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaplain",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "5+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Absolver bolt pistol",
+          "range": "18\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Crozius arcanum",
+          "A": "5",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Assault Intercessor Squad\n■ Bladeguard Veteran Squad\n■ Hellblaster Squad\n■ Infernus Squad\n■ Intercessor Squad\n■ Sternguard Veteran Squad\n■ Tactical Squad"
+        },
+        {
+          "name": "Litany of Hate",
+          "description": "While this model is leading a unit, each time a model in that unit makes a melee attack, add 1 to the Wound roll."
+        },
+        {
+          "name": "Spiritual Leader",
+          "description": "Once per battle, at the start of any phase, you can select one friendly Adeptus Astartes unit that is Battle-shocked and within 12\" of this model. That unit is no longer Battle-shocked."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaplain in Terminator Armour",
+      "points": 75,
+      "primary_stats": {
+        "model": "Chaplain in Terminator Armour",
+        "M": "5\"",
+        "T": "5",
+        "SV": "2+",
+        "W": "5",
+        "LD": "5+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaplain in Terminator Armour",
+          "M": "5\"",
+          "T": "5",
+          "SV": "2+",
+          "W": "5",
+          "LD": "5+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Storm bolter",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Crozius arcanum",
+          "A": "5",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Recitation of Faith",
+          "description": "While this model is leading a unit, models in that unit have the Feel No Pain 4+ ability against mortal wounds."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Terminator Assault Squad\n■ Terminator Squad"
+        },
+        {
+          "name": "Litany of Hate",
+          "description": "While this model is leading a unit, each time a model in that unit makes a melee attack, add 1 to the Wound roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaplain on Bike",
+      "points": 75,
+      "primary_stats": {
+        "model": "Chaplain on Bike",
+        "M": "12\"",
+        "T": "5",
+        "SV": "3+",
+        "W": "5",
+        "LD": "5+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaplain on Bike",
+          "M": "12\"",
+          "T": "5",
+          "SV": "3+",
+          "W": "5",
+          "LD": "5+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Absolver bolt pistol",
+          "range": "18\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Twin bolt rifle",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Crozius arcanum",
+          "A": "5",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Catechism of Fire",
+          "description": "Each time this model’s unit is selected to shoot, you can select one enemy unit within 12\" of and visible to this model. Until the end of the phase, ranged\nweapons equipped by models in this model’s unit have the [DEVASTATING WOUNDS] ability when targeting that enemy unit."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Bike Squad\n■ Outrider Squad"
+        },
+        {
+          "name": "Litany of Hate",
+          "description": "While this model is leading a unit, each time a model in that unit makes a melee attack, add 1 to the Wound roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Chaplain with Jump Pack",
+      "points": 75,
+      "primary_stats": {
+        "model": "Chaplain with Jump Pack",
+        "M": "12\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "5+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Chaplain with Jump Pack",
+          "M": "12\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "5+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Crozius arcanum",
+          "A": "5",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Exhortation of Rage",
+          "description": "Each time this model’s unit is selected to fight, you can select one enemy unit within Engagement Range of this model’s unit and roll one D6: on a 4-5, that enemy unit suffers D3 mortal wounds; on a 6, that enemy unit suffers 3 mortal wounds."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Assault Intercessors with Jump Packs\n■ Vanguard Veteran Squad with Jump Packs"
+        },
+        {
+          "name": "Litany of Hate",
+          "description": "While this model is leading a unit, each time a model in that unit makes a melee attack, add 1 to the Wound roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Judiciar",
+      "points": 70,
+      "primary_stats": {
+        "model": "Judiciar",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "5+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Judiciar",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "5+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Absolver bolt pistol",
+          "range": "18\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Executioner Relic Blade",
+          "A": "5",
+          "WS": "2+",
+          "S": "7",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Devastating Wounds, Precision"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Tempormortis",
+          "description": "While this model is leading a unit, that unit has the Fights First ability."
+        },
+        {
+          "name": "Silent Fury",
+          "description": "Each time this model destroys an enemy Character model, until the end of the battle, add 1 to the Attacks characteristic of its executioner relic blade."
+        },
+        {
+          "name": "Invulnerable Save*",
+          "description": "4+\n\nThis model has a 4+ invulnerable save against melee attacks."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Assault Intercessor Squad\n■ Bladeguard Veteran Squad\n■ Infernus Squad\n■ Intercessor Squad\n■ Sternguard Veteran Squad\n■ Tactical Squad"
+        }
+      ]
+    },
+    {
+      "card_name": "Librarian",
+      "points": 65,
+      "primary_stats": {
+        "model": "Librarian",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Librarian",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Smite - Witchfire",
+          "range": "24\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Psychic"
+        },
+        {
+          "name": "Smite - Focused Witchfire",
+          "range": "24\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "D3",
+          "keywords": "Devastating Wounds, Hazardous, Psychic"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Force weapon",
+          "A": "4",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Mental Fortress [Psychic]",
+          "description": "While this model is leading a unit, models in that unit have a 4+ invulnerable save."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Assault Intercessor Squad\n■ Desolation Squad\n■ Devastator Squad\n■ Hellblaster Squad\n■ Infernus Squad\n■ Intercessor Squad\n■ Sternguard Veteran Squad\n■ Tactical Squad"
+        },
+        {
+          "name": "Psychic Hood",
+          "description": "While this model is leading a unit, models in that unit have the Feel No Pain 4+ ability against Psychic Attacks."
+        }
+      ]
+    },
+    {
+      "card_name": "Librarian in Phobos Armour",
+      "points": 70,
+      "primary_stats": {
+        "model": "Librarian in Phobos Armor",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Librarian in Phobos Armor",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Smite - Witchfire",
+          "range": "24\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Psychic"
+        },
+        {
+          "name": "Smite - Focused Witchfire",
+          "range": "24\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "D3",
+          "keywords": "Devastating Wounds, Hazardous, Psychic"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Force weapon",
+          "A": "4",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Shrouding [Psychic]",
+          "description": "While this model is leading a unit, models in that unit have the Stealth ability and that unit cannot be targeted by ranged attacks unless the attacking\nmodel is within 12\"."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Eliminator Squad\n■ Incursor Squad\n■ Infiltrator Squad\n■ Reiver Squad"
+        },
+        {
+          "name": "Psychic Hood",
+          "description": "While this model is leading a unit, models in that unit have the Feel No Pain 4+ ability against Psychic Attacks."
+        }
+      ]
+    },
+    {
+      "card_name": "Librarian in Terminator Armour",
+      "points": 75,
+      "primary_stats": {
+        "model": "Librarian in Terminator Armor",
+        "M": "5\"",
+        "T": "5",
+        "SV": "2+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Librarian in Terminator Armor",
+          "M": "5\"",
+          "T": "5",
+          "SV": "2+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Smite - Witchfire",
+          "range": "24\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Psychic"
+        },
+        {
+          "name": "Smite - Focused Witchfire",
+          "range": "24\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "D3",
+          "keywords": "Devastating Wounds, Hazardous, Psychic"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Force weapon",
+          "A": "4",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Psychic"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Veil of Time [Psychic]",
+          "description": "While this model is leading a unit, weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Relic Terminator Squad\n■ Terminator Assault Squad\n■ Terminator Squad"
+        },
+        {
+          "name": "Psychic Hood",
+          "description": "While this model is leading a unit, models in that unit have the Feel No Pain 4+ ability against Psychic Attacks."
+        }
+      ]
+    },
+    {
+      "card_name": "Lieutenant",
+      "points": 55,
+      "primary_stats": {
+        "model": "Lieutenant",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Lieutenant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Master-crafted bolter",
+          "range": "24\"",
+          "A": "2",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "5",
+          "WS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Assault Intercessor Squad\n■ Bladeguard Veteran Squad\n■ Company Heroes\n■ Hellblaster Squad\n■ Infernus Squad\n■ Intercessor Squad\n■ Sternguard Veteran Squad\n■ Tactical Squad\nYou can attach this model to a unit it can lead even if one Captain or Chapter Master model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        },
+        {
+          "name": "Target Priority",
+          "description": "This model’s unit is eligible to shoot and declare a charge in a turn in which it Fell Back"
+        },
+        {
+          "name": "Tactical Precision",
+          "description": "While this model is leading a unit, weapons equipped by models in that unit have the [LETHAL HITS] ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Lieutenant in Phobos Armour",
+      "points": 55,
+      "primary_stats": {
+        "model": "Lieutenant in Phobos Armor",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Lieutenant in Phobos Armor",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Master-crafted Scoped Bolt Carbine",
+          "range": "24\"",
+          "A": "2",
+          "BS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Paired Combat Blades",
+          "A": "5",
+          "WS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Sustained Hits 1"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Strategic Dispersal",
+          "description": "In your Shooting phase, after this model’s unit has shot, if it is not within Engagement Range of any enemy models, it can make a Normal move of up to  6\". If it does, until the end of the turn, that unit is not eligible to declare a charge.’"
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Incursor Squad\n■ Infiltrator Squad\n■ Reiver Squad\nYou can attach this model to a unit it can lead units even if one Captain or Chapter Master model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        },
+        {
+          "name": "Tactical Precision",
+          "description": "While this model is leading a unit, weapons equipped by models in that unit have the [LETHAL HITS] ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Lieutenant in Reiver Armour",
+      "points": 55,
+      "primary_stats": {
+        "model": "Lieutenant in Reiver Armor",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Lieutenant in Reiver Armor",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Master-crafted Special Issue Bolt Pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Pistol, Precision"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Combat Knife",
+          "A": "6",
+          "WS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Precision"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Deadly Terror",
+          "description": "While this model is leading a unit, increase the range of that unit’s Terror Troops ability by 3\"."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following unit:\n■ Reiver Squad\nYou can attach this model a unit it can lead even if one Captain or Chapter Master model has already been attached to it. If you do, and that Bodyguard unit is destroyed, the Leader units attached to it become separate units, with their original Starting Strengths."
+        },
+        {
+          "name": "Tactical Precision",
+          "description": "While this model is leading a unit, weapons equipped by models in that unit have the [LETHAL HITS] ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Lieutenant with Combi-weapon",
+      "points": 85,
+      "primary_stats": {
+        "model": "Lieutenant with Combi-weapon",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Lieutenant with Combi-weapon",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Combi-weapon",
+          "range": "24\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Anti-Infantry 4+, Devastating Wounds, Rapid Fire 1"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Paired Combat Blades",
+          "A": "5",
+          "WS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Anti-Infantry 4+, Sustained Hits 1"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Priority Objective Identified",
+          "description": "At the start of the first battle round, if your army includes one or more models with this ability, you can select one objective marker on the battlefield. Until the end of the battle, while one or more models with this ability are on the battlefield, each time a friendly ADEPTUS ASTARTES model makes an attack that targets an enemy unit that is within range of that objective marker, re-roll a Wound roll of 1."
+        },
+        {
+          "name": "Evade and Survive",
+          "description": "Once per turn, when an enemy unit ends a Normal, Advance or Fall Back move within 9\" of this unit, if this unit is not within Engagement Range of one or more enemy units, it can make a Normal move"
+        },
+        {
+          "name": "Lone Survivor",
+          "description": "This model cannot be selected to be your Warlord."
+        }
+      ]
+    },
+    {
+      "card_name": "Techmarine",
+      "points": 55,
+      "primary_stats": {
+        "model": "Techmarine",
+        "M": "6\"",
+        "T": "4",
+        "SV": "2+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Techmarine",
+          "M": "6\"",
+          "T": "4",
+          "SV": "2+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Forge Bolter",
+          "range": "24\"",
+          "A": "3",
+          "BS": "2+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        },
+        {
+          "name": "Grav-pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Anti-vehicle 2+, Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Omnissian power axe",
+          "A": "4",
+          "WS": "3+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        },
+        {
+          "name": "Servo-arm",
+          "A": "1",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Extra Attacks"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Techmarine",
+          "description": "While this model is within 3\" of one or more friendly Adeptus Astartes Vehicle units, this model has the Lone Operative ability"
+        },
+        {
+          "name": "Blessing of the Omnissiah",
+          "description": "In your Command phase, you can select one friendly Adeptus Astartes Vehicle model within 3\" of this model. That model regains up to D3 lost wounds and, until the start of your next Command phase, each time that Vehicle model makes an attack, add 1 to the Hit roll. Each model can only be selected for this ability once per turn."
+        },
+        {
+          "name": "Vengeance of the Omnissiah",
+          "description": "If a friendly Adeptus Astartes Vehicle model is destroyed within 12\" of this model, until the end of the battle, this model’s Omnissian power axe has an\nAttacks characteristic of 7."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n■ Assault Intercessor Squad\n■ Desolation Squad\n■ Devastator Squad\n■ Intercessor Squad\n■ Tactical Squad"
+        }
+      ]
+    },
+    {
+      "card_name": "Assault Intercessor Squad",
+      "points": 75,
+      "primary_stats": {
+        "model": "Assault Intercessor Sergeant",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Assault Intercessor Sergeant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "2"
+        },
+        {
+          "model": "Assault Intercessor (x4)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Heavy Bolt Pistol (x5)",
+          "range": "18\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Astartes Chainsword (x5)",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Shock Assault",
+          "description": "Each time a model in this unit targets an enemy unit with a melee attack, re-roll a Wound roll of 1. If that enemy unit is within range of an objective marker, you can re-roll the Wound roll instead."
+        }
+      ]
+    },
+    {
+      "card_name": "Heavy Intercessor Squad",
+      "points": 100,
+      "primary_stats": {
+        "model": "Heavy Intercessor Sergeant",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Heavy Intercessor Sergeant",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "2"
+        },
+        {
+          "model": "Heavy intercessor Squad (x4)",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Heavy Bolt Rifle (x5)",
+          "range": "30\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Assault, Heavy"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Unyielding in the Face of the Foe",
+          "description": "While this unit is within range of an objective marker you control, each time an attack with a Damage characteristic of 1 is allocated to a model in \nthis unit, add 1 to any armour saving throw made against that attack."
+        }
+      ]
+    },
+    {
+      "card_name": "Intercessor Squad",
+      "points": 80,
+      "primary_stats": {
+        "model": "Intercessor Sergeant",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Intercessor Sergeant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "2"
+        },
+        {
+          "model": "Intercessor Squad (x4)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Bolt Rifle (x5)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Heavy"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Objective Secured",
+          "description": "If you control an objective marker at the end of your Command phase and this unit is within range of that objective marker, that objective marker remains under your control, even if you have no models within range of it, until your opponent controls it at the start or end of any turn."
+        },
+        {
+          "name": "Target Elimination",
+          "description": "Each time this unit is selected to shoot, it can use this ability. If it does, until the end of the phase, add 2 to the Attacks characteristic of bolt rifles equipped by models in this unit and you can only select one enemy unit as the target of all of this unit's attacks"
+        }
+      ]
+    },
+    {
+      "card_name": "Tactical Squad",
+      "points": 140,
+      "primary_stats": {
+        "model": "Tactical Squad (x9)",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Tactical Squad (x9)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "2"
+        },
+        {
+          "model": "Tactical Marine Sergeant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x10)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Boltgun (x10)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x10)",
+          "A": "2",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Combat Squads",
+          "description": "At the start of the Declare Battle Formations step, before any units have been set up, this unit can be split into two units, each containing five models"
+        }
+      ]
+    },
+    {
+      "card_name": "Aggressor Squad",
+      "points": 95,
+      "primary_stats": {
+        "model": "Aggressor Sergeant",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Aggressor Sergeant",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Aggressors (x2)",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Flamestorm Gauntlets (x3)",
+          "range": "12\"",
+          "A": "D6+1",
+          "BS": "N/A",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Twin power fist (x3)",
+          "A": "3",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Twin-linked"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Close-quarters Firepower",
+          "description": "Each time a model in this unit makes a ranged attack that targets the closest eligible target, improve the Armour Penetration characteristic of that attack\nby 1."
+        }
+      ]
+    },
+    {
+      "card_name": "Assault Intercessors with Jump Packs",
+      "points": 90,
+      "primary_stats": {
+        "model": "Assault Intercessor Sergeant with Jump Pack",
+        "M": "12\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Assault Intercessor Sergeant with Jump Pack",
+          "M": "12\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Assault Intercessors with Jump Packs (x4)",
+          "M": "12\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Heavy Bolt Pistol (x5)",
+          "range": "18\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Astartes Chainsword (x5)",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Hammer of Wrath",
+          "description": "Each time this unit ends a Charge move, select one enemy unit within Engagement Range of it, then roll one D6 for each model in this unit that is within Engagement Range of that enemy unit: for each 4+, that enemy unit suffers 1 mortal wound."
+        }
+      ]
+    },
+    {
+      "card_name": "Bladeguard Veteran Squad",
+      "points": 80,
+      "primary_stats": {
+        "model": "Bladeguard Veteran Sergeant",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Bladeguard Veteran Sergeant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Bladeguard Veteran (x2)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Heavy Bolt Pistol (x3)",
+          "range": "18\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Master-crafted power weapon (x3)",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Bladeguard",
+          "description": "At the start of the Fight phase, you can select one of the following abilities to apply to models in this unit until the end of the phase:\n■ Swords of the Imperium: Each time a model in this unit makes a melee attack, re-roll a Hit roll of 1.\n■ Shields of the Imperium: Each time an invulnerable saving throw is made for a model in this unit, re-roll a saving throw of 1."
+        }
+      ]
+    },
+    {
+      "card_name": "Centurion Assault Squad",
+      "points": 150,
+      "primary_stats": {
+        "model": "Assault Centurion (x2)",
+        "M": "4\"",
+        "T": "7",
+        "SV": "2+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Assault Centurion (x2)",
+          "M": "4\"",
+          "T": "7",
+          "SV": "2+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "2"
+        },
+        {
+          "model": "Assault Centurion Sergeant",
+          "M": "4\"",
+          "T": "7",
+          "SV": "2+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Centurion Bolters (x2)",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 3, Twin-linked"
+        },
+        {
+          "name": "Twin flamer (x3)",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Siege Drills (x3)",
+          "A": "3",
+          "WS": "3+",
+          "S": "10",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Twin-linked"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Annihilator Protocols",
+          "description": "Melee weapons equipped by models in this unit have the [SUSTAINED HITS 2] ability when targeting Monster, Vehicle or Fortification units"
+        },
+        {
+          "name": "Centurion Assault Launchers",
+          "description": "The bearer has the Grenades keyword."
+        }
+      ]
+    },
+    {
+      "card_name": "Centurion Devastator Squad",
+      "points": 175,
+      "primary_stats": {
+        "model": "Devastator Centurion (x2)",
+        "M": "4\"",
+        "T": "7",
+        "SV": "2+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Devastator Centurion (x2)",
+          "M": "4\"",
+          "T": "7",
+          "SV": "2+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "2"
+        },
+        {
+          "model": "Devastator Centurion Sergeant",
+          "M": "4\"",
+          "T": "7",
+          "SV": "2+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Centurion Bolters (x3)",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 3, Twin-linked"
+        },
+        {
+          "name": "Grav-cannon (x2)",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Anti-Vehicle 2+"
+        },
+        {
+          "name": "Grav-cannon",
+          "range": "24\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "6",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Anti-vehicle 2+"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Centurion Fists (x3)",
+          "A": "3",
+          "WS": "4+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Decimator Protocols",
+          "description": "Each time a model in this unit makes a ranged attack, re-roll a Hit roll of 1. If the target of that attack is an enemy unit within range of an objective marker, you can re-roll the Hit roll instead."
+        }
+      ]
+    },
+    {
+      "card_name": "Company Heroes",
+      "points": 105,
+      "primary_stats": {
+        "model": "Company Heroes (x4)",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Company Heroes (x4)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x4)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Bolt Rifle",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Master-crafted Bolt Rifle",
+          "range": "24\"",
+          "A": "2",
+          "BS": "2+",
+          "S": "4",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Devastating Wounds, Rapid Fire 1"
+        },
+        {
+          "name": "Master-crafted Heavy Bolter",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Heavy, Sustained Hits 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x3)",
+          "A": "5",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Master-crafted Power Weapon",
+          "A": "6",
+          "WS": "2+",
+          "S": "5",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Precision"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Ancient Banner",
+          "description": "While this unit contains an Ancient, add 1 to the Objective Control characteristic of models in this unit"
+        },
+        {
+          "name": "Command Squad",
+          "description": "While a Character model is leading this unit, each time an attack targets this unit, subtract 1 from the Wound roll."
+        },
+        {
+          "name": "Company Heroes",
+          "description": "You must attach one Captain or Chapter Master model to this unit. If this is not possible, this unit does not take part in the battle and counts as having been destroyed."
+        }
+      ]
+    },
+    {
+      "card_name": "Desolation Squad",
+      "points": 200,
+      "primary_stats": {
+        "model": "Desolation Squad (x4)",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Desolation Squad (x4)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Desolation Sergeant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Castellan Launcher (x5)",
+          "range": "36\"",
+          "A": "D3",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast, Indirect Fire"
+        },
+        {
+          "name": "Superfrag Rocket Launcher (x5)",
+          "range": "48\"",
+          "A": "D6+1",
+          "BS": "4+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast, Heavy"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Targeter Optics",
+          "description": "Each time this unit Remains Stationary, until the start of your next Movement phase, ranged weapons equipped by models in this unit have the  [IGNORES COVER] ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Devastator Squad",
+      "points": 120,
+      "primary_stats": {
+        "model": "Devastator Sergeant",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Devastator Sergeant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Devastator Marine (x4)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Boltgun",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Grav-cannon (x4)",
+          "range": "24\"",
+          "A": "3",
+          "BS": "4+",
+          "S": "6",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Anti-vehicle 2+, Heavy"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x5)",
+          "A": "2",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Signum",
+          "description": "Each time this unit Remains Stationary, until the start of your next Movement phase, ranged weapons equipped by models in this unit have the [IGNORES COVER] ability."
+        },
+        {
+          "name": "Armorium Cherub",
+          "description": "Once per battle, after making a Hit roll for a model in this unit, you can change that roll to an unmodified 6."
+        }
+      ]
+    },
+    {
+      "card_name": "Eliminator Squad",
+      "points": 85,
+      "primary_stats": {
+        "model": "Eliminator Squad (x2)",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Eliminator Squad (x2)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Eliminator Sergeant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x3)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Bolt Sniper Rifle (x3)",
+          "range": "36\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Heavy, Precision"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x3)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Reposition Under Covering Fire",
+          "description": "In your Shooting phase, after this unit has shot, if it contains an Eliminator Sergeant equipped with an instigator bolt carbine, this unit can make a\nNormal move. If it does so, until the end of the turn, this unit is not eligible to declare a charge."
+        },
+        {
+          "name": "Mark the Target",
+          "description": "Each time this unit Remains Stationary, until the start of your next Movement phase, ranged weapons equipped by models in this unit have the [DEVASTATING WOUNDS] ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Eradicator Squad",
+      "points": 90,
+      "primary_stats": {
+        "model": "Eradicator Squad (x2)",
+        "M": "5\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Eradicator Squad (x2)",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Eradicator Sergeant",
+          "M": "5\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x3)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Melta rifle (x3)",
+          "range": "18\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Heavy, Melta 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x3)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Total Obliteration",
+          "description": "Each time a ranged attack made by a model in this unit targets a Monster or Vehicle model, you can re-roll the Hit roll, you can re-roll the Wound roll and you can re-roll the Damage roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Hellblaster Squad",
+      "points": 110,
+      "primary_stats": {
+        "model": "Hellblaster Squad (x4)",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Hellblaster Squad (x4)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Hellblaster Sergeant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Plasma Incinerator - Standard (x5)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "7",
+          "AP": "-2",
+          "D": "1",
+          "keywords": "Assault, Heavy"
+        },
+        {
+          "name": "Plasma Incinerator - Supercharge (x5)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Assault, Heavy, Hazardous"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "For the Chapter!",
+          "description": "Each time a model in this unit is destroyed, roll one D6: on a 3+, do not remove it from play. The destroyed model can shoot after the attacking model’s unit has finished making its attacks, and is then removed from play. When resolving these attacks, any Hazardous tests taken for that attack are automatically passed."
+        }
+      ]
+    },
+    {
+      "card_name": "Inceptor Squad",
+      "points": 120,
+      "primary_stats": {
+        "model": "Inceptor Squad (x2)",
+        "M": "10\"",
+        "T": "6",
+        "SV": "3+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Inceptor Squad (x2)",
+          "M": "10\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Inceptor Sergeant",
+          "M": "10\"",
+          "T": "6",
+          "SV": "3+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Assault Bolters (x3)",
+          "range": "18\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Assault, Pistol, Sustained Hits 2, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x3)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Meteoric Descent",
+          "description": "In your Movement phase, when this unit is set up on the battlefield using the Deep Strike ability, it can perform a meteoric descent. If it does, this unit can be set up anywhere on the battlefield that is more than 6\" horizontally away from all enemy units, but until the end of the turn, it is not eligible to declare a charge."
+        }
+      ]
+    },
+    {
+      "card_name": "Incursor Squad",
+      "points": 80,
+      "primary_stats": {
+        "model": "Incursor Squad (x4)",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Incursor Squad (x4)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Incursor Sergeant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Occulus Bolt Carbine (x5)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Assault, Ignores Cover"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Paired Combat Blades (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Sustained Hits 1"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Multi-spectrum Array",
+          "description": "In your Shooting phase, after this unit has shot, select one enemy unit that was hit by one or more attacks made by this unit this phase. Until the end of the phase, each time a friendly Adeptus Astartes unit makes an attack that targets that enemy unit, add 1 to the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Infernus Squad",
+      "points": 90,
+      "primary_stats": {
+        "model": "Infernus Squad (x4)",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Infernus Squad (x4)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Infernus Sergeant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Pyreblaster (x5)",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Purge the Foe",
+          "description": "In your Shooting phase, after this unit has shot, you can select one enemy Infantry unit hit by one or more of those attacks made with a pyreblaster. That enemy unit must take a Battle-shock test, subtracting 1 from that test."
+        }
+      ]
+    },
+    {
+      "card_name": "Infiltrator Squad",
+      "points": 100,
+      "primary_stats": {
+        "model": "Infiltrator Squad (x4)",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Infiltrator Squad (x4)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Infiltrator Sergeant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Marksman Bolt Carbine (x5)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Heavy"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Omni-scramblers",
+          "description": "Enemy units that are set up on the battlefield from Reserves cannot be set up within 12\" of this unit."
+        }
+      ]
+    },
+    {
+      "card_name": "Reiver Squad",
+      "points": 80,
+      "primary_stats": {
+        "model": "Reiver Sergeant",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Reiver Sergeant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Reiver Squad (x4)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Special Issue Bolt Pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Pistol, Precision"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Combat Knife (x5)",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Precision"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Fearsome Assault",
+          "description": "At the start of the Fight phase, each enemy unit within Engagement Range of one or more units with this ability must take a Battle-shock test subtracting 1 from that test"
+        },
+        {
+          "name": "Terror Troops",
+          "description": "While an enemy unit (excluding Monsters and Vehicles) is within 3\" of one or more units with this ability, subtract 1 from the Objective Control characteristic of models in that enemy unit."
+        }
+      ]
+    },
+    {
+      "card_name": "Scout Squad",
+      "points": 70,
+      "primary_stats": {
+        "model": "Scout Sergeant",
+        "M": "6\"",
+        "T": "4",
+        "SV": "4+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Scout Sergeant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "4+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Scout Squad (x4)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "4+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Boltgun (x5)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x5)",
+          "A": "2",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Guerrilla Tactics",
+          "description": "At the end of your opponent’s turn, if this unit is more than 6\" away from all enemy models, you can remove this unit from the battlefield and place it into\nStrategic Reserves."
+        }
+      ]
+    },
+    {
+      "card_name": "Sternguard Veteran Squad",
+      "points": 100,
+      "primary_stats": {
+        "model": "Sternguard Veteran Sergeant",
+        "M": "6\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Sternguard Veteran Sergeant",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Sternguard Veteran Squad (x4)",
+          "M": "6\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Sternguard Bolt Pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating Wounds, Pistol"
+        },
+        {
+          "name": "Sternguard Bolt Rifle (x5)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Assault, Devastating Wounds, Heavy, Rapid Fire 1"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x5)",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Sternguard Focus",
+          "description": "Each time a model in this unit makes an attack that targets your Oath of Moment Target, you can re-roll the wound roll"
+        }
+      ]
+    },
+    {
+      "card_name": "Suppressor Squad",
+      "points": 75,
+      "primary_stats": {
+        "model": "Suppressor Squad (x2)",
+        "M": "12\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Suppressor Squad (x2)",
+          "M": "12\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Suppressor Sergeant",
+          "M": "12\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Accelerator Autocannon (x3)",
+          "range": "48\"",
+          "A": "3",
+          "BS": "4+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Heavy"
+        },
+        {
+          "name": "Bolt pistol (x3)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x3)",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Suppression Fire",
+          "description": "In your Shooting phase, after this unit has shot, select one enemy unit hit by one or more of those attacks made with an accelerator autocannon. Until the start of your next turn, while this unit is on the battlefield, that enemy unit is suppressed. While a unit is suppressed, each time a model in that unit makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Terminator Assault Squad",
+      "points": 180,
+      "primary_stats": {
+        "model": "Assault Terminator Sergeant w/ Storm Shield",
+        "M": "5\"",
+        "T": "5",
+        "SV": "2+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Assault Terminator Sergeant w/ Storm Shield",
+          "M": "5\"",
+          "T": "5",
+          "SV": "2+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Assault Terminator w/ Storm Shield (x4)",
+          "M": "5\"",
+          "T": "5",
+          "SV": "2+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [
+        {
+          "name": "Thunder Hammer (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Teleport Homer",
+          "description": "At the start of the battle, you can set up one Teleport Homer token for this unit anywhere on the battlefield that is not in your opponent’s deployment zone. If you do, once per battle, you can target this unit with the Rapid Ingress Stratagem for 0CP, but when resolving that Stratagem, you must set this unit up within 3\" horizontally of that token and not within 9\" horizontally of any enemy models. That token is then removed."
+        },
+        {
+          "name": "Terminatus Assault",
+          "description": "At the start of the Fight phase, each enemy unit within Engagement Range of this unit must take a Battle-Shock test."
+        },
+        {
+          "name": "Storm Shield",
+          "description": "The bearer has a Wounds characteristic of 4."
+        }
+      ]
+    },
+    {
+      "card_name": "Terminator Squad",
+      "points": 170,
+      "primary_stats": {
+        "model": "Terminator Sergeant",
+        "M": "5\"",
+        "T": "5",
+        "SV": "2+",
+        "W": "3",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Terminator Sergeant",
+          "M": "5\"",
+          "T": "5",
+          "SV": "2+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Terminator Squad (x4)",
+          "M": "5\"",
+          "T": "5",
+          "SV": "2+",
+          "W": "3",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": "4+",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Storm bolter (x5)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Power fist (x5)",
+          "A": "3",
+          "WS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Teleport Homer",
+          "description": "At the start of the battle, you can set up one Teleport Homer token for this unit anywhere on the battlefield that is not in your opponent’s deployment zone. If you do, once per battle, you can target this unit with the Rapid Ingress Stratagem for 0CP, but when resolving that Stratagem, you must set this unit up within 3\" horizontally of that token and not within 9\" horizontally of any enemy models. That token is then removed."
+        },
+        {
+          "name": "Fury of the First",
+          "description": "Each time a model in this unit makes an attack that targets your Oath of Moment target, add 1 to the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Vanguard Veteran Squad with Jump Packs",
+      "points": 100,
+      "primary_stats": {
+        "model": "Vanguard Veteran Sergeant with Jump Pack",
+        "M": "12\"",
+        "T": "4",
+        "SV": "3+",
+        "W": "2",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Vanguard Veteran Sergeant with Jump Pack",
+          "M": "12\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        },
+        {
+          "model": "Vanguard Veterans with Jump Packs (x4)",
+          "M": "12\"",
+          "T": "4",
+          "SV": "3+",
+          "W": "2",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol (x5)",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Vanguard Veteran Weapon (x5)",
+          "A": "4",
+          "WS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Vanguard Assault",
+          "description": "Each time this unit ends a Charge move, until the end of the turn, melee weapons equipped by models in this unit have the [LETHAL HITS] ability."
+        }
+      ]
+    },
+    {
+      "card_name": "Invader ATV",
+      "points": 60,
+      "primary_stats": {
+        "model": "Invader ATV",
+        "M": "12\"",
+        "T": "5",
+        "SV": "3+",
+        "W": "8",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Invader ATV",
+          "M": "12\"",
+          "T": "5",
+          "SV": "3+",
+          "W": "8",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Twin bolt rifle",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Twin-linked"
+        },
+        {
+          "name": "Onslaught gatling cannon",
+          "range": "24\"",
+          "A": "8",
+          "BS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "5",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Outrider Escort",
+          "description": "Once per turn, in your opponent's Shooting phase, when another friendly Adeptus Astartes Mounted unit within 6\" of this model is selected as the target of an attack, one model from your army with this ability can use it. If it does, after that enemy unit has finished making its attacks, that model can shoot as if it were your Shooting phase , but when resolving those attacks it can only target that enemy unit [and only if it is an eligible target)."
+        }
+      ]
+    },
+    {
+      "card_name": "Outrider Squad",
+      "points": 80,
+      "primary_stats": {
+        "model": "Outrider Squad (x2)",
+        "M": "12\"",
+        "T": "5",
+        "SV": "3+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Outrider Squad (x2)",
+          "M": "12\"",
+          "T": "5",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "2"
+        },
+        {
+          "model": "Outrider Sergeant",
+          "M": "12\"",
+          "T": "5",
+          "SV": "3+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Heavy Bolt Pistol (x3)",
+          "range": "18\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Twin bolt rifle (x3)",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Astartes Chainsword (x3)",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Thunderous Impact",
+          "description": "Each time a model in this unit makes a melee attack, if this unit made a Charge move this turn, improve the Strength and Damage characteristics of that attack by 1"
+        }
+      ]
+    },
+    {
+      "card_name": "Astraeus",
+      "points": 525,
+      "primary_stats": {
+        "model": "Astraeus",
+        "M": "10\"",
+        "T": "12",
+        "SV": "2+",
+        "W": "24",
+        "LD": "6+",
+        "OC": "8"
+      },
+      "all_model_stats": [
+        {
+          "model": "Astraeus",
+          "M": "10\"",
+          "T": "12",
+          "SV": "2+",
+          "W": "24",
+          "LD": "6+",
+          "OC": "8"
+        }
+      ],
+      "invuln_save": "This model has a 5+ invulnerable save against ranged attacks.",
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Ironhail Heavy Stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 3"
+        },
+        {
+          "name": "Storm bolter",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        },
+        {
+          "name": "Twin macro-accelerator cannon",
+          "range": "72\"",
+          "A": "12",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Sustained Hits 1, Twin-linked"
+        },
+        {
+          "name": "Twin heavy bolter",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Sustained Hits 1, Twin-linked"
+        },
+        {
+          "name": "Astraeus las-ripper (x2)",
+          "range": "36\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured hull",
+          "A": "6",
+          "WS": "4+",
+          "S": "8",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Suppression Fire",
+          "description": "In your Shooting phase, after this model has shot, select one enemy unit hit by one or more attacks made with its twin macro-accelerator cannon this phase. Until the start of your next turn, while this model is on the battlefield, that enemy unit is suppressed. While a unit is suppressed, each time a model in that unit makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Damaged: 1-8 wounds remaining",
+          "description": "While this model has 1-8 wounds remaining, subtract 4 from this model’s Objective Control characteristic and each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Ballistus Dreadnought",
+      "points": 150,
+      "primary_stats": {
+        "model": "Ballistus Dreadnought",
+        "M": "8\"",
+        "T": "10",
+        "SV": "2+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "4"
+      },
+      "all_model_stats": [
+        {
+          "model": "Ballistus Dreadnought",
+          "M": "8\"",
+          "T": "10",
+          "SV": "2+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "4"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Ballistus Lascannon",
+          "range": "48\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": ""
+        },
+        {
+          "name": "Ballistus Missile Launcher - Frag",
+          "range": "48\"",
+          "A": "2D6",
+          "BS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Ballistus Missile Launcher - Krak",
+          "range": "48\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "10",
+          "AP": "-2",
+          "D": "D6",
+          "keywords": ""
+        },
+        {
+          "name": "Twin Storm Bolter",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Feet",
+          "A": "5",
+          "WS": "3+",
+          "S": "7",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Ballistus Strike",
+          "description": "Each time this model makes a ranged attack that targets a unit that is not Below Half-strength, you can re-roll the Hit roll."
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Brutalis Dreadnought",
+      "points": 160,
+      "primary_stats": {
+        "model": "Brutalis Dreadnought",
+        "M": "8\"",
+        "T": "10",
+        "SV": "2+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "4"
+      },
+      "all_model_stats": [
+        {
+          "model": "Brutalis Dreadnought",
+          "M": "8\"",
+          "T": "10",
+          "SV": "2+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "4"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Twin Icarus ironhail heavy stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Anti-FLY 4+, Rapid Fire 3, Twin-linked"
+        },
+        {
+          "name": "Brutalis Bolt Rifles",
+          "range": "24\"",
+          "A": "4",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Twin-linked"
+        },
+        {
+          "name": "Twin heavy bolter",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Sustained Hits 1, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Brutalis Fists",
+          "A": "6",
+          "WS": "3+",
+          "S": "12",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Twin-linked"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Brutalis Charge",
+          "description": "Each time this model ends a Charge move, select one enemy unit within Engagement Range of it and roll one D6: on a 2-3, that enemy unit suffers D3 mortal wounds; on a 4-5, that enemy unit suffers 3 mortal wounds; on a 6, that enemy unit suffers D3+3 mortal wounds"
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Dreadnought",
+      "points": 135,
+      "primary_stats": {
+        "model": "Dreadnought",
+        "M": "6\"",
+        "T": "9",
+        "SV": "2+",
+        "W": "8",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Dreadnought",
+          "M": "6\"",
+          "T": "9",
+          "SV": "2+",
+          "W": "8",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Missile Launcher - Frag",
+          "range": "48\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Missile Launcher - Krak",
+          "range": "48\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-2",
+          "D": "D6",
+          "keywords": ""
+        },
+        {
+          "name": "Assault Cannon",
+          "range": "24\"",
+          "A": "6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "5",
+          "WS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Wisdom of the Ancients [Aura]",
+          "description": "While a friendly Adeptus Astartes Infantry unit is within 6\" of this model, each time a model in that unit makes an attack, re-roll a Hit roll of 1."
+        }
+      ]
+    },
+    {
+      "card_name": "Firestrike Servo-Turrets",
+      "points": 75,
+      "primary_stats": {
+        "model": "Firestrike Servo-Turrets",
+        "M": "3\"",
+        "T": "6",
+        "SV": "2+",
+        "W": "6",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Firestrike Servo-Turrets",
+          "M": "3\"",
+          "T": "6",
+          "SV": "2+",
+          "W": "6",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Twin Firestrike Las-talon",
+          "range": "36\"",
+          "A": "2",
+          "BS": "2+",
+          "S": "10",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "3",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Sentinel Protocols",
+          "description": "Each time you select this unit for the Fire Overwatch Stratagem, hits are scored on unmodified Hit rolls of 4+ when resolving that Stratagem."
+        }
+      ]
+    },
+    {
+      "card_name": "Gladiator Lancer",
+      "points": 160,
+      "primary_stats": {
+        "model": "Gladiator Lancer",
+        "M": "10\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Gladiator Lancer",
+          "M": "10\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Lancer Laser Destroyer",
+          "range": "72\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "14",
+          "AP": "-4",
+          "D": "D6+3",
+          "keywords": "Heavy"
+        },
+        {
+          "name": "Fragstorm grenade launcher (x2)",
+          "range": "18\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Aqullon Optics",
+          "description": "Each time this model is selected to shoot, you can re-roll one Hit roll, you can re-roll one Wound roll and you can re-roll one Damage roll when resolving its attacks"
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Gladiator Reaper",
+      "points": 160,
+      "primary_stats": {
+        "model": "Gladiator Reaper",
+        "M": "10\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Gladiator Reaper",
+          "M": "10\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Tempest Bolter (x2)",
+          "range": "24\"",
+          "A": "4",
+          "BS": "3+",
+          "S": "4",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Rapid Fire 4"
+        },
+        {
+          "name": "Twin Heavy Onslaught Gatling Cannon",
+          "range": "24\"",
+          "A": "12",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating Wounds, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Rotating Death",
+          "description": "This model’s twin heavy onslaught gatling cannon has the [SUSTAINED HITS 2] ability when targeting Infantry units."
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Gladiator Valiant",
+      "points": 150,
+      "primary_stats": {
+        "model": "Gladiator Valiant",
+        "M": "10\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Gladiator Valiant",
+          "M": "10\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Multi-melta (x2)",
+          "range": "18\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Melta 2"
+        },
+        {
+          "name": "Twin Las-talon",
+          "range": "36\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "10",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Ferocious Assault",
+          "description": "Each time this model makes an attack with its twin las-talon that targets the closest eligible Monster or Vehicle unit, add 1 to the Hit roll"
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Invictor Tactical Warsuit",
+      "points": 125,
+      "primary_stats": {
+        "model": "Invictor Tactical Warsuit",
+        "M": "8\"",
+        "T": "8",
+        "SV": "3+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "4"
+      },
+      "all_model_stats": [
+        {
+          "model": "Invictor Tactical Warsuit",
+          "M": "8\"",
+          "T": "8",
+          "SV": "3+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "4"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Fragstorm grenade launcher",
+          "range": "18\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Heavy Bolter",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Sustained Hits 1"
+        },
+        {
+          "name": "Twin Ironhail Heavy Stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 3, Twin-linked"
+        },
+        {
+          "name": "Incendium Cannon",
+          "range": "12\"",
+          "A": "D6+3",
+          "BS": "N/A",
+          "S": "6",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Invictor Fist",
+          "A": "5",
+          "WS": "3+",
+          "S": "14",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Combat Support",
+          "description": "Once per turn, in your opponent’s Shooting phase, when a friendly Adeptus Astartes Phobos Infantry unit within 6\" of this model is selected as the target of an attack, this model can use this ability. If it does, after that enemy model’s unit has finished making its attacks, this model can shoot as if it were your Shooting phase, but when resolving those attacks it can only target that enemy unit (and only if it is an eligible target)."
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Land Raider",
+      "points": 220,
+      "primary_stats": {
+        "model": "Land Raider",
+        "M": "10\"",
+        "T": "12",
+        "SV": "2+",
+        "W": "16",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Land Raider",
+          "M": "10\"",
+          "T": "12",
+          "SV": "2+",
+          "W": "16",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Godhammer Lascannon (x2)",
+          "range": "48\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": ""
+        },
+        {
+          "name": "Twin heavy bolter",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Sustained Hits 1, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Tracks",
+          "A": "6",
+          "WS": "4+",
+          "S": "8",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Assault Ramp",
+          "description": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn."
+        },
+        {
+          "name": "Transport",
+          "description": "This model has a transport capacity of 12 Adeptus Astartes Infantry models. Each Jump Pack, Wulfen, Gravis or Terminator model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
+        },
+        {
+          "name": "Damaged: 1-5 Wounds Remaining",
+          "description": "While this model has 1-5 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Land Raider Crusader",
+      "points": 220,
+      "primary_stats": {
+        "model": "Land Raider Crusader",
+        "M": "12\"",
+        "T": "12",
+        "SV": "2+",
+        "W": "16",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Land Raider Crusader",
+          "M": "12\"",
+          "T": "12",
+          "SV": "2+",
+          "W": "16",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Hurricane Bolter (x2)",
+          "range": "24\"",
+          "A": "6",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 6, Twin-linked"
+        },
+        {
+          "name": "Twin assault cannon",
+          "range": "24\"",
+          "A": "6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating wounds, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Tracks",
+          "A": "6",
+          "WS": "4+",
+          "S": "8",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Transport",
+          "description": "This model has a transport capacity of 16 Adeptus Astartes Infantry models. Each Jump Pack, Wulfen, Gravis or Terminator model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
+        },
+        {
+          "name": "Assault Ramp",
+          "description": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn."
+        },
+        {
+          "name": "Damaged: 1-5 Wounds Remaining",
+          "description": "While this model has 1-5 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Land Raider Redeemer",
+      "points": 270,
+      "primary_stats": {
+        "model": "Land Raider Redeemer",
+        "M": "12\"",
+        "T": "12",
+        "SV": "2+",
+        "W": "16",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Land Raider Redeemer",
+          "M": "12\"",
+          "T": "12",
+          "SV": "2+",
+          "W": "16",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Flamestorm Cannon (x2)",
+          "range": "12\"",
+          "A": "D6+3",
+          "BS": "N/A",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Ignores Cover, Torrent"
+        },
+        {
+          "name": "Twin assault cannon",
+          "range": "24\"",
+          "A": "6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating wounds, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Tracks",
+          "A": "6",
+          "WS": "4+",
+          "S": "8",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Transport",
+          "description": "This model has a transport capacity of 14 Adeptus Astartes Infantry models. Each Jump Pack, Wulfen, Gravis or Terminator model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
+        },
+        {
+          "name": "Assault Ramp",
+          "description": "Each time a unit disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn."
+        },
+        {
+          "name": "Damaged: 1-5 Wounds Remaining",
+          "description": "While this model has 1-5 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Predator Annihilator",
+      "points": 135,
+      "primary_stats": {
+        "model": "Predator Annihilator",
+        "M": "10",
+        "T": "10",
+        "SV": "3+",
+        "W": "11",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Predator Annihilator",
+          "M": "10",
+          "T": "10",
+          "SV": "3+",
+          "W": "11",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Predator Twin Lascannon",
+          "range": "48\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "14",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": "Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Tracks",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Annihilator",
+          "description": "Each time a ranged attack made by this model is allocated to a Monster or Vehicle model, you can re‑roll the Damage roll"
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Predator Destructor",
+      "points": 140,
+      "primary_stats": {
+        "model": "Predator Destructor",
+        "M": "10",
+        "T": "10",
+        "SV": "3+",
+        "W": "11",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Predator Destructor",
+          "M": "10",
+          "T": "10",
+          "SV": "3+",
+          "W": "11",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Predator Autocannon",
+          "range": "48\"",
+          "A": "4",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-1",
+          "D": "3",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Tracks",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Destructor",
+          "description": "Each time this model makes a ranged attack that targets an Infantry unit, improve the Armour Penetration characteristic of that attack by 1."
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Redemptor Dreadnought",
+      "points": 205,
+      "primary_stats": {
+        "model": "Redemptor Dreadnought",
+        "M": "8\"",
+        "T": "10",
+        "SV": "2+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "4"
+      },
+      "all_model_stats": [
+        {
+          "model": "Redemptor Dreadnought",
+          "M": "8\"",
+          "T": "10",
+          "SV": "2+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "4"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Heavy Onslaught Gatling Cannon",
+          "range": "24\"",
+          "A": "12",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating Wounds"
+        },
+        {
+          "name": "Heavy Flamer",
+          "range": "12\"",
+          "A": "D6",
+          "BS": "N/A",
+          "S": "5",
+          "AP": "-1",
+          "D": "1",
+          "keywords": "Ignores Cover, Torrent"
+        },
+        {
+          "name": "Twin Fragstorm Grenade Launcher",
+          "range": "18\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Redemptor Fist",
+          "A": "5",
+          "WS": "3+",
+          "S": "12",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Duty Eternal",
+          "description": "Each time an attack is allocated to this model, subtract 1 from the Damage characteristic of that attack"
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Repulsor",
+      "points": 180,
+      "primary_stats": {
+        "model": "Repulsor",
+        "M": "10\"",
+        "T": "12",
+        "SV": "3+",
+        "W": "16",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Repulsor",
+          "M": "10\"",
+          "T": "12",
+          "SV": "3+",
+          "W": "16",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Hunter-slayer missile",
+          "range": "48\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "14",
+          "AP": "-3",
+          "D": "D6",
+          "keywords": "Indirect Fire, One Shot"
+        },
+        {
+          "name": "Repulsor Defensive Array",
+          "range": "24\"",
+          "A": "18",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Twin heavy bolter",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Sustained Hits 1, Twin-linked"
+        },
+        {
+          "name": "Heavy Onslaught Gatling Cannon",
+          "range": "24\"",
+          "A": "12",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating Wounds"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Hull",
+          "A": "6",
+          "WS": "4+",
+          "S": "8",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Transport",
+          "description": "This model has a transport capacity of 14 ADEPTUS ASTARTES INFANTRY models. Each JUMP PACK, WULFEN, GRAVIS or TERMINATOR model takes up the space of 2 models and each CENTURION model takes up the space of 3 models."
+        },
+        {
+          "name": "Emergency Combat Embarkation",
+          "description": "Once per turn, in your opponent’s Charge phase, after an enemy unit has selected targets for its charge but before it makes a Charge move, you can select one Adeptus Astartes unit from your army that was selected as a target of that charge. Provided that unit is not within Engagement Range of any enemy units and every model in that unit is within 3\" of this Transport, it can embark within this Transport. The charging unit can then select new targets for its charge."
+        },
+        {
+          "name": "Damaged: 1-5 Wounds Remaining",
+          "description": "While this model has 1-5 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Repulsor Executioner",
+      "points": 230,
+      "primary_stats": {
+        "model": "Repulsor Executioner",
+        "M": "10\"",
+        "T": "12",
+        "SV": "3+",
+        "W": "16",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Repulsor Executioner",
+          "M": "10\"",
+          "T": "12",
+          "SV": "3+",
+          "W": "16",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Heavy Onslaught Gatling Cannon",
+          "range": "24\"",
+          "A": "12",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating Wounds"
+        },
+        {
+          "name": "Repulsor Executioner Defensive Array",
+          "range": "24\"",
+          "A": "10",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Twin heavy bolter",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Sustained Hits 1, Twin-linked"
+        },
+        {
+          "name": "Twin Icarus ironhail heavy stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Anti-FLY 4+, Rapid Fire 3, Twin-linked"
+        },
+        {
+          "name": "Macro Plasma Incinerator - Standard",
+          "range": "36\"",
+          "A": "D6+1",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-3",
+          "D": "2",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Macro Plasma Incinerator - Supercharge",
+          "range": "36\"",
+          "A": "D6+1",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "3",
+          "keywords": "Blast, Hazardous"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Hull",
+          "A": "6",
+          "WS": "4+",
+          "S": "8",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Transport",
+          "description": "This model has a transport capacity of 7 Adeptus Astartes Infantry models. Each Jump Pack, Wulfen, Gravis or Terminator model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
+        },
+        {
+          "name": "Executioner",
+          "description": "Each time this model makes an attack that targets a unit that is Below Half-strength, add 1 to the Hit roll."
+        },
+        {
+          "name": "Damaged: 1-5 Wounds Remaining",
+          "description": "While this model has 1-5 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Storm Speeder Hailstrike",
+      "points": 115,
+      "primary_stats": {
+        "model": "Storm Speeder Hailstrike",
+        "M": "14\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "11",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Storm Speeder Hailstrike",
+          "M": "14\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "11",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Fragstorm grenade launcher (x2)",
+          "range": "18\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Onslaught gatling cannon",
+          "range": "24\"",
+          "A": "8",
+          "BS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating Wounds"
+        },
+        {
+          "name": "Twin Ironhail Heavy Stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 3, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Hailstrike",
+          "description": "Each time this model has shot, select one enemy unit (excluding MONSTERS or VEHICLES) that was hit by one or more of those attacks. Until the end of the phase, each time a friendly ADEPTUS ASTARTES unit makes a ranged attack that targets that enemy unit, improve the Armour Penetration characteristic of that attack by 1. The same enemy unit can only be affected by this ability once per phase."
+        }
+      ]
+    },
+    {
+      "card_name": "Storm Speeder Hammerstrike",
+      "points": 125,
+      "primary_stats": {
+        "model": "Storm Speeder Hammerstrike",
+        "M": "14\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "11",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Storm Speeder Hammerstrike",
+          "M": "14\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "11",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Hammerstrike Missile Launcher",
+          "range": "36\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-3",
+          "D": "D6",
+          "keywords": ""
+        },
+        {
+          "name": "Krakstorm Grenade Launcher (x2)",
+          "range": "18\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": ""
+        },
+        {
+          "name": "Melta Destroyer",
+          "range": "18\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-4",
+          "D": "D6",
+          "keywords": "Melta 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Hammerstrike",
+          "description": "Each time this model has shot, select one enemy unit that was hit by one or more of those attacks. Until the end of the phase, that enemy unit cannot have the Benefit of Cover."
+        }
+      ]
+    },
+    {
+      "card_name": "Storm Speeder Thunderstrike",
+      "points": 135,
+      "primary_stats": {
+        "model": "Storm Speeder Thunderstrike",
+        "M": "14\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "11",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Storm Speeder Thunderstrike",
+          "M": "14\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "11",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Stormfury Missiles",
+          "range": "48\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": ""
+        },
+        {
+          "name": "Thunderstrike Las-talon",
+          "range": "36\"",
+          "A": "2",
+          "BS": "2+",
+          "S": "9",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": ""
+        },
+        {
+          "name": "Twin Icarus Rocket Pod",
+          "range": "24\"",
+          "A": "D3",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Anti-Fly 2+, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon",
+          "A": "4",
+          "WS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Thunderstrike",
+          "description": "Each time this model has shot, select one enemy MONSTER or VEHICLE unit that was hit by one or more of those attacks. Until the end of the phase, each time a friendly ADEPTUS ASTARTES unit makes a ranged attack that targets that enemy unit, add 1 to the Wound roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Stormhawk Interceptor",
+      "points": 155,
+      "primary_stats": {
+        "model": "Stormhawk Interceptor",
+        "M": "20\"+",
+        "T": "9",
+        "SV": "3+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Stormhawk Interceptor",
+          "M": "20\"+",
+          "T": "9",
+          "SV": "3+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Twin assault cannon",
+          "range": "24\"",
+          "A": "6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating wounds, Twin-linked"
+        },
+        {
+          "name": "Las-talon",
+          "range": "36\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "10",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": ""
+        },
+        {
+          "name": "Skyhammer Missile Launcher",
+          "range": "48\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Anti-Fly 2+"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Interceptor",
+          "description": "Each time this model makes a ranged attack that targets a unit that can Fly, add 1 to the Hit roll"
+        }
+      ]
+    },
+    {
+      "card_name": "Stormraven Gunship",
+      "points": 280,
+      "primary_stats": {
+        "model": "Stormraven Gunship",
+        "M": "20\"+",
+        "T": "10",
+        "SV": "3+",
+        "W": "14",
+        "LD": "6+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Stormraven Gunship",
+          "M": "20\"+",
+          "T": "10",
+          "SV": "3+",
+          "W": "14",
+          "LD": "6+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Stormstrike Missile Launcher (x2)",
+          "range": "48\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "10",
+          "AP": "-2",
+          "D": "3",
+          "keywords": ""
+        },
+        {
+          "name": "Twin assault cannon",
+          "range": "24\"",
+          "A": "6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating wounds, Twin-linked"
+        },
+        {
+          "name": "Typhoon missile launcher - frag",
+          "range": "48\"",
+          "A": "2D6",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Typhoon missile launcher - krak",
+          "range": "48\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "9",
+          "AP": "-2",
+          "D": "D6",
+          "keywords": ""
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Hull",
+          "A": "6",
+          "WS": "4+",
+          "S": "8",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Armoured Resilience",
+          "description": "Each time an attack is allocated to this model, subtract 1 from the Damage characteristic of that attack."
+        },
+        {
+          "name": "Transport",
+          "description": "This model has a transport capacity of 12 Adeptus Astartes Infantry models and 1 Dreadnought model. Each Jump Pack, Wulfen, Gravis or Terminator model takes up the space of 2 models and each Centurion model takes up the space of 3 models."
+        },
+        {
+          "name": "Damaged: 1-5 Wounds Remaining",
+          "description": "While this model has 1-5 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Stormtalon Gunship",
+      "points": 165,
+      "primary_stats": {
+        "model": "Stormtalon Gunship",
+        "M": "20\"+",
+        "T": "8",
+        "SV": "3+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Stormtalon Gunship",
+          "M": "20\"+",
+          "T": "8",
+          "SV": "3+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Twin assault cannon",
+          "range": "24\"",
+          "A": "6",
+          "BS": "3+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Devastating wounds, Twin-linked"
+        },
+        {
+          "name": "Skyhammer Missile Launcher",
+          "range": "48\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-1",
+          "D": "D3",
+          "keywords": "Anti-Fly 2+, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Strafing Run",
+          "description": "Each time this model makes a ranged attack that targets a unit that cannot Fly, add 1 to the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Thunderhawk Gunship",
+      "points": 840,
+      "primary_stats": {
+        "model": "Thunderhawk Gunship",
+        "M": "20+\"",
+        "T": "12",
+        "SV": "2+",
+        "W": "30",
+        "LD": "6+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Thunderhawk Gunship",
+          "M": "20+\"",
+          "T": "12",
+          "SV": "2+",
+          "W": "30",
+          "LD": "6+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Lascannon (x2)",
+          "range": "48\"",
+          "A": "1",
+          "BS": "3+",
+          "S": "12",
+          "AP": "-3",
+          "D": "D6+1",
+          "keywords": ""
+        },
+        {
+          "name": "Twin heavy bolter (x4)",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Sustained Hits 1, Twin-linked"
+        },
+        {
+          "name": "Thunderhawk heavy cannon",
+          "range": "48\"",
+          "A": "D6+6",
+          "BS": "3+",
+          "S": "10",
+          "AP": "-2",
+          "D": "3",
+          "keywords": "Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured hull",
+          "A": "6",
+          "WS": "4+",
+          "S": "8",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Aerial Assault",
+          "description": "Each time a unit with the Deep Strike ability disembarks from this model after it has made a Normal move, that unit is still eligible to declare a charge this turn."
+        },
+        {
+          "name": "Damaged: 1-10 wounds remaining",
+          "description": "While this model has 1-10 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Thunderhawk Cluster Bombs",
+          "description": "Each time the bearer ends a Normal move, you can select one enemy unit it moved over during that move and roll six D6: for each 3+, that unit suffers 1 mortal wound."
+        }
+      ]
+    },
+    {
+      "card_name": "Vindicator",
+      "points": 185,
+      "primary_stats": {
+        "model": "Vindicator",
+        "M": "9\"",
+        "T": "11",
+        "SV": "2+",
+        "W": "11",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Vindicator",
+          "M": "9\"",
+          "T": "11",
+          "SV": "2+",
+          "W": "11",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Demolisher Cannon",
+          "range": "24\"",
+          "A": "D6+3",
+          "BS": "3+",
+          "S": "14",
+          "AP": "-3",
+          "D": "D6",
+          "keywords": "Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Tracks",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Siege Shield",
+          "description": "When making ranged attacks with its demolisher cannon, this model can target enemy units within Engagement Range of it (provided no other friendly units are also within Engagement Range of that enemy unit). In addition, when making ranged attacks, this model does not suffer the penalty to its Hit rolls for being within Engagement Range of one or more enemy units."
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Whirlwind",
+      "points": 190,
+      "primary_stats": {
+        "model": "Whirlwind",
+        "M": "10\"",
+        "T": "10",
+        "SV": "3+",
+        "W": "11",
+        "LD": "6+",
+        "OC": "3"
+      },
+      "all_model_stats": [
+        {
+          "model": "Whirlwind",
+          "M": "10\"",
+          "T": "10",
+          "SV": "3+",
+          "W": "11",
+          "LD": "6+",
+          "OC": "3"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Whirlwind Vengeance Launcher",
+          "range": "72\"",
+          "A": "D6+3",
+          "BS": "3+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Blast, Indirect Fire"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Tracks",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Pinning Bombardment",
+          "description": "In your Shooting phase, after this model has shot, if one or more of those attacks made with its Whirlwind vengeance launcher scored a hit against an enemy Infantry unit, that unit must take a Battle-shock test."
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Drop Pod",
+      "points": 70,
+      "primary_stats": {
+        "model": "Drop Pod",
+        "M": "-",
+        "T": "7",
+        "SV": "3+",
+        "W": "8",
+        "LD": "6+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Drop Pod",
+          "M": "-",
+          "T": "7",
+          "SV": "3+",
+          "W": "8",
+          "LD": "6+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [],
+      "melee_weapons": [],
+      "abilities": [
+        {
+          "name": "Drop Pod Assault",
+          "description": "This model must start the battle in Reserves and can be set up in the Reinforcements step of your first, second or third Movement phase, regardless of any mission rules. Any units embarked within this model must immediately disembark after it has been set up on the battlefield, and they must be set up more than 9\" away from all enemy models."
+        },
+        {
+          "name": "Transport",
+          "description": "This model has a transport capacity of 12 Adeptus Astartes Infantry models. It cannot transport Jump Pack, Wulfen, Gravis, Centurion or Terminator models."
+        },
+        {
+          "name": "Combat Disembarkation",
+          "description": "Each time a unit disembarks from this model after it has been set up on the battlefield, that unit is still eligible to declare a charge this turn"
+        },
+        {
+          "name": "Deployment Complete",
+          "description": "Once this unit is set up on the battlefield and all units within it have disembarked, until the end of the battle, units cannot embark within this TRANSPORT"
+        }
+      ]
+    },
+    {
+      "card_name": "Impulsor",
+      "points": 80,
+      "primary_stats": {
+        "model": "Impulsor",
+        "M": "12\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "11",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Impulsor",
+          "M": "12\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "11",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Fragstorm grenade launcher (x2)",
+          "range": "18\"",
+          "A": "D6",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Transport",
+          "description": "This model has a transport capacity of 7 TACTICUS or PHOBOS INFANTRY models. It cannot transport JUMP PACK models."
+        },
+        {
+          "name": "Assault Vehicle",
+          "description": "Units can disembark from this Transport after it has Advanced. Units that do so count as having made a Normal move, and cannot declare a charge that turn."
+        }
+      ]
+    },
+    {
+      "card_name": "Razorback",
+      "points": 95,
+      "primary_stats": {
+        "model": "Razorback",
+        "M": "12\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Razorback",
+          "M": "12\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Twin heavy bolter",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Sustained Hits 1, Twin-linked"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Tracks",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Fire Support",
+          "description": "In your Shooting phase, after this model has  shot, select one enemy unit it scored one or more hits against this phase. Until the end of the phase, each time a friendly model that disembarked from this Transport this turn makes an attack that targets that enemy unit, you can re-roll the Wound roll."
+        },
+        {
+          "name": "Transport",
+          "description": "This model has a transport capacity of 6 Adeptus Astartes Infantry models.  It cannot transport JUMP PACK, WULFEN, PHOBOS, GRAVIS, CENTURION, TERMINATOR or TACTICUS models (excluding TACTICUS CHARACTER models that began the battle attached to a non-TACTICUS unit)"
+        }
+      ]
+    },
+    {
+      "card_name": "Rhino",
+      "points": 75,
+      "primary_stats": {
+        "model": "Rhino",
+        "M": "12\"",
+        "T": "9",
+        "SV": "3+",
+        "W": "10",
+        "LD": "6+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Rhino",
+          "M": "12\"",
+          "T": "9",
+          "SV": "3+",
+          "W": "10",
+          "LD": "6+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Storm bolter",
+          "range": "24\"",
+          "A": "2",
+          "BS": "3+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured Tracks",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Self Repair",
+          "description": "At the end of your Command phase, this model regains 1 lost wound."
+        },
+        {
+          "name": "Transport",
+          "description": "This model has a transport capacity of 12 ADEPTUS ASTARTES INFANTRY models. It cannot transport JUMP PACK, WULFEN, PHOBOS, GRAVIS, CENTURION, TERMINATOR or TACTICUS models (excluding TACTICUS CHARACTER models that began the battle attached to a non-TACTICUS unit)"
+        }
+      ]
+    },
+    {
+      "card_name": "Hammerfall Bunker",
+      "points": 175,
+      "primary_stats": {
+        "model": "Hammerfall Bunker",
+        "M": "-",
+        "T": "12",
+        "SV": "2+",
+        "W": "14",
+        "LD": "6+",
+        "OC": "0"
+      },
+      "all_model_stats": [
+        {
+          "model": "Hammerfall Bunker",
+          "M": "-",
+          "T": "12",
+          "SV": "2+",
+          "W": "14",
+          "LD": "6+",
+          "OC": "0"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Hammerfall Missile Launcher - Superfrag",
+          "range": "48\"",
+          "A": "2d6+2",
+          "BS": "4+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Blast"
+        },
+        {
+          "name": "Hammerfall Missile Launcher - Superkrak",
+          "range": "48\"",
+          "A": "2",
+          "BS": "4+",
+          "S": "10",
+          "AP": "-2",
+          "D": "D6+1",
+          "keywords": ""
+        },
+        {
+          "name": "Hammerfall Heavy Bolter Array",
+          "range": "36\"",
+          "A": "6",
+          "BS": "4+",
+          "S": "5",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Defensive Array, Sustained Hits 1, Twin-linked"
+        }
+      ],
+      "melee_weapons": [],
+      "abilities": [
+        {
+          "name": "Fortification",
+          "description": "While an enemy unit is only within Engagement Range of one or more Fortifications from your army:\n■ That unit can still be selected as the target of ranged attacks, but each time such an attack is made, unless it is made with a Pistol, subtract 1 from the Hit roll.\n■ Models in that unit do not need to take Desperate Escape tests due to Falling Back while Battle-shocked, except for those that will move over enemy models when doing so."
+        },
+        {
+          "name": "Ceramite Cover",
+          "description": "Each time a ranged attack is allocated to a model, if that model is not fully visible to every model in the attacking unit because of this Fortification, that model has the Benefit of Cover against that attack."
+        },
+        {
+          "name": "Damaged: 1-4 Wounds Remaining",
+          "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        },
+        {
+          "name": "Defensive Array",
+          "description": "You can target this Fortification with the Fire Overwatch Strategem for 0CP, and can do so even if you have already targeted another unit with that Stratagem this turn. This Fortification can only be targeted with that Stratagem once per turn."
+        }
+      ]
+    }
+  ]
+}
