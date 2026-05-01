@@ -53,16 +53,18 @@ class ArmyCalculatorView(TemplateView):
     template_name = 'calculators/army_calculator.html'
 
     def get(self, request, *args, **kwargs):
-        """Redirect legacy ?faction=<slug> GET-param URLs to canonical clean path URLs.
+        """Redirect to canonical faction URLs; default bare /army-calculator/ to Space Marines.
 
-        The faction selector previously used relative ?faction= links which created
-        non-canonical parameter URLs that search engines couldn't index. Clean paths
-        like /army-calculator/blood-angels/ are now the canonical form. Any remaining
-        ?faction= links (e.g. old bookmarks, external sites) are permanently redirected.
+        1. Legacy ?faction=<slug> GET-param URLs → permanent 301 to clean path.
+        2. Bare /army-calculator/ (no faction kwarg) → 302 to /army-calculator/space-marines/
+           so Space Marines is always the default landing experience.
         """
         faction_slug = request.GET.get('faction', '').strip()
         if faction_slug and not self.kwargs.get('faction'):
             return redirect(f'/army-calculator/{faction_slug}/', permanent=True)
+        # Default: send bare /army-calculator/ straight to Space Marines
+        if not self.kwargs.get('faction') and not faction_slug:
+            return redirect('/army-calculator/space-marines/')
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

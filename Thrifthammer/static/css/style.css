@@ -4052,7 +4052,7 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 /* ── Faction pill bar ─────────────────────────────────────────────────────── */
 .ab-faction-bar-wrap {
   position: sticky;
-  top: 0;
+  top: 64px;           /* sits flush below the 64px navbar, not behind it */
   z-index: 40;
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border-subtle);
@@ -4212,16 +4212,17 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 .ab-expand-all-btn:hover { color: var(--text-secondary); border-color: var(--border-mid); }
 
 /* ── Category groups ──────────────────────────────────────────────────────── */
-.ab-cat-group { margin-bottom: var(--sp-4); }
+.ab-cat-group { margin-bottom: var(--sp-6); }
 .ab-cat-header {
   font-family: 'Oswald', sans-serif;
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
-  padding: var(--sp-1) 0;
-  margin-bottom: var(--sp-2);
-  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: var(--sp-2) 0;
+  margin-bottom: var(--sp-3);
+  border-bottom: 2px solid var(--border-mid);
 }
 
 /* ── Unit card ────────────────────────────────────────────────────────────── */
@@ -4284,11 +4285,11 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 }
 .ab-cat-badge--epic_hero   { background: rgba(200,146,42,0.25); color: var(--accent-gold-lt); }
 .ab-cat-badge--character   { background: rgba(240,192,96,0.18); color: #e8c068; }
-.ab-cat-badge--battleline  { background: rgba(45,122,79,0.25);  color: var(--accent-green-lt); }
+.ab-cat-badge--battleline  { background: rgba(74,128,204,0.2);  color: var(--accent-blue-lt); }  /* same blue as infantry */
 .ab-cat-badge--infantry    { background: rgba(74,128,204,0.2);  color: var(--accent-blue-lt); }
 .ab-cat-badge--mounted     { background: rgba(144,96,208,0.2);  color: var(--accent-purple-lt); }
 .ab-cat-badge--vehicle     { background: rgba(155,32,32,0.25);  color: var(--accent-red-lt); }
-.ab-cat-badge--transport   { background: rgba(42,74,127,0.25);  color: #6090d8; }
+.ab-cat-badge--transport   { background: rgba(200,100,30,0.25); color: #e87830; }               /* orange */
 .ab-cat-badge--fortification { background: rgba(138,96,32,0.25); color: #c8a050; }
 .ab-cat-badge--combo_box   { background: rgba(90,42,138,0.25);  color: var(--accent-purple-lt); }
 
@@ -4534,34 +4535,35 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 .ab-wep-kw   { color: var(--text-muted); font-style: italic; white-space: normal; max-width: 180px; }
 
 /* Abilities */
-.ab-abilities-section { margin-bottom: var(--sp-2); }
+.ab-abilities-section { margin-bottom: var(--sp-3); }
 .ab-abilities-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--sp-2);
-  margin-top: var(--sp-1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin-top: var(--sp-2);
 }
 .ab-ability-card {
   background: var(--bg-elevated);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--rounded-sm);
-  padding: var(--sp-2) var(--sp-3);
+  border-left: 3px solid var(--accent-gold);
+  border-radius: var(--rounded);
+  padding: var(--sp-3) var(--sp-4);
   display: flex;
   flex-direction: column;
-  gap: var(--sp-1);
+  gap: var(--sp-2);
 }
 .ab-ability-name {
   font-family: 'Oswald', sans-serif;
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   color: var(--accent-gold-lt);
   text-transform: uppercase;
 }
 .ab-ability-desc {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  line-height: 1.45;
+  line-height: 1.65;
 }
 
 /* Empty state */
@@ -4588,8 +4590,8 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 /* ── Army panel ───────────────────────────────────────────────────────────── */
 .ab-army-panel {
   position: sticky;
-  top: 58px;                  /* below faction bar */
-  max-height: calc(100vh - 70px);
+  top: 116px;                 /* 64px navbar + ~52px faction bar */
+  max-height: calc(100vh - 130px);
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--border-subtle) transparent;
@@ -5059,6 +5061,5 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   /* Faction bar */
   .ab-faction-bar-wrap { padding: var(--sp-2) var(--sp-3); }
 
-  /* Abilities grid: single col */
-  .ab-abilities-grid { grid-template-columns: 1fr; }
+  /* Abilities already single-col flex — no override needed */
 }
