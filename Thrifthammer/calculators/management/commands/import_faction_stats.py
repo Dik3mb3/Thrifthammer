@@ -227,18 +227,25 @@ class Command(BaseCommand):
         required_cols = {'card_name', 'db_name', 'include'}
         rows = []  # include=Yes
 
-        with mapping_path.open(encoding='utf-8-sig') as fh:
-            reader = csv.DictReader(fh)
-            fieldnames = set(reader.fieldnames or [])
-            missing_cols = required_cols - fieldnames
-            if missing_cols:
-                raise CommandError(
-                    f'Mapping CSV is missing required columns: {missing_cols}\n'
-                    f'Found columns: {fieldnames}'
-                )
-            for row in reader:
-                if (row.get('include') or '').strip().lower() == 'yes':
-                    rows.append(row)
+        # Try UTF-8 first; fall back to cp1252 for CSVs saved on Windows.
+        for _enc in ('utf-8-sig', 'cp1252'):
+            try:
+                with mapping_path.open(encoding=_enc) as fh:
+                    reader = csv.DictReader(fh)
+                    fieldnames = set(reader.fieldnames or [])
+                    missing_cols = required_cols - fieldnames
+                    if missing_cols:
+                        raise CommandError(
+                            f'Mapping CSV is missing required columns: {missing_cols}\n'
+                            f'Found columns: {fieldnames}'
+                        )
+                    for row in reader:
+                        if (row.get('include') or '').strip().lower() == 'yes':
+                            rows.append(row)
+                break  # successfully read — stop trying encodings
+            except UnicodeDecodeError:
+                rows.clear()
+                continue
 
         self.stdout.write(
             f'Found {len(rows)} include=Yes rows in {mapping_path.name}.'
