@@ -195,6 +195,14 @@ jobs:
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "blood_angels"; then
             run_seed seed_blood_angels_stats
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Blood Angels"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Blood Angels" \
+              --json ../parser_output/blood_angels_parsed.json \
+              --mapping ../parser_output/blood_angels_mapping.csv \
+              $FLAGS
           fi
 
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "space_wolves"; then
