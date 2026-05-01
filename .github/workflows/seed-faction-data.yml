@@ -335,6 +335,36 @@ jobs:
               $FLAGS
           fi
 
+           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "raven_guard"; then
+            echo "========================================="
+            echo "Running: sync_cross_faction_units --faction Raven Guard"
+            echo "========================================="
+            python manage.py sync_cross_faction_units --faction "Raven Guard" $FLAGS
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Raven Guard"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Raven Guard" \
+              --json ../parser_output/raven_guard_parsed.json \
+              --mapping ../parser_output/raven_guard_mapping.csv \
+              $FLAGS
+          fi
+
+             if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "iron_hands"; then
+            echo "========================================="
+            echo "Running: sync_cross_faction_units --faction Iron Hands"
+            echo "========================================="
+            python manage.py sync_cross_faction_units --faction "Iron Hands" $FLAGS
+            echo "========================================="
+            echo "Running: import_faction_stats --faction Iron Hands"
+            echo "========================================="
+            python manage.py import_faction_stats \
+              --faction "Iron Hands" \
+              --json ../parser_output/iron_hands_parsed.json \
+              --mapping ../parser_output/iron_hands_mapping.csv \
+              $FLAGS
+          fi
+
           if [ "$FACTIONS" = "all" ] || echo "$FACTIONS" | grep -q "deathwatch"; then
             echo "========================================="
             echo "Running: sync_cross_faction_units --faction Deathwatch"
