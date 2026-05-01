@@ -33,6 +33,7 @@ from django.core.validators import validate_email
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
 from accounts.models import WatchlistItem
+from calculators.models import UnitType
 from prices.models import CurrentPrice
 
 from .forms import IssueReportForm
@@ -492,6 +493,36 @@ def product_detail(request, slug):
                     _base_title = _candidate
         page_title = _base_title
 
+        # Linked unit datasheets — used for the collapsible stats block.
+        # Require both movement and toughness to be seeded (filters out
+        # partially-seeded records like Black Templars cross-faction stubs).
+        # Deduplicate by stat fingerprint: shared-kit units (e.g. Intercessors
+        # across 7 SM sub-factions) have identical stats — show only one block.
+        _all_unit_types = list(
+            UnitType.objects
+            .filter(
+                product=product,
+                is_active=True,
+                stat_movement__isnull=False,
+                stat_toughness__isnull=False,
+            )
+            .select_related('faction')
+            .prefetch_related('weapon_profiles', 'abilities')
+            .order_by('faction__name', 'name')
+        )
+        _seen = set()
+        unit_types = []
+        for _u in _all_unit_types:
+            _fp = (
+                _u.name,
+                _u.stat_movement, _u.stat_toughness, _u.stat_save,
+                _u.stat_wounds,   _u.stat_leadership, _u.stat_oc,
+                _u.stat_invuln,   _u.stat_fnp,
+            )
+            if _fp not in _seen:
+                _seen.add(_fp)
+                unit_types.append(_u)
+
         cached_ctx = {
             'product':          product,
             'current_prices':   current_prices,
@@ -501,6 +532,7 @@ def product_detail(request, slug):
             'gw_ref_price':     gw_ref_price,
             'json_ld':          json_ld,
             'page_title':       page_title,
+            'unit_types':       unit_types,
         }
         cache.set(cache_key, cached_ctx, timeout=1800)  # 30 minutes
 

@@ -4038,6 +4038,101 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 }
 
 /* =============================================================================
+   PRODUCT DETAIL — In-game datasheet collapsible  (pd-datasheet-*)
+   Uses <details>/<summary> so Google indexes content when closed.
+   Inner stat/weapon/ability content reuses ab-* classes from army builder.
+   ============================================================================= */
+
+.pd-datasheet-wrap {
+  margin: var(--sp-8) 0 var(--sp-4);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--sp-6);
+}
+
+.pd-datasheet {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded-lg);
+  margin-bottom: var(--sp-3);
+  overflow: hidden;
+}
+
+.pd-datasheet-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-5);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: background 150ms ease;
+}
+.pd-datasheet-summary::-webkit-details-marker { display: none; }
+.pd-datasheet-summary:hover { background: var(--bg-elevated); }
+
+.pd-datasheet-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.pd-datasheet-faction {
+  font-size: 0.75rem;
+  color: var(--accent-gold);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.pd-datasheet-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  flex: 1;
+}
+.pd-datasheet-arrow {
+  width: 18px; height: 18px;
+  border-right: 2px solid var(--text-muted);
+  border-bottom: 2px solid var(--text-muted);
+  transform: rotate(45deg);
+  transition: transform 200ms ease, border-color 200ms ease;
+  flex-shrink: 0;
+  margin-right: var(--sp-1);
+}
+.pd-datasheet[open] .pd-datasheet-arrow {
+  transform: rotate(-135deg);
+  border-color: var(--accent-gold);
+}
+.pd-datasheet[open] .pd-datasheet-summary { background: var(--bg-elevated); }
+
+.pd-datasheet-body {
+  padding: var(--sp-4) var(--sp-5) var(--sp-5);
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+}
+
+.pd-datasheet-source {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--divider);
+}
+.pd-datasheet-source a {
+  color: var(--accent-gold);
+  text-decoration: none;
+}
+.pd-datasheet-source a:hover { color: var(--accent-gold-lt); }
+
+@media (max-width: 767px) {
+  .pd-datasheet-summary { padding: var(--sp-3) var(--sp-4); }
+  .pd-datasheet-hint    { display: none; }
+  .pd-datasheet-body    { padding: var(--sp-3) var(--sp-4) var(--sp-4); }
+}
+
+/* =============================================================================
    ARMY BUILDER  (ab-* prefix)
    DraftKings/ESPN lineup builder aesthetic — dark, data-dense, mobile-first
    ============================================================================= */

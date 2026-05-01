@@ -245,6 +245,107 @@
     </div>
   </div>{# end product-layout #}
 
+  {# ── In-game datasheet (collapsible) ─────────────────────────────────────── #}
+  {# Content is in the DOM so Google indexes it even when collapsed.            #}
+  {% if unit_types %}
+  <div class="pd-datasheet-wrap">
+    {% for unit in unit_types %}
+    <details class="pd-datasheet">
+      <summary class="pd-datasheet-summary">
+        <span class="pd-datasheet-title">
+          In-Game Stats
+          {% if unit_types|length > 1 %}<span class="pd-datasheet-faction">{{ unit.faction.name }}</span>{% endif %}
+        </span>
+        <span class="pd-datasheet-hint">See unit stats, weapons &amp; abilities</span>
+        <span class="pd-datasheet-arrow" aria-hidden="true"></span>
+      </summary>
+
+      <div class="pd-datasheet-body">
+
+        {# Stat line #}
+        {% if unit.stat_movement %}
+        <div class="ab-stat-grid" style="margin-bottom:var(--sp-4);">
+          <div class="ab-stat-cell"><span class="ab-stat-val">{{ unit.stat_movement }}</span><span class="ab-stat-key">M</span></div>
+          <div class="ab-stat-cell"><span class="ab-stat-val">{{ unit.stat_toughness }}</span><span class="ab-stat-key">T</span></div>
+          <div class="ab-stat-cell"><span class="ab-stat-val">{{ unit.stat_save }}</span><span class="ab-stat-key">Sv</span></div>
+          <div class="ab-stat-cell"><span class="ab-stat-val">{{ unit.stat_wounds }}</span><span class="ab-stat-key">W</span></div>
+          <div class="ab-stat-cell"><span class="ab-stat-val">{{ unit.stat_leadership }}</span><span class="ab-stat-key">Ld</span></div>
+          <div class="ab-stat-cell"><span class="ab-stat-val">{{ unit.stat_oc }}</span><span class="ab-stat-key">OC</span></div>
+          {% if unit.stat_invuln %}<div class="ab-stat-cell ab-stat-cell--special"><span class="ab-stat-val">{{ unit.stat_invuln }}</span><span class="ab-stat-key">Inv</span></div>{% endif %}
+          {% if unit.stat_fnp %}<div class="ab-stat-cell ab-stat-cell--special"><span class="ab-stat-val">{{ unit.stat_fnp }}</span><span class="ab-stat-key">FNP</span></div>{% endif %}
+        </div>
+        {% endif %}
+
+        {# Weapons #}
+        {% with weapons=unit.weapon_profiles.all %}{% if weapons %}
+
+        {% with has_ranged=False %}{% for w in weapons %}{% if w.weapon_type == 'ranged' %}{% with has_ranged=True %}{% endwith %}{% endif %}{% endfor %}{% endwith %}
+        <div class="ab-weapons-section">
+          <div class="ab-weapons-label">Ranged Weapons</div>
+          <div class="ab-weapons-scroll">
+            <table class="ab-weapons-table">
+              <thead><tr><th>Weapon</th><th>Range</th><th>A</th><th>BS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th></tr></thead>
+              <tbody>
+              {% for w in weapons %}{% if w.weapon_type == 'ranged' %}
+              <tr>
+                <td class="ab-wep-name">{{ w.name }}</td>
+                <td>{{ w.range }}</td><td>{{ w.attacks }}</td><td>{{ w.skill }}</td>
+                <td>{{ w.strength }}</td><td>{{ w.ap }}</td><td>{{ w.damage }}</td>
+                <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}—{% endif %}</td>
+              </tr>
+              {% endif %}{% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="ab-weapons-section">
+          <div class="ab-weapons-label">Melee Weapons</div>
+          <div class="ab-weapons-scroll">
+            <table class="ab-weapons-table">
+              <thead><tr><th>Weapon</th><th>Range</th><th>A</th><th>WS</th><th>S</th><th>AP</th><th>D</th><th>Keywords</th></tr></thead>
+              <tbody>
+              {% for w in weapons %}{% if w.weapon_type == 'melee' %}
+              <tr>
+                <td class="ab-wep-name">{{ w.name }}</td>
+                <td>Melee</td><td>{{ w.attacks }}</td><td>{{ w.skill }}</td>
+                <td>{{ w.strength }}</td><td>{{ w.ap }}</td><td>{{ w.damage }}</td>
+                <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}—{% endif %}</td>
+              </tr>
+              {% endif %}{% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {% endif %}{% endwith %}
+
+        {# Abilities #}
+        {% if unit.abilities.all %}
+        <div class="ab-abilities-section">
+          <div class="ab-weapons-label">Abilities</div>
+          <div class="ab-abilities-grid">
+            {% for ability in unit.abilities.all %}
+            <div class="ab-ability-card">
+              <span class="ab-ability-name">{{ ability.name }}</span>
+              <span class="ab-ability-desc">{{ ability.description }}</span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <p class="pd-datasheet-source">
+          Stats sourced from Warhammer 40,000 10th Edition.
+          <a href="/army-calculator/{{ unit.faction.slug }}/">Build a {{ unit.faction.name }} list</a>
+        </p>
+
+      </div>{# /pd-datasheet-body #}
+    </details>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   {# ── Related products ── #}
   {% if related_products %}
   <div style="margin-top:var(--sp-12);">
