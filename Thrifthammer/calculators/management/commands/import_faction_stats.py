@@ -310,6 +310,22 @@ class Command(BaseCommand):
 
                 # 3. Create if still not found
                 if unit is None:
+                    # Safety: card_name may already exist in DB but was consumed
+                    # by a previous row (duplicate card_name in mapping).  Rather
+                    # than crashing with an IntegrityError, re-use the existing
+                    # unit and warn that the mapping has a duplicate entry.
+                    already = UnitType.objects.filter(
+                        name=card_name, faction=faction,
+                    ).first()
+                    if already is not None:
+                        self.stdout.write(self.style.WARNING(
+                            f'  WARN: {card_name!r} already exists (pk={already.pk},'
+                            f' consumed by earlier row) — '
+                            f'mapping has duplicate card_name; skipping second row'
+                        ))
+                        seeded_pks.add(already.pk)   # keep it active
+                        continue
+
                     if dry_run:
                         self.stdout.write(
                             f'  DRY-RUN WOULD CREATE: {card_name!r} '
