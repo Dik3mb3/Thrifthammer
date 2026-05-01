@@ -102,8 +102,8 @@
                         <button type="submit" class="btn-logout-link">Logout</button>
                     </form>
                 {% else %}
-                    <a href="{% url 'accounts:login' %}">Login</a>
-                    <a href="{% url 'accounts:register' %}">Register</a>
+                    <a href="{% url 'accounts:login' %}" rel="nofollow">Login</a>
+                    <a href="{% url 'accounts:register' %}" rel="nofollow">Register</a>
                 {% endif %}
             </div>
 
