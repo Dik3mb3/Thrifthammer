@@ -451,4 +451,13 @@ jobs:
             fi
           fi
 
+          # Clear the Django cache so the live site reflects seeded changes
+          # immediately, without waiting for the next Railway deploy.
+          if [ "${{ github.event.inputs.dry_run }}" != "true" ]; then
+            echo "========================================="
+            echo "Running: clear_cache"
+            echo "========================================="
+            python manage.py clear_cache || true
+          fi
+
           echo "All selected faction seeds complete."
