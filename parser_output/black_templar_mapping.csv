@@ -1,89 +1,88 @@
 card_name,db_name,gw_sku,faction,include
-Chaplain Grimaldus,,,Black Templar,
-High Marshal Helbrecht,,,Black Templar,
-Ancient,,,Black Templar,
-Ancient in Terminator Armor,,,Black Templar,
-Apothecary,,,Black Templar,
-Apothecary Biologis,,,Black Templar,
-Bladeguard Ancient,,,Black Templar,
-Captain,,,Black Templar,
-Captain in Gravis Armour,,,Black Templar,
-Captain in Phobos Armour,,,Black Templar,
-Captain in Terminator Armour,,,Black Templar,
-Captain on Bike [Legends],,,Black Templar,
-Captain with Jump Pack,,,Black Templar,
-Castellan,,,Black Templar,
-Chaplain,,,Black Templar,
-Chaplain in Terminator Armour,,,Black Templar,
-Chaplain on Bike,,,Black Templar,
-Chaplain with Jump Pack,,,Black Templar,
-Crusade Ancient,,,Black Templar,
-Emperor's Champion,,,Black Templar,
-Execrator,,,Black Templar,
-Judiciar,,,Black Templar,
-Lieutenant,,,Black Templar,
-Lieutenant in Phobos Armour,,,Black Templar,
-Lieutenant in Reiver Armour,,,Black Templar,
-Lieutenant with Combi-weapon,,,Black Templar,
-Marshal,,,Black Templar,
-Techmarine,,,Black Templar,
-Assault Intercessor Squad,,,Black Templar,
-Crusader Squad,,,Black Templar,
-Heavy Intercessor Squad,,,Black Templar,
-Intercessor Squad,,,Black Templar,
-Tactical Squad,,,Black Templar,
-Aggressor Squad,,,Black Templar,
-Assault Intercessors with Jump Packs,,,Black Templar,
-Bladeguard Veteran Squad,,,Black Templar,
-Centurion Assault Squad,,,Black Templar,
-Centurion Devastator Squad,,,Black Templar,
-Company Heroes,,,Black Templar,
-Desolation Squad,,,Black Templar,
-Devastator Squad,,,Black Templar,
-Eliminator Squad,,,Black Templar,
-Eradicator Squad,,,Black Templar,
-Hellblaster Squad,,,Black Templar,
-Inceptor Squad,,,Black Templar,
-Incursor Squad,,,Black Templar,
-Infernus Squad,,,Black Templar,
-Infiltrator Squad,,,Black Templar,
-Reiver Squad,,,Black Templar,
-Scout Squad,,,Black Templar,
-Sternguard Veteran Squad,,,Black Templar,
-Suppressor Squad,,,Black Templar,
-Sword Brethren Squad,,,Black Templar,
-Terminator Assault Squad,,,Black Templar,
-Terminator Squad,,,Black Templar,
-Vanguard Veteran Squad with Jump Packs,,,Black Templar,
-Invader ATV,,,Black Templar,
-Outrider Squad,,,Black Templar,
+Ancient in Terminator Armor,Ancient in Terminator Armour,SKU: 48-99,Black Templar,Yes
+Assault Intercessors with Jump Packs,Assault Intercessors with Jump Packs,SKU: 48-100,Black Templar,Yes
+Castellan,Black Templars Castellan,SKU: 55-25,Black Templar,
+Chaplain Grimaldus,Black Templars Chaplain Grimaldus,SKU: 55-24,Black Templar,
+Crusade Ancient,Black Templars Crusade Ancient,SKU: 55-27,Black Templar,Yes
+Emperor's Champion,Black Templars Emperor's Champion,SKU: 55-22,Black Templar,Yes
+Execrator,Black Templars Execrator,SKU: 55-26,Black Templar,Yes
+High Marshal Helbrecht,Black Templars Helbrecht,SKU: 55-21,Black Templar,Yes
+Marshal,Black Templars Marshal,SKU: 55-28,Black Templar,Yes
+Crusader Squad,Black Templars Primaris Crusader Squad,SKU: 55-20,Black Templar,Yes
+Sword Brethren Squad,Black Templars Sword Brethren,SKU: 55-23,Black Templar,
+Chaplain with Jump Pack,Blood Angels Chaplain With Jump Pack,SKU: 41-27,Black Templar,Yes
+Captain in Gravis Armour,Captain in Gravis Armour,SKU: 48-101,Black Templar,Yes
+Captain in Phobos Armour,Captain in Phobos Armour,SKU: 48-102,Black Templar,Yes
+Captain in Terminator Armour,Captain in Terminator Armour,SKU: 48-103,Black Templar,Yes
+Captain with Jump Pack,Captain with Jump Pack,SKU: 48-105,Black Templar,Yes
+Captain,Captain with Relic Shield,SKU: 48-106,Black Templar,Yes
+Centurion Assault Squad,Centurion Assault Squad,SKU: 48-107,Black Templar,Yes
+Centurion Devastator Squad,Centurion Devastator Squad,SKU: 48-108,Black Templar,Yes
+Chaplain on Bike,Chaplain on Bike,SKU: 48-109,Black Templar,Yes
+Desolation Squad,Desolation Squad,SKU: 48-111,Black Templar,Yes
+Drop Pod,Drop Pods,SKU: 48-112,Black Templar,Yes
+Gladiator Lancer,Gladiator Lancer,SKU: 48-113,Black Templar,Yes
+Gladiator Reaper,Gladiator Reaper,SKU: 48-114,Black Templar,Yes
+Gladiator Valiant,Gladiator Valiant,SKU: 48-115,Black Templar,Yes
+Heavy Intercessor Squad,Heavy Intercessor Squad,SKU: 48-116,Black Templar,Yes
+Hellblaster Squad,Hellblaster Squad,SKU: 48-117,Black Templar,Yes
+Land Raider Redeemer,Land Raider Redeemer,SKU: 48-119,Black Templar,Yes
+Lieutenant in Reiver Armour,Lieutenant in Reiver Armour,SKU: 48-121,Black Templar,Yes
+Razorback,Razorback,SKU: 48-126,Black Templar,Yes
+Reiver Squad,Reiver Squad,SKU: 48-127,Black Templar,Yes
+Rhino,Rhino,SKU: 48-128,Black Templar,Yes
+Aggressor Squad,Space Marine Aggressors,SKU: 48-92,Black Templar,Yes
+Ancient,Space Marine Ancient,SKU: 48-34,Black Templar,Yes
+Apothecary,Space Marine Apothecary,SKU: 48-33,Black Templar,Yes
+Apothecary Biologis,Space Marine Apothecary,SKU: 48-33,Black Templar,Yes
+Assault Intercessor Squad,Space Marine Assault Intercessors,SKU: 48-76,Black Templar,Yes
+Ballistus Dreadnought,Space Marine Ballistus Dreadnought,SKU: 48-46,Black Templar,Yes
+Bladeguard Veteran Squad,Space Marine Bladeguard Veterans,SKU: 48-38,Black Templar,Yes
+Brutalis Dreadnought,Space Marine Brutalis Dreadnought,SKU: 48-44,Black Templar,Yes
+Chaplain,Space Marine Chaplain,SKU: 48-32,Black Templar,Yes
+Chaplain in Terminator Armour,Space Marine Chaplain in Terminator Armour,SKU: HA-051,Black Templar,Yes
+Company Heroes,Space Marine Company Heroes,SKU: 48-37,Black Templar,Yes
+Devastator Squad,Space Marine Devastator Squad,SKU: 48-15,Black Templar,Yes
+Eradicator Squad,Space Marine Eradicators,SKU: 48-39,Black Templar,Yes
+Firestrike Servo-Turrets,Space Marine Firestrike Servo-Turrets,SKU: 48-28,Black Templar,Yes
+Hammerfall Bunker,Space Marine Hammerfall Bunker,SKU: 48-27,Black Templar,Yes
+Impulsor,Space Marine Impulsor,SKU: 48-94,Black Templar,Yes
+Inceptor Squad,Space Marine Inceptors,SKU: 48-97,Black Templar,Yes
+Incursor Squad,Space Marine Incursors,SKU: 48-96,Black Templar,Yes
+Infernus Squad,Space Marine Infernus Squad,SKU: 48-45,Black Templar,Yes
+Infiltrator Squad,Space Marine Infiltrators,SKU: 48-41,Black Templar,Yes
+Intercessor Squad,Space Marine Intercessors,SKU: 48-75,Black Templar,Yes
+Invader ATV,Space Marine Invader ATV,SKU: 48-42,Black Templar,Yes
+Land Raider,Space Marine Land Raider Crusader,SKU: 48-22,Black Templar,Yes
+Land Raider Crusader,Space Marine Land Raider Crusader,SKU: 48-22,Black Templar,Yes
+Outrider Squad,Space Marine Outriders,SKU: 48-40,Black Templar,Yes
+Predator Annihilator,Space Marine Predator,SKU: 48-23,Black Templar,Yes
+Predator Destructor,Space Marine Predator,SKU: 48-23,Black Templar,Yes
+Eliminator Squad,Space Marine Primaris Eliminators,SKU: 48-98,Black Templar,Yes
+Lieutenant,Space Marine Primaris Lieutenant,SKU: 48-61,Black Templar,Yes
+Redemptor Dreadnought,Space Marine Redemptor Dreadnought,SKU: 48-93,Black Templar,Yes
+Repulsor,Space Marine Repulsor Executioner,SKU: 48-95,Black Templar,Yes
+Repulsor Executioner,Space Marine Repulsor Executioner,SKU: 48-95,Black Templar,Yes
+Scout Squad,Space Marine Scouts,SKU: 48-29,Black Templar,Yes
+Sternguard Veteran Squad,Space Marine Sternguard Veteran Squad,SKU: 48-43,Black Templar,Yes
+Tactical Squad,Space Marine Tactical Squad,SKU: 48-07,Black Templar,Yes
+Terminator Squad,Space Marine Terminator Squad,SKU: 48-06,Black Templar,Yes
+Vanguard Veteran Squad with Jump Packs,Space Marine Vanguard Veteran Squad,SKU: 48-08,Black Templar,Yes
+Vindicator,Space Marine Vindicator,SKU: 48-26,Black Templar,Yes
+Whirlwind,Space Marine Whirlwind,SKU: 48-25,Black Templar,Yes
+Storm Speeder Hailstrike,Storm Speeder Hailstrike,SKU: 48-131,Black Templar,Yes
+Storm Speeder Hammerstrike,Storm Speeder Hammerstrike,SKU: 48-132,Black Templar,Yes
+Storm Speeder Thunderstrike,Storm Speeder Thunderstrike,SKU: 48-133,Black Templar,Yes
+Stormhawk Interceptor,Stormhawk Interceptor,SKU: 48-129,Black Templar,Yes
+Stormraven Gunship,Stormraven Gunship,SKU: 48-130,Black Templar,Yes
+Stormtalon Gunship,Stormtalon Gunship,SKU: 48-134,Black Templar,Yes
+Techmarine,Techmarine,SKU: 48-135,Black Templar,Yes
+Terminator Assault Squad,Terminator Assault Squad,SKU: 48-136,Black Templar,Yes
+Dreadnought,Venerable Dreadnought,SKU: 48-137,Black Templar,Yes
 Astraeus,,,Black Templar,
-Ballistus Dreadnought,,,Black Templar,
-Brutalis Dreadnought,,,Black Templar,
-Dreadnought,,,Black Templar,
-Firestrike Servo-Turrets,,,Black Templar,
-Gladiator Lancer,,,Black Templar,
-Gladiator Reaper,,,Black Templar,
-Gladiator Valiant,,,Black Templar,
-Land Raider,,,Black Templar,
-Land Raider Crusader,,,Black Templar,
-Land Raider Redeemer,,,Black Templar,
-Predator Annihilator,,,Black Templar,
-Predator Destructor,,,Black Templar,
-Redemptor Dreadnought,,,Black Templar,
-Repulsor,,,Black Templar,
-Repulsor Executioner,,,Black Templar,
-Storm Speeder Hailstrike,,,Black Templar,
-Storm Speeder Hammerstrike,,,Black Templar,
-Storm Speeder Thunderstrike,,,Black Templar,
-Stormhawk Interceptor,,,Black Templar,
-Stormraven Gunship,,,Black Templar,
-Stormtalon Gunship,,,Black Templar,
+Bladeguard Ancient,,,Black Templar,
+Judiciar,,,Black Templar,
+Lieutenant in Phobos Armour,,,Black Templar,
+Lieutenant with Combi-weapon,,,Black Templar,
+Suppressor Squad,,,Black Templar,
 Thunderhawk Gunship,,,Black Templar,
-Vindicator,,,Black Templar,
-Whirlwind,,,Black Templar,
-Drop Pod,,,Black Templar,
-Impulsor,,,Black Templar,
-Razorback,,,Black Templar,
-Rhino,,,Black Templar,
-Hammerfall Bunker,,,Black Templar,

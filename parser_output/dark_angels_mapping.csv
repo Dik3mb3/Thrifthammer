@@ -1,28 +1,4 @@
 card_name,db_name,gw_sku,faction,include
-Apothecary Biologis,,,Dark Angels,Yes
-Asmodai,Dark Angels Asmodai,SKU: 44-03,Dark Angels,Yes
-Astraeus,,,Dark Angels,Yes
-Azrael,Dark Angels Azrael,SKU: 44-04,Dark Angels,Yes
-Belial,Dark Angels Belial,SKU: 44-05,Dark Angels,Yes
-Bladeguard Ancient,,,Dark Angels,Yes
-Deathwing Knights,Dark Angels Deathwing Knights,SKU: 44-10,Dark Angels,Yes
-Deathwing Terminator Squad,Dark Angels Deathwing Knights,SKU: 44-10,Dark Angels,Yes
-Ezekiel,Dark Angels Ezekiel,SKU: 44-02,Dark Angels,Yes
-Inner Circle Companions,Dark Angels Inner Circle Companions,SKU: 44-13,Dark Angels,Yes
-Judiciar,,,Dark Angels,Yes
-Land Speeder Vengeance,Dark Angels Land Speeder Vengeance,SKU: 44-16,Dark Angels,Yes
-Lazarus,Dark Angels Lazarus,SKU: 44-07,Dark Angels,Yes
-Lieutenant in Phobos Armour,,,Dark Angels,Yes
-Lieutenant with Combi-weapon,,,Dark Angels,Yes
-Lion El'Jonson,Dark Angels Lion El'Jonson,SKU: 44-06,Dark Angels,Yes
-Nephilim Jetfighter,Dark Angels Nephilim Jetfighter,SKU: 44-17,Dark Angels,Yes
-Ravenwing Black Knights,Dark Angels Ravenwing Black Knights,SKU: 44-12,Dark Angels,Yes
-Ravenwing Command Squad,Dark Angels Ravenwing Command Squad,SKU: 44-09,Dark Angels,Yes
-Ravenwing Dark Talon,Dark Angels Ravenwing Dark Talon,SKU: 44-14,Dark Angels,Yes
-Ravenwing Darkshroud,Dark Angels Ravenwing Dark Talon,SKU: 44-14,Dark Angels,Yes
-Sammael,Dark Angels Sammael,SKU: 44-08,Dark Angels,Yes
-Suppressor Squad,,,Dark Angels,Yes
-Thunderhawk Gunship,,,Dark Angels,Yes
 Ancient in Terminator Armor,Ancient in Terminator Armour,SKU: 48-99,Dark Angels,Yes
 Assault Intercessors with Jump Packs,Assault Intercessors with Jump Packs,SKU: 48-100,Dark Angels,Yes
 Chaplain with Jump Pack,Blood Angels Chaplain With Jump Pack,SKU: 41-27,Dark Angels,Yes
@@ -35,6 +11,22 @@ Captain,Captain with Relic Shield,SKU: 48-106,Dark Angels,Yes
 Centurion Assault Squad,Centurion Assault Squad,SKU: 48-107,Dark Angels,Yes
 Centurion Devastator Squad,Centurion Devastator Squad,SKU: 48-108,Dark Angels,Yes
 Chaplain on Bike,Chaplain on Bike,SKU: 48-109,Dark Angels,Yes
+Asmodai,Dark Angels Asmodai,SKU: 44-03,Dark Angels,Yes
+Azrael,Dark Angels Azrael,SKU: 44-04,Dark Angels,Yes
+Belial,Dark Angels Belial,SKU: 44-05,Dark Angels,Yes
+Deathwing Knights,Dark Angels Deathwing Knights,SKU: 44-10,Dark Angels,Yes
+Deathwing Terminator Squad,Dark Angels Deathwing Knights,SKU: 44-10,Dark Angels,Yes
+Ezekiel,Dark Angels Ezekiel,SKU: 44-02,Dark Angels,Yes
+Inner Circle Companions,Dark Angels Inner Circle Companions,SKU: 44-13,Dark Angels,Yes
+Land Speeder Vengeance,Dark Angels Land Speeder Vengeance,SKU: 44-16,Dark Angels,Yes
+Lazarus,Dark Angels Lazarus,SKU: 44-07,Dark Angels,Yes
+Lion El'Jonson,Dark Angels Lion El'Jonson,SKU: 44-06,Dark Angels,Yes
+Nephilim Jetfighter,Dark Angels Nephilim Jetfighter,SKU: 44-17,Dark Angels,Yes
+Ravenwing Black Knights,Dark Angels Ravenwing Black Knights,SKU: 44-12,Dark Angels,Yes
+Ravenwing Command Squad,Dark Angels Ravenwing Command Squad,SKU: 44-09,Dark Angels,Yes
+Ravenwing Dark Talon,Dark Angels Ravenwing Dark Talon,SKU: 44-14,Dark Angels,Yes
+Ravenwing Darkshroud,Dark Angels Ravenwing Dark Talon,SKU: 44-14,Dark Angels,Yes
+Sammael,Dark Angels Sammael,SKU: 44-08,Dark Angels,Yes
 Desolation Squad,Desolation Squad,SKU: 48-111,Dark Angels,Yes
 Drop Pod,Drop Pods,SKU: 48-112,Dark Angels,Yes
 Gladiator Lancer,Gladiator Lancer,SKU: 48-113,Dark Angels,Yes
@@ -97,3 +89,11 @@ Stormtalon Gunship,Stormtalon Gunship,SKU: 48-134,Dark Angels,Yes
 Techmarine,Techmarine,SKU: 48-135,Dark Angels,Yes
 Terminator Assault Squad,Terminator Assault Squad,SKU: 48-136,Dark Angels,Yes
 Dreadnought,Venerable Dreadnought,SKU: 48-137,Dark Angels,Yes
+Apothecary Biologis,,,Dark Angels,
+Astraeus,,,Dark Angels,
+Bladeguard Ancient,,,Dark Angels,
+Judiciar,,,Dark Angels,
+Lieutenant in Phobos Armour,,,Dark Angels,
+Lieutenant with Combi-weapon,,,Dark Angels,
+Suppressor Squad,,,Dark Angels,
+Thunderhawk Gunship,,,Dark Angels,
