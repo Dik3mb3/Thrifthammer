@@ -76,6 +76,11 @@ BLOG_IMAGES = [
         'static_path': 'images/blog/blog-faction-popularity-ranking.jpg',
         'alt': 'Most popular Warhammer 40K factions ranked by Reddit, Instagram, and tournament data',
     },
+    {
+        'slug': 'warhammer-40k-armageddon-11th-edition-box-contents-revealed',
+        'static_path': 'images/blog/11th-edition-box.png',
+        'alt': 'Warhammer 40K Armageddon 11th Edition launch box contents revealed',
+    },
 ]
 
 BASE_URL = 'https://thrifthammer.com'
