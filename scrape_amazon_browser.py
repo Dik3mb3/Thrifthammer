@@ -26,19 +26,15 @@ import re
 import sys
 import time
 
+from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
+
 # ---------------------------------------------------------------------------
-# Django setup — needed to query the DB for Amazon URLs
+# Django is set up inside __main__ after arg parsing, so DATABASE_URL (set
+# by the PS1 wrapper from .env.production) is already in the environment.
 # ---------------------------------------------------------------------------
 DJANGO_PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Thrifthammer')
 sys.path.insert(0, DJANGO_PROJECT_DIR)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'thrifthammer.settings')
-
-import django
-django.setup()
-
-from prices.models import CurrentPrice  # noqa: E402 (must come after django.setup())
-
-from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
 
 # ---------------------------------------------------------------------------
 # Batch letter ranges — edit these if you want different splits
@@ -63,6 +59,7 @@ def load_products(batch_num=None, sku_filter=None):
     If sku_filter is given, returns only that SKU (batch_num ignored).
     If batch_num is given, filters by the corresponding letter range.
     """
+    from prices.models import CurrentPrice  # import after django.setup()
     qs = (
         CurrentPrice.objects
         .filter(retailer__slug='amazon')
@@ -248,6 +245,11 @@ if __name__ == '__main__':
 
     if not args.sku and args.batch is None:
         parser.error('Provide --batch (1/2/3) or --sku <gw_sku>.')
+
+    # Set up Django now — DATABASE_URL must already be in the environment
+    # (the run_amazon_browser_scrape.ps1 wrapper loads it from .env.production).
+    import django
+    django.setup()
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
