@@ -44,8 +44,15 @@ from django.conf import settings
 logger = logging.getLogger(__name__)
 
 # ── Browse API endpoints ──────────────────────────────────────────────────────
-BROWSE_API_ENDPOINT   = 'https://api.ebay.com/buy/browse/v1/item_summary/search'
-BROWSE_API_SANDBOX    = 'https://api.sandbox.ebay.com/buy/browse/v1/item_summary/search'
+BROWSE_API_ENDPOINT        = 'https://api.ebay.com/buy/browse/v1/item_summary/search'
+BROWSE_API_SANDBOX         = 'https://api.sandbox.ebay.com/buy/browse/v1/item_summary/search'
+
+# Item detail endpoint — returns complete, accurate shipping for a single listing.
+# Search results (item_summary/search) sometimes omit or return $0 shipping even
+# for fixed-rate listings.  We fetch item detail for the winning result to ensure
+# the stored price is item price + real shipping.
+BROWSE_API_ITEM_ENDPOINT   = 'https://api.ebay.com/buy/browse/v1/item/'
+BROWSE_API_ITEM_SANDBOX    = 'https://api.sandbox.ebay.com/buy/browse/v1/item/'
 
 OAUTH_ENDPOINT        = 'https://api.ebay.com/identity/v1/oauth2/token'
 OAUTH_ENDPOINT_SANDBOX = 'https://api.sandbox.ebay.com/identity/v1/oauth2/token'
@@ -127,6 +134,7 @@ class EbayBrowseAPI:
             )
 
         self.browse_endpoint = BROWSE_API_SANDBOX if use_sandbox else BROWSE_API_ENDPOINT
+        self.item_endpoint   = BROWSE_API_ITEM_SANDBOX if use_sandbox else BROWSE_API_ITEM_ENDPOINT
         self.oauth_endpoint  = OAUTH_ENDPOINT_SANDBOX if use_sandbox else OAUTH_ENDPOINT
 
         # Token cache
@@ -226,6 +234,26 @@ class EbayBrowseAPI:
         else:
             best = first_valid
 
+        # Refresh shipping from item detail endpoint.
+        # Search results (item_summary/search) sometimes return $0 or missing
+        # shippingOptions even for listings with real fixed-rate shipping.
+        # The item detail endpoint is the authoritative source.
+        accurate_shipping = self._fetch_item_shipping(best['item_id'])
+        if accurate_shipping is None:
+            # CALCULATED or LOCAL_PICKUP confirmed by item detail — discard winner
+            logger.debug(
+                '[ebay] Winner discarded after item detail shipping check: "%s"',
+                best['title'][:60],
+            )
+            return None
+        if accurate_shipping != best['shipping']:
+            logger.debug(
+                '[ebay] Shipping corrected by item detail for "%s": $%.2f → $%.2f',
+                best['title'][:60], best['shipping'], accurate_shipping,
+            )
+            best['shipping']    = accurate_shipping
+            best['total_cost']  = best['price'] + accurate_shipping
+
         logger.debug(
             '[ebay] Match: "%s" — $%.2f + $%.2f shipping '
             '(%d valid from top-%d Best Match results)',
@@ -233,6 +261,105 @@ class EbayBrowseAPI:
             len(valid_items), len(items),
         )
         return best
+
+    # A generic US buyer location passed to the item detail endpoint so eBay
+    # calculates and returns shipping costs.  Without this header, eBay omits
+    # shippingOptions from the response entirely for many listings.
+    # The specific zip doesn't affect fixed-rate shipping; for weight-based
+    # listings it gives a representative continental-US estimate.
+    _BUYER_CONTEXT = 'contextualLocation=country%3DUS%2Czip%3D10001'
+
+    def _fetch_item_shipping(self, item_id):
+        """
+        Fetch the accurate shipping cost for a specific eBay listing.
+
+        Two problems with relying on search results alone:
+          1. item_summary/search often returns $0 or missing shippingOptions.
+          2. Even the item detail endpoint omits shippingOptions unless a buyer
+             location context is provided via X-EBAY-C-ENDUSERCTX.
+
+        With buyer context, eBay returns real shipping costs but labels them
+        "CALCULATED" (meaning "calculated for this buyer location") — that is
+        NOT the same as seller-side CALCULATED shipping (unknown until checkout).
+        So we accept any shippingCostType here; only LOCAL_PICKUP is rejected.
+
+        Called for the winning result from find_best_match_for_product() to
+        ensure the stored price = item price + actual shipping.
+
+        Args:
+            item_id: eBay item ID string (Browse API format: 'v1|...|0').
+
+        Returns:
+            Decimal shipping cost (0 for free shipping), or None if the
+            listing should be skipped (LOCAL_PICKUP or any API/network error).
+        """
+        if self.api_calls_made >= DAILY_CALL_SAFETY_LIMIT:
+            logger.warning('[ebay] Daily call limit reached — skipping item detail fetch')
+            return None
+
+        token = self._get_access_token()
+        url = f'{self.item_endpoint}{item_id}'
+
+        try:
+            response = self.session.get(
+                url,
+                headers={
+                    'Authorization':           f'Bearer {token}',
+                    'X-EBAY-C-MARKETPLACE-ID': MARKETPLACE_ID,
+                    # Buyer context is required — without it eBay omits shippingOptions
+                    'X-EBAY-C-ENDUSERCTX':     self._BUYER_CONTEXT,
+                    'Content-Type':            'application/json',
+                },
+                timeout=10,
+            )
+        except requests.Timeout:
+            logger.warning('[ebay] Timeout fetching item detail for %s', item_id)
+            return None
+        except requests.RequestException as exc:
+            logger.warning('[ebay] Network error fetching item detail for %s: %s', item_id, exc)
+            return None
+        finally:
+            self.api_calls_made += 1
+
+        if not response.ok:
+            logger.warning(
+                '[ebay] Item detail HTTP %d for %s', response.status_code, item_id
+            )
+            return None
+
+        try:
+            data = response.json()
+        except ValueError:
+            logger.warning('[ebay] Invalid JSON in item detail for %s', item_id)
+            return None
+
+        shipping_options = data.get('shippingOptions', [])
+        if not shipping_options:
+            # No shipping options even with buyer context — treat as free shipping
+            return Decimal('0')
+
+        first = shipping_options[0]
+        type_field = first.get('type', '')
+
+        # LOCAL_PICKUP: no shipping offered, buyer must collect in person — skip
+        # Note: do NOT reject shippingCostType=='CALCULATED' here. With buyer
+        # context, eBay returns 'CALCULATED' simply to mean "we calculated this
+        # cost for your location" — it IS a real, known dollar amount.
+        if type_field == 'LOCAL_PICKUP':
+            logger.debug('[ebay] Item detail confirms LOCAL_PICKUP for %s — skipping', item_id)
+            return None
+
+        ship_cost = first.get('shippingCost', {})
+        currency  = ship_cost.get('currency', 'USD')
+        value     = ship_cost.get('value', '0')
+
+        if currency != 'USD':
+            return Decimal('0')
+
+        try:
+            return Decimal(str(value))
+        except InvalidOperation:
+            return Decimal('0')
 
     def search_items(self, keywords, max_results=10):
         """
@@ -536,7 +663,26 @@ class EbayBrowseAPI:
             shipping = Decimal('0')
             shipping_options = item.get('shippingOptions', [])
             if shipping_options:
-                ship_cost     = shipping_options[0].get('shippingCost', {})
+                first_option = shipping_options[0]
+
+                # Skip listings where we cannot determine a fixed upfront cost.
+                # CALCULATED: shipping depends on buyer location — unknown until checkout.
+                # LOCAL_PICKUP: no shipping offered; buyer must collect in person.
+                # Both are detected via shippingCostType (Browse API standard) and/or
+                # type (older field, same values).
+                ship_cost_type = first_option.get('shippingCostType', '')
+                ship_type_field = first_option.get('type', '')
+                if ship_cost_type == 'CALCULATED' or ship_type_field == 'LOCAL_PICKUP':
+                    logger.debug(
+                        '[ebay] Skipping %s listing (shippingCostType=%s type=%s): "%s"',
+                        'CALCULATED' if ship_cost_type == 'CALCULATED' else 'LOCAL_PICKUP',
+                        ship_cost_type or '—',
+                        ship_type_field or '—',
+                        title[:60],
+                    )
+                    return None
+
+                ship_cost     = first_option.get('shippingCost', {})
                 ship_currency = ship_cost.get('currency', 'USD')
                 ship_value    = ship_cost.get('value', '0')
                 # Only use shipping cost if it is also in USD

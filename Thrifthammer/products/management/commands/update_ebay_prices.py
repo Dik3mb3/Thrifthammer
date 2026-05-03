@@ -49,6 +49,39 @@ from prices.models import CurrentPrice
 from products.models import Product, Retailer
 from products.ebay_api_client import EbayBrowseAPI, EbayAPIError
 
+# EPN affiliate tracking parameters (US marketplace).
+# Appended to every eBay URL we save so clicks generate affiliate revenue.
+_EPN_PARAMS = 'mkcid=1&mkrid=711-53200-19255-0&toolid=10001&mkevt=1'
+
+
+def _add_epn_params(url, campaign_id):
+    """
+    Append eBay Partner Network tracking parameters to an eBay item URL.
+
+    Safe to call on URLs that already contain these params — strips any
+    existing EPN params first so we never double-append on re-runs.
+
+    Args:
+        url:         Raw eBay item URL from the Browse API.
+        campaign_id: EPN campaign ID from settings.EBAY_AFFILIATE_CAMPAIGN_ID.
+
+    Returns:
+        URL with EPN tracking params appended, or original URL if no
+        campaign_id is configured.
+    """
+    if not campaign_id:
+        return url
+
+    # Strip any previously appended EPN params to avoid duplication on re-runs
+    for marker in ('mkcid=1', '&mkcid=1'):
+        idx = url.find(marker)
+        if idx != -1:
+            url = url[:idx].rstrip('?&')
+            break
+
+    separator = '&' if '?' in url else '?'
+    return f'{url}{separator}{_EPN_PARAMS}&campid={campaign_id}'
+
 
 def _debug_search(ebay_api, product, stdout, style):
     """
@@ -257,6 +290,15 @@ class Command(BaseCommand):
             )
             return
 
+        # ── EPN affiliate campaign ID ────────────────────────────────────────
+        campaign_id = getattr(settings, 'EBAY_AFFILIATE_CAMPAIGN_ID', '')
+        if campaign_id:
+            self.stdout.write(f'  EPN affiliate  : campid={campaign_id}')
+        else:
+            self.stdout.write(
+                self.style.WARNING('  EPN affiliate  : NOT configured (set EBAY_AFFILIATE_CAMPAIGN_ID)')
+            )
+
         # ── Get or create eBay retailer ──────────────────────────────────────
         ebay_retailer, created = Retailer.objects.get_or_create(
             slug='ebay',
@@ -433,7 +475,7 @@ class Command(BaseCommand):
             # ── Save result ──────────────────────────────────────────────────
             if result:
                 price         = result['total_cost']
-                url           = result['url']
+                url           = _add_epn_params(result['url'], campaign_id)
                 shipping      = result['shipping']
                 # Sanitise display strings to ASCII so Windows cp1252 terminals
                 # don't crash on special chars (™, é, etc.) in eBay titles.
@@ -467,6 +509,7 @@ class Command(BaseCommand):
                             'url': url,
                             'in_stock': True,
                             'not_available': False,
+                            'shipping_cost': shipping,
                         },
                     )
                 else:

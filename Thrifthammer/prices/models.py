@@ -50,6 +50,13 @@ class CurrentPrice(models.Model):
             'overwritten by automated scrapers or stock checkers.'
         ),
     )
+    shipping_cost = models.DecimalField(
+        max_digits=8, decimal_places=2, null=True, blank=True,
+        help_text=(
+            'eBay only — the shipping component included in the price. '
+            'The price field stores the total (item price + shipping).'
+        ),
+    )
     last_seen = models.DateTimeField(auto_now=True)
 
     class Meta:

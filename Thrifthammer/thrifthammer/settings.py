@@ -229,6 +229,12 @@ EBAY_USE_SANDBOX = os.environ.get('EBAY_USE_SANDBOX', 'False').lower() in ('true
 EBAY_CALLS_PER_DAY_LIMIT = 5000
 EBAY_DELAY_BETWEEN_CALLS = 0.5
 
+# eBay Partner Network (EPN) affiliate campaign ID.
+# Set EBAY_AFFILIATE_CAMPAIGN_ID in Railway environment variables.
+# When set, the scraper appends EPN tracking params to every saved eBay URL
+# so clicks generate affiliate revenue.
+EBAY_AFFILIATE_CAMPAIGN_ID = os.environ.get('EBAY_AFFILIATE_CAMPAIGN_ID', '')
+
 # ---------------------------------------------------------------------------
 # Email configuration — for the "Report Issue" feature
 # ---------------------------------------------------------------------------
