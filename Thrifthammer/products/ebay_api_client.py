@@ -70,7 +70,7 @@ TOKEN_REFRESH_BUFFER  = 300
 DAILY_CALL_SAFETY_LIMIT = 4500
 DAILY_CALL_LIMIT        = 5000
 
-
+# ---------------------------------------------------------------------------
 class EbayAPIError(Exception):
     """Raised when eBay API returns an error response."""
     pass
@@ -595,7 +595,7 @@ class EbayBrowseAPI:
         # eBay query level prevents card sets from winning the best-price match over
         # the actual miniature box.
         if not is_citadel:
-            query = f'{query.strip()} -bits -bitz -sprue -decor -cards -datacards'
+            query = f'{query.strip()} -bits -bitz -sprue -decor -cards -datacards -"ny rangers"'
 
         # Product-specific negative keywords: exclude similarly-named products
         # that our keyword validator cannot distinguish (e.g. Plastic Glue vs
