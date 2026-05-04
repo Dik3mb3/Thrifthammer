@@ -111,6 +111,44 @@ PRICE_SELECTORS = [
 UNAVAILABLE_MARKERS = ['currently unavailable', 'this item is not available', 'out of stock', 'sign in to purchase']
 BLOCKED_MARKERS     = ['robot check', 'ap/signin', 'verify you are a human', 'automated access']
 
+# Stop words excluded when comparing product name to Amazon page title.
+_TITLE_STOP = {'of', 'the', 'a', 'an', 'and', 'or', 'in', 'on', 'for', 'with'}
+
+
+def extract_amazon_title(page):
+    """Return the Amazon #productTitle text (lowercase), or None if absent."""
+    try:
+        el = page.query_selector('#productTitle')
+        if el:
+            return el.inner_text().strip().lower()
+    except Exception:
+        pass
+    return None
+
+
+def title_matches_product(amazon_title, product_name):
+    """
+    Return True if the Amazon page title is for the product we expect.
+
+    Splits the product name into significant words (>=3 chars, not stop words)
+    and checks that at least 50% of them appear somewhere in the Amazon title.
+    This catches the common case where Amazon shows a 'similar items' price
+    instead of the actual product when the real listing is unavailable.
+
+    Returns True (no rejection) when we cannot extract a title — we prefer
+    false positives over silently dropping valid prices.
+    """
+    if not amazon_title or not product_name:
+        return True
+    name_words = [
+        w for w in product_name.lower().split()
+        if w not in _TITLE_STOP and len(w) >= 3
+    ]
+    if not name_words:
+        return True
+    matches = sum(1 for w in name_words if w in amazon_title)
+    return (matches / len(name_words)) >= 0.5
+
 
 def extract_price(page):
     """Try each CSS selector in order and return the first dollar amount found."""
@@ -192,14 +230,25 @@ def scrape(products, output_file, resume):
                     unavail += 1
                     results[sku] = {'name': name, 'url': url, 'status': 'unavailable', 'price': None}
                 else:
-                    price = extract_price(page)
-                    if price:
-                        print(f'${price}')
-                        results[sku] = {'name': name, 'url': url, 'status': 'ok', 'price': price}
+                    # Validate the Amazon page title before trusting any price.
+                    # When a product is sold out Amazon sometimes shows an
+                    # 'Alternative item' panel whose price our CSS selectors
+                    # can accidentally pick up.  If the page H1 doesn't match
+                    # the product name we treat the result as unavailable.
+                    amazon_title = extract_amazon_title(page)
+                    if amazon_title and not title_matches_product(amazon_title, name):
+                        print(f'TITLE MISMATCH (page: {amazon_title[:60]!r})')
+                        unavail += 1
+                        results[sku] = {'name': name, 'url': url, 'status': 'title_mismatch', 'price': None}
                     else:
-                        print('no price found')
-                        no_price += 1
-                        results[sku] = {'name': name, 'url': url, 'status': 'no_price', 'price': None}
+                        price = extract_price(page)
+                        if price:
+                            print(f'${price}')
+                            results[sku] = {'name': name, 'url': url, 'status': 'ok', 'price': price}
+                        else:
+                            print('no price found')
+                            no_price += 1
+                            results[sku] = {'name': name, 'url': url, 'status': 'no_price', 'price': None}
             except PlaywrightTimeout:
                 print('TIMEOUT')
                 results[sku] = {'name': name, 'url': url, 'status': 'timeout', 'price': None}
@@ -214,9 +263,10 @@ def scrape(products, output_file, resume):
         context.close()
         browser.close()
 
-    ok = sum(1 for v in results.values() if v['status'] == 'ok')
+    ok         = sum(1 for v in results.values() if v['status'] == 'ok')
+    mismatched = sum(1 for v in results.values() if v['status'] == 'title_mismatch')
     print(
-        f'\nDone.  Found: {ok}  Unavailable: {unavail}  '
+        f'\nDone.  Found: {ok}  Unavailable: {unavail}  Title-mismatch: {mismatched}  '
         f'Blocked: {blocked}  No price: {no_price}  Skipped: {skipped}'
     )
     print(f'Results saved to {output_file}')
