@@ -116,11 +116,28 @@ _TITLE_STOP = {'of', 'the', 'a', 'an', 'and', 'or', 'in', 'on', 'for', 'with'}
 
 
 def extract_amazon_title(page):
-    """Return the Amazon #productTitle text (lowercase), or None if absent."""
+    """
+    Return the Amazon product title (lowercase) for validation purposes.
+
+    Tries (in order):
+      1. #productTitle — the visible H1 on standard product pages
+      2. The HTML <title> tag — always present; on Amazon it contains the
+         product name, e.g. "Games Workshop Convergence of Dominion : Toys"
+
+    Returns None only if both attempts fail.
+    """
     try:
         el = page.query_selector('#productTitle')
         if el:
-            return el.inner_text().strip().lower()
+            text = el.inner_text().strip().lower()
+            if text:
+                return text
+    except Exception:
+        pass
+    try:
+        title = page.title()
+        if title:
+            return title.lower()
     except Exception:
         pass
     return None
@@ -135,10 +152,12 @@ def title_matches_product(amazon_title, product_name):
     This catches the common case where Amazon shows a 'similar items' price
     instead of the actual product when the real listing is unavailable.
 
-    Returns True (no rejection) when we cannot extract a title — we prefer
-    false positives over silently dropping valid prices.
+    Returns False when amazon_title is None — we cannot confirm the product
+    so we conservatively reject the price rather than risk storing a wrong one.
     """
-    if not amazon_title or not product_name:
+    if not amazon_title:
+        return False   # can't confirm — reject conservatively
+    if not product_name:
         return True
     name_words = [
         w for w in product_name.lower().split()
@@ -236,8 +255,9 @@ def scrape(products, output_file, resume):
                     # can accidentally pick up.  If the page H1 doesn't match
                     # the product name we treat the result as unavailable.
                     amazon_title = extract_amazon_title(page)
-                    if amazon_title and not title_matches_product(amazon_title, name):
-                        print(f'TITLE MISMATCH (page: {amazon_title[:60]!r})')
+                    if not title_matches_product(amazon_title, name):
+                        short_title = amazon_title[:70] if amazon_title else '<no title found>'
+                        print(f'TITLE MISMATCH (page: {short_title!r})')
                         unavail += 1
                         results[sku] = {'name': name, 'url': url, 'status': 'title_mismatch', 'price': None}
                     else:
