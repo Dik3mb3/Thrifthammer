@@ -1054,10 +1054,19 @@ class EbayBrowseAPI:
                     )
                     return False
 
+        # ── Per-product allowed title words ───────────────────────────────────
+        # Some products legitimately appear in listings that include words
+        # normally blocked by the bits filter or digit check (e.g. Bloodcrushers
+        # are sold as "NOS" New Old Stock sealed boxes with "6 Models" in the
+        # title).  ebay_allowed_title_words is a space-separated list of words
+        # and/or digits that should be exempted from those checks for this product.
+        _raw_allowed = getattr(product, 'ebay_allowed_title_words', '') or ''
+        _allowed_words = set(shlex.split(_raw_allowed.lower())) if _raw_allowed else set()
+
         # ── Bits/parts filter ─────────────────────────────────────────────────
         # Split title into words and check against the bits keyword set.
         title_words = set(re.sub(r"[^\w\s]", ' ', title_lower).split())
-        bits_matches = title_words & EbayBrowseAPI._BITS_KEYWORDS
+        bits_matches = (title_words & EbayBrowseAPI._BITS_KEYWORDS) - _allowed_words
         if bits_matches:
             logger.debug(
                 '[ebay] Rejected (bits/parts): "%s" matched keywords: %s',
@@ -1084,7 +1093,11 @@ class EbayBrowseAPI:
         #     "T'au Fire Warriors - 10 Miniatures"
         #     "15 Figures New"
         #     Fix: reject NUMBER + miniatures/minis/figures (covers 10+).
-        if re.search(r'\b[1-9]\b', title_lower):
+        blocked_digits = [
+            d for d in re.findall(r'\b([1-9])\b', title_lower)
+            if d not in _allowed_words
+        ]
+        if blocked_digits:
             logger.debug(
                 '[ebay] Rejected (standalone count digit): "%s"',
                 result['title'][:60],
@@ -1365,7 +1378,7 @@ class EbayBrowseAPI:
                 w for w in re.sub(r'[^\w\s]', ' ', title_lower).split()
                 if len(w) >= 3
             ]
-            if len(title_kws) >= 3:
+            if len(title_kws) >= 3 and not _allowed_words:
                 desc_prefix = short_desc[:150]
                 mirror_matches = sum(1 for w in title_kws if w in desc_prefix)
                 mirror_ratio = mirror_matches / len(title_kws)

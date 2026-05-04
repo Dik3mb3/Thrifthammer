@@ -246,6 +246,15 @@ class Product(models.Model):
             '"mk2" for Painting Handle XL excludes standard Mk2 handle listings.'
         ),
     )
+    ebay_allowed_title_words = models.CharField(
+        max_length=200, blank=True, default='',
+        help_text=(
+            'Space-separated words/digits that are normally blocked by the validator '
+            'but should be allowed for this product. '
+            'e.g. "nos 6" for Bloodcrushers allows "NOS" (New Old Stock) listings '
+            'and titles that include the model count "6".'
+        ),
+    )
     batch_tag = models.CharField(
         max_length=50, blank=True, default='', db_index=True,
         help_text=(
