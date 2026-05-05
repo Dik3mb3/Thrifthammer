@@ -185,7 +185,18 @@ def extract_price(page):
 
 
 def check_page_status(page):
-    """Return 'blocked', 'unavailable', or 'ok' based on page body text."""
+    """Return 'blocked', 'unavailable', or 'ok' based on page body text.
+
+    Special case: if Amazon shows 'See All Buying Options' as the primary
+    action but no 'Add to Cart' button, there is no direct buybox price.
+    In this state the broad .a-price fallback selector can accidentally pick
+    up prices from unrelated products in the 'similar items' carousel at the
+    top of the page.  Treating this as unavailable prevents that.
+
+    Pages that do have an 'Add to Cart' button (normal in-stock listings,
+    including those with non-standard price layouts) are unaffected — all
+    price selectors including the .a-price fallback run as normal.
+    """
     try:
         body = page.inner_text('body').lower()
     except Exception:
@@ -196,6 +207,8 @@ def check_page_status(page):
     for m in UNAVAILABLE_MARKERS:
         if m in body:
             return 'unavailable'
+    if 'see all buying options' in body and 'add to cart' not in body:
+        return 'unavailable'
     return 'ok'
 
 
