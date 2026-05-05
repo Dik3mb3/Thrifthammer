@@ -207,8 +207,17 @@ def check_page_status(page):
     for m in UNAVAILABLE_MARKERS:
         if m in body:
             return 'unavailable'
-    if 'see all buying options' in body and 'add to cart' not in body:
-        return 'unavailable'
+    # No-buybox detection: 'See All Buying Options' pages have carousel items
+    # that also contain "add to cart" text, so checking body text is too broad.
+    # Instead check for #add-to-cart-button — the specific buybox button ID that
+    # only exists when Amazon has a direct price to offer.
+    if 'see all buying options' in body:
+        try:
+            has_buybox = page.query_selector('#add-to-cart-button') is not None
+        except Exception:
+            has_buybox = True  # can't confirm, assume ok
+        if not has_buybox:
+            return 'unavailable'
     return 'ok'
 
 
