@@ -1,6 +1,10 @@
 param(
-    [ValidateSet(1,2,3)]
-    [int]$Batch = 1,
+    [ValidateSet(1,2,3,0)]
+    [int]$Batch = 0,
+
+    # Scrape all products with a specific batch_tag (e.g. -BatchTag blood-bowl).
+    # When set, --batch is ignored.
+    [string]$BatchTag = '',
 
     # Pass -Resume to skip SKUs already in the JSON (useful if Chrome crashed mid-run).
     # By default every run re-scrapes all SKUs so prices are always fresh.
@@ -30,8 +34,15 @@ $env:RAILWAY_ENVIRONMENT  = 'production'
 $env:DJANGO_ALLOWED_HOSTS = 'thrifthammer.com,www.thrifthammer.com,web-production-b6056.up.railway.app'
 $env:DJANGO_DEBUG         = 'False'
 
+if (-not $BatchTag -and $Batch -eq 0) {
+    Write-Host 'ERROR: Provide -Batch (1/2/3) or -BatchTag <tag> (e.g. -BatchTag blood-bowl).' -ForegroundColor Red
+    pause; exit 1
+}
+
+$label = if ($BatchTag) { "BatchTag=$BatchTag" } else { "Batch $Batch" }
+
 Write-Host ''
-Write-Host "ThriftHammer - Amazon Browser Scraper (Batch $Batch)" -ForegroundColor Cyan
+Write-Host "ThriftHammer - Amazon Browser Scraper ($label)" -ForegroundColor Cyan
 Write-Host '------------------------------------------------------'
 Write-Host "Using Python: $python"
 Write-Host ''
@@ -47,14 +58,22 @@ Write-Host '[2/2] Starting browser scraper...' -ForegroundColor Yellow
 Write-Host 'Chrome will open and visit each page. Do NOT close it.' -ForegroundColor Yellow
 Write-Host ''
 
-& $python (Join-Path $scriptDir 'scrape_amazon_browser.py') --batch $Batch @(if ($Resume) { '--resume' })
+$scriptArgs = @()
+if ($BatchTag) {
+    $scriptArgs += '--batch-tag', $BatchTag
+} else {
+    $scriptArgs += '--batch', $Batch
+}
+if ($Resume) { $scriptArgs += '--resume' }
+
+& $python (Join-Path $scriptDir 'scrape_amazon_browser.py') @scriptArgs
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host 'Scraper exited with an error.' -ForegroundColor Red; pause; exit 1
 }
 
+$outFile = if ($BatchTag) { "amazon_prices_tag_$($BatchTag.Replace('-','_')).json" } else { "amazon_prices_batch${Batch}.json" }
 Write-Host ''
-Write-Host "Batch $Batch complete. Results in amazon_prices_batch${Batch}.json" -ForegroundColor Green
-Write-Host "Run import_amazon_prices_batch${Batch}.ps1 to write to the database." -ForegroundColor Cyan
+Write-Host "$label complete. Results in $outFile" -ForegroundColor Green
 Write-Host ''
 pause

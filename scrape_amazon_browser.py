@@ -14,9 +14,10 @@ Usage:
   python scrape_amazon_browser.py --batch 2
   python scrape_amazon_browser.py --batch 3
   python scrape_amazon_browser.py --batch 2 --resume
-  python scrape_amazon_browser.py --sku 43-04   (no batch needed)
+  python scrape_amazon_browser.py --sku 43-04        (no batch needed)
+  python scrape_amazon_browser.py --batch-tag blood-bowl
 
-Output: amazon_prices_batch{N}.json  (or amazon_prices_sku_{SKU}.json for --sku)
+Output: amazon_prices_batch{N}.json  (or amazon_prices_sku_{SKU}.json / amazon_prices_tag_{TAG}.json)
 """
 
 import argparse
@@ -51,12 +52,13 @@ BATCH_LABELS = {
 }
 
 
-def load_products(batch_num=None, sku_filter=None):
+def load_products(batch_num=None, sku_filter=None, batch_tag=None):
     """
     Query the DB for active Amazon CurrentPrice rows and return a list of
     (gw_sku, product_name, amazon_url) tuples sorted alphabetically.
 
-    If sku_filter is given, returns only that SKU (batch_num ignored).
+    If sku_filter is given, returns only that SKU (other filters ignored).
+    If batch_tag is given, filters by product.batch_tag.
     If batch_num is given, filters by the corresponding letter range.
     """
     from prices.models import CurrentPrice  # import after django.setup()
@@ -71,6 +73,8 @@ def load_products(batch_num=None, sku_filter=None):
 
     if sku_filter:
         qs = qs.filter(product__gw_sku=sku_filter)
+    elif batch_tag:
+        qs = qs.filter(product__batch_tag=batch_tag)
     elif batch_num is not None:
         lo, hi = BATCH_RANGES[batch_num]
         qs = qs.filter(product__name__iregex=f'^[{lo}-{hi}]')
@@ -80,6 +84,8 @@ def load_products(batch_num=None, sku_filter=None):
     if not products:
         if sku_filter:
             print(f'No active Amazon URL found for SKU {sku_filter!r}.')
+        elif batch_tag:
+            print(f'No active Amazon URLs found for batch_tag {batch_tag!r}.')
         else:
             print(f'No products found for batch {batch_num} ({BATCH_LABELS[batch_num]}).')
     return products
@@ -263,10 +269,14 @@ if __name__ == '__main__':
         '--sku', type=str, default=None,
         help='Scrape a single SKU regardless of batch (e.g. --sku 43-04).',
     )
+    parser.add_argument(
+        '--batch-tag', type=str, default=None,
+        help='Scrape all products with this batch_tag (e.g. --batch-tag blood-bowl).',
+    )
     args = parser.parse_args()
 
-    if not args.sku and args.batch is None:
-        parser.error('Provide --batch (1/2/3) or --sku <gw_sku>.')
+    if not args.sku and not args.batch_tag and args.batch is None:
+        parser.error('Provide --batch (1/2/3), --sku <gw_sku>, or --batch-tag <tag>.')
 
     # Set up Django now — DATABASE_URL must already be in the environment
     # (the run_amazon_browser_scrape.ps1 wrapper loads it from .env.production).
@@ -279,6 +289,11 @@ if __name__ == '__main__':
         products    = load_products(sku_filter=args.sku)
         safe_sku    = args.sku.replace('/', '_')
         output_file = os.path.join(script_dir, f'amazon_prices_sku_{safe_sku}.json')
+    elif args.batch_tag:
+        products    = load_products(batch_tag=args.batch_tag)
+        safe_tag    = args.batch_tag.replace('-', '_')
+        print(f'Batch tag "{args.batch_tag}" — {len(products)} products loaded from DB.')
+        output_file = os.path.join(script_dir, f'amazon_prices_tag_{safe_tag}.json')
     else:
         products    = load_products(batch_num=args.batch)
         label       = BATCH_LABELS[args.batch]
