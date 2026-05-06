@@ -21,15 +21,16 @@ class CurrentPriceAdmin(admin.ModelAdmin):
     """
 
     list_display = ('product', 'retailer', 'formatted_price', 'discount_badge', 'in_stock', 'last_seen')
-    list_filter = ('retailer', 'in_stock', 'last_seen')
+    list_filter = ('retailer', 'in_stock')
     search_fields = ('product__name', 'product__gw_sku', 'retailer__name')
     raw_id_fields = ('product', 'retailer')
     list_per_page = 50
-    date_hierarchy = 'last_seen'
 
     @admin.display(description='Price')
     def formatted_price(self, obj):
         """Highlight the price in the theme teal colour for quick scanning."""
+        if obj.price is None:
+            return '—'
         return format_html('<strong style="color:#03dac6">${}</strong>', obj.price)
 
     @admin.display(description='Discount')
