@@ -20,9 +20,17 @@ class Command(BaseCommand):
             nargs='?',
             help='Retailer slug to scrape (omit to run all)',
         )
+        parser.add_argument(
+            '--batch-tag',
+            type=str,
+            default=None,
+            metavar='TAG',
+            help='Only scrape products with this batch_tag (e.g. blood-bowl, phase-2).',
+        )
 
     def handle(self, *args, **options):
         retailer_slug = options.get('retailer')
+        batch_tag = options.get('batch_tag')
 
         if retailer_slug:
             scrapers = {retailer_slug: SCRAPER_REGISTRY.get(retailer_slug)}
@@ -37,7 +45,7 @@ class Command(BaseCommand):
             self.stdout.write(f'Running scraper: {slug}...')
             try:
                 scraper = scraper_class()
-                job = scraper.run()
+                job = scraper.run(batch_tag=batch_tag)
                 self.stdout.write(self.style.SUCCESS(
                     f'  {slug}: {job.status} — '
                     f'{job.products_found} found, {job.prices_updated} updated'

@@ -124,7 +124,7 @@ class MiniatureMarketScraper:
     # Public entry point
     # -------------------------------------------------------------------------
 
-    def run(self):
+    def run(self, batch_tag=None):
         """Execute a full scrape job and return the ScrapeJob record."""
         try:
             retailer = Retailer.objects.get(slug=self.retailer_slug)
@@ -139,6 +139,8 @@ class MiniatureMarketScraper:
         )
         errors = []
         products = Product.objects.filter(is_active=True).exclude(gw_sku='')
+        if batch_tag:
+            products = products.filter(batch_tag=batch_tag)
 
         for product in products:
             sku = product.gw_sku.strip()

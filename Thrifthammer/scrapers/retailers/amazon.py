@@ -354,7 +354,7 @@ class AmazonScraper:
     # Public entry point
     # -------------------------------------------------------------------------
 
-    def run(self):
+    def run(self, batch_tag=None):
         """
         Scrape Amazon prices for all products with a stored Amazon URL.
 
@@ -383,6 +383,7 @@ class AmazonScraper:
             .exclude(url='')
             .exclude(url__isnull=True)
             .select_related('product')
+            .filter(**(({'product__batch_tag': batch_tag}) if batch_tag else {}))
         )
 
         # Randomise order — sequential scraping is a clear bot signal.

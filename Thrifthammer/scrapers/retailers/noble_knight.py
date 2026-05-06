@@ -112,7 +112,7 @@ class NoblekKnightScraper:
     # Public entry point
     # -------------------------------------------------------------------------
 
-    def run(self):
+    def run(self, batch_tag=None):
         """
         Scrape NK prices for all products with a stored NK URL.
 
@@ -138,6 +138,8 @@ class NoblekKnightScraper:
             .exclude(url__isnull=True)
             .select_related('product')
         )
+        if batch_tag:
+            entries = entries.filter(product__batch_tag=batch_tag)
 
         for entry in entries:
             product = entry.product
