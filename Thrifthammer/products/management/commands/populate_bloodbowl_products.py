@@ -793,6 +793,7 @@ class Command(BaseCommand):
                     'faction': None,
                     'is_active': True,
                     'batch_tag': 'blood-bowl',
+                    'ebay_negative_keywords': 'Dice',
                 },
             )
             if created:
