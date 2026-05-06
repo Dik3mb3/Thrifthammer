@@ -66,6 +66,8 @@ class CurrentPrice(models.Model):
     def __str__(self):
         if self.not_available:
             return f"{self.product.name} @ {self.retailer.name}: NOT AVAILABLE"
+        if self.price is None:
+            return f"{self.product.name} @ {self.retailer.name}: no price"
         return f"{self.product.name} @ {self.retailer.name}: ${self.price:.2f}"
 
     @property
