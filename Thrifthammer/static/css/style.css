@@ -74,18 +74,18 @@
    Navbar stays dark navy in both themes to preserve brand identity.
    ============================================================================= */
 html[data-theme="light"] {
-  /* ── Backgrounds: stone/concrete — warm neutral mid-tones ── */
-  --bg-primary:   #c4c0b8;  /* base stone */
-  --bg-secondary: #cec9c1;  /* panels */
-  --bg-elevated:  #dad5cc;  /* raised cards */
-  --bg-input:     #dedad3;  /* form inputs */
+  /* ── Backgrounds: darker warm slate — considerably deeper than stone/beige ── */
+  --bg-primary:   #9e9a92;  /* dark warm slate */
+  --bg-secondary: #a8a49c;  /* panels */
+  --bg-elevated:  #b2aea6;  /* raised cards */
+  --bg-input:     #bcb8b0;  /* form inputs */
 
-  /* ── Text — warm near-black for good contrast on stone ── */
+  /* ── Text — dark for good contrast on mid-dark slate ── */
   --text-primary:   #1a1814;
-  --text-secondary: #3a3630;
-  --text-muted:     #6e6a62;
+  --text-secondary: #2e2a26;
+  --text-muted:     #4a4642;  /* darkened — lighter values vanish on this bg */
 
-  /* ── Accents — richer/deeper to stand out on mid-tone stone ── */
+  /* ── Accents — richer/deeper to stand out on slate ── */
   --accent-gold:    #a87820;
   --accent-gold-lt: #c89430;
   --accent-red:     #b82222;
@@ -97,19 +97,29 @@ html[data-theme="light"] {
   --accent-purple:  #5a2a8a;
   --accent-purple-lt:#7040b0;
 
-  /* ── Borders — warm stone tones ── */
-  --border-subtle:  #b0aba2;
-  --border-mid:     #a09b92;
+  /* ── Borders — slate tones ── */
+  --border-subtle:  #8e8a82;
+  --border-mid:     #7e7a72;
   --border-focus:   #a87820;
-  --divider:        #b8b3aa;
+  --divider:        #949088;
 
-  /* ── Shadows — mid-tone surfaces need moderate depth ── */
-  --shadow-sm:        0 1px 3px 0 rgb(0 0 0 / 0.12);
-  --shadow-md:        0 4px 8px -1px rgb(0 0 0 / 0.16);
-  --shadow-lg:        0 12px 24px -4px rgb(0 0 0 / 0.20);
-  --shadow-glow-gold: 0 0 18px rgb(168 120 32 / 0.30);
-  --shadow-glow-red:  0 0 18px rgb(184 34 34 / 0.25);
+  /* ── Shadows — darker surface, slightly stronger depth ── */
+  --shadow-sm:        0 1px 3px 0 rgb(0 0 0 / 0.15);
+  --shadow-md:        0 4px 8px -1px rgb(0 0 0 / 0.20);
+  --shadow-lg:        0 12px 24px -4px rgb(0 0 0 / 0.28);
+  --shadow-glow-gold: 0 0 18px rgb(168 120 32 / 0.35);
+  --shadow-glow-red:  0 0 18px rgb(184 34 34 / 0.30);
 }
+
+/* Badges: semi-transparent dark-mode versions wash out on a mid-dark surface.
+   Override with solid light-fill + dark text so they pop clearly. */
+html[data-theme="light"] .badge-green  { background: #d4eede; color: #0c5226; border-color: #7ec89a; }
+html[data-theme="light"] .badge-red    { background: #f0d4d4; color: #6e1010; border-color: #c87878; }
+html[data-theme="light"] .badge-blue   { background: #d2dcf5; color: #1c3080; border-color: #6888d8; }
+html[data-theme="light"] .badge-purple { background: #e2d4f5; color: #3a1875; border-color: #8c5ec4; }
+html[data-theme="light"] .badge-gold   { background: #f0e4c4; color: #604406; border-color: #c49840; }
+html[data-theme="light"] .badge-default,
+html[data-theme="light"] .badge-muted  { background: #cac6be; color: #2e2a26; border-color: #8e8a82; }
 
 /* Remove grimdark background image in light mode */
 html[data-theme="light"] {
@@ -2195,7 +2205,12 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
     margin: 0 auto var(--sp-4);
   }
   .product-detail { padding: var(--sp-4) var(--sp-4); }
-  .product-info-header h1 { font-size: 1.3rem; }
+  .product-info-header h1 {
+    font-size: 1.3rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
 
   /* ── Price table: horizontally scrollable ── */
   .price-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
