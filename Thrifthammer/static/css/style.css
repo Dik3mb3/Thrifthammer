@@ -69,6 +69,153 @@
 }
 
 /* =============================================================================
+   Light Theme — PCPartPicker / CamelCamelCamel inspired
+   Activated by data-theme="light" on <html>.
+   Navbar stays dark navy in both themes to preserve brand identity.
+   ============================================================================= */
+html[data-theme="light"] {
+  /* ── Backgrounds ── */
+  --bg-primary:   #f2f4f7;
+  --bg-secondary: #ffffff;
+  --bg-elevated:  #ffffff;
+  --bg-input:     #f8f9fb;
+
+  /* ── Text ── */
+  --text-primary:   #1c1e26;
+  --text-secondary: #484d5e;
+  --text-muted:     #8a8e9c;
+
+  /* ── Accents — slightly deepened for legibility on light bg ── */
+  --accent-gold:    #9a6f18;
+  --accent-gold-lt: #b88a20;
+  --accent-red:     #b02020;
+  --accent-red-lt:  #cc3030;
+  --accent-green:   #1a6b40;
+  --accent-green-lt:#228a52;
+  --accent-blue:    #2a5aaf;
+  --accent-blue-lt: #3a72cc;
+  --accent-purple:  #5a2a8a;
+  --accent-purple-lt:#7040b0;
+
+  /* ── Borders ── */
+  --border-subtle:  #e2e4ec;
+  --border-mid:     #d0d3dc;
+  --border-focus:   #9a6f18;
+  --divider:        #e8eaf2;
+
+  /* ── Shadows — lighter on a light surface ── */
+  --shadow-sm:        0 1px 3px 0 rgb(0 0 0 / 0.07);
+  --shadow-md:        0 4px 8px -1px rgb(0 0 0 / 0.10);
+  --shadow-lg:        0 12px 24px -4px rgb(0 0 0 / 0.13);
+  --shadow-glow-gold: 0 0 18px rgb(154 111 24 / 0.15);
+  --shadow-glow-red:  0 0 18px rgb(176 32 32 / 0.15);
+}
+
+/* Remove grimdark background image in light mode */
+html[data-theme="light"] {
+  background-image: none !important;
+  background-color: var(--bg-primary);
+}
+
+/* Remove dark vignette overlays from body in light mode */
+html[data-theme="light"] body {
+  background-image: none;
+}
+
+/* ── Navbar: stays dark navy in light mode (PCPartPicker style) ── */
+html[data-theme="light"] .navbar {
+  background: rgba(26, 32, 48, 0.98);
+  box-shadow: 0 2px 20px rgb(0 0 0 / 0.25), 0 1px 0 rgb(255 255 255 / 0.05);
+}
+html[data-theme="light"] .navbar-links a,
+html[data-theme="light"] .nav-dropdown-toggle,
+html[data-theme="light"] .btn-logout-link {
+  color: #a09880;
+}
+html[data-theme="light"] .navbar-links a:hover,
+html[data-theme="light"] .nav-dropdown-toggle:hover,
+html[data-theme="light"] .nav-dropdown.open .nav-dropdown-toggle {
+  color: #e8e0d0;
+  background: #1c2230;
+}
+html[data-theme="light"] .navbar-links .nav-cta {
+  background: #9b2020;
+  color: #f0c060;
+  border-color: #d44040;
+}
+html[data-theme="light"] .navbar-links .nav-cta:hover {
+  background: #d44040;
+  color: #e8e0d0;
+}
+html[data-theme="light"] .navbar-links .watchlist-badge {
+  background: #1c2230;
+  border-color: #2a2e3a;
+  color: #a09880;
+}
+html[data-theme="light"] .nav-dropdown-menu {
+  background: #13171f;
+  border-color: #2a2e3a;
+}
+html[data-theme="light"] .nav-dropdown-item { color: #a09880; }
+html[data-theme="light"] .nav-dropdown-item:hover {
+  color: #f0c060;
+  background: #1c2230;
+}
+html[data-theme="light"] .navbar-search input {
+  background: rgba(10, 12, 16, 0.5);
+  color: #e8e0d0;
+  border-color: #2a2e3a;
+}
+html[data-theme="light"] .navbar-search input::placeholder { color: #5c5648; }
+html[data-theme="light"] .navbar-search input:focus {
+  border-color: #c8922a;
+  background: rgba(10, 12, 16, 0.7);
+}
+html[data-theme="light"] .hero-search-results {
+  background: #13171f;
+  border-color: #2a2e3a;
+}
+
+/* ── Theme sliding toggle (PCPartPicker style) ── */
+.theme-slider {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  padding: 3px;
+  gap: 0;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: var(--sp-2);
+}
+/* Sliding thumb — sits behind the icons, translates on theme change */
+.theme-slider-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  pointer-events: none;
+  transition: transform 200ms ease;
+  /* Default (dark mode): thumb on right, covering the moon icon */
+  transform: translateX(26px);
+}
+/* Light mode: thumb slides left to cover the sun icon */
+html[data-theme="light"] .theme-slider-thumb {
+  transform: translateX(0);
+}
+.theme-slider-icon {
+  position: relative;
+  z-index: 1;
+  width: 26px;
+  height: 26px;
+}
+
+/* =============================================================================
    Reset & Base
    ============================================================================= */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
