@@ -595,7 +595,7 @@ class EbayBrowseAPI:
         # eBay query level prevents card sets from winning the best-price match over
         # the actual miniature box.
         if not is_citadel:
-            query = f'{query.strip()} -bits -bitz -sprue -decor -cards -datacards -"ny rangers" -"D&D" -5e'
+            query = f'{query.strip()} -bits -bitz -sprue -decor -cards -datacards -"ny rangers" -"D&D" -5e -"3D" -printing'
 
         # Product-specific negative keywords: exclude similarly-named products
         # that our keyword validator cannot distinguish (e.g. Plastic Glue vs
