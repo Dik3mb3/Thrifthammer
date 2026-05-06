@@ -185,7 +185,17 @@ class MiniatureMarketScraper:
                     )
 
                 # Non-numeric SKUs with no stored URL are not on MM.
+                # If a stored URL existed but the fetch failed transiently,
+                # skip without marking N/A — preserves the seeded URL.
                 if not GW_SKU_PATTERN.match(sku):
+                    if stored_cp and stored_cp.url:
+                        logger.info(
+                            '[url-skip] %s — non-numeric SKU, stored URL fetch failed '
+                            '(transient?); preserving existing record',
+                            product.name,
+                        )
+                        time.sleep(self.delay)
+                        continue
                     self._save_not_available(product, retailer)
                     logger.info('[n/a]      %s — non-standard SKU, no stored URL', product.name)
                     job.prices_updated += 1
