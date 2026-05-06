@@ -15,11 +15,27 @@ Usage:
 import decimal
 import json
 import os
+import re
 
 from django.core.management.base import BaseCommand, CommandError
 
 from prices.models import CurrentPrice
 from products.models import Product, Retailer
+
+ASSOCIATE_TAG = 'thrifthammer7-20'
+_ASIN_RE = re.compile(r'/dp/([A-Z0-9]{10})')
+
+
+def _affiliate_url(raw_url):
+    """Extract ASIN and return a clean affiliate URL.
+
+    If no ASIN can be found the original URL is returned unchanged so the
+    record is never left blank.
+    """
+    match = _ASIN_RE.search(raw_url or '')
+    if not match:
+        return raw_url
+    return f'https://www.amazon.com/dp/{match.group(1)}?tag={ASSOCIATE_TAG}'
 
 
 class Command(BaseCommand):
@@ -143,7 +159,7 @@ class Command(BaseCommand):
                     retailer=amazon,
                     defaults={
                         'price'        : price,
-                        'url'          : url,
+                        'url'          : _affiliate_url(url),
                         'in_stock'     : True,
                         'not_available': False,
                         'listing_title': '',
