@@ -27,12 +27,16 @@ class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True, db_index=True)
     description = models.TextField(blank=True)
+    sort_order = models.IntegerField(
+        default=50,
+        help_text='Lower numbers sort first. Use to pin categories above alphabetical order.',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name_plural = 'categories'
-        ordering = ['name']
+        ordering = ['sort_order', 'name']
 
     def __str__(self):
         return self.name
