@@ -75,10 +75,10 @@
    ============================================================================= */
 html[data-theme="light"] {
   /* ── Backgrounds ── */
-  --bg-primary:   #f2f4f7;
-  --bg-secondary: #ffffff;
-  --bg-elevated:  #ffffff;
-  --bg-input:     #f8f9fb;
+  --bg-primary:   #d8dce4;  /* medium blue-gray — enough depth for accents to pop */
+  --bg-secondary: #e6e9f0;  /* panels/cards */
+  --bg-elevated:  #edf0f5;  /* raised elements */
+  --bg-input:     #f0f2f6;  /* form inputs */
 
   /* ── Text ── */
   --text-primary:   #1c1e26;
