@@ -5,6 +5,11 @@ on:
     # Daily at 05:30 UTC (after Amazon and MM runs at 04:00)
     - cron: '30 5 * * *'
   workflow_dispatch:
+    inputs:
+      batch_tag:
+        description: 'Only scrape products with this batch_tag (e.g. kill-team, blood-bowl)'
+        type: string
+        default: ''
 
 jobs:
   scrape:
@@ -36,7 +41,12 @@ jobs:
           DJANGO_ALLOWED_HOSTS: thrifthammer.com,www.thrifthammer.com,web-production-b6056.up.railway.app
           DJANGO_DEBUG: 'False'
           RAILWAY_ENVIRONMENT: production
-        run: python manage.py run_scrapers noble-knight-games
+        run: |
+          FLAGS=""
+          if [ -n "${{ github.event.inputs.batch_tag }}" ]; then
+            FLAGS="$FLAGS --batch-tag ${{ github.event.inputs.batch_tag }}"
+          fi
+          python manage.py run_scrapers noble-knight-games $FLAGS
 
       - name: Clear cache after price update
         env:
