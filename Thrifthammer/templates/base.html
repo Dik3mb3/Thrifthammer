@@ -70,6 +70,13 @@
             </div>
 
             {# Hamburger toggle — visible only on mobile #}
+            {# Theme toggle — outside navbar-links so it stays in the top bar on mobile #}
+            <button class="theme-slider" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+                <div class="theme-slider-thumb"></div>
+                <span class="theme-slider-icon" aria-hidden="true"></span>
+                <span class="theme-slider-icon" aria-hidden="true"></span>
+            </button>
+
             <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="navbar-links">
                 <span></span>
                 <span></span>
@@ -108,12 +115,6 @@
                     <a href="{% url 'accounts:register' %}" rel="nofollow">Register</a>
                 {% endif %}
 
-                {# Light/dark sliding toggle #}
-                <button class="theme-slider" id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
-                    <div class="theme-slider-thumb"></div>
-                    <span class="theme-slider-icon" aria-hidden="true"></span>
-                    <span class="theme-slider-icon" aria-hidden="true"></span>
-                </button>
             </div>
 
         </div>

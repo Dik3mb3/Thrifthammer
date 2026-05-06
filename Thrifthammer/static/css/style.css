@@ -74,41 +74,41 @@
    Navbar stays dark navy in both themes to preserve brand identity.
    ============================================================================= */
 html[data-theme="light"] {
-  /* ── Backgrounds ── */
-  --bg-primary:   #d8dce4;  /* medium blue-gray — enough depth for accents to pop */
-  --bg-secondary: #e6e9f0;  /* panels/cards */
-  --bg-elevated:  #edf0f5;  /* raised elements */
-  --bg-input:     #f0f2f6;  /* form inputs */
+  /* ── Backgrounds: stone/concrete — warm neutral mid-tones ── */
+  --bg-primary:   #c4c0b8;  /* base stone */
+  --bg-secondary: #cec9c1;  /* panels */
+  --bg-elevated:  #dad5cc;  /* raised cards */
+  --bg-input:     #dedad3;  /* form inputs */
 
-  /* ── Text ── */
-  --text-primary:   #1c1e26;
-  --text-secondary: #484d5e;
-  --text-muted:     #8a8e9c;
+  /* ── Text — warm near-black for good contrast on stone ── */
+  --text-primary:   #1a1814;
+  --text-secondary: #3a3630;
+  --text-muted:     #6e6a62;
 
-  /* ── Accents — slightly deepened for legibility on light bg ── */
-  --accent-gold:    #9a6f18;
-  --accent-gold-lt: #b88a20;
-  --accent-red:     #b02020;
-  --accent-red-lt:  #cc3030;
-  --accent-green:   #1a6b40;
-  --accent-green-lt:#228a52;
+  /* ── Accents — richer/deeper to stand out on mid-tone stone ── */
+  --accent-gold:    #a87820;
+  --accent-gold-lt: #c89430;
+  --accent-red:     #b82222;
+  --accent-red-lt:  #d43838;
+  --accent-green:   #1e7a48;
+  --accent-green-lt:#289858;
   --accent-blue:    #2a5aaf;
   --accent-blue-lt: #3a72cc;
   --accent-purple:  #5a2a8a;
   --accent-purple-lt:#7040b0;
 
-  /* ── Borders ── */
-  --border-subtle:  #e2e4ec;
-  --border-mid:     #d0d3dc;
-  --border-focus:   #9a6f18;
-  --divider:        #e8eaf2;
+  /* ── Borders — warm stone tones ── */
+  --border-subtle:  #b0aba2;
+  --border-mid:     #a09b92;
+  --border-focus:   #a87820;
+  --divider:        #b8b3aa;
 
-  /* ── Shadows — lighter on a light surface ── */
-  --shadow-sm:        0 1px 3px 0 rgb(0 0 0 / 0.07);
-  --shadow-md:        0 4px 8px -1px rgb(0 0 0 / 0.10);
-  --shadow-lg:        0 12px 24px -4px rgb(0 0 0 / 0.13);
-  --shadow-glow-gold: 0 0 18px rgb(154 111 24 / 0.15);
-  --shadow-glow-red:  0 0 18px rgb(176 32 32 / 0.15);
+  /* ── Shadows — mid-tone surfaces need moderate depth ── */
+  --shadow-sm:        0 1px 3px 0 rgb(0 0 0 / 0.12);
+  --shadow-md:        0 4px 8px -1px rgb(0 0 0 / 0.16);
+  --shadow-lg:        0 12px 24px -4px rgb(0 0 0 / 0.20);
+  --shadow-glow-gold: 0 0 18px rgb(168 120 32 / 0.30);
+  --shadow-glow-red:  0 0 18px rgb(184 34 34 / 0.25);
 }
 
 /* Remove grimdark background image in light mode */
@@ -188,7 +188,6 @@ html[data-theme="light"] .hero-search-results {
   border: none;
   cursor: pointer;
   flex-shrink: 0;
-  margin-left: var(--sp-2);
 }
 /* Sliding thumb — sits behind the icons, translates on theme change */
 .theme-slider-thumb {
@@ -2199,9 +2198,21 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   .product-info-header h1 { font-size: 1.3rem; }
 
   /* ── Price table: horizontally scrollable ── */
-  .price-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .price-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
   .price-table { min-width: 440px; font-size: 0.8rem; }
   .price-table th, .price-table td { padding: var(--sp-2) var(--sp-3); }
+
+  /* ── Price table Buy buttons: thumb-friendly tap targets ── */
+  .price-table .btn-sm {
+    padding: 0.55rem 0.9rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Prevent background bleed when table scrolls horizontally ── */
+  html { overflow-x: hidden; }
 
   /* ── Hero ── */
   .hero { padding: var(--sp-12) 0; background-attachment: scroll; }

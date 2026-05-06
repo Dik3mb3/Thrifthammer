@@ -190,9 +190,6 @@
               {% if forloop.first and cp.in_stock %}
               <span class="badge badge-green" style="margin-left:4px;">Best</span>
               {% endif %}
-              {% if 'amazon' in cp.retailer.slug %}
-              <div style="font-size:0.68rem;color:var(--text-muted);margin-top:2px;">checked {{ cp.last_seen|date:"d M Y" }}</div>
-              {% endif %}
               {% endif %}
             </td>
             <td>
@@ -234,9 +231,8 @@
       </table>
       </div>{# /price-table-wrap #}
       <p style="font-size:0.72rem;color:var(--text-muted);margin-top:var(--sp-2);">
-        Prices last updated: {{ current_prices.0.last_seen|date:"d M Y" }}
-        {% for cp in current_prices %}{% if 'amazon' in cp.retailer.slug %} &mdash; <em>Amazon and eBay links are affiliate links. We may earn a commission if you buy.</em>{% endif %}{% endfor %}
-        {% for cp in current_prices %}{% if cp.retailer.slug == 'ebay' and cp.price and not cp.not_available %} &mdash; <em>eBay prices include shipping.</em>{% endif %}{% endfor %}
+        Prices updated: {{ current_prices.0.last_seen|date:"d M Y" }}{% for cp in current_prices %}{% if 'amazon' in cp.retailer.slug %}, Amazon checked {{ cp.last_seen|date:"d M Y" }}{% endif %}{% endfor %}.
+        Amazon and eBay links are affiliate links.{% for cp in current_prices %}{% if cp.retailer.slug == 'ebay' and cp.price and not cp.not_available %} eBay prices include shipping.{% endif %}{% endfor %}
       </p>
       {% else %}
       <p style="color:var(--text-muted);font-size:0.9rem;">
