@@ -373,12 +373,17 @@ def product_detail(request, slug):
         )
         # Related products: prefer same faction+category, then same faction,
         # then same category — avoids the alphabetical Adepta Sororitas problem.
+        _rp_price_filter = Q(
+            current_prices__not_available=False,
+            current_prices__in_stock=True,
+        )
         exclude_pk = product.pk
         related_products = list(
             Product.objects
             .filter(faction=product.faction, category=product.category, is_active=True)
             .exclude(pk=exclude_pk)
             .select_related('category', 'faction')
+            .annotate(min_price=Min('current_prices__price', filter=_rp_price_filter))
             .order_by('name')[:4]
         )
         if len(related_products) < 4 and product.faction_id:
@@ -388,6 +393,7 @@ def product_detail(request, slug):
                 .filter(faction=product.faction, is_active=True)
                 .exclude(pk__in=existing_pks)
                 .select_related('category', 'faction')
+                .annotate(min_price=Min('current_prices__price', filter=_rp_price_filter))
                 .order_by('name')[:4 - len(related_products)]
             )
             related_products.extend(more)
@@ -398,6 +404,7 @@ def product_detail(request, slug):
                 .filter(category=product.category, is_active=True)
                 .exclude(pk__in=existing_pks)
                 .select_related('category', 'faction')
+                .annotate(min_price=Min('current_prices__price', filter=_rp_price_filter))
                 .order_by('name')[:4 - len(related_products)]
             )
             related_products.extend(more)

@@ -361,12 +361,20 @@
         {% endif %}
         <div class="product-card-body">
           <div class="product-card-name">{{ rp.name }}</div>
-          {% if rp.msrp %}
           <div class="product-card-pricing">
+            {% if rp.min_price %}
+            <div class="product-card-price-label">Best Price</div>
+            <div class="product-card-price">${{ rp.min_price|floatformat:"2" }}</div>
+            {% if rp.msrp %}
+            <div class="product-card-savings-row">
+              <span class="product-card-msrp">MSRP ${{ rp.msrp }}</span>
+            </div>
+            {% endif %}
+            {% elif rp.msrp %}
             <div class="product-card-price-label">MSRP</div>
-            <div style="color:var(--text-secondary);font-weight:600;">${{ rp.msrp }}</div>
+            <div style="font-size:1rem;font-weight:600;color:var(--text-secondary);">${{ rp.msrp }}</div>
+            {% endif %}
           </div>
-          {% endif %}
         </div>
       </a>
       {% endfor %}
