@@ -38,6 +38,8 @@
       "sameAs": []
     }
     </script>
+    {# Preload style.css early so it's fetched before font requests are discovered #}
+    <link rel="preload" href="{% static 'css/style.css' %}" as="style">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     {# Non-blocking font load: preload triggers fetch early; onload swaps rel to stylesheet #}

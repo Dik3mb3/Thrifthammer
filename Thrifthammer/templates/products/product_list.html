@@ -191,13 +191,16 @@
           {% endif %}
 
           {% if product.image_url %}
-          <img
-            src="{{ product.image_url }}"
-            alt="{{ product.name }}"
-            class="product-card-img"
-            width="300" height="300"
-            loading="lazy"
-          >
+          <picture>
+            <source srcset="https://wsrv.nl/?url={{ product.image_url|urlencode }}&output=webp&w=300&h=300&fit=cover" type="image/webp">
+            <img
+              src="{{ product.image_url }}"
+              alt="{{ product.name }}"
+              class="product-card-img"
+              width="300" height="300"
+              {% if forloop.counter == 1 %}loading="eager" fetchpriority="high"{% elif forloop.counter <= 4 %}loading="eager"{% else %}loading="lazy"{% endif %}
+            >
+          </picture>
           {% else %}
           <div class="product-card-img-placeholder" aria-hidden="true"></div>
           {% endif %}
