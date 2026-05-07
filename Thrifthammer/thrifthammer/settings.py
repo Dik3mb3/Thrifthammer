@@ -54,6 +54,7 @@ if DEBUG:
     INSTALLED_APPS += ['debug_toolbar']
 
 MIDDLEWARE = [
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'thrifthammer.middleware.ContentSecurityPolicyMiddleware',

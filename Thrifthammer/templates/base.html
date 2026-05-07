@@ -4,13 +4,16 @@
 <head>
     {# Prevent flash of wrong theme — reads localStorage before first paint #}
     <script>(function(){if(localStorage.getItem('th-theme')==='light'){document.documentElement.setAttribute('data-theme','light');}}());</script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TKJE217J10"></script>
+    {# Analytics deferred to after page load so it doesn't contribute to TBT #}
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}</script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-TKJE217J10');
+      window.addEventListener('load',function(){
+        var s=document.createElement('script');
+        s.src='https://www.googletagmanager.com/gtag/js?id=G-TKJE217J10';
+        s.async=true;
+        document.head.appendChild(s);
+        s.onload=function(){gtag('js',new Date());gtag('config','G-TKJE217J10');};
+      });
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
