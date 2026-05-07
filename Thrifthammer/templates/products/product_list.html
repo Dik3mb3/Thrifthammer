@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 
 {% block canonical %}
-{# Canonical strips sort/page/q — only category+faction define a unique page. #}
-{% if selected_category and selected_faction %}<link rel="canonical" href="https://thrifthammer.com/products/?category={{ selected_category }}&faction={{ selected_faction }}">
+{# Canonical strips sort/page/q — only category+faction define a unique page.    #}
+{# Empty-result pages always point to /products/ so the chain ends at an          #}
+{# indexable URL (fixes Screaming Frog "Non-Indexable Canonical" errors).          #}
+{% if not products %}<link rel="canonical" href="https://thrifthammer.com/products/">
+{% elif selected_category and selected_faction %}<link rel="canonical" href="https://thrifthammer.com/products/?category={{ selected_category }}&faction={{ selected_faction }}">
 {% elif selected_category %}<link rel="canonical" href="https://thrifthammer.com/products/?category={{ selected_category }}">
 {% else %}<link rel="canonical" href="https://thrifthammer.com/products/">
 {% endif %}{% endblock %}
 
-{% block robots %}{% if query or not products and selected_category or not products and selected_faction %}<meta name="robots" content="noindex, follow">{% endif %}{% endblock %}
+{% block robots %}{% if query or page_obj.number > 1 or not products %}<meta name="robots" content="noindex, follow">{% endif %}{% endblock %}
 
 {% block title %}{% if selected_faction_obj %}{{ selected_faction_obj.name }} Kits — Best Prices | ThriftHammer{% elif selected_category_obj %}{{ selected_category_obj.name }} Kits — Best Prices | ThriftHammer{% elif query %}Search: {{ query }} | ThriftHammer{% else %}Browse Warhammer 40K Products | ThriftHammer{% endif %}{% endblock %}
 
