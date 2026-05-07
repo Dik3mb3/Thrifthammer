@@ -22,7 +22,7 @@
 {# Built in the view with json.dumps() — guarantees valid JSON for all product    #}
 {# names, including those with apostrophes (T'au, C'tan, etc.) which would break  #}
 {# the old |escapejs approach (' → \' is valid JS but invalid JSON).              #}
-<script type="application/ld+json">{{ json_ld }}</script>
+<script type="application/ld+json">{{ json_ld|safe }}</script>
 {% endblock %}
 
 {% block content %}
