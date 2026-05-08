@@ -104,9 +104,9 @@ class MiniatureMarketScraper:
     retailer_slug = 'miniature-market'
 
     def __init__(self):
-        """Initialise requests session with browser-like headers."""
-        import requests
-        self.session = requests.Session()
+        """Initialise curl_cffi session with TLS impersonation for Cloudflare bypass."""
+        from curl_cffi import requests as curl_requests
+        self.session = curl_requests.Session(impersonate='chrome120')
         self.session.headers.update({
             'User-Agent': (
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '

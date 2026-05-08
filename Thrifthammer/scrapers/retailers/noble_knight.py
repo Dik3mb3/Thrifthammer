@@ -37,7 +37,7 @@ import time
 from decimal import Decimal, InvalidOperation
 from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 
-import requests
+from curl_cffi import requests as curl_requests
 from bs4 import BeautifulSoup
 from django.utils import timezone
 
@@ -89,8 +89,8 @@ class NoblekKnightScraper:
     retailer_slug = 'noble-knight-games'
 
     def __init__(self):
-        """Initialise a requests session with browser-like headers."""
-        self.session = requests.Session()
+        """Initialise a curl_cffi session with TLS impersonation for Cloudflare bypass."""
+        self.session = curl_requests.Session(impersonate='chrome120')
         self.session.headers.update({
             'User-Agent': (
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
@@ -242,7 +242,7 @@ class NoblekKnightScraper:
         """
         try:
             response = self.session.get(url, timeout=15)
-        except requests.RequestException as exc:
+        except Exception as exc:
             logger.warning('[nk] Request failed for %s: %s', url[:80], exc)
             return _FETCH_ERROR
 
@@ -267,9 +267,19 @@ class NoblekKnightScraper:
 
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Secondary bot-detection check: known CAPTCHA / challenge page signals
+        # Secondary bot-detection: check page title for Cloudflare challenge signals.
+        # Do NOT check full page text for 'captcha' — NK pages legitimately include
+        # this word in Cloudflare footer/script text, causing false positives.
+        title_lower = (soup.title.string or '').lower() if soup.title else ''
         page_text_lower = soup.get_text().lower()
-        if any(kw in page_text_lower for kw in ('captcha', 'access denied', 'checking your browser')):
+        bot_signals = (
+            'just a moment' in title_lower
+            or 'access denied' in title_lower
+            or 'attention required' in title_lower
+            or 'checking your browser' in page_text_lower
+            or 'access denied' in page_text_lower
+        )
+        if bot_signals:
             logger.warning('[nk] Bot-detection challenge detected for %s', url[:80])
             return _FETCH_ERROR
 
