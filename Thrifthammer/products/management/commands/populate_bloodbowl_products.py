@@ -819,10 +819,10 @@ class Command(BaseCommand):
                 else:
                     gw_updated += 1
 
-            # ── Amazon placeholder ────────────────────────────────────────────
+            # ── Amazon placeholder — create only; never overwrite a scraped price ──
             if amazon and amazon_asin:
                 affiliate_url = f'https://www.amazon.com/dp/{amazon_asin}?tag={AMAZON_TAG}'
-                _, p_created = CurrentPrice.objects.update_or_create(
+                cp, p_created = CurrentPrice.objects.get_or_create(
                     product=product,
                     retailer=amazon,
                     defaults={
@@ -837,6 +837,9 @@ class Command(BaseCommand):
                     amz_created += 1
                 else:
                     amz_updated += 1
+                    if cp.url != affiliate_url:
+                        cp.url = affiliate_url
+                        cp.save(update_fields=['url'])
 
             # ── Miniature Market placeholder ──────────────────────────────────
             if mm and mm_url:

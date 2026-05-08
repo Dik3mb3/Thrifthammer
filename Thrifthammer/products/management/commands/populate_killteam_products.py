@@ -285,9 +285,9 @@ class Command(BaseCommand):
                 },
             )
 
-            # Amazon — placeholder with affiliate URL
+            # Amazon — create placeholder only; never overwrite a scraped price
             amazon_url = _amazon_url(amazon_asin)
-            CurrentPrice.objects.update_or_create(
+            cp, created = CurrentPrice.objects.get_or_create(
                 product=product,
                 retailer=retailers['amazon'],
                 defaults={
@@ -297,6 +297,9 @@ class Command(BaseCommand):
                     'not_available': False,
                 },
             )
+            if not created and cp.url != amazon_url:
+                cp.url = amazon_url
+                cp.save(update_fields=['url'])
 
             # Miniature Market — only create row if URL exists
             if mm_url:
