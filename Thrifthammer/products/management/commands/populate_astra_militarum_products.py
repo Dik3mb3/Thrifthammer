@@ -17,6 +17,62 @@ from products.models import Category, Faction, Product, Retailer
 
 AMAZON_TAG = 'thrifthammer7-20'
 NK_AWID = '1576'
+_GW_CDN = 'https://www.warhammer.com/app/resources/catalog/product/920x950/{}'
+
+# Images verified directly from GW product pages via browser.
+# fetch_gw_images (Algolia) returns wrong images for several AM products;
+# these overrides ensure the correct image is used on first deploy.
+_IMAGES = {
+    'AM-001': '99120105108_AMAegisDefenceline01.jpg',
+    'AM-002': '99120105124_AstraMilitarumCombatPatrol1.jpg',  # placeholder — product not on GW site yet
+    'AM-003': '99120105126_AstraMilitarumKriegArtilleryTeam1.jpg',
+    'AM-004': '99120105092_AMAttilanRoughRidersUpdate2.jpg',
+    'AM-005': '99120105107_AMBanebladeLeadBaneblade.jpg',
+    'AM-006': '99120105107_AMBanebladeLeadBanehammer.jpg',
+    'AM-007': '99120105107_AMBanebladeLeadBanesword.jpg',
+    'AM-008': '99120105117_AMBullgryns1.jpg',
+    'AM-009': '99120105100_CadianCastellan1.jpg',
+    'AM-010': '60010105001_EngAMCoreGame02.jpg',
+    'AM-011': '99120105106_CadianUpgrades2.jpg',
+    'AM-012': '99120105037_CatachanCommandSquadNEW01.jpg',
+    'AM-013': '99120105014_CatachanHeavyWeaponsNEW01.jpg',
+    'AM-014': '99120105040_AstraMilitarumCatachanJungleFightersUPDATE1.jpg',
+    'AM-015': '60030105013_EngAMCodex01.jpg',
+    'AM-016': '99120105140_AstraMilitarumCommissarGraves1.jpg',
+    'AM-017': '99120105138_AstraMilitarumCommissarYarrick01.jpg',
+    'AM-018': '99120105135_AstraMilitarumDeathKorpsKriegInfantrySquad1.jpg',
+    'AM-019': '99120105128_AstraMilitarumKriegDeathRidersSquad1.jpg',
+    'AM-020': '99120105049_DeathstrikeNEW02.jpg',
+    'AM-021': '99120105107_AMBanebladeLeadDoomhammer.jpg',
+    'AM-022': '99120105104_AMFieldOrdnanceBattery01.jpg',
+    'AM-023': '99120105087_GauntsGhostsLead.jpg',
+    'AM-024': '99120105097_AMCadianHeavyWeaponsSquad01.jpg',
+    'AM-025': '99120105107_AMBanebladeLeadHellhammer.jpg',
+    'AM-026': '99120105115_AMHydra1.jpg',
+    'AM-027': '99120105129_AstraMilitarumKriegCombatEngineersSquad1.jpg',
+    'AM-028': '99120105127_AstraMilitarumKriegCommandSquad1.jpg',
+    'AM-029': '99120105130_AstraMilitarumKriegHeavyWeaponsSquad1.jpg',
+    'AM-030': '99120105096_AMLordCastellanUrsulaCreed01.jpg',
+    'AM-031': '99120105125_AstraMilitarumKriegLordMarshalDreir1.jpg',
+    'AM-032': '99120105095_AMLordSolarLeontus01.jpg',
+    'AM-033': '99120105049_ManticoreNEW01.jpg',
+    'AM-034': '99120105055_TempestusScionsCommand01.jpg',
+    'AM-035': '99070108011_ASMinistorumPriest01.jpg',
+    'AM-036': '99120105077_AMBullgrynNorkDeddog01.jpg',
+    'AM-037': '99120105117_AMBullgryns2.jpg',
+    'AM-038': '99070105003_AMPrimarisPsyker01.jpg',
+    'AM-039': '99120105098_AMRogalDornBattleTank01.jpg',
+    'AM-040': '99120105107_AMBanebladeLeadShadowsword.jpg',
+    'AM-041': '99810105030_SlyMarbo01.jpg',
+    'AM-042': '99120105107_AMBanebladeLeadStormlord.jpg',
+    'AM-043': '99120105107_AMBanebladeLeadStormsword.jpg',
+    'AM-044': '99120105054_Taurox01.jpg',
+    'AM-045': '99120105054_Taurox01.jpg',
+    'AM-046': '99070105002_TechpriestEnginseer01.jpg',
+    'AM-047': '99120105055_TempestusScions01.jpg',
+    'AM-048': '99120105113_AMValkyreLEAD.jpg',
+    'AM-049': '99120105115_AMHydra2.jpg',
+}
 
 
 def _amazon_url(asin):
@@ -330,6 +386,7 @@ class Command(BaseCommand):
         updated_count = 0
 
         for gw_sku, name, msrp, gw_url, amazon_asin, mm_url, nk_base_url in PRODUCTS:
+            image_url = _GW_CDN.format(_IMAGES.get(gw_sku, ''))
             product, created = Product.objects.update_or_create(
                 gw_sku=gw_sku,
                 defaults={
@@ -337,16 +394,14 @@ class Command(BaseCommand):
                     'slug': slugify(name),
                     'msrp': msrp,
                     'gw_url': gw_url,
+                    'image_url': image_url,
                     'category': category,
                     'faction': faction,
                     'is_active': True,
                     'batch_tag': 'astra-militarum',
                 },
             )
-            # Only seed image_url on new products — never overwrite a real image
             if created:
-                product.image_url = ''
-                product.save(update_fields=['image_url'])
                 created_count += 1
             else:
                 updated_count += 1
