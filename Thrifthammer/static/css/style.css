@@ -3118,7 +3118,6 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   line-height: 1.9;
   color: var(--text-secondary);
   overflow-wrap: break-word;
-  word-break: break-word;
 }
 .prose h2 {
   font-family: 'Cinzel', serif;
@@ -3180,6 +3179,7 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   padding: var(--sp-2) var(--sp-3);
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 .prose tbody tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
 
