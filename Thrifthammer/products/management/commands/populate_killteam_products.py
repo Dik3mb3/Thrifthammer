@@ -16,6 +16,43 @@ from products.models import Category, Product, Retailer
 
 AMAZON_TAG = 'thrifthammer7-20'
 NK_AWID = '1576'
+_GW_CDN = 'https://www.warhammer.com/app/resources/catalog/product/920x950/{}'
+
+_IMAGES = {
+    'KT-001': '60010199071_ENGKTStarterSet1.jpg',
+    'KT-002': '99120199136_KTKillZoneNecronTombWorld01.jpg',
+    'KT-003': '60040199176_ENGKTCoreBook2.jpg',
+    'KT-004': '99120116048_ENGKillTeamTyphonCoreGame2.jpg',
+    'KT-005': '99120108116_KillTeamSanctifiers01.jpg',
+    'KT-006': '99120102208_KillTeamGoremongers01.jpg',
+    'KT-007': '99120103123_ENGKTBrutalCunning3.jpg',
+    'KT-008': '99120102214_KTFellgorRavagers2.jpg',
+    'KT-009': '99120108109_KTExactionSquad2.jpg',
+    'KT-010': '99120108108_KTNavyBreachers2.jpg',
+    'KT-011': '99120105123_KTTempestusAquilons2.jpg',
+    'KT-012': '60010199049_EngKTShadowvaultGroup1.jpg',
+    'KT-013': '99120199132_KTKillzoneBhetaDecima01.jpg',
+    'KT-014': '99120199130_KTGallowdark01.jpg',
+    'KT-015': '99120199121_KTUpgradeEquipmentPack01.jpg',
+    'KT-016': '99120117029_KTBroodBrothers1.jpg',
+    'KT-017': '99120102182_KTNemesisClaw1.jpg',
+    'KT-018': '60010199064_KTSalvation3.jpg',
+    'KT-019': '99120105132_ENGKTBrutalCunning2.jpg',
+    'KT-020': '99120118023_KTHearthkynSalvagers2.jpg',
+    'KT-021': '99120112058_KTHandArchon2.jpg',
+    'KT-022': '99120110084_HierotekCircle2.jpg',
+    'KT-023': '99120114003_KTFarstalkerKinband2.jpg',
+    'KT-024': '60010199070_KTHivestorm3New.jpg',
+    'KT-025': '60010199066_EngKTTerminationGroup02.jpg',
+    'KT-026': '99120101457_KTWolfScouts01.jpg',
+    'KT-027': '99120112055_KTMandrakes1.jpg',
+    'KT-028': '99120113102_KTXV26StealthBattlesuits01.jpg',
+    'KT-029': '99120110086_KTCanoptekCircle01.jpg',
+    'KT-030': '99120106083_ENGKillTeamTyphonCoreGame3.jpg',
+    'KT-031': '99120199129_KTKZVolkus1.jpg',
+    'KT-032': '99120104105_KTBladesKhaine2.jpg',
+    'KT-033': '60010199056_KT2AshesOfFaith02.jpg',
+}
 
 
 def _amazon_url(asin):
@@ -261,7 +298,7 @@ class Command(BaseCommand):
                     'slug': slug,
                     'msrp': msrp,
                     'gw_url': gw_url,
-                    'image_url': '',
+                    'image_url': _GW_CDN.format(_IMAGES.get(gw_sku, '')),
                     'category': kt_category,
                     'faction': None,
                     'is_active': True,
