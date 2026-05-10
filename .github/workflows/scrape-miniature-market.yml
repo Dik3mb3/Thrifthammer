@@ -3,7 +3,7 @@ name: Scrape Miniature Market
 on:
   schedule:
     # Every day at 04:00 UTC
-    - cron: '0 4 * * *'
+    - cron: '0 4 * * 1,3,6'
   workflow_dispatch:
     inputs:
       batch_tag:

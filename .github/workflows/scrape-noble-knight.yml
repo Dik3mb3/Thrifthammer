@@ -3,7 +3,7 @@ name: Scrape Noble Knight Games
 on:
   schedule:
     # Daily at 05:30 UTC (after Amazon and MM runs at 04:00)
-    - cron: '30 5 * * *'
+    - cron: '30 5 * * 1,3,6'
   workflow_dispatch:
     inputs:
       batch_tag:
