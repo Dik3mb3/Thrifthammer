@@ -15,7 +15,7 @@ jobs:
   scrape:
     name: Noble Knight Scraper
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     defaults:
       run:
         working-directory: ./Thrifthammer

@@ -63,8 +63,8 @@ def _strip_affiliate_params(url):
     params.pop('awid', None)
     new_query = urlencode({k: v[0] for k, v in params.items()})
     return urlunparse(parsed._replace(query=new_query))
-DEFAULT_DELAY = 1.5
-JITTER_MAX = 1.0
+DEFAULT_DELAY = 0.75
+JITTER_MAX = 0.3
 
 # Sentinel returned by _fetch_price when the page could not be retrieved
 # (network error, non-200 HTTP status, bot-detection redirect, etc.).
@@ -75,7 +75,7 @@ _FETCH_ERROR = object()
 # Bot-detection pages are typically very short.  If the response body is
 # shorter than this threshold (bytes) we treat it as a blocked request rather
 # than a real product page.
-_MIN_PAGE_BYTES = 2_000
+_MIN_PAGE_BYTES = 5_000
 
 
 class NoblekKnightScraper:
@@ -161,20 +161,14 @@ class NoblekKnightScraper:
             try:
                 result = self._fetch_price(fetch_url)
 
-                # Retry on fetch errors (network/rate-limit) — back off longer
-                # between attempts.  Only retry None ("page loaded, no price")
-                # once in case of a transient rendering issue.
+                # Retry on fetch errors (network/rate-limit) — back off briefly
+                # between attempts.
                 if result is _FETCH_ERROR:
-                    time.sleep(self.delay * 2 + random.uniform(1, 3))
+                    time.sleep(self.delay + random.uniform(0.5, 1.0))
                     result = self._fetch_price(fetch_url)
 
                 if result is _FETCH_ERROR:
-                    time.sleep(self.delay * 3 + random.uniform(2, 5))
-                    result = self._fetch_price(fetch_url)
-
-                if result is None:
-                    # Retry once: page loaded but price wasn't found (transient?)
-                    time.sleep(self.delay * 2 + random.uniform(1, 3))
+                    time.sleep(self.delay * 1.5 + random.uniform(0.5, 1.5))
                     result = self._fetch_price(fetch_url)
 
                 if result is _FETCH_ERROR:
