@@ -15,7 +15,7 @@ jobs:
   scrape:
     name: Miniature Market Scraper
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     defaults:
       run:
         working-directory: ./Thrifthammer

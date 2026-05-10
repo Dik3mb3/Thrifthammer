@@ -118,7 +118,7 @@ class MiniatureMarketScraper:
                 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
             ),
         })
-        self.delay = getattr(settings, 'SCRAPER_REQUEST_DELAY', 1)
+        self.delay = 0.5
 
     # -------------------------------------------------------------------------
     # Public entry point
