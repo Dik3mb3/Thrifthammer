@@ -565,11 +565,13 @@ class Command(BaseCommand):
                     product=product,
                     retailer=mm_retailer,
                     defaults={
-                        'price':         price,
                         'url':           url,
-                        'in_stock':      not is_not_available,
                         'not_available': is_not_available,
                         'listing_title': '',
+                    },
+                    create_defaults={
+                        'price':    price,
+                        'in_stock': not is_not_available,
                     },
                 )
             applied += 1

@@ -344,10 +344,12 @@ class Command(BaseCommand):
                     product=product,
                     retailer=retailers['miniature-market'],
                     defaults={
-                        'price': None,
                         'url': mm_url,
-                        'in_stock': False,
                         'not_available': False,
+                    },
+                    create_defaults={
+                        'price': None,
+                        'in_stock': False,
                     },
                 )
 
@@ -358,10 +360,12 @@ class Command(BaseCommand):
                     product=product,
                     retailer=retailers['noble-knight-games'],
                     defaults={
-                        'price': None,
                         'url': nk_url,
-                        'in_stock': False,
                         'not_available': False,
+                    },
+                    create_defaults={
+                        'price': None,
+                        'in_stock': False,
                     },
                 )
 

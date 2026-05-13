@@ -415,6 +415,53 @@ AMAZON_DATA = {
     # 96-14 Lord-Celestant — Amazon NOT_AVAIL wave I (old B09CV9CD6J $162.35 wrong); removed
     '96-55': ('49.30',  'https://www.amazon.com/dp/B09K4K9T89', True),   # Praetors
     '96-50': ('51.00',  'https://www.amazon.com/dp/B09K4JGTVX', True),   # Vindictors  ✓ FIXED wave I (old B0C1P2G6ZS $35.00 wrong)
+    # ── Stormcast Eternals phase-3 (SE-xxx SKUs) — prices TBD, scraper will update ──
+    'SE-001': ('', 'https://www.amazon.com/dp/1804574287', False),  # Order Battletome: Stormcast Eternals
+    'SE-002': ('', 'https://www.amazon.com/dp/B0D9XMP1VD', False),  # AoS Introductory Set
+    'SE-003': ('', 'https://www.amazon.com/dp/B0D9W5192H', False),  # AoS Starter Set
+    'SE-004': ('', 'https://www.amazon.com/dp/B09K4HM19R', False),  # Annihilators
+    'SE-005': ('', 'https://www.amazon.com/dp/B06X1BNT3Y', False),  # Vanguard-Hunters
+    # SE-006 Stormcoven — no Amazon listing
+    'SE-007': ('', 'https://www.amazon.com/dp/B09MNH2FTG', False),  # Karazai the Scarred (dual kit with SE-008)
+    'SE-008': ('', 'https://www.amazon.com/dp/B09MNH2FTG', False),  # Krondys, Son of Dracothion (dual kit with SE-007)
+    'SE-009': ('', 'https://www.amazon.com/dp/B09K4HM19R', False),  # Annihilators with Meteoric Grandhammers (dual kit with SE-004)
+    # SE-010 Vanquishers — no Amazon listing
+    'SE-011': ('', 'https://www.amazon.com/dp/B09K4G47VW', False),  # Vigilors
+    'SE-012': ('', 'https://www.amazon.com/dp/B09K4H9W13', False),  # Lord-Commander Bastian Carthalos
+    'SE-013': ('', 'https://www.amazon.com/dp/B09FXJ7Y3V', False),  # Stormstrike Chariot
+    # SE-014 Gardus Steel Soul — no Amazon listing
+    'SE-015': ('', 'https://www.amazon.com/dp/B07F3DM8YG', False),  # Endless Spells: Stormcast Eternals
+    'SE-016': ('', 'https://www.amazon.com/dp/B072V5S7M7', False),  # Vandus Hammerhand
+    # SE-017 Vanguard-Palladors — no Amazon listing
+    'SE-018': ('', 'https://www.amazon.com/dp/B06X6N2R1N', False),  # Lord-Aquilor
+    'SE-019': ('', 'https://www.amazon.com/dp/B06X93VBPX', False),  # Gryph-hounds
+    # SE-020 Knight-Questor — no Amazon listing
+    'SE-021': ('', 'https://www.amazon.com/dp/B09CV9CD6J', False),  # Drakesworn Templar (dual kit with SE-022)
+    'SE-022': ('', 'https://www.amazon.com/dp/B09CV9CD6J', False),  # Lord-Celestant on Stardrake (dual kit with SE-021)
+    'SE-023': ('', 'https://www.amazon.com/dp/B014P5T2NG', False),  # Celestant-Prime, Hammer of Sigmar
+    'SE-024': ('', 'https://www.amazon.com/dp/B0CCP99MF3', False),  # Questor Soulsworn
+    'SE-025': ('', 'https://www.amazon.com/dp/B0DJLZPK3G', False),  # Stormreach Portal
+    # SE-026 Lord-Imperatant — no Amazon listing
+    # SE-027 Knight-Arcanum — no Amazon listing
+    # SE-028 Prosecutors — no Amazon listing
+    'SE-029': ('', 'https://www.amazon.com/dp/B0DJM2TJ2P', False),  # Iridan the Witness
+    'SE-030': ('', 'https://www.amazon.com/dp/B0DJM1WW2Y', False),  # Reclusians
+    'SE-031': ('', 'https://www.amazon.com/dp/B0DJM35PVN', False),  # Lord-Terminos
+    'SE-032': ('', 'https://www.amazon.com/dp/B0DJM2XNP2', False),  # Lord-Relictor
+    'SE-033': ('', 'https://www.amazon.com/dp/B0DJM31VFR', False),  # Tornus the Redeemed
+    'SE-034': ('', 'https://www.amazon.com/dp/B0DJM1X56K', False),  # Stormstrike Palladors
+    'SE-035': ('', 'https://www.amazon.com/dp/B0CRSPL1ZT', False),  # Ionus Cryptborn, Warden of Lost Souls
+    'SE-036': ('', 'https://www.amazon.com/dp/B0CLM88T89', False),  # The Blacktalons
+    'SE-037': ('', 'https://www.amazon.com/dp/B09MNFSWVQ', False),  # Knight-Draconis (dual kit with SE-038)
+    'SE-038': ('', 'https://www.amazon.com/dp/B09MNFSWVQ', False),  # Stormdrake Guard (dual kit with SE-037)
+    'SE-039': ('', 'https://www.amazon.com/dp/B09K4F7BL6', False),  # Knight-Relictor
+    'SE-040': ('', 'https://www.amazon.com/dp/B09HJN394F', False),  # Vanguard-Raptors Longstrike (dual kit with SE-043)
+    'SE-041': ('', 'https://www.amazon.com/dp/B01CY9IM54', False),  # Tempestors (multi-kit SE-041/042/044/045/046)
+    'SE-042': ('', 'https://www.amazon.com/dp/B01CY9IM54', False),  # Lord-Celestant on Dracoth (multi-kit)
+    'SE-043': ('', 'https://www.amazon.com/dp/B09HJN394F', False),  # Vanguard-Raptors Hurricane (dual kit with SE-040)
+    'SE-044': ('', 'https://www.amazon.com/dp/B01CY9IM54', False),  # Desolators (multi-kit)
+    'SE-045': ('', 'https://www.amazon.com/dp/B01CY9IM54', False),  # Concussors (multi-kit)
+    'SE-046': ('', 'https://www.amazon.com/dp/B01CY9IM54', False),  # Fulminators (multi-kit)
     # 71-55 Stormcast Vanguard — deactivated wave I (duplicate starter-set entry); removed
 
     # ── T'au Empire ───────────────────────────────────────────────────────

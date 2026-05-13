@@ -71,11 +71,13 @@ class Command(BaseCommand):
                 product=product,
                 retailer=nk,
                 defaults={
-                    'listing_title': title,
-                    'price': price,
                     'url': url,
-                    'in_stock': in_stock,
+                    'listing_title': title,
                     'not_available': not_available,
+                },
+                create_defaults={
+                    'price': price,
+                    'in_stock': in_stock,
                     'last_seen': timezone.now(),
                 },
             )

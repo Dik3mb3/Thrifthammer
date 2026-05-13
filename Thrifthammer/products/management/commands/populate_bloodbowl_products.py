@@ -951,11 +951,13 @@ class Command(BaseCommand):
                     product=product,
                     retailer=mm,
                     defaults={
-                        'price': None,
                         'url': mm_url,
-                        'in_stock': False,
                         'not_available': False,
                         'listing_title': '',
+                    },
+                    create_defaults={
+                        'price': None,
+                        'in_stock': False,
                     },
                 )
                 if p_created:
@@ -970,11 +972,13 @@ class Command(BaseCommand):
                     product=product,
                     retailer=nk,
                     defaults={
-                        'price': None,
                         'url': nk_affiliate,
-                        'in_stock': False,
                         'not_available': False,
                         'listing_title': '',
+                    },
+                    create_defaults={
+                        'price': None,
+                        'in_stock': False,
                     },
                 )
                 if p_created:

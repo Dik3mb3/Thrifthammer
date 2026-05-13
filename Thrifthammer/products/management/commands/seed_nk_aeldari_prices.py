@@ -351,11 +351,13 @@ class Command(BaseCommand):
                 product=product,
                 retailer=nk,
                 defaults={
-                    'price': price,
                     'url': url,
                     'listing_title': listing_title,
-                    'in_stock': in_stock,
                     'not_available': not_available,
+                },
+                create_defaults={
+                    'price': price,
+                    'in_stock': in_stock,
                 },
             )
             status = 'Created' if created else 'Updated'
