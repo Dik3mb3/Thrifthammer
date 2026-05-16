@@ -260,9 +260,9 @@ class Command(BaseCommand):
             published_at=timezone.now(),
             meta_title='How to Choose a Warhammer 40K Faction (Complete 2026 Guide)',
             meta_description=(
-                'Choosing a Warhammer 40K faction? This guide ranks the 5 most important '
-                'factors: cost, playstyle, cool factor, hobby requirements, and '
-                'competitiveness. Find the right army for you.'
+                'Choosing your first Warhammer 40K faction? We rank cost, playstyle, '
+                'cool factor, hobby requirements, and competitiveness to find the right '
+                'army for you.'
             ),
         )
 

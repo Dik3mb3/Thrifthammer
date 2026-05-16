@@ -96,13 +96,10 @@ class Command(BaseCommand):
         """Clear stale product detail caches for products whose gw_url was set in wave AB."""
         busted = 0
         for gw_sku in _WAVE_AB_GW_URL_SKUS:
-            try:
-                product = Product.objects.get(gw_sku=gw_sku)
-            except Product.DoesNotExist:
-                continue
-            if product.slug:
-                cache.delete(f'product_detail|{product.slug}')
-                busted += 1
+            for product in Product.objects.filter(gw_sku=gw_sku):
+                if product.slug:
+                    cache.delete(f'product_detail|{product.slug}')
+                    busted += 1
         self.stdout.write(self.style.SUCCESS(
             f'  Fix 2: Busted {busted} product detail caches for wave-AB gw_url updates.'
         ))

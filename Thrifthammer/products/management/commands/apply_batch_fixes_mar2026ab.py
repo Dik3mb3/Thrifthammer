@@ -158,11 +158,16 @@ class Command(BaseCommand):
     # -------------------------------------------------------------------------
 
     def _get_product(self, gw_sku):
-        """Return Product or None, writing a warning if not found."""
+        """Return Product or None, writing a warning if not found or ambiguous."""
         try:
             return Product.objects.get(gw_sku=gw_sku)
         except Product.DoesNotExist:
             self.stdout.write(self.style.WARNING(f'  Product {gw_sku} not found — skipped'))
+            return None
+        except Product.MultipleObjectsReturned:
+            self.stdout.write(self.style.WARNING(
+                f'  Product {gw_sku} matched multiple rows (duplicate gw_sku) — skipped'
+            ))
             return None
 
     def _get_retailer(self, slug):
