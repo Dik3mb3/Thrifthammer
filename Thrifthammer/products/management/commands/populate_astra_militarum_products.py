@@ -87,6 +87,13 @@ def _nk_url(base_url):
     return f'{base_url}?awid={NK_AWID}'
 
 
+_EBAY_NEGATIVE_KEYWORDS = {
+    # AM-035 "Ministorum Priest" — eBay returns Adepta Sororitas / Blackstone
+    # Fortress / Vourne listings that share keywords.  Excluding these terms
+    # keeps results focused on the standalone Ministorum Priest blister.
+    'AM-035': 'Taddeus Sister Blackstone Vourne',
+}
+
 # (gw_sku, name, msrp, gw_url, amazon_asin, mm_url, nk_base_url)
 PRODUCTS = [
     ('AM-001', 'Astra Militarum Aegis Defence Line', Decimal('85.00'),
@@ -401,6 +408,11 @@ class Command(BaseCommand):
                     'batch_tag': 'astra-militarum',
                 },
             )
+
+            if gw_sku in _EBAY_NEGATIVE_KEYWORDS:
+                Product.objects.filter(gw_sku=gw_sku).update(
+                    ebay_negative_keywords=_EBAY_NEGATIVE_KEYWORDS[gw_sku],
+                )
             if created:
                 created_count += 1
             else:

@@ -100,6 +100,9 @@
           {% endif %}
           {% endwith %}
           {% endif %}
+          {% if pts_per_dollar %}
+          <em style="font-size:0.95rem;color:var(--text-muted);font-weight:500;">({{ pts_per_dollar }} points/dollar)</em>
+          {% endif %}
         </div>
         <div class="best-price-retailer">at {{ best.retailer.name }}
           {% if best.in_stock %}

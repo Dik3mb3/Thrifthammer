@@ -530,6 +530,24 @@ def product_detail(request, slug):
                 _seen.add(_fp)
                 unit_types.append(_u)
 
+        # Points per dollar — 40K products only, faction-matched unit.
+        # Single lightweight query; result is cached with the rest of the context.
+        _unit_points = None
+        if (
+            product.faction_id
+            and product.category
+            and product.category.slug == 'warhammer-40000'
+        ):
+            _unit_points = (
+                UnitType.objects
+                .filter(product=product, faction_id=product.faction_id, is_active=True)
+                .values_list('points_cost', flat=True)
+                .first()
+            )
+        pts_per_dollar = None
+        if _unit_points and current_prices and current_prices[0].price:
+            pts_per_dollar = round(float(_unit_points) / float(current_prices[0].price), 1)
+
         cached_ctx = {
             'product':          product,
             'current_prices':   current_prices,
@@ -540,6 +558,7 @@ def product_detail(request, slug):
             'json_ld':          json_ld,
             'page_title':       page_title,
             'unit_types':       unit_types,
+            'pts_per_dollar':   pts_per_dollar,
         }
         cache.set(cache_key, cached_ctx, timeout=1800)  # 30 minutes
 

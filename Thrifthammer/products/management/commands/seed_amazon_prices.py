@@ -33,6 +33,37 @@ AMAZON_DATA = {
     '52-02': ('55.00',  'https://www.amazon.com/dp/B0968RM9H1', True),   # Morvenn Vahl
     '52-15': ('53.66',  'https://www.amazon.com/dp/B083P6HN5P', True),   # Retributor Squad
     '52-12': ('55.25',  'https://www.amazon.com/dp/B085Q29R7P', True),   # Seraphim Squad
+    # ── Adepta Sororitas phase-2 (AS-xxx SKUs) — prices TBD, scraper will update ──
+    'AS-001': ('', 'https://www.amazon.com/dp/B0GXWY9XHL', False),   # Armageddon Battalion
+    'AS-002': ('', 'https://www.amazon.com/dp/B0968R7668', False),   # Celestian Insidiants
+    'AS-003': ('', 'https://www.amazon.com/dp/B0GXX3LWWV', False),   # Intranzia Fraye - Dogmata Superior
+    'AS-004': ('', 'https://www.amazon.com/dp/1804573965', False),   # Codex: Adepta Sororitas
+    'AS-005': ('', 'https://www.amazon.com/dp/B0FCG9TJ21', False),   # Kill Team: Sanctifiers
+    # AS-006 Aestred Thurga — no Amazon listing
+    'AS-007': ('', 'https://www.amazon.com/dp/B09B7WW1BV', False),   # Castigator
+    'AS-008': ('', 'https://www.amazon.com/dp/B0968PW797', False),   # Paragon Warsuits
+    'AS-009': ('', 'https://www.amazon.com/dp/B0968NKKQ3', False),   # Palatine
+    'AS-010': ('', 'https://www.amazon.com/dp/B08BNPCD55', False),   # Daemonifuge - Ephrael Stern & Kyganil
+    'AS-011': ('', 'https://www.amazon.com/dp/B085Q29R7P', False),   # Zephyrim Squad  ⚠ same kit as 52-12 Seraphim Squad
+    'AS-012': ('', 'https://www.amazon.com/dp/B09CLJHHVB', False),   # Rhino
+    'AS-013': ('', 'https://www.amazon.com/dp/B085PWHGLX', False),   # Repentia Squad
+    'AS-014': ('', 'https://www.amazon.com/dp/B09HJLK4Z8', False),   # Canoness
+    'AS-015': ('', 'https://www.amazon.com/dp/B085Q24S9T', False),   # Dialogus
+    'AS-016': ('', 'https://www.amazon.com/dp/B09HJH84JR', False),   # Imagifier
+    'AS-017': ('', 'https://www.amazon.com/dp/B09XKS4PML', False),   # Arco-flagellants
+    'AS-018': ('', 'https://www.amazon.com/dp/B083ZJB1K9', False),   # Junith Eruita
+    'AS-019': ('', 'https://www.amazon.com/dp/B09HJLL599', False),   # Hospitaller
+    'AS-020': ('', 'https://www.amazon.com/dp/B083P6J94L', False),   # The Triumph of Saint Katherine
+    'AS-021': ('', 'https://www.amazon.com/dp/B09HJDZQ5M', False),   # Celestine, the Living Saint
+    'AS-022': ('', 'https://www.amazon.com/dp/B083P7M8TF', False),   # Dominion Squad  ⚠ same kit as 52-20 Battle Sisters Squad
+    'AS-023': ('', 'https://www.amazon.com/dp/B0FNS2C4VW', False),   # Sisters Novitiate Squad
+    'AS-024': ('', 'https://www.amazon.com/dp/B0DJFGFGSB', False),   # Canoness with Jump Pack
+    'AS-025': ('', 'https://www.amazon.com/dp/B0DC6NVD8N', False),   # Ministorum Priest
+    'AS-026': ('', 'https://www.amazon.com/dp/B0D63BGVJW', False),   # Ministorum Priest with Vindictor
+    'AS-027': ('', 'https://www.amazon.com/dp/B096SJWN6B', False),   # Sister Dogmata
+    'AS-028': ('', 'https://www.amazon.com/dp/B083ZHWJYC', False),   # Mortifiers  ⚠ same kit as AS-029
+    'AS-029': ('', 'https://www.amazon.com/dp/B083ZHWJYC', False),   # Penitent Engines  ⚠ same kit as AS-028
+    'AS-030': ('', 'https://www.amazon.com/dp/B07TDV4N2V', False),   # Sister Superior Amalia Novena
 
     # ── Adeptus Custodes ──────────────────────────────────────────────────
     '01-20': ('138.53', 'https://www.amazon.com/dp/B0D14W3KTM', True),   # Combat Patrol
@@ -230,7 +261,10 @@ AMAZON_DATA = {
     '57-14': ('68.17',  'https://www.amazon.com/dp/B0FPDMT27L', False),  # Dreadknight
     '57-20': ('142.18', 'https://www.amazon.com/dp/B0FJ915PXJ', True),   # Combat Patrol
     '57-02': ('35.70',  'https://www.amazon.com/dp/B074MB4X97', True),   # Grand Master Voldus
-    '57-06': ('45.32',  'https://www.amazon.com/dp/B08QJ4FCSL', True),   # Strike Squad
+    '57-06': ('58.65',  'https://www.amazon.com/dp/B00MYGOM3Y?tag=thrifthammer7-20', True),   # Strike Squad  ✓ FIXED (old B08QJ4FCSL wrong product; same kit as 57-24/26/27)
+    '57-24': ('58.65',  'https://www.amazon.com/dp/B00MYGOM3Y?tag=thrifthammer7-20', True),   # Interceptor Squad  ⚠ same kit as Strike Squad
+    '57-26': ('58.65',  'https://www.amazon.com/dp/B00MYGOM3Y?tag=thrifthammer7-20', True),   # Purgation Squad  ⚠ same kit as Strike Squad
+    '57-27': ('58.65',  'https://www.amazon.com/dp/B00MYGOM3Y?tag=thrifthammer7-20', True),   # Purifier Squad  ⚠ same kit as Strike Squad
 
     # ── Horus Heresy ──────────────────────────────────────────────────────
     'HA-001': ('44.00',  'https://www.amazon.com/dp/B0CP673J8F', True),  # MKVI Tactical Squad  ✓ FIXED (old B0CWBVGDKG wrong)
@@ -474,6 +508,44 @@ AMAZON_DATA = {
     '56-19': ('40.80',  'https://www.amazon.com/dp/B016S4S9OK', True),   # Pathfinders  ✓ FIXED wave I (old B07KW5TRCL $21.87 wrong)
     '56-16': ('103.70', 'https://www.amazon.com/dp/B09SZMQV11', True),   # Riptide Battlesuit
     '56-14': ('',       'https://www.amazon.com/dp/B075X58BFJ', False),  # Stealth Battlesuits
+    # ── T'au Empire phase-2 (TE-xxx SKUs) — prices TBD, scraper will update ──
+    'TE-001': ('', 'https://www.amazon.com/dp/B09WM2KFC8', False),  # Tidewall Shieldline
+    'TE-002': ('', 'https://www.amazon.com/dp/B0D2J3XJK5', False),  # Kroot Hounds
+    'TE-003': ('', 'https://www.amazon.com/dp/B0GQVVZS78', False),  # The Twin Lance
+    'TE-004': ('', 'https://www.amazon.com/dp/B0CB1BGFX3', False),  # Commander Farsight
+    'TE-005': ('', 'https://www.amazon.com/dp/B09RG6NNFF', False),  # Darkstrider
+    'TE-006': ('', 'https://www.amazon.com/dp/B09SZLDTYD', False),  # Commander Shadowsun
+    'TE-007': ('', 'https://www.amazon.com/dp/B09SBXJ53W', False),  # Fire Warriors Breacher Team (dual kit with TE-008)
+    'TE-008': ('', 'https://www.amazon.com/dp/B09SBXJ53W', False),  # Fire Warriors Strike Team (dual kit with TE-007)
+    'TE-009': ('', 'https://www.amazon.com/dp/B09WCHJNK5', False),  # Empire Commander
+    'TE-010': ('', 'https://www.amazon.com/dp/B09VZFJSYH', False),  # Cadre Fireblade
+    # TE-011 Ta'unar Heavy Rail Cannon — no Amazon listing
+    # TE-012 Ta'unar Nexus Missile — no Amazon listing
+    # TE-013 Tidewall Droneport — no Amazon listing
+    'TE-014': ('', 'https://www.amazon.com/dp/B0177V7NWW', False),  # Tactical Drones
+    'TE-015': ('', 'https://www.amazon.com/dp/B09RG24ZXJ', False),  # XV95 Ghostkeel Battlesuit
+    'TE-016': ('', 'https://www.amazon.com/dp/B09SZNZQYJ', False),  # KV128 Stormsurge
+    'TE-017': ('', 'https://www.amazon.com/dp/B00C4V6IRW', False),  # Razorshark Strike Fighter (dual kit with TE-019)
+    'TE-018': ('', 'https://www.amazon.com/dp/B00C4UUYPK', False),  # Sky Ray Gunship (dual kit with 56-10 Hammerhead)
+    'TE-019': ('', 'https://www.amazon.com/dp/B00C4V6IRW', False),  # Sun Shark Bomber (dual kit with TE-017)
+    'TE-020': ('', 'https://www.amazon.com/dp/B09S6V7MFK', False),  # Devilfish
+    'TE-021': ('', 'https://www.amazon.com/dp/B0DPMYQNCS', False),  # Kill Team: Farstalker Kinband
+    'TE-022': ('', 'https://www.amazon.com/dp/B0DPMWDS2D', False),  # Kill Team: Vespid Stingwings
+    'TE-023': ('', 'https://www.amazon.com/dp/B0D2J34PWH', False),  # Kroot Lone-Spear
+    'TE-024': ('', 'https://www.amazon.com/dp/B0D2J41PJQ', False),  # Kroot Trail Shaper
+    'TE-025': ('', 'https://www.amazon.com/dp/B0D2J2XXYF', False),  # Kroot Flesh Shaper
+    'TE-026': ('', 'https://www.amazon.com/dp/B0D2HYH14S', False),  # Kroot War Shaper
+    'TE-027': ('', 'https://www.amazon.com/dp/B0D2J3KXSJ', False),  # Krootox Rider
+    'TE-028': ('', 'https://www.amazon.com/dp/B0D2J74BLC', False),  # Krootox Rampagers
+    'TE-029': ('', 'https://www.amazon.com/dp/1804573523',  False),  # Codex: T'au Empire
+    # TE-030 Tiger Shark — no Amazon listing
+    # TE-031 Ta'unar Fusion Eradicator — no Amazon listing
+    # TE-032 Ta'unar Pulse Ordnance Multi-driver — no Amazon listing
+    # TE-033 Ta'unar Tri-axis Ion Cannon — no Amazon listing
+    # TE-034 Manta — no Amazon listing
+    # TE-035 Firesight Team — no Amazon listing
+    'TE-036': ('', 'https://www.amazon.com/dp/B09TGRTXNJ', False),  # Piranha
+    'TE-037': ('', 'https://www.amazon.com/dp/B0D2J28FS7', False),  # Kroot Carnivores
 
     # ── Thousand Sons ─────────────────────────────────────────────────────
     '43-30': ('40.80',  'https://www.amazon.com/dp/B09KFQYBJ8', True),   # Ahriman  ✓ FIXED wave I (old B0B2PKL77J $29.75 wrong)
