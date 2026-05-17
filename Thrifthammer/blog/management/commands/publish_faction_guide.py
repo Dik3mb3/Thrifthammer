@@ -12,7 +12,8 @@ Usage:
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-SLUG = 'how-to-choose-warhammer-40k-faction'
+SLUG  = 'how-to-choose-warhammer-40k-faction'
+TITLE = 'How to Choose Your Next Warhammer 40K Faction (Complete 2026 Guide)'
 
 BODY = """\
 <p class="post-lead">Choosing your next Warhammer 40K faction is one of the biggest decisions in the hobby.</p>
@@ -239,16 +240,32 @@ class Command(BaseCommand):
         """Create or update the faction guide post."""
         from blog.models import Post, Tag
 
-        existing = Post.objects.filter(slug=SLUG).first()
+        # Look up by canonical slug first; fall back to title to catch posts
+        # that were created before slug was set explicitly (bug: auto-generated
+        # slug differed from SLUG constant, so every deploy created a duplicate).
+        existing = (
+            Post.objects.filter(slug=SLUG).first()
+            or Post.objects.filter(title=TITLE).first()
+        )
 
-        if existing and not options['force']:
-            self.stdout.write(
-                self.style.SUCCESS(f'Post already exists (pk={existing.pk}) — skipping.')
-            )
-            return
+        if existing:
+            # One-time slug correction: if the old post has the wrong slug, fix it.
+            if existing.slug != SLUG:
+                self.stdout.write(self.style.WARNING(
+                    f'  Correcting slug: {existing.slug!r} → {SLUG!r}'
+                ))
+                existing.slug = SLUG
+                existing.save(update_fields=['slug'])
+
+            if not options['force']:
+                self.stdout.write(
+                    self.style.SUCCESS(f'Post already exists (pk={existing.pk}) — skipping.')
+                )
+                return
 
         defaults = dict(
-            title='How to Choose Your Next Warhammer 40K Faction (Complete 2026 Guide)',
+            title=TITLE,
+            slug=SLUG,
             excerpt=(
                 'Choosing the right Warhammer 40K faction is one of the most important '
                 'decisions in the hobby. This guide ranks the 5 key factors (cost, '
