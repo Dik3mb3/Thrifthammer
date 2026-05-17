@@ -217,7 +217,7 @@ class Command(BaseCommand):
                 entry.price = new_price
                 entry.in_stock = new_in_stock
                 entry.not_available = False
-                entry.save(update_fields=['price', 'in_stock', 'not_available'])
+                entry.save(update_fields=['price', 'in_stock', 'not_available', 'last_seen'])
 
             updated += 1
 
