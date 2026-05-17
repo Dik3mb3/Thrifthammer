@@ -933,6 +933,13 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # partial-squad listings selling 4 models out of the standard 5-man kit
     # (sellers advertising "4x Scarab Occult Terminators").
     '43-36': '4x',
+    # 43-54 "Death Guard Blightlord Terminators" — eBay returns:
+    #   Felthius:  "Felthius' Cohort" limited-release bundle (Lord Felthius +
+    #              Blightlord Terminators) — a discontinued product at a
+    #              different price point from the standard kit.
+    #   Contagion: listings for the Contagion Edition starter set which
+    #              included Blightlord Terminators as a bundled component.
+    '43-54': 'Felthius Contagion',
     # 43-60 "World Eaters Berzerkers" — eBay returns "Kharn the Betrayer"
     # special-character listings and "Berzerkers with Kharn" bundle listings
     # that share enough Berzerker keywords to pass match threshold.
