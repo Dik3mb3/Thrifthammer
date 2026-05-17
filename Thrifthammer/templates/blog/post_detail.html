@@ -100,6 +100,13 @@
           <time datetime="{{ post.published_at|date:'Y-m-d' }}">{{ post.published_at|date:"j F Y" }}</time>
           <span class="blog-byline-sep" aria-hidden="true">·</span>
           <span>{{ post.reading_time }} min read</span>
+          <button
+            id="share-btn"
+            class="btn-share"
+            onclick="shareThisPage()"
+            aria-label="Share this article"
+            style="margin-left:auto;"
+          ><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Share</button>
         </div>
       </header>
 
@@ -120,6 +127,17 @@
       {# Article body #}
       <div class="blog-article-body prose">
         {{ post.body|safe }}
+      </div>
+
+      {# ── Inline newsletter signup ── #}
+      <div class="blog-inline-newsletter">
+        <h3 class="blog-inline-newsletter-title">Get Weekly Warhammer Deal Alerts</h3>
+        <p class="blog-inline-newsletter-text">We will email you the biggest price drops across US retailers every week. No spam. Unsubscribe any time.</p>
+        <form class="blog-inline-newsletter-form" method="post" action="{% url 'newsletter_signup' %}">
+          {% csrf_token %}
+          <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address for weekly deal alerts">
+          <button type="submit" class="btn btn-primary">Get Deal Alerts</button>
+        </form>
       </div>
 
       {# ── Related posts ── #}
@@ -260,4 +278,27 @@
 
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function shareThisPage() {
+  var btn  = document.getElementById('share-btn');
+  var url  = window.location.href;
+  if (navigator.share) {
+    navigator.share({
+      title: "{{ post.effective_meta_title|default:post.title|escapejs }}",
+      text:  "{{ post.effective_meta_description|default:''|escapejs }}",
+      url:   url
+    }).catch(function(){});
+  } else {
+    navigator.clipboard.writeText(url).then(function() {
+      var orig = btn.innerHTML;
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+    }).catch(function() { prompt('Copy this link:', url); });
+  }
+}
+</script>
 {% endblock %}

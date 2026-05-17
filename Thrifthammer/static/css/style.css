@@ -756,6 +756,50 @@ h3, h4, h5 {
 .btn-hero { color: var(--accent-gold-lt) !important; font-weight: 700 !important; letter-spacing: 0.04em; min-width: 200px; text-align: center; justify-content: center; }
 .btn-hero:hover { color: var(--accent-gold-lt) !important; }
 
+/* Share button — blog posts and product detail pages */
+.btn-share {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0.3rem 0.8rem;
+  background: rgb(200 146 42 / 0.1);
+  color: var(--accent-gold);
+  border: 1px solid rgb(200 146 42 / 0.3);
+  border-radius: var(--rounded);
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.btn-share:hover {
+  background: rgb(200 146 42 / 0.2);
+  color: var(--accent-gold-lt);
+  border-color: rgb(200 146 42 / 0.55);
+  box-shadow: 0 0 10px rgb(200 146 42 / 0.18);
+}
+.btn-share svg { flex-shrink: 0; }
+.btn-share.copied {
+  background: rgb(45 122 79 / 0.15);
+  color: var(--accent-green-lt);
+  border-color: rgb(74 171 114 / 0.4);
+}
+
+/* Title row used on product detail to position share button top-right */
+.product-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-3);
+}
+.product-title-row h1 { flex: 1; margin-bottom: 0; }
+
 .btn-blue { background: var(--accent-blue); color: var(--accent-gold-lt); border-color: var(--accent-blue-lt); }
 .btn-blue:hover { background: var(--accent-blue-lt); color: var(--accent-gold-lt); text-decoration: none; }
 .btn-purple { background: var(--accent-purple); color: var(--accent-gold-lt); border-color: var(--accent-purple-lt); }
@@ -3312,6 +3356,52 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   flex-wrap: wrap;
   gap: var(--sp-3);
   align-items: center;
+}
+
+/* ── Inline newsletter (end of article body) ── */
+.blog-inline-newsletter {
+  margin: var(--sp-8) 0 var(--sp-6);
+  padding: var(--sp-6) var(--sp-7);
+  background: var(--bg-elevated);
+  border-top: 2px solid var(--accent-gold);
+  border-bottom: 1px solid var(--border-subtle);
+  border-left: none;
+  border-right: none;
+}
+.blog-inline-newsletter-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--sp-2);
+  letter-spacing: 0.02em;
+}
+.blog-inline-newsletter-text {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin: 0 0 var(--sp-4);
+  line-height: 1.7;
+}
+.blog-inline-newsletter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  align-items: center;
+}
+.blog-inline-newsletter-form input[type="email"] {
+  flex: 1 1 220px;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded-md);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 0.88rem;
+}
+.blog-inline-newsletter-form input[type="email"]::placeholder {
+  color: var(--text-muted);
+}
+.blog-inline-newsletter-form .btn {
+  white-space: nowrap;
 }
 
 /* ── Sidebar ── */
