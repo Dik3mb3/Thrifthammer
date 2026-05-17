@@ -48,9 +48,13 @@ _TOKEN_URL = 'https://api.amazon.com/auth/o2/token'
 _API_BASE   = 'https://creatorsapi.amazon'
 _ITEMS_PATH = '/catalog/v1/getItems'
 
-# Resources to request — price only (availability.type is not a valid enum value)
+# Resources to request.
+# 'offersV2.listings.condition' lets us filter out Used/Collectible/Refurbished
+# listings so we only surface new-condition prices to users.
+# Note: availability.type is NOT a valid resource — do not add it.
 _RESOURCES = [
     'offersV2.listings.price',
+    'offersV2.listings.condition',
 ]
 
 # Amazon limits GetItems to 10 ASINs per call
@@ -245,14 +249,33 @@ class AmazonCreatorsClient:
     # -------------------------------------------------------------------------
 
     @staticmethod
+    def _is_new_condition(listing):
+        """
+        Return True if a listing is new condition (not used/collectible/refurbished).
+
+        Amazon condition values: 'New', 'Used', 'UsedLikeNew', 'UsedVeryGood',
+        'UsedGood', 'UsedAcceptable', 'Collectible', 'Refurbished', etc.
+
+        If the condition field is absent from the response (e.g. the resource was
+        not returned), we default to True so we do not accidentally hide prices.
+        """
+        condition = listing.get('condition', {})
+        if not condition:
+            return True
+        return condition.get('value', 'New') == 'New'
+
+    @staticmethod
     def _extract_price(item):
         """
-        Extract the lowest listing price from a GetItems response item.
+        Extract the lowest NEW-condition listing price from a GetItems response item.
+
+        Filters to new-condition listings only to avoid surfacing used/collectible
+        prices (e.g. a $7 used book undercutting the $60 new price).
 
         The API returns price under listing.price.money.amount (not listing.price.amount).
 
         Returns:
-            Decimal price, or None if no price is available.
+            Decimal price, or None if no new-condition price is available.
         """
         try:
             listings = item.get('offersV2', {}).get('listings', [])
@@ -261,6 +284,8 @@ class AmazonCreatorsClient:
 
             prices = []
             for listing in listings:
+                if not AmazonCreatorsClient._is_new_condition(listing):
+                    continue
                 amount = listing.get('price', {}).get('money', {}).get('amount')
                 if amount is not None:
                     prices.append(Decimal(str(amount)))
@@ -276,15 +301,17 @@ class AmazonCreatorsClient:
         Determine availability from a GetItems response item.
 
         The API does not expose a dedicated availability resource, so we
-        infer stock status from whether any listing has a buyable price.
-        A listing with no price.money.amount is MAP-restricted or unavailable.
+        infer stock status from whether any new-condition listing has a buyable
+        price. Used/collectible listings do not count as in-stock.
 
         Returns:
-            True if at least one listing has a purchasable price.
+            True if at least one new-condition listing has a purchasable price.
         """
         try:
             listings = item.get('offersV2', {}).get('listings', [])
             for listing in listings:
+                if not AmazonCreatorsClient._is_new_condition(listing):
+                    continue
                 amount = listing.get('price', {}).get('money', {}).get('amount')
                 if amount is not None:
                     return True

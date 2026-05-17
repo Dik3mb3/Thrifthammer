@@ -257,6 +257,18 @@ class Command(BaseCommand):
                 existing.slug = SLUG
                 existing.save(update_fields=['slug'])
 
+            # Delete any duplicate posts with the same title that aren't the
+            # canonical one. These were created by pre-fix deploys where the slug
+            # mismatch caused a new post to be created on every deployment.
+            duplicates = Post.objects.filter(title=TITLE).exclude(pk=existing.pk)
+            dup_count = duplicates.count()
+            if dup_count:
+                dup_pks = list(duplicates.values_list('pk', flat=True))
+                duplicates.delete()
+                self.stdout.write(self.style.SUCCESS(
+                    f'  Removed {dup_count} duplicate post(s) (PKs: {dup_pks}).'
+                ))
+
             if not options['force']:
                 self.stdout.write(
                     self.style.SUCCESS(f'Post already exists (pk={existing.pk}) — skipping.')
