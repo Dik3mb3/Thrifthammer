@@ -287,6 +287,8 @@ class Command(BaseCommand):
             body=BODY,
             status=Post.STATUS_PUBLISHED,
             published_at=timezone.now(),
+            featured_image_url='/static/images/blog/faction-guide-featured.png',
+            featured_image_alt='My Next Warhammer Army checklist covering cost, playstyle, cool factor, hobby requirements and competitiveness',
             meta_title='How to Choose a Warhammer 40K Faction (Complete 2026 Guide)',
             meta_description=(
                 'Choosing your first Warhammer 40K faction? We rank cost, playstyle, '

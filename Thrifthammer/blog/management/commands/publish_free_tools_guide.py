@@ -189,12 +189,6 @@ BODY = """\
 
 <p>If you sign up for a free account, Thrifthammer.com also offers the ability to keep track of your at-home mini collection and access to daily price alerts for your wishlisted models. We plan to keep expanding our tools and database to deliver the best prices and experience to our community.</p>
 
-<div class="blog-video-wrap">
-  <video controls playsinline preload="metadata" style="width:100%;border-radius:6px;display:block;" aria-label="ThriftHammer website walkthrough">
-    <source src="/static/videos/thrifthammer-walkthrough.mp4" type="video/mp4">
-  </video>
-</div>
-
 <h2>There Is a Tool for Everyone</h2>
 
 <p>The best part about modern Warhammer is that the community has built an incredible ecosystem of free tools around the hobby to help with every pain point big or small.</p>
@@ -267,6 +261,8 @@ class Command(BaseCommand):
             body=BODY,
             status=Post.STATUS_PUBLISHED,
             published_at=timezone.now(),
+            featured_image_url='/static/images/blog/free-tools-guide-featured.png',
+            featured_image_alt='ThriftHammer I Want You To Use These Free Warhammer Tools',
             meta_title='The 20 Best Free Warhammer 40K Websites and Apps (2026)',
             meta_description=(
                 'Discover the 20 best free Warhammer 40K websites and apps. '
