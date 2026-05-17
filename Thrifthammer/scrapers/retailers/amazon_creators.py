@@ -290,7 +290,11 @@ class AmazonCreatorsClient:
                 if amount is not None:
                     prices.append(Decimal(str(amount)))
 
-            return min(prices) if prices else None
+            # Return the first new-condition listing price (Buy Box / featured
+            # offer) rather than the cheapest across all new sellers.  The API
+            # returns listings in Buy Box priority order, so index 0 is what
+            # most users see when they click through to Amazon.
+            return prices[0] if prices else None
 
         except (InvalidOperation, ValueError, TypeError):
             return None
