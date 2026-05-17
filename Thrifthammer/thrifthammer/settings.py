@@ -237,6 +237,23 @@ EBAY_DELAY_BETWEEN_CALLS = 0.5
 EBAY_AFFILIATE_CAMPAIGN_ID = os.environ.get('EBAY_AFFILIATE_CAMPAIGN_ID', '')
 
 # ---------------------------------------------------------------------------
+# Amazon Creators API — OAuth2-based affiliate price lookup
+# ---------------------------------------------------------------------------
+# Replaces the HTML scraper approach. PA-API v5 was retired May 15 2026.
+# Credentials from Associates Central → Tools → Creators API.
+# Add AMAZON_CREATORS_CLIENT_ID and AMAZON_CREATORS_CLIENT_SECRET to Railway
+# environment variables in production.
+#
+# Usage:
+#   python manage.py update_amazon_creators_prices --test-auth
+#   python manage.py update_amazon_creators_prices --dry-run
+#   python manage.py update_amazon_creators_prices --sku AS-001
+#   python manage.py update_amazon_creators_prices
+AMAZON_CREATORS_CLIENT_ID     = os.environ.get('AMAZON_CREATORS_CLIENT_ID', '')
+AMAZON_CREATORS_CLIENT_SECRET = os.environ.get('AMAZON_CREATORS_CLIENT_SECRET', '')
+AMAZON_ASSOCIATE_TAG          = os.environ.get('AMAZON_ASSOCIATE_TAG', 'thrifthammer7-20')
+
+# ---------------------------------------------------------------------------
 # Email configuration — for the "Report Issue" feature
 # ---------------------------------------------------------------------------
 # In production set these Railway environment variables:
