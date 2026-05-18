@@ -74,12 +74,12 @@ NK_PRICES = [
         False,
         False,
     ),
-    # ⚠ Dual kit: Breacher Team / Strike Team share the same NK listing
+    # ⚠ Dual kit: Breacher Team / Strike Team — Breacher now has its own NK listing
     (
         'tau-empire-fire-warriors-breacher-team',
-        'Fire Warriors Team 2022 Edition',
+        'Fire Warriors',
         None,
-        f'{_NK_BASE}/P/2148420417/Fire-Warriors-Team-2022-Edition?awid=1576',
+        f'{_NK_BASE}/P/2147956210/Fire-Warriors?awid=1576',
         False,
         False,
     ),
