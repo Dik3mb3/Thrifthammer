@@ -269,6 +269,16 @@ class Command(BaseCommand):
                     f'  Removed {dup_count} duplicate post(s) (PKs: {dup_pks}).'
                 ))
 
+            # Always apply the featured image if it is not already set.
+            if not existing.featured_image_url:
+                existing.featured_image_url = '/static/images/blog/faction-guide-featured.png'
+                existing.featured_image_alt = (
+                    'My Next Warhammer Army checklist covering cost, playstyle, '
+                    'cool factor, hobby requirements and competitiveness'
+                )
+                existing.save(update_fields=['featured_image_url', 'featured_image_alt'])
+                self.stdout.write(self.style.SUCCESS('  Featured image applied.'))
+
             if not options['force']:
                 self.stdout.write(
                     self.style.SUCCESS(f'Post already exists (pk={existing.pk}) — skipping.')
