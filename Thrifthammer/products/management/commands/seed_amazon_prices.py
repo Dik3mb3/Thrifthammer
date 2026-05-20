@@ -308,6 +308,40 @@ AMAZON_DATA = {
     'GC-017': ('', 'https://www.amazon.com/dp/B07N8LKKJB', False),   # Jackal Alphus
     'GC-018': ('', 'https://www.amazon.com/dp/B07N8KK6DL', False),   # Clamavus
 
+    # ── Seraphon (SR-xxx SKUs) — prices TBD, scraper will update ─────────────
+    'SR-001': ('', 'https://www.amazon.com/dp/B0C5XPQ558', False),   # Aggradon Lancers
+    'SR-002': ('', 'https://www.amazon.com/dp/B017K7M58U', False),   # Bastiladon
+    # ⚠ SR-003 / SR-025 / SR-026 Engine of the Gods / Stegadon / Stegadon Chief share one kit/ASIN
+    'SR-003': ('', 'https://www.amazon.com/dp/B017K7M2EW', False),   # Engine of the Gods
+    'SR-004': ('', 'https://www.amazon.com/dp/B0BVGP6R5P', False),   # Hunters of Huanchi
+    # ⚠ SR-005 / SR-006 Kroxigor / Kroxigor Warspawned share one kit/ASIN
+    'SR-005': ('', 'https://www.amazon.com/dp/B0C5XNZ3W4', False),   # Kroxigor
+    'SR-006': ('', 'https://www.amazon.com/dp/B0C5XNZ3W4', False),   # Kroxigor Warspawned  ⚠ same kit
+    'SR-007': ('', 'https://www.amazon.com/dp/B0FSLDPZJL', False),   # Lord Kroak
+    # ⚠ SR-008 / SR-009 Raptadon Chargers / Raptadon Hunters share one kit/ASIN
+    'SR-008': ('', 'https://www.amazon.com/dp/B0C5XN4TCW', False),   # Raptadon Chargers
+    'SR-009': ('', 'https://www.amazon.com/dp/B0C5XN4TCW', False),   # Raptadon Hunters  ⚠ same kit
+    'SR-010': ('', 'https://www.amazon.com/dp/B085LR2GC5', False),   # Realmshaper Engine
+    # ⚠ SR-011 / SR-027 Ripperdactyl Riders / Terradon Riders share one kit/ASIN
+    'SR-011': ('', 'https://www.amazon.com/dp/B017K7LW8O', False),   # Ripperdactyl Riders
+    'SR-012': ('', 'https://www.amazon.com/dp/B0C5XND1DS', False),   # Saurus Astrolith Bearer
+    # SR-013 Saurus Guard — no Amazon listing
+    'SR-014': ('', 'https://www.amazon.com/dp/B005LVHRFY', False),   # Saurus Oldblood
+    # SR-015 Saurus Oldblood on Carnosaur — no Amazon listing
+    'SR-016': ('', 'https://www.amazon.com/dp/B0C5XNLS7W', False),   # Saurus Scar-Veteran on Aggradon
+    # SR-017 Saurus Scar-Veteran on Carnosaur — no Amazon listing
+    'SR-018': ('', 'https://www.amazon.com/dp/B0C5XQPH2C', False),   # Saurus Warriors
+    # SR-019 Skink Oracle on Troglodon — no Amazon listing
+    'SR-020': ('', 'https://www.amazon.com/dp/B017K7LIWO', False),   # Skink Starpriest
+    'SR-021': ('', 'https://www.amazon.com/dp/B0C5XL7JLP', False),   # Skink Starseer
+    'SR-022': ('', 'https://www.amazon.com/dp/B002EJI002', False),   # Skinks
+    'SR-023': ('', 'https://www.amazon.com/dp/B0C5XJYCGF', False),   # Slann Starmaster
+    'SR-024': ('', 'https://www.amazon.com/dp/B0C5XLZ5H9', False),   # Spawn of Chotec
+    'SR-025': ('', 'https://www.amazon.com/dp/B017K7M2EW', False),   # Stegadon  ⚠ same kit as SR-003
+    'SR-026': ('', 'https://www.amazon.com/dp/B017K7M2EW', False),   # Stegadon Chief  ⚠ same kit as SR-003
+    'SR-027': ('', 'https://www.amazon.com/dp/B017K7LW8O', False),   # Terradon Riders  ⚠ same kit as SR-011
+    'SR-028': ('', 'https://www.amazon.com/dp/B0F9YT2H9W', False),   # Spearhead: Sunblooded Prowlers
+
     # ── Grey Knights ──────────────────────────────────────────────────────
     '57-14': ('68.17',  'https://www.amazon.com/dp/B0FPDMT27L', False),  # Dreadknight
     '57-20': ('142.18', 'https://www.amazon.com/dp/B0FJ915PXJ', True),   # Combat Patrol
