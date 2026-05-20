@@ -81,6 +81,37 @@ AMAZON_DATA = {
     '59-10': ('49.30',  'https://www.amazon.com/dp/B00VE6WTPI', True),   # Skitarii Rangers
     '59-11': ('49.30',  'https://www.amazon.com/dp/B00VE6WTPI', True),   # Skitarii Vanguard (same kit)
     '59-06': ('33.15',  'https://www.amazon.com/dp/B09BBKFJD4', True),   # Tech-Priest Dominus
+    # ── Adeptus Mechanicus phase-2 (MC-xxx SKUs) — prices TBD, scraper will update ──
+    # ⚠ MC-001/002/003 Archaeopter (Fusilave/Stratoraptor/Transvector) share one kit/ASIN
+    'MC-001': ('', 'https://www.amazon.com/dp/B0899J6L6G', False),   # Archaeopter Fusilave
+    'MC-002': ('', 'https://www.amazon.com/dp/B0899J6L6G', False),   # Archaeopter Stratoraptor  ⚠ same kit
+    'MC-003': ('', 'https://www.amazon.com/dp/B0899J6L6G', False),   # Archaeopter Transvector   ⚠ same kit
+    'MC-004': ('', 'https://www.amazon.com/dp/B0FNS1MKFZ', False),   # Battleclade (Kill Team)
+    'MC-005': ('', 'https://www.amazon.com/dp/B075R36H3Q', False),   # Belisarius Cawl
+    'MC-006': ('', 'https://www.amazon.com/dp/B09HJX1435', False),   # Fulgurite Electro-Priests
+    'MC-007': ('', 'https://www.amazon.com/dp/B0GVGFNX61', False),   # Hastarii
+    'MC-008': ('', 'https://www.amazon.com/dp/B096YZ167X', False),   # Kastelan Robots
+    'MC-009': ('', 'https://www.amazon.com/dp/B00XTZUSB4', False),   # Kataphron Breachers  ⚠ same kit as 59-18 Kataphron Destroyers
+    # ⚠ MC-010/011 Pteraxii (Skystalkers/Sterylizors) share one kit/ASIN
+    'MC-010': ('', 'https://www.amazon.com/dp/B0899FYZHD', False),   # Pteraxii Skystalkers
+    'MC-011': ('', 'https://www.amazon.com/dp/B0899FYZHD', False),   # Pteraxii Sterylizors  ⚠ same kit
+    # ⚠ MC-012/013 Serberys (Raiders/Sulphurhounds) share one kit/ASIN
+    'MC-012': ('', 'https://www.amazon.com/dp/B0899MR5DQ', False),   # Serberys Raiders
+    'MC-013': ('', 'https://www.amazon.com/dp/B0899MR5DQ', False),   # Serberys Sulphurhounds  ⚠ same kit
+    # ⚠ MC-014/015 Sicarians (Infiltrators/Ruststalkers) share one kit/ASIN
+    'MC-014': ('', 'https://www.amazon.com/dp/B096G7QHD3', False),   # Sicarian Infiltrators
+    'MC-015': ('', 'https://www.amazon.com/dp/B096G7QHD3', False),   # Sicarian Ruststalkers  ⚠ same kit
+    'MC-016': ('', 'https://www.amazon.com/dp/B095J4QXSW', False),   # Skitarii Marshal
+    # ⚠ MC-017/018 Skorpius (Disintegrator/Dunerider) share one kit/ASIN
+    'MC-017': ('', 'https://www.amazon.com/dp/B07TS4QN8W', False),   # Skorpius Disintegrator
+    'MC-018': ('', 'https://www.amazon.com/dp/B07TS4QN8W', False),   # Skorpius Dunerider  ⚠ same kit
+    'MC-019': ('', 'https://www.amazon.com/dp/B0965W1ZD8', False),   # Sydonian Dragoon (Ironstrider kit)
+    'MC-020': ('', 'https://www.amazon.com/dp/B0CNTVKXZD', False),   # Sydonian Skatros
+    # MC-021 Technoarcheologist — no Amazon listing
+    'MC-022': ('', 'https://www.amazon.com/dp/B09BBKFJD4', False),   # Tech-Priest Enginseer  ⚠ same ASIN as 59-06
+    'MC-023': ('', 'https://www.amazon.com/dp/B00YHVDG6S', False),   # Tech-Priest Manipulus
+    'MC-024': ('', 'https://www.amazon.com/dp/B0GVGFP28V', False),   # Thulia Ghuld
+    'MC-025': ('', 'https://www.amazon.com/dp/1804572780', False),   # Codex: Adeptus Mechanicus
 
     # ── Age of Sigmar ─────────────────────────────────────────────────────
     '80-20': ('26.70',  'https://www.amazon.com/dp/B0D8LHNZB2', True),   # Dice Set
@@ -256,6 +287,26 @@ AMAZON_DATA = {
     '51-69': ('138.00', 'https://www.amazon.com/dp/B0D63C96WS', True),   # Combat Patrol
     '51-43': ('29.75',  'https://www.amazon.com/dp/B09RMTQ1HV', True),   # Magus
     '51-40': ('51.00',  'https://www.amazon.com/dp/B09XLWHDHP', True),   # Neophyte Hybrids
+    # ── Genestealer Cults phase-2 (GC-xxx SKUs) — prices TBD, scraper will update ──
+    'GC-001': ('', 'https://www.amazon.com/dp/1804573884', False),   # Codex: Genestealer Cults
+    'GC-002': ('', 'https://www.amazon.com/dp/B0B1DX87Z2', False),   # Reductus Saboteur
+    'GC-003': ('', 'https://www.amazon.com/dp/B09QXRC667', False),   # Kelermorph
+    'GC-004': ('', 'https://www.amazon.com/dp/B09SJ5SLX5', False),   # Abominant
+    'GC-005': ('', 'https://www.amazon.com/dp/B09TM375L9', False),   # Biophagus
+    'GC-006': ('', 'https://www.amazon.com/dp/B07N8FQLXY', False),   # Atalan Jackals
+    'GC-007': ('', 'https://www.amazon.com/dp/B07N8MC6XT', False),   # Nexos
+    'GC-008': ('', 'https://www.amazon.com/dp/B09QH11PYX', False),   # Locus
+    'GC-009': ('', 'https://www.amazon.com/dp/B09RMYKS5B', False),   # Sanctus
+    # ⚠ GC-010/011 Goliath (Rockgrinder/Truck) share one kit/ASIN
+    'GC-010': ('', 'https://www.amazon.com/dp/B09RMWKQR7', False),   # Goliath Rockgrinder
+    'GC-011': ('', 'https://www.amazon.com/dp/B09RMWKQR7', False),   # Goliath Truck  ⚠ same kit
+    'GC-012': ('', 'https://www.amazon.com/dp/B01LZEUULK', False),   # Acolyte Iconward
+    'GC-013': ('', 'https://www.amazon.com/dp/B09XLWHDHP', False),   # Hybrid Metamorphs  ⚠ same ASIN as 51-40 Neophyte Hybrids
+    'GC-014': ('', 'https://www.amazon.com/dp/B0DJFGZZGW', False),   # Benefictus
+    'GC-015': ('', 'https://www.amazon.com/dp/B0CGV7GF6V', False),   # Genestealers
+    'GC-016': ('', 'https://www.amazon.com/dp/B07NFFJWLF', False),   # Achilles Ridgerunner
+    'GC-017': ('', 'https://www.amazon.com/dp/B07N8LKKJB', False),   # Jackal Alphus
+    'GC-018': ('', 'https://www.amazon.com/dp/B07N8KK6DL', False),   # Clamavus
 
     # ── Grey Knights ──────────────────────────────────────────────────────
     '57-14': ('68.17',  'https://www.amazon.com/dp/B0FPDMT27L', False),  # Dreadknight
