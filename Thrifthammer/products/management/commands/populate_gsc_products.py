@@ -178,7 +178,7 @@ PRODUCTS = [
         60.00,
         '99120106068_Genestealers2.jpg',
         'https://www.warhammer.com/en-US/shop/tyranids-genestealers-2023',
-        'Genestealers',  # eBay sellers list as "Tyranids Genestealers" not "Genestealer Cults Genestealers"
+        'Tyranids Genestealers',  # eBay sellers list as "Tyranids Genestealers" not "Genestealer Cults Genestealers"
     ),
 
     # ── Vehicles ──────────────────────────────────────────────────────────────
