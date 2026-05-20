@@ -229,7 +229,7 @@ PRODUCTS = [
     (
         'necron-canoptek-wraiths',
         'Canoptek Wraiths',
-        'prod4390156',
+        '49-18',
         65.00,
         '99120110060_NECCanoptekWraithsLead.jpg',
         'https://www.warhammer.com/en-US/shop/Necron-Canoptek-Wraiths-2020',

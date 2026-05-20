@@ -30,7 +30,7 @@ class Command(BaseCommand):
             # Astra Militarum
             ('AM-012', {'ebay_search_name': 'Catachan Heavy Weapon Squad'}),
             ('AM-013', {'ebay_search_name': 'Catachan Heavy Weapon Squad'}),
-            ('AM-035', {'ebay_search_name': 'Warhammer 40K Ministorum Priest', 'ebay_negative_keywords': 'Taddeus'}),
+            ('AM-035', {'ebay_search_name': 'Warhammer 40K Ministorum Priest', 'ebay_negative_keywords': 'Taddeus Sister Blackstone Vourne Pious Zealot'}),
             ('AM-036', {'ebay_search_name': 'Astra Militarum Bullgryns'}),
             ('AM-040', {'ebay_search_name': 'Astra Militarum Baneblade'}),
             ('AM-042', {'ebay_search_name': 'Astra Militarum Baneblade'}),

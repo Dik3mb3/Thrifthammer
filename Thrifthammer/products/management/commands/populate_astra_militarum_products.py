@@ -91,7 +91,7 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # AM-035 "Ministorum Priest" — eBay returns Adepta Sororitas / Blackstone
     # Fortress / Vourne listings that share keywords.  Excluding these terms
     # keeps results focused on the standalone Ministorum Priest blister.
-    'AM-035': 'Taddeus Sister Blackstone Vourne',
+    'AM-035': 'Taddeus Sister Blackstone Vourne Pious Zealot',
 }
 
 # (gw_sku, name, msrp, gw_url, amazon_asin, mm_url, nk_base_url)

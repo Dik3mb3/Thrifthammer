@@ -225,7 +225,7 @@ PRODUCTS = [
         62.50,
         '99120104073_AELRangersLead.jpg',
         'https://www.warhammer.com/en-US/shop/aeldari-rangers-2022',
-        '',
+        'Aeldari Rangers',
     ),
     (
         'aeldari-howling-banshees',

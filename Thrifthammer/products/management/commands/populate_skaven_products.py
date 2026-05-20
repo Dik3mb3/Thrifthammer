@@ -32,6 +32,11 @@ from products.models import Category, Faction, Product, Retailer
 
 _IMG = 'https://www.warhammer.com/app/resources/catalog/product/920x950/{filename}'
 
+# ── Per-SKU eBay negative keywords ───────────────────────────────────────────
+_EBAY_NEGATIVE_KEYWORDS = {
+    'SK-005': 'Bell of Doom',
+}
+
 # ── Product definitions ───────────────────────────────────────────────────────
 # (slug, gw_sku, name, msrp, image_filename, gw_url, ebay_search_name)
 #
@@ -461,6 +466,14 @@ class Command(BaseCommand):
                     price_created += 1
                 else:
                     price_updated += 1
+
+        # ── Apply per-SKU eBay negative keywords ──────────────────────────────
+        for gw_sku, neg_kw in _EBAY_NEGATIVE_KEYWORDS.items():
+            rows = Product.objects.filter(gw_sku=gw_sku).update(ebay_negative_keywords=neg_kw)
+            if rows:
+                self.stdout.write(f'  [neg_kw] {gw_sku}: {neg_kw}')
+            else:
+                self.stdout.write(self.style.WARNING(f'  [neg_kw skip] {gw_sku} not found'))
 
         self.stdout.write(self.style.SUCCESS(
             f'\npopulate_skaven_products complete. '
