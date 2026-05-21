@@ -21,7 +21,8 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives, send_mail
+from django.template.loader import render_to_string
 
 logger = logging.getLogger(__name__)
 from django.core.paginator import InvalidPage, Paginator
@@ -49,7 +50,7 @@ from .models import Category, Faction, IssueReport, NewsletterSignup, Product
 SPOTLIGHT_COUNT = 10  # Number of deals to show in the Top 10 Best Deals section
 
 
-def _get_spotlight_deals(count=SPOTLIGHT_COUNT):
+def _get_spotlight_deals(count=SPOTLIGHT_COUNT, category_name=None, exclude_category=None):
     """
     Return the top deals by discount percentage for the home page.
 
@@ -61,6 +62,11 @@ def _get_spotlight_deals(count=SPOTLIGHT_COUNT):
     - Ranked by discount % vs GW live price (or MSRP fallback) — same reference
       used by the browse page, so rankings are consistent.
     - Returns at most `count` results.
+
+    Args:
+        count: Maximum number of deals to return.
+        category_name: If set, only include products in this category.
+        exclude_category: If set, exclude products in this category.
 
     Returns:
         list[CurrentPrice]: Evaluated list with .product and .retailer
@@ -79,9 +85,9 @@ def _get_spotlight_deals(count=SPOTLIGHT_COUNT):
     )
 
     # Fetch all active, priced, in-stock entries from non-GW retailers
-    candidates = list(
+    qs = (
         CurrentPrice.objects
-        .select_related('product', 'retailer')
+        .select_related('product', 'retailer', 'product__category')
         .filter(
             product__is_active=True,
             product__msrp__isnull=False,
@@ -91,8 +97,14 @@ def _get_spotlight_deals(count=SPOTLIGHT_COUNT):
             not_available=False,
         )
         .exclude(retailer__slug='games-workshop')
-        .order_by('product_id', 'price')  # cheapest first per product
     )
+
+    if category_name:
+        qs = qs.filter(product__category__name=category_name)
+    if exclude_category:
+        qs = qs.exclude(product__category__name=exclude_category)
+
+    candidates = list(qs.order_by('product_id', 'price'))  # cheapest first per product
 
     # Deduplicate: keep only the best (lowest) price per product
     seen_products: set = set()
@@ -157,17 +169,13 @@ def home(request):
     The hot deals are selected by _get_spotlight_deals() — edit that
     function to change the selection strategy without touching this view.
     """
-    cache_key = 'home_page_data_v7'
+    cache_key = 'home_page_data_v8'
     ctx = cache.get(cache_key)
     if ctx is None:
         categories = list(Category.objects.all())
-        recent_drops = _get_spotlight_deals()
-        live_factions = list(
-            Faction.objects.filter(synopsis__gt='')
-            .order_by('name')
-            .values('name', 'display_name', 'slug', 'hero_image_url', 'hero_tagline', 'difficulty')
-        )
-        ctx = {'categories': categories, 'recent_drops': recent_drops, 'live_factions': live_factions}
+        deals_40k = _get_spotlight_deals(category_name='Warhammer 40,000')
+        deals_other = _get_spotlight_deals(exclude_category='Warhammer 40,000')
+        ctx = {'categories': categories, 'deals_40k': deals_40k, 'deals_other': deals_other}
         cache.set(cache_key, ctx, timeout=900)  # 15 minutes
 
     return render(request, 'home.html', ctx)
@@ -741,15 +749,56 @@ def newsletter_signup(request):
         messages.error(request, 'Please enter a valid email address.')
         return redirect('home')
 
-    _, created = NewsletterSignup.objects.get_or_create(email=email)
+    signup, created = NewsletterSignup.objects.get_or_create(
+        email=email,
+        defaults={'is_confirmed': False},
+    )
     if created:
+        # Send confirmation email — new subscribers must click to confirm.
+        _send_newsletter_confirmation(signup)
         messages.success(
             request,
-            "You're on the list! We'll send you the best weekly deals.",
+            "Almost there! Check your inbox and click the confirmation link to activate your deal alerts.",
+        )
+    elif not signup.is_confirmed:
+        # Resend confirmation if they try again before confirming.
+        _send_newsletter_confirmation(signup)
+        messages.info(
+            request,
+            "We sent you another confirmation email. Check your inbox to activate your deal alerts.",
         )
     else:
         messages.info(request, "You're already signed up for deal alerts.")
     return redirect('home')
+
+
+def _send_newsletter_confirmation(signup):
+    """Send the double opt-in confirmation email to a new subscriber."""
+    confirmation_url = signup.get_confirmation_url()
+    context = {
+        'confirmation_url': confirmation_url,
+        'site_url': 'https://thrifthammer.com',
+    }
+    html_body = render_to_string('emails/newsletter_confirmation.html', context)
+    text_body = (
+        'Confirm your ThriftHammer deal alerts subscription\n\n'
+        'Click the link below to confirm your email address:\n\n'
+        f'{confirmation_url}\n\n'
+        'If you did not sign up for ThriftHammer deal alerts, you can ignore this email.\n'
+        '-- ThriftHammer\n'
+        'https://thrifthammer.com'
+    )
+    msg = EmailMultiAlternatives(
+        subject='Confirm your ThriftHammer deal alerts',
+        body=text_body,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[signup.email],
+    )
+    msg.attach_alternative(html_body, 'text/html')
+    try:
+        msg.send(fail_silently=True)
+    except Exception:
+        pass  # Never let email failure block the user flow
 
 
 def newsletter_unsubscribe(request, token):
@@ -771,4 +820,21 @@ def newsletter_unsubscribe(request, token):
     return render(request, 'products/newsletter_unsubscribe_confirm.html', {
         'email': signup.email if signup else None,
         'token': token,
+    })
+
+
+def newsletter_confirm(request, token):
+    """
+    One-click confirmation for new homepage newsletter signups.
+
+    GET → set is_confirmed=True and show success page.
+    Unknown tokens show a neutral success page to prevent probing.
+    """
+    signup = NewsletterSignup.objects.filter(token=token).first()
+    if signup and not signup.is_confirmed:
+        signup.is_confirmed = True
+        signup.save(update_fields=['is_confirmed'])
+
+    return render(request, 'products/newsletter_confirmed.html', {
+        'email': signup.email if signup else None,
     })

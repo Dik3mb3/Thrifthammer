@@ -84,24 +84,93 @@
     {# ── Weekly deal alerts newsletter ── #}
     <div class="profile-section">
       <h2 class="profile-section-title">Weekly Deal Alerts</h2>
-      <p class="profile-section-hint">
-        Get the top 10 biggest Warhammer discounts sent to your inbox every Monday morning.
-      </p>
       {% if not user.email %}
       <p class="profile-section-hint" style="color:var(--accent-red-lt);">
         You need an email address on your account to receive deal alerts. Add one above.
       </p>
-      {% else %}
-      <form method="post" action="{% url 'accounts:newsletter_toggle' %}" style="display:flex;align-items:center;gap:var(--sp-2);">
+      {% elif not newsletter_subscribed %}
+      <p class="profile-section-hint">
+        Get the top 10 biggest Warhammer discounts sent to your inbox every Monday and Friday.
+      </p>
+      <form method="post" action="{% url 'accounts:newsletter_toggle' %}">
         {% csrf_token %}
-        {% if newsletter_subscribed %}
-        <span style="font-size:0.85rem;color:var(--accent-green-lt);">&#10003; Subscribed — emails go to {{ user.email }}</span>
-        <button type="submit" class="btn btn-secondary btn-sm">Unsubscribe</button>
-        {% else %}
-        <span style="font-size:0.85rem;color:var(--text-muted);">Not subscribed</span>
+        <span style="font-size:0.85rem;color:var(--text-muted);display:block;margin-bottom:var(--sp-2);">Not subscribed</span>
         <button type="submit" class="btn btn-primary btn-sm">Subscribe to deal alerts</button>
-        {% endif %}
       </form>
+      {% else %}
+      <p class="profile-section-hint">
+        Subscribed &mdash; emails go to {{ user.email }}.
+        Customise which newsletters you receive below.
+      </p>
+
+      {# ── Preferences form ── #}
+      <form method="post" action="{% url 'accounts:newsletter_prefs' %}" class="profile-form" style="margin-bottom:var(--sp-3);">
+        {% csrf_token %}
+
+        <p style="font-size:0.8rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--sp-2);">Which newsletters do you want?</p>
+
+        <label style="display:flex;align-items:flex-start;gap:var(--sp-2);margin-bottom:var(--sp-2);cursor:pointer;">
+          <input type="checkbox" name="monday_40k" {% if newsletter_obj.monday_40k %}checked{% endif %} style="margin-top:3px;flex-shrink:0;">
+          <span>
+            <strong>Monday — Warhammer 40K deals</strong><br>
+            <span style="font-size:0.82rem;color:var(--text-muted);">Top 10 biggest discounts on 40K kits, sent Monday morning.</span>
+          </span>
+        </label>
+
+        <label style="display:flex;align-items:flex-start;gap:var(--sp-2);margin-bottom:var(--sp-2);cursor:pointer;">
+          <input type="checkbox" name="friday_other" {% if newsletter_obj.friday_other %}checked{% endif %} style="margin-top:3px;flex-shrink:0;">
+          <span>
+            <strong>Friday — AoS &amp; More deals</strong><br>
+            <span style="font-size:0.82rem;color:var(--text-muted);">Top 10 discounts on Age of Sigmar, Horus Heresy, Kill Team &amp; more, sent Friday morning.</span>
+          </span>
+        </label>
+
+        <label style="display:flex;align-items:flex-start;gap:var(--sp-2);margin-bottom:var(--sp-2);cursor:pointer;">
+          <input type="checkbox" name="sunday_faction" id="sunday_faction_cb" {% if newsletter_obj.sunday_faction %}checked{% endif %} style="margin-top:3px;flex-shrink:0;">
+          <span>
+            <strong>Sunday — Personalised faction deals</strong><br>
+            <span style="font-size:0.82rem;color:var(--text-muted);">Deals for your specific faction(s) only, sent Sunday morning. Select your factions below.</span>
+          </span>
+        </label>
+
+        {# ── Faction multi-select (always visible if Sunday opt-in ticked) ── #}
+        <div id="faction-selector" style="{% if not newsletter_obj.sunday_faction %}display:none;{% endif %}margin-left:var(--sp-4);margin-bottom:var(--sp-3);padding:var(--sp-3);background:var(--bg-card);border:1px solid var(--border);border-radius:4px;">
+          <p style="font-size:0.8rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--sp-2);">Your factions</p>
+          {% regroup all_factions by category.name as factions_by_category %}
+          {% for group in factions_by_category %}
+          <p style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;margin-top:var(--sp-2);">{{ group.grouper }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:2px;">
+            {% for faction in group.list %}
+            <label style="display:flex;align-items:center;gap:5px;font-size:0.82rem;cursor:pointer;padding:4px 8px;border:1px solid var(--border);border-radius:3px;background:var(--bg-base);">
+              <input type="checkbox" name="factions" value="{{ faction.pk }}"
+                     {% if faction in newsletter_obj.factions.all %}checked{% endif %}>
+              {{ faction.name }}
+            </label>
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-sm">Save preferences</button>
+      </form>
+
+      {# ── Unsubscribe ── #}
+      <form method="post" action="{% url 'accounts:newsletter_toggle' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary btn-sm">Unsubscribe from all newsletters</button>
+      </form>
+
+      <script>
+        (function () {
+          var cb = document.getElementById('sunday_faction_cb');
+          var sel = document.getElementById('faction-selector');
+          if (cb && sel) {
+            cb.addEventListener('change', function () {
+              sel.style.display = this.checked ? '' : 'none';
+            });
+          }
+        })();
+      </script>
       {% endif %}
     </div>
 

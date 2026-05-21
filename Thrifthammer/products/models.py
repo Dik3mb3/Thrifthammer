@@ -372,7 +372,14 @@ class Product(models.Model):
 
 
 class NewsletterSignup(models.Model):
-    """Email address submitted via the homepage deal-alert opt-in."""
+    """
+    Email address submitted via the homepage deal-alert opt-in or profile page.
+
+    Preference fields control which newsletters the subscriber receives.
+    New homepage signups start unconfirmed (is_confirmed=False) and receive a
+    confirmation email. Existing subscribers and profile-page toggles are
+    confirmed immediately.
+    """
 
     email = models.EmailField(
         unique=True,
@@ -382,8 +389,48 @@ class NewsletterSignup(models.Model):
         default=uuid.uuid4,
         unique=True,
         editable=False,
-        help_text='Unique token used to generate a one-click unsubscribe link.',
+        help_text='Unique token used to generate one-click confirm and unsubscribe links.',
     )
+    is_confirmed = models.BooleanField(
+        default=True,
+        help_text=(
+            'Email address confirmed via opt-in link. '
+            'Existing subscribers are True by default. '
+            'New homepage signups start False until confirmation link is clicked.'
+        ),
+    )
+
+    # ── Newsletter preferences ────────────────────────────────────────────────
+    monday_40k = models.BooleanField(
+        default=True,
+        help_text='Receive the Monday Warhammer 40K deal digest.',
+    )
+    friday_other = models.BooleanField(
+        default=True,
+        help_text='Receive the Friday Age of Sigmar & Other deal digest.',
+    )
+    sunday_faction = models.BooleanField(
+        default=False,
+        help_text=(
+            'Receive a Sunday personalised faction deal digest. '
+            'Subscriber must also select at least one faction.'
+        ),
+    )
+    factions = models.ManyToManyField(
+        'Faction',
+        blank=True,
+        related_name='newsletter_subscribers',
+        help_text='Factions to include in the Sunday personalised email.',
+    )
+    user = models.OneToOneField(
+        'auth.User',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='newsletter_signup',
+        help_text='Linked user account, if the subscriber has created one.',
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -397,6 +444,10 @@ class NewsletterSignup(models.Model):
     def get_unsubscribe_url(self):
         """Return the absolute unsubscribe URL for this subscriber."""
         return f'https://thrifthammer.com/products/newsletter/unsubscribe/{self.token}/'
+
+    def get_confirmation_url(self):
+        """Return the absolute confirmation URL for new (unconfirmed) subscribers."""
+        return f'https://thrifthammer.com/products/newsletter/confirm/{self.token}/'
 
 
 class IssueReport(models.Model):

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
-from products.models import NewsletterSignup
+from products.models import Faction, NewsletterSignup
 
 from .forms import (
     ChangeEmailForm,
@@ -20,11 +20,34 @@ from .models import SecurityProfile, WatchlistItem
 
 
 def register(request):
-    """Register a new user account, including a security question for password recovery."""
+    """
+    Register a new user account, including a security question for password recovery.
+
+    Automatically subscribes the new user to Monday 40K and Friday AoS newsletters
+    using their registration email. Confirmed immediately (no opt-in email needed —
+    the user just provided the email themselves).
+    """
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            email = form.cleaned_data['email'].strip().lower()
+            if email:
+                signup, created = NewsletterSignup.objects.get_or_create(
+                    email=email,
+                    defaults={
+                        'user': user,
+                        'is_confirmed': True,
+                        'monday_40k': True,
+                        'friday_other': True,
+                        'sunday_faction': False,
+                    },
+                )
+                if not created:
+                    # Email already existed (e.g. homepage signup) — link the account
+                    signup.user = user
+                    signup.is_confirmed = True
+                    signup.save(update_fields=['user', 'is_confirmed'])
             messages.success(request, 'Account created! You can now log in.')
             return redirect('accounts:login')
     else:
@@ -45,15 +68,25 @@ def profile(request):
     email_form = ChangeEmailForm(request.user)
     username_form = ChangeUsernameForm(request.user)
 
-    newsletter_subscribed = (
-        bool(request.user.email)
-        and NewsletterSignup.objects.filter(email__iexact=request.user.email).exists()
-    )
+    newsletter_obj = None
+    newsletter_subscribed = False
+    if request.user.email:
+        newsletter_obj = (
+            NewsletterSignup.objects
+            .filter(email__iexact=request.user.email)
+            .prefetch_related('factions')
+            .first()
+        )
+        newsletter_subscribed = newsletter_obj is not None
+
+    all_factions = Faction.objects.select_related('category').order_by('category__name', 'name')
 
     return render(request, 'accounts/profile.html', {
         'email_form': email_form,
         'username_form': username_form,
         'newsletter_subscribed': newsletter_subscribed,
+        'newsletter_obj': newsletter_obj,
+        'all_factions': all_factions,
     })
 
 
@@ -188,9 +221,50 @@ def toggle_newsletter(request):
         existing.delete()
         messages.success(request, 'You have been unsubscribed from weekly deal alerts.')
     else:
-        NewsletterSignup.objects.create(email=email)
+        # Profile subscribers are already authenticated — confirm immediately,
+        # no confirmation email needed.
+        NewsletterSignup.objects.create(
+            email=email,
+            user=request.user,
+            is_confirmed=True,
+        )
         messages.success(request, "You're subscribed! We'll send you the best weekly deals every Monday.")
 
+    return redirect('accounts:profile')
+
+
+@login_required
+@require_POST
+def update_newsletter_prefs(request):
+    """
+    POST-only: update newsletter preferences for the logged-in subscriber.
+
+    Handles monday_40k, friday_other, sunday_faction toggles and faction
+    multi-select. Silently redirects if the user is not subscribed.
+    """
+    email = request.user.email.strip().lower() if request.user.email else ''
+    signup = NewsletterSignup.objects.filter(email__iexact=email).first() if email else None
+
+    if not signup:
+        messages.error(request, 'You are not currently subscribed to deal alerts.')
+        return redirect('accounts:profile')
+
+    signup.monday_40k = 'monday_40k' in request.POST
+    signup.friday_other = 'friday_other' in request.POST
+    signup.sunday_faction = 'sunday_faction' in request.POST
+
+    # Faction multi-select — only integers, ignore bad input
+    faction_ids = []
+    for fid in request.POST.getlist('factions'):
+        try:
+            faction_ids.append(int(fid))
+        except (ValueError, TypeError):
+            pass
+
+    signup.save(update_fields=['monday_40k', 'friday_other', 'sunday_faction'])
+    signup.factions.set(faction_ids)
+
+    messages.success(request, 'Newsletter preferences updated.')
     return redirect('accounts:profile')
 
 

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>ThriftHammer — {{ subject }}</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
+  </style>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+</head>
+<body style="margin:0;padding:0;background-color:#0d0f14;font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;color:#e8e0d0;">
+
+  <!-- Outer wrapper -->
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0d0f14;">
+    <tr>
+      <td align="center" style="padding:24px 16px;">
+
+        <!-- Email container -->
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background-color:#13171f;border-radius:6px;border:1px solid #2a2f3a;overflow:hidden;">
+
+          <!-- ── HEADER ── -->
+          <tr>
+            <td style="background-color:#0d0f14;padding:22px 24px 18px;border-bottom:2px solid #c8922a;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="vertical-align:middle;">
+                    <a href="{{ site_url }}" style="text-decoration:none;">
+                      <div style="font-family:'Cinzel',Georgia,'Times New Roman',serif;font-size:30px;font-weight:900;letter-spacing:0.1em;color:#f0c060;line-height:1;">
+                        THRIFTHAMMER
+                      </div>
+                    </a>
+                  </td>
+                  <td style="vertical-align:top;text-align:right;padding-top:4px;">
+                    {% if unsubscribe_url %}
+                    <a href="{{ unsubscribe_url }}" style="font-size:10px;color:#5c5648;text-decoration:underline;font-family:'Inter','Helvetica Neue',Arial,sans-serif;">Unsubscribe</a>
+                    {% endif %}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ── SUBJECT ── -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#1c2230 0%,#0d0f14 100%);padding:22px 32px;text-align:center;border-bottom:1px solid #2a2f3a;">
+              <div style="font-family:'Cinzel',Georgia,'Times New Roman',serif;font-size:20px;font-weight:700;color:#f0c060;letter-spacing:0.05em;">
+                {{ subject }}
+              </div>
+            </td>
+          </tr>
+
+          <!-- ── BODY ── -->
+          <tr>
+            <td style="padding:28px 32px;">
+              <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:15px;color:#e8e0d0;line-height:1.8;white-space:pre-wrap;">{{ body_text }}</div>
+            </td>
+          </tr>
+
+          <!-- ── BROWSE CTA ── -->
+          <tr>
+            <td style="padding:4px 24px 28px;text-align:center;">
+              <a href="{{ site_url }}/products/"
+                 style="display:inline-block;background-color:#13171f;color:#f0c060;font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:13px;font-weight:600;text-decoration:none;padding:11px 28px;border-radius:4px;border:1px solid #c8922a;letter-spacing:0.06em;text-transform:uppercase;">
+                Browse All Deals &rarr;
+              </a>
+            </td>
+          </tr>
+
+          <!-- ── FOOTER ── -->
+          <tr>
+            <td style="padding:18px 24px;text-align:center;border-top:1px solid #2a2f3a;">
+              <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;color:#5c5648;line-height:1.8;">
+                You're receiving this because you signed up at thrifthammer.com.<br>
+                ThriftHammer is not affiliated with Games Workshop.<br>
+                {% if unsubscribe_url %}
+                <a href="{{ unsubscribe_url }}" style="color:#5c5648;text-decoration:underline;">Unsubscribe</a>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /Email container -->
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

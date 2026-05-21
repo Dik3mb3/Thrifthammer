@@ -424,20 +424,78 @@
     </div>
 </section>
 
-{# ─── BIGGEST DISCOUNTS RIGHT NOW ─────────────────────────────────────── #}
-{% if recent_drops %}
-<section class="section" aria-labelledby="deals-heading">
+{# ─── TOP 10 WARHAMMER 40K DEALS ──────────────────────────────────────── #}
+{% if deals_40k %}
+<section class="section" aria-labelledby="deals-40k-heading">
     <div class="container">
         <div class="section-header deals-header">
             <div>
-                <h2 id="deals-heading">Biggest Discounts Right Now</h2>
-                <p>The best prices available today across US Warhammer retailers</p>
+                <h2 id="deals-40k-heading">Biggest Warhammer 40K Deals Right Now</h2>
+                <p>The best 40K prices available today across US Warhammer retailers</p>
+            </div>
+            <a href="{% url 'products:list' %}?sort=discount&category=warhammer-40000" class="btn btn-ghost">See all 40K deals &rarr;</a>
+        </div>
+
+        <div class="card-grid">
+            {% for cp in deals_40k %}
+            <a href="{% url 'products:detail' cp.product.slug %}" class="product-card">
+
+                {% if cp.product.image_url %}
+                <img
+                    src="{{ cp.product.image_url }}"
+                    alt="{{ cp.product.name }}"
+                    class="product-card-img"
+                    width="300" height="300"
+                    loading="lazy"
+                >
+                {% else %}
+                <div class="product-card-img-placeholder" aria-hidden="true"></div>
+                {% endif %}
+
+                <div class="product-card-body">
+                    <div class="product-card-name">{{ cp.product.name }}</div>
+
+                    <div class="product-card-badges">
+                        {% if cp.product.faction %}
+                        <span class="badge badge-purple">{{ cp.product.faction.name }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="product-card-pricing">
+                        <div class="product-card-price-label">Best price at {{ cp.retailer.name }}</div>
+                        <div class="product-card-price">${{ cp.price|floatformat:"2" }}</div>
+                        {% if cp.product.msrp %}
+                        <div style="display:flex;align-items:center;gap:var(--sp-2);flex-wrap:wrap;margin-top:var(--sp-1);">
+                            <span class="product-card-msrp">MSRP ${{ cp.product.msrp }}</span>
+                            {% if cp.discount_pct_vs_ref and cp.discount_pct_vs_ref > 0 %}
+                            <span class="badge badge-green">{{ cp.discount_pct_vs_ref|floatformat:"0" }}% off</span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ─── TOP 10 AOS & MORE DEALS ─────────────────────────────────────────── #}
+{% if deals_other %}
+<section class="section section-alt" aria-labelledby="deals-other-heading">
+    <div class="container">
+        <div class="section-header deals-header">
+            <div>
+                <h2 id="deals-other-heading">Biggest AoS &amp; Other Deals Right Now</h2>
+                <p>The best Age of Sigmar and other game prices available today</p>
             </div>
             <a href="{% url 'products:list' %}?sort=discount" class="btn btn-ghost">See all deals &rarr;</a>
         </div>
 
         <div class="card-grid">
-            {% for cp in recent_drops %}
+            {% for cp in deals_other %}
             <a href="{% url 'products:detail' cp.product.slug %}" class="product-card">
 
                 {% if cp.product.image_url %}
@@ -565,35 +623,6 @@
         </div>
     </div>
 </section>
-
-{# ─── FACTION PAGES ───────────────────────────────────────────────────── #}
-{% if live_factions %}
-<section class="section section-alt" aria-labelledby="factions-heading">
-    <div class="container">
-        <div class="section-header deals-header">
-            <div>
-                <h2 id="factions-heading">Browse by Faction</h2>
-                <p>Faction-specific price guides, deal tracking, and army cost breakdowns</p>
-            </div>
-            <a href="{% url 'factions:index' %}" class="btn btn-ghost">All factions &rarr;</a>
-        </div>
-
-        <div class="faction-strip">
-            {% for f in live_factions %}
-            <a href="{% url 'factions:detail' f.slug %}"
-               class="faction-chip"
-               {% if f.hero_image_url %}style="--faction-img:url('{{ f.hero_image_url }}')"{% endif %}
-               title="{{ f.hero_tagline|default:f.name }}">
-                <span class="faction-chip-name">{{ f.display_name|default:f.name }}</span>
-                {% if f.difficulty %}
-                <span class="faction-chip-tag">{{ f.difficulty }}</span>
-                {% endif %}
-            </a>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
 
 {# ─── SEO CONTENT BLOCK ───────────────────────────────────────────────── #}
 <section class="section" aria-label="About ThriftHammer Warhammer price comparison">

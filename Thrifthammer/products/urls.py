@@ -38,4 +38,6 @@ urlpatterns = [
     path('<slug:slug>/report/', views.report_issue, name='report_issue'),
     # Newsletter unsubscribe — token-based, no login required
     path('newsletter/unsubscribe/<uuid:token>/', views.newsletter_unsubscribe, name='newsletter_unsubscribe'),
+    # Newsletter confirmation — new homepage signups confirm their email via this link
+    path('newsletter/confirm/<uuid:token>/', views.newsletter_confirm, name='newsletter_confirm'),
 ]

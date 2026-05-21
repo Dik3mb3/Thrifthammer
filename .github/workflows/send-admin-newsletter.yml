@@ -1,0 +1,65 @@
+name: Send Admin Newsletter Broadcast
+
+on:
+  workflow_dispatch:
+    # Manual dispatch only — never runs on a schedule.
+    inputs:
+      subject:
+        description: 'Email subject line (required)'
+        type: string
+        required: true
+      body:
+        description: 'Plain-text email body (required)'
+        type: string
+        required: true
+      dry_run:
+        description: 'Dry run (log recipients, send nothing)'
+        type: boolean
+        default: false
+
+jobs:
+  send-email:
+    name: Admin Newsletter Broadcast
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./Thrifthammer
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: Thrifthammer/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Send admin newsletter
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_ALLOWED_HOSTS: thrifthammer.com,www.thrifthammer.com,web-production-b6056.up.railway.app
+          DJANGO_DEBUG: 'False'
+          RAILWAY_ENVIRONMENT: production
+          EMAIL_BACKEND: django.core.mail.backends.smtp.EmailBackend
+          EMAIL_HOST: smtp.gmail.com
+          EMAIL_PORT: '587'
+          EMAIL_USE_TLS: 'True'
+          EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+          DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
+        run: |
+          FLAGS=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            FLAGS="$FLAGS --dry-run"
+          fi
+          python manage.py send_admin_newsletter \
+            --subject "${{ github.event.inputs.subject }}" \
+            --body "${{ github.event.inputs.body }}" \
+            $FLAGS

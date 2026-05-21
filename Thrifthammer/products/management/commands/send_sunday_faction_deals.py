@@ -1,13 +1,16 @@
 """
-Management command: send_weekly_deals
+Management command: send_sunday_faction_deals
 
-Finds the top 10 active Warhammer 40K products with the biggest discount vs
-MSRP and sends a Monday deal digest to confirmed subscribers with monday_40k=True.
+Sends a personalised Sunday deal digest to confirmed subscribers who have
+opted in (sunday_faction=True) and selected at least one faction.
+
+Each subscriber receives a tailored email showing deals only from their
+chosen faction(s), ranked by % discount vs MSRP.
 
 Usage:
-    python manage.py send_weekly_deals            # production run
-    python manage.py send_weekly_deals --dry-run  # log recipients, send nothing
-    python manage.py send_weekly_deals --limit 5  # send top N deals instead of 10
+    python manage.py send_sunday_faction_deals            # production run
+    python manage.py send_sunday_faction_deals --dry-run
+    python manage.py send_sunday_faction_deals --limit 10
 """
 
 import datetime
@@ -20,15 +23,14 @@ from django.db.models import F, Min, Q
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-from blog.models import Post
 from prices.models import CurrentPrice
 from products.models import NewsletterSignup, Product
 
 
 class Command(BaseCommand):
-    """Send a weekly deal digest to all newsletter subscribers."""
+    """Send a personalised Sunday faction deal digest to opted-in subscribers."""
 
-    help = 'Email the top N discounted products to every newsletter subscriber.'
+    help = 'Email personalised faction deals to sunday_faction subscribers.'
 
     def add_arguments(self, parser):
         """Add --dry-run, --limit, and --recipient flags."""
@@ -41,7 +43,7 @@ class Command(BaseCommand):
             '--limit',
             type=int,
             default=10,
-            help='Number of top deals to include (default: 10).',
+            help='Number of top deals per subscriber to include (default: 10).',
         )
         parser.add_argument(
             '--recipient',
@@ -51,86 +53,83 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        """Main entry point — find deals, build email, send to all subscribers."""
+        """Main entry point — find subscribers, build personalised emails, send."""
         dry_run = options['dry_run']
         limit = options['limit']
         recipient_override = options['recipient']
         today = datetime.date.today()
 
-        # ── 1. Find top 40K deals ────────────────────────────────────────────
-        deals = self._get_top_deals(limit, category_name='Warhammer 40,000')
-
-        if not deals:
-            self.stdout.write(self.style.WARNING('No deals found — nothing to send.'))
-            return
-
-        self.stdout.write(f'Found {len(deals)} deals for {today}:')
-        for i, d in enumerate(deals, 1):
-            self.stdout.write(
-                f'  {i:>2}. {d["name"]:50s}  '
-                f'${d["price"]:.2f}  '
-                f'(save {d["pct_off"]:.0f}% off ${d["msrp"]:.2f})'
-            )
-
-        # ── 2. Gather subscribers (or use override for testing) ──────────────
+        # ── 1. Gather subscribers ─────────────────────────────────────────────
         if recipient_override:
-            # Create a minimal stub — just needs .email and .get_unsubscribe_url()
-            class _Stub:
-                email = recipient_override
-                def get_unsubscribe_url(self):
-                    return 'https://thrifthammer.com/products/newsletter/unsubscribe/test/'
-            subscribers = [_Stub()]
+            # Test mode: use the recipient_override but still look up their prefs
+            subscriber = NewsletterSignup.objects.filter(
+                email__iexact=recipient_override,
+            ).prefetch_related('factions').first()
+            if subscriber:
+                subscribers = [subscriber]
+            else:
+                # Fallback stub with no factions — useful for basic smoke test
+                class _Stub:
+                    email = recipient_override
+                    factions = NewsletterSignup.objects.none()
+                    def get_unsubscribe_url(self):
+                        return 'https://thrifthammer.com/products/newsletter/unsubscribe/test/'
+                subscribers = [_Stub()]
             self.stdout.write(f'\nTEST MODE — sending only to: {recipient_override}')
         else:
             subscribers = list(
-                NewsletterSignup.objects.filter(is_confirmed=True, monday_40k=True)
+                NewsletterSignup.objects
+                .filter(is_confirmed=True, sunday_faction=True)
+                .prefetch_related('factions')
             )
             if not subscribers:
-                self.stdout.write(self.style.WARNING('No confirmed Monday 40K subscribers — nothing to send.'))
+                self.stdout.write(self.style.WARNING('No confirmed Sunday faction subscribers — nothing to send.'))
                 return
-            self.stdout.write(f'\n{len(subscribers)} confirmed Monday 40K subscriber(s).')
-
-        # ── 3. Fetch latest published blog post ──────────────────────────────
-        latest_post = (
-            Post.objects
-            .filter(status=Post.STATUS_PUBLISHED, published_at__lte=timezone.now())
-            .order_by('-published_at')
-            .first()
-        )
-        if latest_post:
-            self.stdout.write(f'Latest blog post: "{latest_post.title}"')
-        else:
-            self.stdout.write('No published blog post found — blog section will be hidden.')
+            self.stdout.write(f'\n{len(subscribers)} confirmed Sunday subscriber(s).')
 
         if dry_run:
             for sub in subscribers:
-                self.stdout.write(f'  [dry-run] Would send to: {sub.email}')
+                factions = getattr(sub.factions, 'all', lambda: [])()
+                faction_names = ', '.join(f.name for f in factions) or '(none)'
+                self.stdout.write(f'  [dry-run] Would send to: {sub.email} — factions: {faction_names}')
             self.stdout.write('\nDry run complete — no emails sent.')
             return
 
-        # Dynamic subject — mentions the top saving to hook the reader
-        top_saving = int(deals[0]['pct_off']) if deals else 0
-        subject = (
-            f"This Week's Top 10 Warhammer 40K Deals -- Save Up to {top_saving}% Off"
-            f" ({today.strftime('%b')} {today.day})"
-        )
-
-        # ── 4. Send (per-subscriber so each gets their own unsubscribe link) ─
-        sent = errors = 0
+        # ── 2. Send per subscriber ────────────────────────────────────────────
+        sent = errors = skipped = 0
         for sub in subscribers:
             try:
+                faction_list = list(sub.factions.all())
+                if not faction_list:
+                    self.stdout.write(self.style.WARNING(f'  [skip] {sub.email} — no factions selected'))
+                    skipped += 1
+                    continue
+
+                deals = self._get_faction_deals(faction_list, limit)
+                if not deals:
+                    self.stdout.write(self.style.WARNING(f'  [skip] {sub.email} — no deals found for their factions'))
+                    skipped += 1
+                    continue
+
+                faction_names = ', '.join(f.name for f in faction_list)
+                top_saving = int(deals[0]['pct_off']) if deals else 0
+                subject = (
+                    f"Your {faction_names} Deals — Save Up to {top_saving}% Off"
+                    f" ({today.strftime('%b')} {today.day})"
+                )
+
                 context = {
                     'deals': deals,
                     'today': today,
+                    'faction_names': faction_names,
                     'site_url': 'https://thrifthammer.com',
                     'browse_url': 'https://thrifthammer.com/products/',
                     'register_url': 'https://thrifthammer.com/accounts/register/',
                     'top_pct': top_saving,
-                    'latest_post': latest_post,
                     'unsubscribe_url': sub.get_unsubscribe_url(),
                 }
-                html_body = render_to_string('emails/weekly_deals.html', context)
-                text_body = self._build_text_body(deals, today, sub.get_unsubscribe_url(), latest_post)
+                html_body = render_to_string('emails/sunday_faction_deals.html', context)
+                text_body = self._build_text_body(deals, today, faction_names, sub.get_unsubscribe_url())
 
                 msg = EmailMultiAlternatives(
                     subject=subject,
@@ -141,17 +140,14 @@ class Command(BaseCommand):
                 msg.attach_alternative(html_body, 'text/html')
                 msg.send(fail_silently=False)
                 sent += 1
-                self.stdout.write(self.style.SUCCESS(f'  [sent] {sub.email}'))
+                self.stdout.write(self.style.SUCCESS(f'  [sent] {sub.email} ({faction_names})'))
             except Exception as exc:
                 errors += 1
                 self.stderr.write(f'  [error] {sub.email} — {exc}')
 
-        self.stdout.write(
-            f'\nDone -- sent: {sent} | errors: {errors}'
-        )
+        self.stdout.write(f'\nDone -- sent: {sent} | skipped: {skipped} | errors: {errors}')
 
-        if errors and not sent:
-            # Every send failed — raise so GitHub Actions marks the run red
+        if errors and not sent and not skipped:
             raise Exception(
                 f'All {errors} email(s) failed to send. '
                 'Check EMAIL_HOST_USER / EMAIL_HOST_PASSWORD secrets.'
@@ -159,23 +155,16 @@ class Command(BaseCommand):
 
     # ── Helpers ──────────────────────────────────────────────────────────────
 
-    def _get_top_deals(self, limit, category_name=None):
+    def _get_faction_deals(self, factions, limit):
         """
-        Return up to `limit` dicts representing the best current deals.
+        Return up to `limit` deal dicts for products belonging to the given factions.
 
-        A deal is an active product with an MSRP where the cheapest in-stock
-        CurrentPrice gives the largest percentage saving vs MSRP.
-
-        Pass category_name to restrict to a single category (e.g. 'Warhammer 40,000').
+        Ranked by % discount vs MSRP descending.
         """
-        # Annotate each active product with its cheapest in-stock price.
-        # We calculate pct_saving in Python to avoid ORM type-inference
-        # issues with mixed Decimal/Float arithmetic across DB backends.
-        qs = Product.objects.filter(is_active=True, msrp__isnull=False)
-        if category_name:
-            qs = qs.filter(category__name=category_name)
+        faction_ids = [f.pk for f in factions]
         candidates = (
-            qs
+            Product.objects
+            .filter(is_active=True, msrp__isnull=False, faction_id__in=faction_ids)
             .annotate(
                 min_price=Min(
                     'current_prices__price',
@@ -186,12 +175,10 @@ class Command(BaseCommand):
                 )
             )
             .filter(min_price__isnull=False, min_price__gt=0)
-            # Only show products cheaper than MSRP by at least 5%
             .filter(min_price__lt=F('msrp') * Decimal('0.95'))
             .select_related('category', 'faction')
         )
 
-        # Sort by % discount descending in Python, then take top N
         def _pct(p):
             """Calculate % discount vs MSRP."""
             return float(p.msrp - p.min_price) / float(p.msrp) * 100
@@ -201,7 +188,6 @@ class Command(BaseCommand):
         deals = []
         for product in sorted_candidates:
             pct_off = _pct(product)
-            # Fetch the cheapest retailer name for this product
             best_cp = (
                 CurrentPrice.objects
                 .filter(
@@ -225,18 +211,19 @@ class Command(BaseCommand):
                 'savings': float(product.msrp - product.min_price),
                 'retailer': retailer_name,
                 'image_url': product.image_url or '',
+                'faction': product.faction.name if product.faction else '',
             })
 
         return deals
 
-    def _build_text_body(self, deals, today, unsubscribe_url, latest_post=None):
+    def _build_text_body(self, deals, today, faction_names, unsubscribe_url):
         """Build a clean plain-text fallback email body."""
         lines = [
-            'THRIFTHAMMER -- MONDAY 40K DEAL DIGEST',
+            f'THRIFTHAMMER -- YOUR {faction_names.upper()} DEALS',
             f'{today.strftime("%B")} {today.day}, {today.year}',
             'https://thrifthammer.com',
             '',
-            "This week's top Warhammer 40K discounts:",
+            f"This week's best deals for your faction(s): {faction_names}",
             '',
         ]
         for i, d in enumerate(deals, 1):
@@ -254,22 +241,8 @@ class Command(BaseCommand):
             'when your target price drops.',
             'https://thrifthammer.com/accounts/register/',
             '',
-        ]
-
-        if latest_post:
-            lines += [
-                '-' * 60,
-                'LATEST FROM THE BLOG',
-                latest_post.title,
-            ]
-            if latest_post.excerpt:
-                lines.append(latest_post.excerpt)
-            lines.append(f'https://thrifthammer.com/blog/{latest_post.slug}/')
-            lines.append('')
-
-        lines += [
             '-' * 60,
-            "You're receiving this because you signed up at thrifthammer.com.",
+            "You're receiving this because you opted in to faction deal alerts.",
             'Stop overpaying for plastic.',
             '-- ThriftHammer',
             '',

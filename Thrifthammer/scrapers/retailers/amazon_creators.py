@@ -44,9 +44,10 @@ logger = logging.getLogger(__name__)
 # LWA token endpoint (Login with Amazon OAuth2)
 _TOKEN_URL = 'https://api.amazon.com/auth/o2/token'
 
-# Creators API base and items path
-_API_BASE   = 'https://creatorsapi.amazon'
-_ITEMS_PATH = '/catalog/v1/getItems'
+# Creators API base and operation paths
+_API_BASE        = 'https://creatorsapi.amazon'
+_ITEMS_PATH      = '/catalog/v1/getItems'
+_SEARCH_PATH     = '/catalog/v1/searchItems'
 
 # Resources to request.
 # 'offersV2.listings.condition' lets us filter out Used/Collectible/Refurbished
@@ -217,6 +218,91 @@ class AmazonCreatorsClient:
             len(asins), len(results),
         )
         return results
+
+    def search_items(self, keywords, marketplace='www.amazon.com', brand='Games Workshop',
+                     item_count=3, resources=None):
+        """
+        Search Amazon for items by keyword using the Creators API SearchItems operation.
+
+        Filters by brand ('Games Workshop' by default) to avoid surfacing
+        third-party listings for unrelated products with similar names.
+
+        Args:
+            keywords:    Search query — typically the product name.
+            marketplace: Amazon marketplace domain (e.g. 'www.amazon.com',
+                         'www.amazon.co.uk').
+            brand:       Brand filter. Defaults to 'Games Workshop'.
+                         Pass None to search without a brand filter.
+            item_count:  Number of results to return (1–10). Default 3 so
+                         the caller can inspect the top few if the first
+                         is a poor match.
+            resources:   List of resource strings to request. Defaults to
+                         title, price, and condition.
+
+        Returns:
+            list of item dicts from searchResult.items, each containing
+            at least 'asin' and (if requested) 'itemInfo', 'offersV2'.
+            Returns an empty list on error or no results.
+
+        Raises:
+            requests.HTTPError: on non-2xx responses after one retry on 429.
+        """
+        if resources is None:
+            resources = [
+                'itemInfo.title',
+                'offersV2.listings.price',
+                'offersV2.listings.condition',
+            ]
+
+        token = self.get_token()
+
+        # Minimal payload matching the SearchItems docs exactly —
+        # no partnerType (not in SearchItems spec, only GetItems)
+        payload = {
+            'partnerTag': settings.AMAZON_ASSOCIATE_TAG,
+            'keywords':   keywords,
+            'itemCount':  item_count,
+            'condition':  'New',
+            'resources':  resources,
+        }
+        if brand:
+            payload['brand'] = brand
+        if marketplace:
+            payload['marketplace'] = marketplace
+
+        headers = {
+            'Authorization':  f'Bearer {token}',
+            'x-marketplace':  marketplace or 'www.amazon.com',
+            'Content-Type':   'application/json; charset=utf-8',
+            'Accept':         'application/json',
+        }
+
+        resp = self._session.post(
+            f'{_API_BASE}{_SEARCH_PATH}',
+            json=payload,
+            headers=headers,
+            timeout=20,
+        )
+
+        if resp.status_code == 429:
+            logger.warning('[creators-api] SearchItems rate limited (429) — retrying in 5s')
+            time.sleep(5)
+            resp = self._session.post(
+                f'{_API_BASE}{_SEARCH_PATH}',
+                json=payload,
+                headers=headers,
+                timeout=20,
+            )
+
+        resp.raise_for_status()
+        data = resp.json()
+
+        items = data.get('searchResult', {}).get('items', [])
+        logger.debug(
+            '[creators-api] SearchItems "%s" → %d result(s)',
+            keywords, len(items),
+        )
+        return items
 
     def get_items_batched(self, asins, delay=_CALL_DELAY):
         """

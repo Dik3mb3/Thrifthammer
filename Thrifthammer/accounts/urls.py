@@ -27,6 +27,8 @@ urlpatterns = [
     ),
     # Newsletter opt-in / opt-out toggle (POST only)
     path('profile/newsletter-toggle/', views.toggle_newsletter, name='newsletter_toggle'),
+    # Newsletter preferences update (POST only — checkboxes + faction multi-select)
+    path('profile/newsletter-prefs/', views.update_newsletter_prefs, name='newsletter_prefs'),
     # Self-service password reset via security question (no email required)
     path('forgot-password/', views.forgot_password, name='forgot_password'),
     path('forgot-password/verify/', views.forgot_password_verify, name='forgot_password_verify'),
