@@ -363,13 +363,13 @@ class EbayBrowseAPI:
 
     def search_items(self, keywords, max_results=10):
         """
-        Search eBay US for items matching keywords using the Browse API.
+        Search eBay for items matching keywords using the Browse API.
 
         Filters applied:
           - buyingOptions: FIXED_PRICE (no auctions)
           - conditions: NEW
           - itemLocationCountry: US
-        Marketplace: EBAY_US (USD prices)
+        Marketplace: EBAY_US
         Sort: Best Match (eBay default relevance — full sealed kits from
               reputable sellers rank above cheap bits/spare parts)
 
@@ -622,18 +622,14 @@ class EbayBrowseAPI:
         Browse API price fields use {'value': '34.99', 'currency': 'USD'}
         format, unlike the old Finding API's {'__value__': '34.99'} format.
 
-        Only USD listings are returned. Non-USD items (GBP, EUR, etc.) are
-        skipped because:
-          - Their numeric prices appear artificially low when treated as USD
-            (e.g., £30 looks like $30, but is actually ~$38).
-          - Their shipping costs are often missing or also in local currency,
-            making total_cost unreliable for price comparison.
+        Only USD listings are returned. Listings in other currencies are skipped
+        because their numeric prices would be misleading in USD comparisons.
 
         Args:
             item: Raw item dict from Browse API itemSummaries array.
 
         Returns:
-            Parsed dict or None if essential fields are missing or non-USD.
+            Parsed dict or None if essential fields are missing or wrong currency.
         """
         try:
             # Some eBay sellers submit their listing title in URL-encoded form
@@ -641,18 +637,32 @@ class EbayBrowseAPI:
             # title is a clean string before any validation checks run.
             # unquote_plus handles both %XX percent-encoding and + → space.
             title   = unquote_plus(item.get('title', ''))
-            url     = item.get('itemWebUrl', '')
             item_id = item.get('itemId', '')
+
+            # Strip eBay search-tracking query params (_skw, _trkparms, _trksid)
+            # from itemWebUrl. eBay echoes the full search query in _skw= which,
+            # with many negative keywords, creates URLs long enough to cause
+            # HTTP 431 "Request Header Fields Too Large" when users click them.
+            # The clean base URL (no query string) is canonical and always works.
+            # EPN affiliate params are appended by the management command after.
+            # Strip search-tracking params and ensure HTTPS.
+            # eBay appends _skw= (the full search query) to itemWebUrl — with many
+            # negative keywords this URL becomes long enough to cause HTTP 431.
+            # Some old listings return http:// which Akamai blocks with 403.
+            raw_url = item.get('itemWebUrl', '')
+            url = raw_url.split('?')[0] if raw_url else ''
+            if url.startswith('http://'):
+                url = 'https://' + url[7:]
 
             if not url:
                 return None
 
-            # Price — only process USD listings
+            # Price — USD only
             price_data     = item.get('price', {})
             price_currency = price_data.get('currency', 'USD')
             if price_currency != 'USD':
                 logger.debug(
-                    '[ebay] Skipping non-USD listing (%s): "%s"',
+                    '[ebay] Skipping listing in unexpected currency (%s): "%s"',
                     price_currency, title[:60],
                 )
                 return None
@@ -685,7 +695,7 @@ class EbayBrowseAPI:
                 ship_cost     = first_option.get('shippingCost', {})
                 ship_currency = ship_cost.get('currency', 'USD')
                 ship_value    = ship_cost.get('value', '0')
-                # Only use shipping cost if it is also in USD
+                # Only use shipping cost if it is in USD
                 if ship_currency == 'USD':
                     try:
                         shipping = Decimal(str(ship_value))
