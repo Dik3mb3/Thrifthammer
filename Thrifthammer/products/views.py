@@ -40,6 +40,13 @@ from prices.models import CurrentPrice
 from .forms import IssueReportForm
 from .models import Category, Faction, IssueReport, NewsletterSignup, Product
 
+# Explicit set of UK retailer slugs — used throughout to isolate UK prices
+# from US prices. Filtering by slug (not country) is required because migration
+# 0002 added the country field with default='UK', so all existing US retailers
+# received country='UK' before populate_products corrected them. Slug-based
+# filtering is always correct regardless of the country field's value.
+_UK_RETAILER_SLUGS = frozenset({'ebay-uk', 'amazon-uk'})
+
 
 # ---------------------------------------------------------------------------
 # Hot Deals selection strategy
@@ -84,7 +91,9 @@ def _get_spotlight_deals(count=SPOTLIGHT_COUNT, category_name=None, exclude_cate
         .values_list('product_id', 'price')
     )
 
-    # Fetch all active, priced, in-stock entries from non-GW retailers
+    # Fetch all active, priced, in-stock entries from non-GW US retailers.
+    # Exclude UK retailers (country='UK') so that GBP prices stored for the
+    # UK version never appear as artificially cheap USD deals on the home page.
     qs = (
         CurrentPrice.objects
         .select_related('product', 'retailer', 'product__category')
@@ -97,6 +106,7 @@ def _get_spotlight_deals(count=SPOTLIGHT_COUNT, category_name=None, exclude_cate
             not_available=False,
         )
         .exclude(retailer__slug='games-workshop')
+        .exclude(retailer__slug__in=_UK_RETAILER_SLUGS)
     )
 
     if category_name:
@@ -202,14 +212,16 @@ def product_list(request):
     if sort not in SORT_OPTIONS:
         sort = 'discount'
 
-    # Stable cache key covers every filter dimension.
+    region = request.session.get('region', 'us')
+
+    # Stable cache key covers every filter dimension including region.
     # Bump the version suffix (v2, v3…) whenever sort_options or the card
     # template change significantly — forces a cache miss on all existing entries.
     # product_list_generation is incremented by the bust_price_caches signal on
     # every CurrentPrice save, invalidating all list page variants at once.
     list_gen = cache.get('product_list_generation', 0)
     cache_key = (
-        f'product_list_v4|gen={list_gen}|q={query}|cat={category_slug}'
+        f'product_list_v4|gen={list_gen}|region={region}|q={query}|cat={category_slug}'
         f'|fac={faction_slug}|sort={sort}|page={page_number}'
     )
     cached = cache.get(cache_key)
@@ -240,6 +252,20 @@ def product_list(request):
         .values('price')[:1]
     )
 
+    # min_price annotation: for UK show only UK retailer prices (GBP),
+    # for US exclude UK retailers so GBP prices don't appear as cheap USD deals.
+    if region == 'uk':
+        _min_price_filter = Q(
+            current_prices__not_available=False,
+            current_prices__in_stock=True,
+            current_prices__retailer__slug__in=_UK_RETAILER_SLUGS,
+        )
+    else:
+        _min_price_filter = Q(
+            current_prices__not_available=False,
+            current_prices__in_stock=True,
+        ) & ~Q(current_prices__retailer__slug__in=_UK_RETAILER_SLUGS)
+
     products = (
         Product.objects
         .filter(is_active=True)
@@ -247,10 +273,7 @@ def product_list(request):
         .annotate(
             min_price=Min(
                 'current_prices__price',
-                filter=Q(
-                    current_prices__not_available=False,
-                    current_prices__in_stock=True,
-                ),
+                filter=_min_price_filter,
             )
         )
         .annotate(gw_ref_price=gw_ref_price_sq)
@@ -357,10 +380,11 @@ def product_detail(request, slug):
     """
     Product detail page with full price comparison table and related products.
 
-    The bulk of the context is cached for 30 minutes. Watchlist status is
-    per-user and is always fetched fresh outside the cache block.
+    The bulk of the context is cached for 30 minutes per region (US/UK).
+    Watchlist status is per-user and always fetched fresh outside the cache.
     """
-    cache_key  = f'product_detail|{slug}'
+    region     = request.session.get('region', 'us')
+    cache_key  = f'product_detail|{slug}|{region}'
     cached_ctx = cache.get(cache_key)
 
     if cached_ctx is None:
@@ -370,15 +394,27 @@ def product_detail(request, slug):
             .filter(is_active=True),
             slug=slug,
         )
-        current_prices = list(
-            CurrentPrice.objects
-            .filter(product=product)
-            .select_related('retailer')
-            # Sort: available first, then in-stock before out-of-stock,
-            # then cheapest first — ensures current_prices.0 is always the
-            # cheapest currently in-stock price (matching search/list behaviour).
-            .order_by('not_available', '-in_stock', 'price')
-        )
+
+        # Filter prices to the active region's retailers.
+        # UK: only show ebay-uk / amazon-uk (country='UK').
+        # US: exclude UK retailers so GBP prices never appear in the USD table.
+        if region == 'uk':
+            current_prices = list(
+                CurrentPrice.objects
+                .filter(product=product, retailer__slug__in=_UK_RETAILER_SLUGS)
+                .select_related('retailer')
+                .order_by('not_available', '-in_stock', 'price')
+            )
+        else:
+            current_prices = list(
+                CurrentPrice.objects
+                .filter(product=product)
+                .exclude(retailer__slug__in=_UK_RETAILER_SLUGS)
+                .select_related('retailer')
+                # Sort: available first, then in-stock before out-of-stock,
+                # then cheapest first.
+                .order_by('not_available', '-in_stock', 'price')
+            )
         # Related products: prefer same faction+category, then same faction,
         # then same category — avoids the alphabetical Adepta Sororitas problem.
         _rp_price_filter = Q(
@@ -417,21 +453,25 @@ def product_detail(request, slug):
             )
             related_products.extend(more)
 
-        savings = product.get_savings_vs_retail()
-
-        # Use GW's own CurrentPrice as the MSRP reference when available —
-        # GW's live price is the most accurate benchmark.  Fall back to the
-        # stored msrp field if GW has no tracked price for this product.
-        gw_cp = next(
-            (
-                cp for cp in current_prices
-                if cp.retailer.slug == 'games-workshop'
-                and not cp.not_available
-                and cp.price
-            ),
-            None,
-        )
-        gw_ref_price = gw_cp.price if gw_cp else product.msrp
+        # Discount reference price and savings — region-specific.
+        # UK: use product.msrp_gbp as the GBP reference (no GW UK price tracked yet).
+        #     savings is skipped because get_savings_vs_retail() is USD-only.
+        # US: use GW's live USD CurrentPrice if tracked, else stored msrp.
+        if region == 'uk':
+            gw_ref_price = product.msrp_gbp  # None if not populated yet
+            savings = None
+        else:
+            gw_cp = next(
+                (
+                    cp for cp in current_prices
+                    if cp.retailer.slug == 'games-workshop'
+                    and not cp.not_available
+                    and cp.price
+                ),
+                None,
+            )
+            gw_ref_price = gw_cp.price if gw_cp else product.msrp
+            savings = product.get_savings_vs_retail()
 
         # Pre-filter for JSON-LD schema — only offers with a real price and
         # not marked unavailable.  Using a separate list means forloop.last
@@ -460,13 +500,14 @@ def product_detail(request, slug):
             schema_dict['description'] = product.description[:200]
         if product.gw_sku:
             schema_dict['sku'] = product.gw_sku
+        price_currency = 'GBP' if region == 'uk' else 'USD'
         if schema_prices:
             schema_dict['offers'] = [
                 {
                     '@type': 'Offer',
                     'seller': {'@type': 'Organization', 'name': cp.retailer.name},
                     'price': float(cp.price),
-                    'priceCurrency': 'USD',
+                    'priceCurrency': price_currency,
                     'availability': (
                         'https://schema.org/InStock' if cp.in_stock
                         else 'https://schema.org/OutOfStock'
