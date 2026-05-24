@@ -501,6 +501,10 @@ jobs:
             run_seed delete_legacy_guard_units
           fi
 
+          if echo "$FACTIONS" | grep -q "delete_duplicate_factions"; then
+            run_seed delete_duplicate_factions
+          fi
+
           if echo "$FACTIONS" | grep -q "assign_missing_skus"; then
             echo "========================================="
             echo "Running: assign_missing_skus"
