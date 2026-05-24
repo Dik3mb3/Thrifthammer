@@ -133,8 +133,8 @@ class Command(BaseCommand):
         skipped_no_asin = []
 
         for entry in entries:
-            if entry.manual_url_override:
-                self.stdout.write(f'  [skip] {entry.product.gw_sku} — manual_url_override=True')
+            if entry.manual_url_override and not entry.url:
+                self.stdout.write(f'  [skip] {entry.product.gw_sku} — manual_url_override=True, no URL')
                 continue
 
             asin = extract_asin(entry.url)
@@ -190,6 +190,10 @@ class Command(BaseCommand):
                     f'  [no price] {product.gw_sku} ({product.name}) — ASIN {asin}'
                 )
                 no_price += 1
+                if not dry_run and (entry.price is not None or entry.in_stock):
+                    entry.price = None
+                    entry.in_stock = False
+                    entry.save(update_fields=['price', 'in_stock', 'last_seen'])
                 continue
 
             price_changed = (entry.price != new_price)
