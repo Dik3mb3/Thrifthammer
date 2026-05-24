@@ -306,6 +306,7 @@ GW_IMAGES = {
     '70-893': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120209122_OWIronjawzBigmobSpearheadArmyBox1.jpg',
     '70-894': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120209125_GloomspiteGitzSnarlpackHuntazSpearheadArmyBox01.jpg',
     '70-915': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120207191_FlesheaterCourtsCharnelWatchSpearhead1.jpg',
+    '70-22': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120202061_ZenestrasZEALOTSSPEARHEAD1.jpg',
     'AP-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/52170106001_TYRPaintSet01.jpg',
     'BP-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99199999068_SyntheticBaseBrushSmallLead.jpg',
     'BR-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99229999109_60mmRoundTextured.jpg',
@@ -377,6 +378,88 @@ GW_IMAGES = {
     'WC-101': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120299081_AoSIncarnateofGhurLead.jpg',
     'WC-102': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60010299038_WCSunderedFateHuntersOfHuanchiLead.jpg',
     'WP-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99811466026_MEWatcherInTheWaterCharacterRerelease01.jpg',
+    # ── Chaos Space Marines (new wave) ───────────────────────────────────────
+    'CSM-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102101_CSMAbbaddon01.jpg',
+    'CSM-002': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102147_AccursedCultistsLead.jpg',
+    'CSM-003': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102091_CSMBikers01.jpg',
+    'CSM-004': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102144_CultistsLead.jpg',
+    'CSM-005': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102093_CSMTerminatorLord01.jpg',
+    'CSM-006': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102193_CSMLordJumpPack1.jpg',
+    'CSM-007': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102141_ChosenLead.jpg',
+    'CSM-008': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99070102028_CSMCultistFirebrand01.jpg',
+    'CSM-009': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101177_TriumvirateofthePrimarch06.jpg',
+    'CSM-010': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102099_CSMDarkApostle01.jpg',
+    'CSM-011': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102146_CSMDarkCommuneLead.jpg',
+    'CSM-012': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102113_CSMFabiusBileLead.jpg',
+    'CSM-013': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102088_HaarkenWorldclaimer01.jpg',
+    'CSM-014': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102096_CSMHavocs01.jpg',
+    'CSM-015': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102225_ChaosSpaceMarinesHuronBlackheartMastersoftheMaelstrom1.jpg',
+    'CSM-016': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102251_CSMKravekMorne1.jpg',
+    'CSM-017': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102100_CSMVexMachinator01.jpg',
+    'CSM-018': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99070102016_MasterPossession1.jpg',
+    'CSM-019': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102230_CSMMutilators1.jpg',
+    'CSM-020': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102106_CITCSMNoctilithCrown01.jpg',
+    'CSM-021': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102140_CSMPossessedLead.jpg',
+    'CSM-022': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102224_RedCorsairsRaiders2.jpg',
+    'CSM-023': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102222_RedCorsairsReaveCaptain2.jpg',
+    'CSM-024': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102220_CSMTraitorEnforcer1.jpg',
+    'CSM-025': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102219_CSMTraitorGuardsmen2.jpg',
+    'CSM-026': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102180_CSMVashtorrTheArkifane01.jpg',
+    'CSM-027': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102143_CSMWarpforgedLead.jpg',
+    'CSM-028': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102138_CSMWarpsmithLead.jpg',
+    'CSM-029': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102192_CSMLordPowerArmour1.jpg',
+    'CSM-030': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60030102030_CSMCodexincLtdEdEURO.jpg',
+    'CSM-031': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102231_ChaosSpaceMarinesIronWarriorsUpgrades01.jpg',
+    'CSM-032': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102214_KTFellgorRavagers2.jpg',
+    'CSM-033': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102232_MURDERWING1.jpg',
+    'CSM-034': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102182_KTNemesisClaw1.jpg',
+    'CSM-035': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120102226_RedCorsairsUpgradesTransfers1.jpg',
+    # ── Adeptus Custodes ──────────────────────────────────────────────────────
+    'AC-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60030108019_EngACCodex01.jpg',
+    'AC-002': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108011_AllarusCustodians01.jpg',
+    'AC-003': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99070108010_ACBladeChampionLead.jpg',
+    'AC-004': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99123043009_CustodesCaladiusGravTankAnnihilator1.jpg',
+    'AC-005': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99123043007_CustodesCaladiusGravTank1.jpg',
+    'AC-006': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99123001007_ContemptorLead.jpg',
+    'AC-007': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99123043008_CustodesCoronusGravCarrier1.jpg',
+    'AC-008': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99123043006_CustodesCustodianDreadnought1.jpg',
+    'AC-009': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99123043005_CustodesCustodianGuard1.jpg',
+    'AC-010': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108007_ProsecutorSquad01.jpg',
+    'AC-011': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99123043002_CustodesSentinelGuard1.jpg',
+    'AC-012': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108031_AleyaValerianLead.jpg',
+    'AC-013': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99550108192_IliastusAcceleratorCulverin01NEW.jpg',
+    'AC-014': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99123043003_CustodesVenatariSodality1.jpg',
+    'AC-015': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108007_VigilatorSquad01.jpg',
+    'AC-016': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120108007_WitchseekerSquad01.jpg',
+    'AC-017': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99560108190_AquilonTerminators01.jpg',
+    'AC-018': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99560108191_AquilonTerminatorsFirepikes01.jpg',
+    'AC-019': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99560108214_CustodesAresGunship01a.jpg',
+    'AC-020': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99560108184_GryfalconJetbike01.jpg',
+    'AC-021': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99560108193_OrionDropship01.jpg',
+    'AC-022': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99560108173_CustodesPallasGravTank01.jpg',
+    'AC-023': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99123043004_CustodesShieldCaptain1.jpg',
+    'AC-024': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99550108187_TelemonStormCannon01.jpg',
+    'AC-025': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99550108186_TelemonDreadCaestusArm01.jpg',
+    'AC-026': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99560108185_TelemonDreadBody01.jpg',
+    # ── Drukhari ──────────────────────────────────────────────────────────────
+    'DR-001': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112042_LelithHesperaxLead.jpg',
+    'DR-002': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112040_Drazhar01.jpg',
+    'DR-003': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99070112002_Haemonculus01.jpg',
+    'DR-004': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99070112003_DESuccubus01.jpg',
+    'DR-005': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112033_DRUWracksSquad01.jpg',
+    'DR-006': 'https://www.warhammer.com/app/resources/catalog/product/920x950/60030112009_EFGISDRUCodex01.jpg',
+    'DR-007': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112041_DRUIncubi01.jpg',
+    'DR-008': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112030_Cronos01.jpg',
+    'DR-009': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112030_Talos01.jpg',
+    'DR-010': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112013_VenomNEW_01.jpg',
+    'DR-011': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112020_DEVoidRavenBomber01.jpg',
+    'DR-012': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112015_RazorwingJetfighterNEW_01.jpg',
+    'DR-013': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112014_ScourgesNEW_01.jpg',
+    'DR-014': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112058_KTHandArchon2.jpg',
+    'DR-015': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112055_KTMandrakes1.jpg',
+    'DR-016': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112054_DRULadyMalys01.jpg',
+    'DR-017': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112010_ReaversNEW01.jpg',
+    'DR-018': 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120112009_HellionsNEW01.jpg',
 }
 
 # ---------------------------------------------------------------------------
@@ -646,6 +729,44 @@ _EBAY_SEARCH_OVERRIDES = {
     # product title "Space Marines - Chaplain in Terminator Armour".  This
     # search name matches that phrasing to surface the correct blister listing.
     'HA-051': 'Space Marines Chaplain Terminator Armour',
+    # ── Chaos Space Marines: Kill Team sets ───────────────────────────────────
+    # Fellgor Ravagers, Murderwing, and Nemesis Claw are sold as Kill Team
+    # expansion boxes.  eBay sellers title these with the "Kill Team:" prefix
+    # matching GW's own product name exactly.
+    'CSM-001': 'Abaddon the Despoiler Warhammer',
+    'CSM-032': 'Kill Team: Fellgor Ravagers',
+    'CSM-034': 'Kill Team: Nemesis Claw',
+    'CSM-033': 'Kill Team: Murderwing',
+    # ── Drukhari: Kill Team sets ──────────────────────────────────────────────
+    'DR-014': 'Kill Team: Hand of the Archon',
+    'DR-015': 'Kill Team: Mandrakes',
+    # ── Chaos Space Marines: singular→plural fix ──────────────────────────────
+    # eBay Browse API does not stem words — "Marine" does not match "Marines".
+    # DB product names use singular "Chaos Space Marine" but eBay sellers
+    # consistently list as "Chaos Space Marines" (plural).  Adding the 's'
+    # brings results from ~0-4 up to 10-59 per product.
+    'CSM-003': 'Chaos Space Marines Chaos Bikers',
+    'CSM-006': 'Chaos Space Marines Chaos Lord with Jump Pack',
+    'CSM-007': 'Chaos Space Marines Chosen',
+    'CSM-008': 'Chaos Space Marines Cultist Firebrand',
+    'CSM-011': 'Chaos Space Marines Dark Commune',
+    'CSM-012': 'Chaos Space Marines Fabius Bile',
+    'CSM-015': 'Chaos Space Marines Huron Blackheart and the Masters of the Maelstrom',
+    'CSM-016': 'Chaos Space Marines Kravek Morne',
+    'CSM-017': 'Chaos Space Marines Lord Discordant on Helstalker',
+    'CSM-019': 'Chaos Space Marines Mutilators',
+    'CSM-020': 'Chaos Space Marines Noctilith Crown',
+    'CSM-021': 'Chaos Space Marines Possessed',
+    'CSM-024': 'Chaos Space Marines Traitor Enforcer',
+    'CSM-025': 'Chaos Space Marines Traitor Guardsmen Squad',
+    'CSM-026': 'Chaos Space Marines Vashtorr the Arkifane',
+    'CSM-027': 'Chaos Space Marines Venomcrawler and Obliterators',
+    'CSM-028': 'Chaos Space Marines Warpsmith',
+    'CSM-009': 'Cypher Fallen Dark Angels Chaos Space Marine',
+    'CSM-013': 'Chaos Space Marines Haarken Worldclaimer',
+    'CSM-015': 'Chaos Space Marines Huron Blackheart & the Masters of the Maelstrom',
+    'CSM-022': 'Chaos Space Marines Red Corsairs Raiders',
+    'CSM-023': 'Chaos Space Marines Red Corsairs Reave-Captain',
 }
 
 # ── Per-product eBay "no box" exemptions ─────────────────────────────────────
@@ -701,6 +822,88 @@ _GW_PRODUCT_PAGE_URLS = {
     '44-09': 'https://www.warhammer.com/en-US/shop/Ravenwing-Command-Squad-2020',
     # HA-051 Space Marine Chaplain in Terminator Armour (renamed from HH)
     'HA-051': 'https://www.warhammer.com/en-WW/shop/horus-heresy-chaplain-in-terminator-armour',
+    # ── Chaos Space Marines (new wave) ───────────────────────────────────────
+    'CSM-001': 'https://www.warhammer.com/en-US/shop/Abaddon-the-Despoiler-2019',
+    'CSM-002': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-accursed-cultists-2022',
+    'CSM-003': 'https://www.warhammer.com/en-US/shop/Chaos-Space-Marine-Bikers-2019',
+    'CSM-004': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-chaos-cultists-2022',
+    'CSM-005': 'https://www.warhammer.com/en-US/shop/Chaos-Space-Marine-Chaos-Lord-2019',
+    'CSM-006': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-lord-with-jump-pack-2024',
+    'CSM-007': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-chosen-2022',
+    'CSM-008': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-cultist-firebrand-2024',
+    'CSM-009': 'https://www.warhammer.com/en-US/shop/Cypher-2018',
+    'CSM-010': 'https://www.warhammer.com/en-US/shop/Chaos-Space-Marines-Dark-Apostle-2019',
+    'CSM-011': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-dark-commune-2022',
+    'CSM-012': 'https://www.warhammer.com/en-US/shop/Chaos-Space-Marines-Fabius-Bile-2020',
+    'CSM-013': 'https://www.warhammer.com/en-US/shop/Haarken-Worldclaimer-2018',
+    'CSM-014': 'https://www.warhammer.com/en-US/shop/Chaos-Space-Marine-Havocs-2019',
+    'CSM-015': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-huron-blackheart-2026',
+    'CSM-016': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-kravek-morne-2026',
+    'CSM-017': 'https://www.warhammer.com/en-US/shop/Chaos-Space-Marines-Vex-Machinator-2019',
+    'CSM-018': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-master-of-possession-2023',
+    'CSM-019': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-mutilators-2026',
+    'CSM-020': 'https://www.warhammer.com/en-US/shop/Chaos-Space-Marines-Noctilith-Crown-2019',
+    'CSM-021': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-possessed-2022',
+    'CSM-022': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-red-corsairs-raiders-2026',
+    'CSM-023': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-red-corsairs-reave-captain-2026',
+    'CSM-024': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-traitor-enforcer-2025',
+    'CSM-025': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-traitor-guardsmen-squad-2025',
+    'CSM-026': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-vashtorr-the-arkifane-2023',
+    'CSM-027': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-warpforged-venomcrawler-and-obliterators-2022',
+    'CSM-028': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-warpsmith-2022',
+    'CSM-029': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-chaos-lord-2024',
+    'CSM-030': 'https://www.warhammer.com/en-US/shop/codex-chaos-space-marines-2024-eng',
+    'CSM-031': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-iron-warriors-upgrades-2026',
+    'CSM-032': 'https://www.warhammer.com/en-US/shop/kill-team-fellgor-ravagers-2024',
+    'CSM-033': 'https://www.warhammer.com/en-US/shop/kill-team-murderwing-2026',
+    'CSM-034': 'https://www.warhammer.com/en-US/shop/kill-team-nemesis-claw-2024',
+    'CSM-035': 'https://www.warhammer.com/en-US/shop/chaos-space-marines-red-corsairs-upgrades-and-transfers-2026',
+    # ── Adeptus Custodes ──────────────────────────────────────────────────────
+    'AC-001': 'https://www.warhammer.com/en-US/shop/codex-adeptus-custodes-eng-2024',
+    'AC-002': 'https://www.warhammer.com/en-US/shop/Adeptus-Custodes-Allarus-Custodians-2018',
+    'AC-003': 'https://www.warhammer.com/en-US/shop/adeptus-custodes-blade-champion-2022',
+    'AC-004': 'https://www.warhammer.com/en-US/shop/legio-custodes-caladius-grav-tank-annihilator-2026',
+    'AC-005': 'https://www.warhammer.com/en-US/shop/legio-custodes-caladius-grav-tank-2026',
+    'AC-006': 'https://www.warhammer.com/en-US/shop/legiones-astartes-contemptor-dreadnought-2022',
+    'AC-007': 'https://www.warhammer.com/en-US/shop/legio-custodes-coronus-grav-carrier-2026',
+    'AC-008': 'https://www.warhammer.com/en-US/shop/legio-custodes-custodian-dreadnought-2026',
+    'AC-009': 'https://www.warhammer.com/en-US/shop/legio-custodes-custodian-guard-sodality-2026',
+    'AC-010': 'https://www.warhammer.com/en-US/shop/Sisters-Of-Silence-2017',
+    'AC-011': 'https://www.warhammer.com/en-US/shop/legio-custodes-sentinel-guard-sodality-2026',
+    'AC-012': 'https://www.warhammer.com/en-US/shop/Talons-Of-The-Emperor-Valerian-And-Aleya-2020',
+    'AC-013': 'https://www.warhammer.com/en-US/shop/Legio-Custodes-Telemon-Dreadnought-Iliastus-Accelerator-Culverin-2017',
+    'AC-014': 'https://www.warhammer.com/en-US/shop/legio-custodes-venatari-sodality-2026',
+    'AC-015': 'https://www.warhammer.com/en-US/shop/Vigilator-Squad',
+    'AC-016': 'https://www.warhammer.com/en-US/shop/Witchseeker-Squad',
+    'AC-017': 'https://www.warhammer.com/en-US/shop/Legio-Custodes-Aquilon-Terminators-2017',
+    'AC-018': 'https://www.warhammer.com/en-US/shop/Legio-Custodes-Aquilon-Terminators-with-Infernus-Firepikes-2017',
+    'AC-019': 'https://www.warhammer.com/en-US/shop/Legio-Custodes-Ares-Gunship-2019',
+    'AC-020': 'https://www.warhammer.com/en-US/shop/Legio-Custodes-Gyrfalcon-Pattern-Jetbike',
+    'AC-021': 'https://www.warhammer.com/en-US/shop/Custodes-Gunship-2017',
+    'AC-022': 'https://www.warhammer.com/en-US/shop/Legio-Custodes-Pallas-Grav-attack',
+    'AC-023': 'https://www.warhammer.com/en-US/shop/legio-custodes-shield-captain-2026',
+    'AC-024': 'https://www.warhammer.com/en-US/shop/Legio-Custodes-Telemon-Storm-Cannon-Arm-2017',
+    'AC-025': 'https://www.warhammer.com/en-US/shop/Legio-custodes-heavy-dreadnought-arm-2017',
+    'AC-026': 'https://www.warhammer.com/en-US/shop/Legio-custodes-heavy-dreadnought-body-2017',
+    # ── Drukhari ──────────────────────────────────────────────────────────────
+    'DR-001': 'https://www.warhammer.com/en-US/shop/Drukhari-Lelith-Hesperax-2021',
+    'DR-002': 'https://www.warhammer.com/en-US/shop/Drukhari-Drazhar-2020',
+    'DR-003': 'https://www.warhammer.com/en-US/shop/Haemonculus-2017',
+    'DR-004': 'https://www.warhammer.com/en-US/shop/Succubus-2014',
+    'DR-005': 'https://www.warhammer.com/en-US/shop/drukhari-wracks-2025',
+    'DR-006': 'https://www.warhammer.com/en-US/shop/codex-drukhari-hb-2025-eng',
+    'DR-007': 'https://www.warhammer.com/en-US/shop/Drukhari-Incubi-2020',
+    'DR-008': 'https://www.warhammer.com/en-US/shop/Dark-Eldar-Talos-Pain-Engine-2018',
+    'DR-009': 'https://www.warhammer.com/en-US/shop/Dark-Eldar-Cronos-Parasite-Engine-2018',
+    'DR-010': 'https://www.warhammer.com/en-US/shop/Dark-Eldar-Venom-2017',
+    'DR-011': 'https://www.warhammer.com/en-US/shop/Voidraven-Bomber',
+    'DR-012': 'https://www.warhammer.com/en-US/shop/Dark-Eldar-Razorwing-Jetfighter',
+    'DR-013': 'https://www.warhammer.com/en-US/shop/Dark-Eldar-Scourges',
+    'DR-014': 'https://www.warhammer.com/en-US/shop/kill-team-hand-of-the-archon-2024',
+    'DR-015': 'https://www.warhammer.com/en-US/shop/kill-team-mandrakes-2024',
+    'DR-016': 'https://www.warhammer.com/en-US/shop/drukhari-lady-malys-2025',
+    'DR-017': 'https://www.warhammer.com/en-US/shop/Dark-Eldar-Reavers',
+    'DR-018': 'https://www.warhammer.com/en-US/shop/Dark-Eldar-Hellions',
 }
 
 # ── Noble Knight Games product page URL overrides ────────────────────────────
@@ -721,6 +924,134 @@ _NK_PRODUCT_PAGE_URLS = {
     '48-61': 'https://www.nobleknight.com/P/2147831538/Primaris-Lieutenant-w-Power-Sword-2020-Edition',
     # 43-30 Thousand Sons Ahriman
     '43-30': 'https://www.nobleknight.com/P/2147936751/Ahriman-the-Sorcerer',
+    # ── Chaos Space Marines (new wave) ───────────────────────────────────────
+    'CSM-001': 'https://www.nobleknight.com/P/2147977259/Abaddon-the-Despoiler',
+    'CSM-002': 'https://www.nobleknight.com/P/2147993202/Chaos-Cultists-2022-Edition',
+    'CSM-003': 'https://www.nobleknight.com/P/2147988718/Chaos-Bikers',
+    'CSM-004': 'https://www.nobleknight.com/P/2147993202/Chaos-Cultists-2022-Edition',
+    'CSM-005': 'https://www.nobleknight.com/P/2147996476/Chaos-Lord-in-Terminator-Armor',
+    'CSM-006': 'https://www.nobleknight.com/P/2148213951/Chaos-Lord-w-Jump-Pack',
+    'CSM-007': 'https://www.nobleknight.com/P/2147993201/Chaos-Space-Marines-Chosen',
+    'CSM-009': 'https://www.nobleknight.com/P/2147689709/Cypher',
+    'CSM-010': 'https://www.nobleknight.com/P/2147993173/Dark-Apostle-2022-Edition',
+    'CSM-011': 'https://www.nobleknight.com/P/2147993203/Dark-Commune',
+    'CSM-012': 'https://www.nobleknight.com/P/2147807784/Fabius-Bile-2020-Edition',
+    'CSM-013': 'https://www.nobleknight.com/P/2148281948/Haarken-Worldclaimer---Herald-of-the-Apocalypse',
+    'CSM-014': 'https://www.nobleknight.com/P/2148136245/Havocs',
+    'CSM-015': 'https://www.nobleknight.com/P/2148414888/Huron-Blackheart-and-the-Masters-of-the-Maelstrom',
+    'CSM-016': 'https://www.nobleknight.com/P/2148448494/Kravek-Morne',
+    'CSM-017': 'https://www.nobleknight.com/P/2148181795/Lord-Discordant-on-Helstalker',
+    'CSM-019': 'https://www.nobleknight.com/P/2148448252/Mutilators',
+    'CSM-020': 'https://www.nobleknight.com/P/2147747015/Chaos-Space-Marines-Noctilith-Crown-2019-Edition',
+    'CSM-021': 'https://www.nobleknight.com/P/2148000851/Possessed-Chaos-Space-Marines-2022-Edition',
+    'CSM-022': 'https://www.nobleknight.com/P/2148424044/Red-Corsairs-Raiders',
+    'CSM-023': 'https://www.nobleknight.com/P/2148424067/Red-Corsairs-Reave-Captain',
+    'CSM-026': 'https://www.nobleknight.com/P/2148048487/Vashtorr-the-Arkifane',
+    'CSM-027': 'https://www.nobleknight.com/P/2148082636/Warpforged---Venomcrawler-and-Obliterators-Webstore-Edition',
+    'CSM-028': 'https://www.nobleknight.com/P/2147993204/Chaos-Space-Marines-Warpsmith',
+    'CSM-030': 'https://www.nobleknight.com/P/2148143396/Codex---Chaos-Space-Marines',
+    'CSM-032': 'https://www.nobleknight.com/P/2148239650/Fellgor-Ravagers',
+    'CSM-034': 'https://www.nobleknight.com/P/2148198382/Nemesis-Claw',
+    'CSM-035': 'https://www.nobleknight.com/P/2148424064/Red-Corsairs-Upgrades-and-Transfers',
+    # ── Adeptus Custodes ──────────────────────────────────────────────────────
+    'AC-001': 'https://www.nobleknight.com/P/2148137130/COdex---Adeptus-Custodes',
+    'AC-002': 'https://www.nobleknight.com/P/2147967582/Allarus-Custodians-2022-Edition',
+    'AC-003': 'https://www.nobleknight.com/P/2147979551/Blade-Champion',
+    'AC-004': 'https://www.nobleknight.com/P/2148451362/Caladius-Annihilator-Grav-Tank',
+    'AC-005': 'https://www.nobleknight.com/P/2148451366/Caladius-Grav-Tank',
+    'AC-006': 'https://www.nobleknight.com/P/2147996299/Legiones-Astartes-Contemptor-Dreadnought',
+    'AC-007': 'https://www.nobleknight.com/P/2148451151/Coronus-Grav-Carrier',
+    'AC-008': 'https://www.nobleknight.com/P/2148451386/Custodian-Dreadnought',
+    'AC-009': 'https://www.nobleknight.com/P/2148451399/Custodian-Guard-Sodality',
+    'AC-010': 'https://www.nobleknight.com/P/2147974200/Sisters-of-Silence',
+    'AC-011': 'https://www.nobleknight.com/P/2148451392/Sentinel-Guard-Sodality',
+    'AC-012': 'https://www.nobleknight.com/P/2147795322/Talons-of-the-Emperor---Valerian-and-Aleya',
+    'AC-014': 'https://www.nobleknight.com/P/2148451391/Venatari-Sodality',
+    'AC-015': 'https://www.nobleknight.com/P/2147974200/Sisters-of-Silence',
+    'AC-016': 'https://www.nobleknight.com/P/2147974200/Sisters-of-Silence',
+    # ── Drukhari ──────────────────────────────────────────────────────────────
+    'DR-001': 'https://www.nobleknight.com/P/2147889359/Lelith-Hesperax-2021-Edition',
+    'DR-002': 'https://www.nobleknight.com/P/2147924681/Drazhar',
+    'DR-003': 'https://www.nobleknight.com/P/2147559187/Haemonculus-2014-Edition',
+    'DR-004': 'https://www.nobleknight.com/P/2147684064/Succubus-2017-Edition',
+    'DR-005': 'https://www.nobleknight.com/P/2148361263/Dark-Eldar-wracks-Webstore-Edition',
+    'DR-006': 'https://www.nobleknight.com/P/2148354507/Codex---Drukhari',
+    'DR-007': 'https://www.nobleknight.com/P/2147924698/Incubi',
+    'DR-008': 'https://www.nobleknight.com/P/2147887644/Talos',
+    'DR-009': 'https://www.nobleknight.com/P/2147887644/Talos',
+    'DR-010': 'https://www.nobleknight.com/P/2148340279/Venom-2024-Edition',
+    'DR-011': 'https://www.nobleknight.com/P/2147941213/Voidraven-Bomber-2017-Edition',
+    'DR-012': 'https://www.nobleknight.com/P/2147453101/Razorwing-Jetfighter',
+    'DR-013': 'https://www.nobleknight.com/P/2147924589/Scourges',
+    'DR-014': 'https://www.nobleknight.com/P/2148239660/Hand-of-the-Archon',
+    'DR-015': 'https://www.nobleknight.com/P/2148198376/Mandrakes',
+    'DR-016': 'https://www.nobleknight.com/P/2148354470/Lady-Malys',
+    'DR-017': 'https://www.nobleknight.com/P/2147439145/Reavers',
+    'DR-018': 'https://www.nobleknight.com/P/2148361221/Dark-Eldar-Hellions-Webstore-Edition',
+}
+
+# ── Miniature Market product page URL overrides ──────────────────────────────
+#
+# By default populate_products seeds each product's MM URL as the generic
+# search fallback: https://www.miniaturemarket.com/search/?q=<SKU>
+# For products whose direct miniaturemarket.com product page has been confirmed,
+# add the full URL here.  populate_products will use this URL instead of the
+# search fallback, so the direct link is preserved across re-runs.
+#
+# Add entries here + re-run populate_products to apply.
+# ─────────────────────────────────────────────────────────────────────────────
+_MM_PRODUCT_PAGE_URLS = {
+    # ── Chaos Space Marines ───────────────────────────────────────────────────
+    'CSM-001': 'https://www.miniaturemarket.com/gw-43-60.html',
+    'CSM-002': 'https://www.miniaturemarket.com/gw-43-83.html',
+    'CSM-003': 'https://www.miniaturemarket.com/gw-43-08.html',
+    'CSM-004': 'https://www.miniaturemarket.com/gw-43-88.html',
+    'CSM-005': 'https://www.miniaturemarket.com/gw-43-12.html',
+    'CSM-006': 'https://www.miniaturemarket.com/warhammer-40k-chaos-space-marines-lord-with-jump-pack-gw-43-101.html',
+    'CSM-007': 'https://www.miniaturemarket.com/gw-43-84.html',
+    'CSM-010': 'https://www.miniaturemarket.com/gw-43-37.html',
+    'CSM-011': 'https://www.miniaturemarket.com/gw-43-87.html',
+    'CSM-012': 'https://www.miniaturemarket.com/gw-43-73.html',
+    'CSM-013': 'https://www.miniaturemarket.com/gw-43-23.html',
+    'CSM-014': 'https://www.miniaturemarket.com/gw-43-61.html',
+    'CSM-015': 'https://www.miniaturemarket.com/Warhammer-40K-Chaos-Space-Marines-Huron-Blackheart-the-Masters-of-the-Maelstrom/GW-43-110-2026',
+    'CSM-016': 'https://www.miniaturemarket.com/Warhammer-40K-Chaos-Space-Marines-Kravek-Morne-New-Arrival/GW-43-33-2026',
+    'CSM-019': 'https://www.miniaturemarket.com/Warhammer-40K-Chaos-Space-Marines-Mutilators-New-Arrival/GW-43-43-2026',
+    'CSM-020': 'https://www.miniaturemarket.com/gw-43-70.html',
+    'CSM-021': 'https://www.miniaturemarket.com/gw-43-86.html',
+    'CSM-022': 'https://www.miniaturemarket.com/Warhammer-40K-Chaos-Space-Marines-Red-Corsairs-Raiders/GW-43-113-2026',
+    'CSM-023': 'https://www.miniaturemarket.com/Warhammer-40K-Chaos-Space-Marines-Red-Corsairs-Reave-Captain/GW-43-111-2026',
+    'CSM-024': 'https://www.miniaturemarket.com/Warhammer-40K-Chaos-Space-Marines-Traitor-Enforcer-Preorder/GW-43-106-2026',
+    'CSM-025': 'https://www.miniaturemarket.com/Warhammer-40K-Chaos-Space-Marines-Traitor-Guardsmen-Squad-Preorder/GW-43-107-2026',
+    'CSM-026': 'https://www.miniaturemarket.com/warhammer-40k-chaos-space-marines-vashtorr-the-arkifane-gw-43-99.html',
+    'CSM-028': 'https://www.miniaturemarket.com/gw-43-85.html',
+    'CSM-029': 'https://www.miniaturemarket.com/warhammer-40k-chaos-space-marines-chaos-lord-gw-43-100.html',
+    'CSM-030': 'https://www.miniaturemarket.com/warhammer-40k-codex-chaos-space-marines-10th-edition-gw-43-01-2024.html',
+    'CSM-032': 'https://www.miniaturemarket.com/kill-team-fellgor-ravagers-gw-103-34-2024.html',
+    'CSM-034': 'https://www.miniaturemarket.com/warhammer-40k-kill-team-chaos-space-marines-nemesis-claw-gw-103-43.html',
+    'CSM-035': 'https://www.miniaturemarket.com/Warhammer-40K-Chaos-Space-Marines-Red-Corsairs-Upgrades-Transfers/GW-43-112-2026',
+    # ── Adeptus Custodes ──────────────────────────────────────────────────────
+    'AC-001': 'https://www.miniaturemarket.com/warhammer-40k-codex-adepus-custodes-10th-edition-gw-01-14.html',
+    'AC-002': 'https://www.miniaturemarket.com/gw-01-13.html',
+    'AC-003': 'https://www.miniaturemarket.com/gw-01-17.html',
+    'AC-004': 'https://www.miniaturemarket.com/Warhammer-Horus-Heresy-Legio-Custodes-Caladius-Annihilator-Grav-Tank-New-Arrival/GW-31-139-2026',
+    'AC-005': 'https://www.miniaturemarket.com/Warhammer-Horus-Heresy-Legio-Custodes-Caladius-Grav-Tank-New-Arrival/GW-31-138-2026',
+    'AC-006': 'https://www.miniaturemarket.com/gw-31-25.html',
+    'AC-007': 'https://www.miniaturemarket.com/Warhammer-Horus-Heresy-Legio-Custodes-Coronus-Grav-Carrier-New-Arrival/GW-31-166-2026',
+    'AC-008': 'https://www.miniaturemarket.com/Warhammer-Horus-Heresy-Legio-Custodes-Custodian-Dreadnought-New-Arrival/GW-31-165-2026',
+    'AC-009': 'https://www.miniaturemarket.com/Warhammer-Horus-Heresy-Legio-Custodes-Custodian-Guard-Sodality-New-Arrival/GW-31-161-2026',
+    'AC-011': 'https://www.miniaturemarket.com/Warhammer-Horus-Heresy-Legio-Custodes-Sentinel-Guard-Sodality-New-Arrival/GW-31-164-2026',
+    'AC-012': 'https://www.miniaturemarket.com/gw-bl-02.html',
+    'AC-014': 'https://www.miniaturemarket.com/Warhammer-Horus-Heresy-Legio-Custodes-Venatari-Sodality-New-Arrival/GW-31-162-2026',
+    # ── Drukhari ──────────────────────────────────────────────────────────────
+    'DR-001': 'https://www.miniaturemarket.com/gw-45-37.html',
+    'DR-002': 'https://www.miniaturemarket.com/gw-45-41.html',
+    'DR-006': 'https://www.miniaturemarket.com/gw-45-01.html',
+    'DR-007': 'https://www.miniaturemarket.com/gw-45-40.html',
+    'DR-013': 'https://www.miniaturemarket.com/gw-45-16.html',
+    'DR-014': 'https://www.miniaturemarket.com/kill-team-hand-archon-gw-103-26.html',
+    'DR-015': 'https://www.miniaturemarket.com/warhammer-40k-kill-team-drukhari-mandrakes-gw-103-42.html',
+    'DR-016': 'https://www.miniaturemarket.com/Warhammer-40K-Drukhari-Lady-Malys/GW-45-45',
 }
 
 # ── Per-product eBay negative keyword exclusions ──────────────────────────────
@@ -1108,8 +1439,6 @@ class Command(BaseCommand):
             ('Custodes', 'Warhammer 40,000'),
             ('Sisters of Battle', 'Warhammer 40,000'),
             ('Imperial Knights', 'Warhammer 40,000'),
-            ('Adepta Sororitas', 'Warhammer 40,000'),
-            ('Adeptus Custodes', 'Warhammer 40,000'),
             ('Agents of the Imperium', 'Warhammer 40,000'),
             # ── Age of Sigmar ──
             ('Stormcast Eternals', 'Age of Sigmar'),
@@ -1177,6 +1506,16 @@ class Command(BaseCommand):
                 'name': 'Amazon',
                 'website': 'https://www.amazon.com',
                 'country': 'US',
+            },
+            {
+                'name': 'Amazon UK',
+                'website': 'https://www.amazon.co.uk',
+                'country': 'UK',
+            },
+            {
+                'name': 'eBay UK',
+                'website': 'https://www.ebay.co.uk',
+                'country': 'UK',
             },
         ]
         retailers = {}
@@ -1267,11 +1606,11 @@ class Command(BaseCommand):
             ),
             # ---- Ultramarines ----
             (
-                'Ultramarines Honour Guard',
+                'Ultramarines Victrix Honour Guard',
                 'Warhammer 40,000', 'Ultramarines',
                 '55-16', decimal.Decimal('35.00'),
-                'Two dedicated bodyguards for Marneus Calgar, clad in ornate '
-                'Terminator armour.',
+                'Five elite Victrix Honour Guard in ornate Terminator armour, '
+                'the chosen bodyguards of Marneus Calgar.',
             ),
             # ---- Chaos Space Marines ----
             (
@@ -1294,6 +1633,251 @@ class Command(BaseCommand):
                 '71-06', decimal.Decimal('105.00'),
                 'A ready-to-play patrol force including a Dark Apostle, '
                 'Chaos Space Marines, and Obliterators.',
+            ),
+            (
+                'Chaos Space Marine Abaddon the Despoiler',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-001', decimal.Decimal('73.50'),
+                'The Warmaster of Chaos and Supreme Commander of the Black Legion. '
+                'This towering single-model kit stands atop ruined masonry.',
+            ),
+            (
+                'Chaos Space Marine Accursed Cultists',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-002', decimal.Decimal('60.00'),
+                'Ten grotesquely mutated Accursed Cultists split between Mutants '
+                'with blade limbs and Torments oozing daemonic corruption.',
+            ),
+            (
+                'Chaos Space Marine Chaos Bikers',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-003', decimal.Decimal('48.50'),
+                'Three Chaos Space Marine Bikers armed with bolt pistols and '
+                'chainswords, speeding into battle on warp-tainted motorcycles.',
+            ),
+            (
+                'Chaos Space Marine Chaos Cultists',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-004', decimal.Decimal('53.00'),
+                'Ten lightly armed Chaos Cultists with autoguns or autopistols '
+                'and blades — the expendable mortal followers of any CSM army.',
+            ),
+            (
+                'Chaos Space Marine Chaos Lord in Terminator Armour',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-005', decimal.Decimal('35.00'),
+                'A single Chaos Lord clad in ancient Terminator plate, armed '
+                'with a combi-bolter and power sword or reaper autocannon.',
+            ),
+            (
+                'Chaos Space Marine Chaos Lord with Jump Pack',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-006', decimal.Decimal('43.50'),
+                'A single Chaos Lord equipped with a jump pack and daemon blade, '
+                'soaring into combat for fast and vicious close-quarters assaults.',
+            ),
+            (
+                'Chaos Space Marine Chosen',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-007', decimal.Decimal('65.00'),
+                'Five Chaos Space Marines Chosen — the most veteran warriors of '
+                'any warband, with access to a full range of weapon options.',
+            ),
+            (
+                'Chaos Space Marine Cultist Firebrand',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-008', decimal.Decimal('35.00'),
+                'A single Cultist Firebrand character, wielding a flamer and '
+                'rousing nearby Cultists into fanatical charges.',
+            ),
+            (
+                'Chaos Space Marine Cypher',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-009', decimal.Decimal('39.00'),
+                'The mysterious Lord of the Fallen — a single-model blister who '
+                'fires two plasma pistols with supernatural speed.',
+            ),
+            (
+                'Chaos Space Marine Dark Apostle',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-010', decimal.Decimal('43.50'),
+                'A Dark Apostle and two Dark Disciples — corrupted preachers who '
+                'inspire nearby infantry with foul litanies of Chaos.',
+            ),
+            (
+                'Chaos Space Marine Dark Commune',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-011', decimal.Decimal('60.00'),
+                'Five cultist support characters including a Mindwitch, Blessed '
+                'Blades, Iconarch, and two Cultist Firebrands.',
+            ),
+            (
+                'Chaos Space Marine Fabius Bile',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-012', decimal.Decimal('48.00'),
+                'The Spider of Bile — chief apothecary of the Emperor\'s Children. '
+                'This single-model kit creates heretical new life through dark science.',
+            ),
+            (
+                'Chaos Space Marine Haarken Worldclaimer',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-013', decimal.Decimal('43.50'),
+                'Abaddon\'s Herald and commander of Chaos airborne shock forces. '
+                'He soars on baroque wings and proclaims worlds as Chaos\'s domain.',
+            ),
+            (
+                'Chaos Space Marine Havocs',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-014', decimal.Decimal('65.00'),
+                'Four Chaos Space Marine Havocs armed with heavy weapons including '
+                'autocannons, lascannons, missile launchers, and heavy bolters.',
+            ),
+            (
+                'Chaos Space Marine Huron Blackheart and the Masters of the Maelstrom',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-015', decimal.Decimal('94.00'),
+                'A multi-model set including Huron Blackheart and his legendary '
+                'Masters of the Maelstrom warband retinue.',
+            ),
+            (
+                'Chaos Space Marine Kravek Morne',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-016', decimal.Decimal('47.00'),
+                'A powerful Chaos Space Marine warlord clad in ornate corrupted '
+                'armour, armed for brutal close-quarters combat.',
+            ),
+            (
+                'Chaos Space Marine Lord Discordant on Helstalker',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-017', decimal.Decimal('82.00'),
+                'A half-mechanical, half-daemonic Chaos sorcerer astride a '
+                'techno-organic Helstalker, interfering with enemy systems.',
+            ),
+            (
+                'Chaos Space Marine Master of Possession',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-018', decimal.Decimal('39.00'),
+                'A sorcerer-priest who binds daemons into flesh and machine, '
+                'leading summoning rituals and empowering possessed warriors.',
+            ),
+            (
+                'Chaos Space Marine Mutilators',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-019', decimal.Decimal('69.00'),
+                'Three Mutilators — hulking warriors whose arms have been replaced '
+                'by randomly morphing melee weapons from the warp.',
+            ),
+            (
+                'Chaos Space Marine Noctilith Crown',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-020', decimal.Decimal('69.00'),
+                'A large Chaos arcane fortification that energises nearby psykers '
+                'and interferes with enemy psychic powers on the battlefield.',
+            ),
+            (
+                'Chaos Space Marine Possessed',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-021', decimal.Decimal('65.00'),
+                'Five Chaos Space Marines Possessed — warriors inhabited by '
+                'daemons that manifest random mutations during battle.',
+            ),
+            (
+                'Chaos Space Marine Red Corsairs Raiders',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-022', decimal.Decimal('65.00'),
+                'Ten Red Corsairs Raiders from Huron Blackheart\'s renegade fleet, '
+                'armed and equipped for rapid assault and piratical warfare.',
+            ),
+            (
+                'Chaos Space Marine Red Corsairs Reave-Captain',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-023', decimal.Decimal('43.50'),
+                'The Reave-Captain of the Red Corsairs — a single-model character '
+                'who leads boarding actions and brutal planetary raids.',
+            ),
+            (
+                'Chaos Space Marine Traitor Enforcer',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-024', decimal.Decimal('55.50'),
+                'A single Traitor Enforcer character — the brutal discipline '
+                'officer of a Chaos mortal warband, enforcing obedience by force.',
+            ),
+            (
+                'Chaos Space Marine Traitor Guardsmen Squad',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-025', decimal.Decimal('53.00'),
+                'Ten Traitor Guardsmen — former Imperial soldiers who turned to '
+                'Chaos, turning their military training against their former allies.',
+            ),
+            (
+                'Chaos Space Marine Vashtorr the Arkifane',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-026', decimal.Decimal('106.00'),
+                'A Daemon Prince of machinery and industry — an enormous '
+                'centrepiece model with a mechanical claw and daemon engine wings.',
+            ),
+            (
+                'Chaos Space Marine Venomcrawler and Obliterators',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-027', decimal.Decimal('82.00'),
+                'A webstore-exclusive Warpforged bundle including a Venomcrawler '
+                'and two Obliterators — daemon-fused weapons platforms.',
+            ),
+            (
+                'Chaos Space Marine Warpsmith',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-028', decimal.Decimal('43.50'),
+                'A single Warpsmith — master of engines and iron, who repairs '
+                'daemon engines and corrupts Imperial war machines in battle.',
+            ),
+            (
+                'Chaos Space Marines Chaos Lord',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-029', decimal.Decimal('43.50'),
+                'A single Chaos Lord in power armour — a versatile warlord '
+                'wielding a chainsword and plasma pistol for rapid offensive action.',
+            ),
+            (
+                'Codex: Chaos Space Marines',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-030', decimal.Decimal('60.00'),
+                'The 10th edition Chaos Space Marines Codex with full rules, '
+                'lore, datasheets, and Detachment options.',
+            ),
+            (
+                'Iron Warriors Upgrades',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-031', decimal.Decimal('35.00'),
+                'An upgrade sprue with Iron Warriors-specific heads, shoulder '
+                'pads, and icons for personalising Chaos Space Marine kits.',
+            ),
+            (
+                'Chaos Space Marines Fellgor Ravagers',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-032', decimal.Decimal('69.00'),
+                'Kill Team: Fellgor Ravagers — beastman warriors who have pledged '
+                'themselves to Chaos, used in Kill Team skirmish games.',
+            ),
+            (
+                'Chaos Space Marines Murderwing',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-033', decimal.Decimal('82.00'),
+                'Kill Team: Murderwing — a 2026 Kill Team expansion featuring '
+                'a new Chaos warband for fast-paced skirmish play.',
+            ),
+            (
+                'Chaos Space Marines Nemesis Claw',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-034', decimal.Decimal('77.00'),
+                'Kill Team: Nemesis Claw — a squad of Night Lords Chaos Space '
+                'Marines, masters of terror tactics and psychological warfare.',
+            ),
+            (
+                'Red Corsairs Upgrades and Transfers',
+                'Warhammer 40,000', 'Chaos Space Marines',
+                'CSM-035', decimal.Decimal('35.00'),
+                'An upgrade frame with Red Corsairs-specific shoulder pads, icons, '
+                'and transfers for personalising Chaos Space Marine models.',
             ),
             # ---- Tyranids ----
             (
@@ -1590,7 +2174,8 @@ class Command(BaseCommand):
                     'description': description,
                     'msrp': msrp,
                     'is_active': True,
-                    'image_url': GW_IMAGES.get(gw_sku, f'https://placehold.co/400x300/1e1e1e/bb86fc?text={slugify(name)[:30]}'),
+                    # image_url is intentionally excluded — images are set once
+                    # on creation and never overwritten by populate runs.
                     # Apply eBay search name override if defined, clear it if removed.
                     'ebay_search_name': _EBAY_SEARCH_OVERRIDES.get(gw_sku, ''),
                     # Allow "no box" listings for products in the exemption dict.
@@ -1599,6 +2184,9 @@ class Command(BaseCommand):
                     'ebay_negative_keywords': _EBAY_NEGATIVE_KEYWORDS.get(gw_sku, ''),
                 },
             )
+            if created and gw_sku in GW_IMAGES:
+                product.image_url = GW_IMAGES[gw_sku]
+                product.save(update_fields=['image_url'])
             products.append(product)
             status = 'created' if created else 'updated'
             override = _EBAY_SEARCH_OVERRIDES.get(gw_sku, '')
@@ -2026,6 +2614,186 @@ class Command(BaseCommand):
              '01-20', decimal.Decimal('105.00'),
              'A Custodes Combat Patrol: Shield-Captain, Custodian Guard, '
              'Vertus Praetors, and Allarus Custodians.'),
+            ('Codex: Adeptus Custodes', 'Warhammer 40,000', 'Custodes',
+             'AC-001', decimal.Decimal('60.00'),
+             'The 10th Edition codex for the Adeptus Custodes, containing '
+             'rules, lore, and datasheets for the Emperor\'s golden warriors.'),
+            ('Custodes Allarus Custodians', 'Warhammer 40,000', 'Custodes',
+             'AC-002', decimal.Decimal('60.00'),
+             'Three towering Allarus Custodians in Terminator plate, armed '
+             'with balistus grenade launchers and castellan axes or guardian spears.'),
+            ('Custodes Blade Champion', 'Warhammer 40,000', 'Custodes',
+             'AC-003', decimal.Decimal('43.50'),
+             'An Adeptus Custodes hero armed with the Vaultswords, three '
+             'master-crafted blades for lightning-fast duelling.'),
+            ('Custodes Caladius Annihilator Grav-tank', 'Warhammer 40,000', 'Custodes',
+             'AC-004', decimal.Decimal('100.00'),
+             'A Legio Custodes heavy grav-tank armed with twin aeonic arc '
+             'cannons, designed to annihilate armoured targets.'),
+            ('Custodes Caladius Grav-tank', 'Warhammer 40,000', 'Custodes',
+             'AC-005', decimal.Decimal('100.00'),
+             'A Legio Custodes grav-tank armed with Iliastus accelerator '
+             'culverins or twin arachnus heavy blaze cannon.'),
+            ('Custodes Contemptor Dreadnought', 'Warhammer 40,000', 'Custodes',
+             'AC-006', decimal.Decimal('65.00'),
+             'A Legiones Astartes Contemptor Dreadnought, also fielded by '
+             'the Legio Custodes in the Horus Heresy.'),
+            ('Custodes Coronus Grav-carrier', 'Warhammer 40,000', 'Custodes',
+             'AC-007', decimal.Decimal('127.00'),
+             'A Legio Custodes heavy transport armed with a twin arachnus '
+             'blaze cannon, carrying Custodian warriors into battle.'),
+            ('Custodes Custodian Dreadnought', 'Warhammer 40,000', 'Custodes',
+             'AC-008', decimal.Decimal('77.00'),
+             'A Legio Custodes Custodian Dreadnought, an ancient war machine '
+             'piloted by a wounded but undying guardian of the Emperor.'),
+            ('Custodes Custodian Guard Sodality', 'Warhammer 40,000', 'Custodes',
+             'AC-009', decimal.Decimal('73.50'),
+             'A five-model Legio Custodes infantry sodality armed with '
+             'guardian spears or sentinel blades and praesidium shields.'),
+            ('Custodes Prosecutor Squad', 'Warhammer 40,000', 'Custodes',
+             'AC-010', decimal.Decimal('60.00'),
+             'Sisters of Silence Prosecutor Squad, ranged-focused infantry '
+             'armed with boltguns who suppress psykers through null aura.'),
+            ('Custodes Sentinel Guard Sodality', 'Warhammer 40,000', 'Custodes',
+             'AC-011', decimal.Decimal('73.50'),
+             'A Legio Custodes Sentinel Guard Sodality, elite heavy infantry '
+             'armed with sentinel war-lances and misericordias.'),
+            ('Custodes Talons of the Emperor: Valerian and Aleya', 'Warhammer 40,000', 'Custodes',
+             'AC-012', decimal.Decimal('60.00'),
+             'The legendary duo of Shield-Captain Valerian and Sisters of '
+             'Silence Aleya, heroes of the Gathering Storm.'),
+            ('Custodes Telemon Heavy Dreadnought Iliastus Accelerator Culverin', 'Warhammer 40,000', 'Custodes',
+             'AC-013', decimal.Decimal('29.00'),
+             'An Iliastus Accelerator Culverin arm upgrade for the Legio '
+             'Custodes Telemon Heavy Dreadnought.'),
+            ('Custodes Venatari Sodality', 'Warhammer 40,000', 'Custodes',
+             'AC-014', decimal.Decimal('82.00'),
+             'A Legio Custodes Venatari Sodality, elite Custodian jetbike '
+             'cavalry armed with venatari lances and kinetic shriek launchers.'),
+            ('Custodes Vigilator Squad', 'Warhammer 40,000', 'Custodes',
+             'AC-015', decimal.Decimal('60.00'),
+             'Sisters of Silence Vigilator Squad, close combat specialists '
+             'armed with executioner greatblades.'),
+            ('Custodes Witchseeker Squad', 'Warhammer 40,000', 'Custodes',
+             'AC-016', decimal.Decimal('60.00'),
+             'Sisters of Silence Witchseeker Squad, armed with flamers for '
+             'purging psykers and corrupted heretics.'),
+            ('Legio Custodes Aquilon Terminators', 'Warhammer 40,000', 'Custodes',
+             'AC-017', decimal.Decimal('104.00'),
+             'Elite Custodian warriors in Aquilon Terminator plate, armed '
+             'with twin adrathic destructors and solerite power talons.'),
+            ('Legio Custodes Aquilon Terminators with Infernus Firepikes', 'Warhammer 40,000', 'Custodes',
+             'AC-018', decimal.Decimal('104.00'),
+             'Aquilon Terminators armed with Infernus firepikes and solerite '
+             'power gauntlets for close-range annihilation.'),
+            ('Legio Custodes Ares Gunship', 'Warhammer 40,000', 'Custodes',
+             'AC-019', decimal.Decimal('575.00'),
+             'A massive Forge World aircraft serving as the Legio Custodes '
+             'aerial superiority and heavy bombardment platform.'),
+            ('Legio Custodes Gyrfalcon Pattern Jetbike', 'Warhammer 40,000', 'Custodes',
+             'AC-020', decimal.Decimal('75.00'),
+             'A single Legio Custodes Gyrfalcon Pattern Jetbike, armed with '
+             'an Iliastus bolter and volkite culverin.'),
+            ('Legio Custodes Orion Assault Dropship', 'Warhammer 40,000', 'Custodes',
+             'AC-021', decimal.Decimal('575.00'),
+             'The Legio Custodes dedicated assault dropship, delivering '
+             'Custodian warriors and vehicles directly into battle.'),
+            ('Legio Custodes Pallas Grav-attack', 'Warhammer 40,000', 'Custodes',
+             'AC-022', decimal.Decimal('128.00'),
+             'A swift Legio Custodes gunboat armed with an arachnus blaze '
+             'cannon for fast-attack and fire support operations.'),
+            ('Legio Custodes Shield Captain', 'Warhammer 40,000', 'Custodes',
+             'AC-023', decimal.Decimal('66.00'),
+             'A Shield-Captain of the Legio Custodes, one of the most '
+             'powerful individual warriors in the entire Imperium.'),
+            ('Legio Custodes Telemon Arachnus Storm Cannon', 'Warhammer 40,000', 'Custodes',
+             'AC-024', decimal.Decimal('29.00'),
+             'An arachnus storm cannon arm upgrade for the Legio Custodes '
+             'Telemon Heavy Dreadnought.'),
+            ('Legio Custodes Telemon Caestus', 'Warhammer 40,000', 'Custodes',
+             'AC-025', decimal.Decimal('29.00'),
+             'A caestus power fist arm upgrade for the Legio Custodes '
+             'Telemon Heavy Dreadnought.'),
+            ('Legio Custodes Telemon Heavy Dreadnought Body', 'Warhammer 40,000', 'Custodes',
+             'AC-026', decimal.Decimal('103.00'),
+             'The main body of the Legio Custodes Telemon Heavy Dreadnought, '
+             'a towering war machine of the Emperor\'s guard.'),
+
+            # ================================================================
+            # DRUKHARI
+            # ================================================================
+            ('Drukhari Lelith Hesperax', 'Warhammer 40,000', 'Drukhari',
+             'DR-001', decimal.Decimal('48.00'),
+             'The Queen of Knives herself, Lelith Hesperax is a supreme Wych '
+             'fighter who tears through enemies with blinding speed and lethal grace.'),
+            ('Drukhari Drazhar', 'Warhammer 40,000', 'Drukhari',
+             'DR-002', decimal.Decimal('48.00'),
+             'The Master of Blades and living embodiment of the Incubi martial '
+             'art, Drazhar cuts down even the mightiest foes with his executioner\'s demiklaives.'),
+            ('Drukhari Haemonculus', 'Warhammer 40,000', 'Drukhari',
+             'DR-003', decimal.Decimal('32.00'),
+             'A twisted flesh-sculptor of the Haemonculus Covens, this macabre '
+             'HQ choice experiments on victims and bolsters Wrack infantry with dark science.'),
+            ('Drukhari Succubus', 'Warhammer 40,000', 'Drukhari',
+             'DR-004', decimal.Decimal('32.00'),
+             'A deadly Wych cult leader who fights with acrobatic ferocity, '
+             'leading her Wyches into the arena and onto the battlefield with equal flair.'),
+            ('Drukhari Wracks', 'Warhammer 40,000', 'Drukhari',
+             'DR-005', decimal.Decimal('60.00'),
+             'Grotesquely altered servants of the Haemonculus Covens, Wracks '
+             'are resilient infantry armed with a variety of agonising close-combat tools.'),
+            ('Codex: Drukhari', 'Warhammer 40,000', 'Drukhari',
+             'DR-006', decimal.Decimal('60.00'),
+             'The 10th Edition codex for the Drukhari, containing rules, lore, '
+             'and datasheets for the raiders of Commorragh.'),
+            ('Drukhari Incubi', 'Warhammer 40,000', 'Drukhari',
+             'DR-007', decimal.Decimal('62.50'),
+             'Elite Kabalite bodyguards and warriors of the Incubi shrines, '
+             'armed with klaives and clad in baroque armour.'),
+            ('Drukhari Talos', 'Warhammer 40,000', 'Drukhari',
+             'DR-008', decimal.Decimal('65.00'),
+             'A Haemonculus Coven pain engine that glides across the battlefield '
+             'on anti-gravity suspensors, lashing out with a host of surgical and arcane weapons.'),
+            ('Drukhari Cronos', 'Warhammer 40,000', 'Drukhari',
+             'DR-009', decimal.Decimal('65.00'),
+             'A Haemonculus Coven parasite engine that feeds on the psychic '
+             'residue of pain and suffering, empowering nearby Coven units.'),
+            ('Drukhari Venom', 'Warhammer 40,000', 'Drukhari',
+             'DR-010', decimal.Decimal('43.50'),
+             'A swift Drukhari skimmer transport armed with twin splinter rifles, '
+             'carrying a small squad of warriors into the heart of the enemy.'),
+            ('Drukhari Voidraven Bomber', 'Warhammer 40,000', 'Drukhari',
+             'DR-011', decimal.Decimal('96.00'),
+             'A sleek and deadly Drukhari aircraft that delivers void lances '
+             'and shatterfield missiles to devastating effect against armoured targets.'),
+            ('Drukhari Razorwing Jetfighter', 'Warhammer 40,000', 'Drukhari',
+             'DR-012', decimal.Decimal('65.00'),
+             'A fast attack Drukhari aircraft armed with dark lances and '
+             'razorwing missiles, strafing enemy lines with lethal precision.'),
+            ('Drukhari Scourges', 'Warhammer 40,000', 'Drukhari',
+             'DR-013', decimal.Decimal('39.00'),
+             'Drukhari warriors who have surgically grafted wings, soaring above '
+             'the battlefield and unleashing heavy weapons fire from above.'),
+            ('Drukhari Hand of the Archon', 'Warhammer 40,000', 'Drukhari',
+             'DR-014', decimal.Decimal('60.00'),
+             'A Kill Team set featuring elite Drukhari agents who serve as the '
+             'Archon\'s personal enforcers, specialists in assassination and terror.'),
+            ('Drukhari Mandrakes', 'Warhammer 40,000', 'Drukhari',
+             'DR-015', decimal.Decimal('82.00'),
+             'A Kill Team set of shadow-dwelling Drukhari warriors who phase '
+             'between darkness and reality, striking from impossible angles.'),
+            ('Drukhari Lady Malys', 'Warhammer 40,000', 'Drukhari',
+             'DR-016', decimal.Decimal('48.00'),
+             'The enigmatic Lady Malys, a Drukhari Archon of supreme cunning '
+             'who has made a pact with the Laughing God himself.'),
+            ('Drukhari Reavers', 'Warhammer 40,000', 'Drukhari',
+             'DR-017', decimal.Decimal('48.00'),
+             'Jetbike-riding Wych cult daredevils who race across the battlefield '
+             'slicing through enemy ranks with bladevanes and cluster caltrops.'),
+            ('Drukhari Hellions', 'Warhammer 40,000', 'Drukhari',
+             'DR-018', decimal.Decimal('35.00'),
+             'Skyboard-riding Drukhari outcasts who swoop and slash through '
+             'enemy lines, armed with hellglaives and stunclaw weapons.'),
 
             # ================================================================
             # SISTERS OF BATTLE
@@ -3135,7 +3903,8 @@ class Command(BaseCommand):
                     'description': description,
                     'msrp': msrp,
                     'is_active': True,
-                    'image_url': GW_IMAGES.get(gw_sku, f'https://placehold.co/400x300/1c2230/c8922a?text={slugify(name)[:30]}'),
+                    # image_url is intentionally excluded — images are set once
+                    # on creation and never overwritten by populate runs.
                     # Apply eBay search name override if defined, clear it if removed.
                     'ebay_search_name': _EBAY_SEARCH_OVERRIDES.get(gw_sku, ''),
                     # Allow "no box" listings for products in the exemption dict.
@@ -3144,6 +3913,9 @@ class Command(BaseCommand):
                     'ebay_negative_keywords': _EBAY_NEGATIVE_KEYWORDS.get(gw_sku, ''),
                 },
             )
+            if created and gw_sku in GW_IMAGES:
+                product.image_url = GW_IMAGES[gw_sku]
+                product.save(update_fields=['image_url'])
             products.append(product)
             status = 'created' if created else 'updated'
             override = _EBAY_SEARCH_OVERRIDES.get(gw_sku, '')
@@ -3202,34 +3974,38 @@ class Command(BaseCommand):
 
             # Miniature Market: 15–25% off — strong US discount retailer
             if mm and msrp >= 10:
-                discount = decimal.Decimal(str(round(random.uniform(0.15, 0.25), 2)))
-                mm_price = self._apply_discount(msrp, discount)
-                in_stock = random.random() > 0.1  # 90% in stock
-                self._upsert_price(
-                    product=product,
-                    retailer=mm,
-                    price=mm_price,
-                    in_stock=in_stock,
-                    url=f'https://www.miniaturemarket.com/search/?q={product.gw_sku}',
-                )
+                mm_url = _MM_PRODUCT_PAGE_URLS.get(product.gw_sku)
+                if mm_url:
+                    discount = decimal.Decimal(str(round(random.uniform(0.15, 0.25), 2)))
+                    mm_price = self._apply_discount(msrp, discount)
+                    in_stock = random.random() > 0.1  # 90% in stock
+                    self._upsert_price(
+                        product=product, retailer=mm,
+                        price=mm_price, in_stock=in_stock, url=mm_url,
+                    )
+                else:
+                    self._upsert_price(
+                        product=product, retailer=mm,
+                        price=None, in_stock=False, url='', not_available=True,
+                    )
                 price_count += 1
 
             # Noble Knight Games: 10–18% off, usually in stock
             if nk:
-                discount = decimal.Decimal(str(round(random.uniform(0.10, 0.18), 2)))
-                nk_price = self._apply_discount(msrp, discount)
-                in_stock = random.random() > 0.15
-                nk_url = _NK_PRODUCT_PAGE_URLS.get(
-                    product.gw_sku,
-                    f'https://www.nobleknight.com/Products/Warhammer?q={product.gw_sku}',
-                )
-                self._upsert_price(
-                    product=product,
-                    retailer=nk,
-                    price=nk_price,
-                    in_stock=in_stock,
-                    url=nk_url,
-                )
+                nk_url = _NK_PRODUCT_PAGE_URLS.get(product.gw_sku)
+                if nk_url:
+                    discount = decimal.Decimal(str(round(random.uniform(0.10, 0.18), 2)))
+                    nk_price = self._apply_discount(msrp, discount)
+                    in_stock = random.random() > 0.15
+                    self._upsert_price(
+                        product=product, retailer=nk,
+                        price=nk_price, in_stock=in_stock, url=nk_url,
+                    )
+                else:
+                    self._upsert_price(
+                        product=product, retailer=nk,
+                        price=None, in_stock=False, url='', not_available=True,
+                    )
                 price_count += 1
 
             # eBay: variable pricing – can be 5–25% off but sometimes higher
@@ -3286,11 +4062,13 @@ class Command(BaseCommand):
         return decimal.Decimal(str(rounded)).quantize(decimal.Decimal('0.01'))
 
     @staticmethod
-    def _upsert_price(product, retailer, price, in_stock, url):
+    def _upsert_price(product, retailer, price, in_stock, url, not_available=False):
         """
         Create or update a CurrentPrice record for a product/retailer pair.
 
         Uses update_or_create to keep the command idempotent.
+        If not_available=True, writes a blank not-available record — no bogus
+        search URL, no random placeholder price.
         """
         if not retailer:
             return
@@ -3301,5 +4079,6 @@ class Command(BaseCommand):
                 'price': price,
                 'in_stock': in_stock,
                 'url': url,
+                'not_available': not_available,
             },
         )
