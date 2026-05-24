@@ -129,7 +129,7 @@ class Command(BaseCommand):
         if options['backup']:
             self._backup(entries)
 
-        asin_to_entry = {}
+        asin_to_entries = {}
         skipped_no_asin = []
 
         for entry in entries:
@@ -142,7 +142,7 @@ class Command(BaseCommand):
                 skipped_no_asin.append(entry.product.gw_sku)
                 continue
 
-            asin_to_entry[asin] = entry
+            asin_to_entries.setdefault(asin, []).append(entry)
 
         if skipped_no_asin:
             self.stdout.write(self.style.WARNING(
@@ -151,17 +151,17 @@ class Command(BaseCommand):
             ))
 
         if options['limit']:
-            asin_to_entry = dict(list(asin_to_entry.items())[:options['limit']])
-            self.stdout.write(f'Limiting to first {len(asin_to_entry)} ASINs (--limit).')
+            asin_to_entries = dict(list(asin_to_entries.items())[:options['limit']])
+            self.stdout.write(f'Limiting to first {len(asin_to_entries)} ASINs (--limit).')
 
-        if not asin_to_entry:
+        if not asin_to_entries:
             self.stdout.write(self.style.WARNING('No ASINs to look up. Exiting.'))
             return
 
-        self.stdout.write(f'Looking up {len(asin_to_entry)} ASINs via Creators API...')
+        self.stdout.write(f'Looking up {len(asin_to_entries)} ASINs via Creators API...')
 
         try:
-            api_results = client.get_items_batched(list(asin_to_entry.keys()))
+            api_results = client.get_items_batched(list(asin_to_entries.keys()))
         except requests.HTTPError as exc:
             self.stderr.write(self.style.ERROR(f'API error: {exc}'))
             if exc.response is not None:
@@ -177,55 +177,57 @@ class Command(BaseCommand):
         unchanged = 0
 
         for asin, result in api_results.items():
-            entry = asin_to_entry.get(asin)
-            if entry is None:
+            entry_list = asin_to_entries.get(asin)
+            if not entry_list:
                 continue
 
-            product = entry.product
             new_price = result['price']
             new_in_stock = result['in_stock']
 
-            if new_price is None:
+            for entry in entry_list:
+                product = entry.product
+
+                if new_price is None:
+                    self.stdout.write(
+                        f'  [no price] {product.gw_sku} ({product.name}) — ASIN {asin}'
+                    )
+                    no_price += 1
+                    if not dry_run and (entry.price is not None or entry.in_stock):
+                        entry.price = None
+                        entry.in_stock = False
+                        entry.save(update_fields=['price', 'in_stock', 'last_seen'])
+                    continue
+
+                price_changed = (entry.price != new_price)
+                stock_changed = (entry.in_stock != new_in_stock)
+
+                if not price_changed and not stock_changed:
+                    unchanged += 1
+                    continue
+
+                change_parts = []
+                if price_changed:
+                    old_str = f'${entry.price:.2f}' if entry.price is not None else 'none'
+                    change_parts.append(f'${new_price:.2f} (was {old_str})')
+                if stock_changed:
+                    change_parts.append('in_stock=' + str(new_in_stock))
+
+                label = '[dry-run]' if dry_run else '[updated]'
                 self.stdout.write(
-                    f'  [no price] {product.gw_sku} ({product.name}) — ASIN {asin}'
+                    f'  {label} {product.gw_sku} ({product.name}) — '
+                    + ', '.join(change_parts)
+                    + f'  [ASIN: {asin} | https://www.amazon.com/dp/{asin}]'
                 )
-                no_price += 1
-                if not dry_run and (entry.price is not None or entry.in_stock):
-                    entry.price = None
-                    entry.in_stock = False
-                    entry.save(update_fields=['price', 'in_stock', 'last_seen'])
-                continue
 
-            price_changed = (entry.price != new_price)
-            stock_changed = (entry.in_stock != new_in_stock)
+                if not dry_run:
+                    entry.price = new_price
+                    entry.in_stock = new_in_stock
+                    entry.not_available = False
+                    entry.save(update_fields=['price', 'in_stock', 'not_available', 'last_seen'])
 
-            if not price_changed and not stock_changed:
-                unchanged += 1
-                continue
+                updated += 1
 
-            change_parts = []
-            if price_changed:
-                old_str = f'${entry.price:.2f}' if entry.price is not None else 'none'
-                change_parts.append(f'${new_price:.2f} (was {old_str})')
-            if stock_changed:
-                change_parts.append('in_stock=' + str(new_in_stock))
-
-            label = '[dry-run]' if dry_run else '[updated]'
-            self.stdout.write(
-                f'  {label} {product.gw_sku} ({product.name}) — '
-                + ', '.join(change_parts)
-                + f'  [ASIN: {asin} | https://www.amazon.com/dp/{asin}]'
-            )
-
-            if not dry_run:
-                entry.price = new_price
-                entry.in_stock = new_in_stock
-                entry.not_available = False
-                entry.save(update_fields=['price', 'in_stock', 'not_available', 'last_seen'])
-
-            updated += 1
-
-        missing_from_api = [asin for asin in asin_to_entry if asin not in api_results]
+        missing_from_api = [asin for asin in asin_to_entries if asin not in api_results]
         if missing_from_api:
             self.stdout.write(self.style.WARNING(
                 f'  {len(missing_from_api)} ASIN(s) not returned by API: '
