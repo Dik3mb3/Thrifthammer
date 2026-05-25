@@ -115,6 +115,11 @@ class Faction(models.Model):
         help_text='Blog tag whose posts appear in the Related Posts section of the faction page.',
     )
 
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        help_text='Timestamp of the last field change — used by the sitemap for crawl prioritisation.',
+    )
+
     class Meta:
         ordering = ['category', 'name']
 
@@ -214,6 +219,10 @@ class Product(models.Model):
         max_digits=10, decimal_places=2, null=True, blank=True,
         help_text='Games Workshop recommended retail price',
     )
+    msrp_gbp = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True,
+        help_text='GW UK retail price in GBP. Populated by the GW UK MSRP scraper.',
+    )
     gw_search_name = models.CharField(
         max_length=300, blank=True, default='',
         help_text=(
@@ -231,6 +240,14 @@ class Product(models.Model):
             'Leave blank to use the product name. '
             'Use this when eBay sellers list a product under a different name '
             'than its display name — e.g. Deathwatch units sold as Space Marine kits.'
+        ),
+    )
+    ebay_search_name_uk = models.CharField(
+        max_length=200, blank=True, default='',
+        help_text=(
+            'UK-only override for the eBay search query name (EBAY_GB). '
+            'Leave blank to fall back to ebay_search_name, then product name. '
+            'Use when UK eBay listings use different terminology than US listings.'
         ),
     )
     ebay_allow_no_box = models.BooleanField(
