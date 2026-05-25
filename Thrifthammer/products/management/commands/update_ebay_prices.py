@@ -510,6 +510,7 @@ class Command(BaseCommand):
                             'in_stock': True,
                             'not_available': False,
                             'shipping_cost': shipping,
+                            'currency': 'USD',
                         },
                     )
                 else:
@@ -533,6 +534,7 @@ class Command(BaseCommand):
                             'url': '',
                             'in_stock': False,
                             'not_available': True,
+                            'currency': 'USD',
                         },
                     )
                 not_found += 1

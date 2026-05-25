@@ -67,6 +67,14 @@ _IMAGES = {
     'TY-044': '99120106057_NeurothropesLead.jpg',
 }
 
+# Per-SKU eBay search name overrides.
+# Used when the product name gives poor eBay results (e.g. Kill Team reboxes).
+_EBAY_SEARCH_NAMES = {
+    # TY-015 "Tyranid Raveners" — sold as a Kill Team box; eBay sellers list it
+    # as "Kill Team Raveners" rather than the full Tyranid unit name.
+    'TY-015': 'Kill Team Raveners',
+}
+
 
 def _amazon_url(asin):
     if not asin:
@@ -424,6 +432,7 @@ class Command(BaseCommand):
                         'faction': faction,
                         'is_active': True,
                         'batch_tag': 'tyranids',
+                        'ebay_search_name': _EBAY_SEARCH_NAMES.get(gw_sku, ''),
                     },
                 )
                 if created:

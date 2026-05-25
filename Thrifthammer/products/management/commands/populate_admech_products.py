@@ -107,7 +107,7 @@ PRODUCTS = [
         60.00,
         '99120116009_AdMechFulguriteElectroPriests01.jpg',
         'https://www.warhammer.com/en-US/shop/Ad-Mec-Fulgurite-Electro-Priests',
-        '',
+        'Adeptus Mechanicus Electro-Priests',
     ),
     (
         'adeptus-mechanicus-hastarii',
