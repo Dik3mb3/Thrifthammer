@@ -24,7 +24,7 @@ jobs:
   update-prices:
     name: eBay Price Update
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     defaults:
       run:
         working-directory: ./Thrifthammer
