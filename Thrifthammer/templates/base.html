@@ -122,7 +122,8 @@
                     <a href="{% url 'accounts:register' %}" rel="nofollow">Register</a>
                 {% endif %}
 
-                {# ── Region switcher — compact flag dropdown at the far right of the nav ── #}
+                {% comment %}
+                {# ── Region switcher — disabled until UK version is ready for launch ── #}
                 <div class="nav-region" id="nav-region">
                     <button
                         class="nav-region-btn"
@@ -145,6 +146,7 @@
                            role="menuitem">🇬🇧 UK / English</a>
                     </div>
                 </div>
+                {% endcomment %}
 
             </div>
 
