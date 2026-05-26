@@ -1,67 +1,73 @@
 card_name,db_name,gw_sku,faction,include
-Basilisk,Astra Militarum Basilisk,47-17,Astra Militarum,Yes
-Cadian Shock Troops,Astra Militarum Cadian Shock Troops,47-30,Astra Militarum,Yes 
-Chimera,Astra Militarum Chimera,47-05,Astra Militarum,Yes
-Commissar,Astra Militarum Commissar,47-08,Astra Militarum,Yes
-Cyclops Demolition Vehicle,,,Astra Militarum,
-Leman Russ Battle Tank,Astra Militarum Leman Russ Battle Tank,47-06,Astra Militarum,Yes
-Scout Sentinels,Astra Militarum Sentinel,47-12,Astra Militarum,Yes
-Aegis Defence Line,,,Astra Militarum,No
-Armoured Sentinels,,,Astra Militarum,No
-Artillery Team,,,Astra Militarum,No
-Attilan Rough Riders,,,Astra Militarum,No
-Avenger Strike Fighter,,,Astra Militarum,No
-Baneblade,,,Astra Militarum,No
-Banehammer,,,Astra Militarum,No
-Banesword,,,Astra Militarum,No
-Gaunt’s Ghosts,,,Astra Militarum,No
-Bullgryn Squad,,,Astra Militarum,No
-Cadian Castellan,,,Astra Militarum,No
-Cadian Command Squad,,,Astra Militarum,No
-Cadian Heavy Weapons Squad,,,Astra Militarum,No
-Catachan Command Squad,,,Astra Militarum,No
-Catachan Heavy Weapons Squad,,,Astra Militarum,No
-Catachan Jungle Fighters,,,Astra Militarum,No
-Death Korps of Krieg,,,Astra Militarum,No
-Death Riders,,,Astra Militarum,No
-Deathstrike,,,Astra Militarum,No
-Doomhammer,,,Astra Militarum,No
-Field Ordnance Battery,,,Astra Militarum,No
-Hellhammer,,,Astra Militarum,No
-Hellhound,Astra Militarum Hellhound,47-14,Astra Militarum,Yes
-Hydra,,,Astra Militarum,No
-Kasrkin,,,Astra Militarum,No
-Krieg Combat Engineers,,,Astra Militarum,No
-Krieg Command Squad,,,Astra Militarum,No
-Krieg Heavy Weapons Squad,,,Astra Militarum,No
-Leman Russ Commander,,,Astra Militarum,No
-Leman Russ Demolisher,,,Astra Militarum,No
-Leman Russ Eradicator,,,Astra Militarum,No
-Leman Russ Executioner,,,Astra Militarum,No
-Leman Russ Exterminator,,,Astra Militarum,No
-Leman Russ Punisher,,,Astra Militarum,No
-Leman Russ Vanquisher,,,Astra Militarum,No
-Lord Marshal Dreir,,,Astra Militarum,No
-Lord Solar Leontus,,,Astra Militarum,No
-Manticore,,,Astra Militarum,No
-Militarum Tempestus Command Squad,,,Astra Militarum,No
-Ministorum Priest,,,Astra Militarum,No
-Nork Deddog,,,Astra Militarum,No
-Ogryn Bodyguard,,,Astra Militarum,No
-Ogryn Squad,,,Astra Militarum,No
-Primaris Psyker,,,Astra Militarum,No
-Ratlings,,,Astra Militarum,No
-Rogal Dorn Battle Tank,,,Astra Militarum,No
-Rogal Dorn Commander,,,Astra Militarum,No
-Shadowsword,,,Astra Militarum,No
-Sly Marbo,,,Astra Militarum,No
-Stormlord,,,Astra Militarum,No
-Stormsword,,,Astra Militarum,No
-Taurox,,,Astra Militarum,No
-Taurox Prime,,,Astra Militarum,No
-Tech-Priest Enginseer,,,Astra Militarum,No
-Tempestus Aquilons,,,Astra Militarum,No
-Tempestus Scions,,,Astra Militarum,No
-Ursula Creed,,,Astra Militarum,No
-Valkyrie,,,Astra Militarum,No
-Wyvern,,,Astra Militarum,No
+Aegis Defence Line,Astra Militarum Aegis Defence Line,SKU: AM-001,Guard,
+Armoured Sentinels,,,Guard,
+Artillery Team,Astra Militarum Artillery Team,SKU: AM-003,Guard,
+Attilan Rough Riders,Astra Militarum Attilan Rough Riders,SKU: AM-004,Guard,
+Avenger Strike Fighter,,,Guard,
+Baneblade,Astra Militarum Baneblade,SKU: AM-005,Guard,
+Banehammer,Astra Militarum Banehammer,SKU: AM-006,Guard,
+Banesword,Astra Militarum Banesword,SKU: AM-007,Guard,
+Basilisk,Astra Militarum Basilisk,SKU: 47-17,Guard,
+Bullgryn Squad,Astra Militarum Bullgryns,SKU: AM-008,Guard,
+Cadian Castellan,Astra Militarum Cadian Castellan,SKU: AM-009,Guard,
+Cadian Command Squad,Astra Militarum Cadian Command Squad,SKU: AM-010,Guard,
+Cadian Heavy Weapons Squad,Astra Militarum Cadian Heavy Weapons Squad,SKU: AM-024,Guard,
+Cadian Recon Squad,,,Guard,
+Cadian Shock Troops,Astra Militarum Cadian Shock Troops,SKU: 47-30,Guard,
+Catachan Command Squad,Astra Militarum Catachan Command Squad,SKU: AM-012,Guard,
+Catachan Heavy Weapons Squad,Astra Militarum Catachan Heavy Weapons Squad,SKU: AM-013,Guard,
+Catachan Jungle Fighters,Astra Militarum Catachan Jungle Fighters,SKU: AM-014,Guard,
+Centaur RSV,Astra Militarum Commissar Graves,SKU: AM-017,Guard,
+Chimera,Astra Militarum Chimera,SKU: 47-05,Guard,
+Commissar,Astra Militarum Commissar,SKU: 47-08,Guard,
+Commissar Graves,Astra Militarum Commissar Graves,SKU: AM-016,Guard,
+Commissar Graves on Foot,Astra Militarum Commissar Graves,SKU: AM-017,Guard,
+Commissar Yarrick,Astra Militarum Commissar Graves,SKU: AM-016,Guard,
+Cyclops Demolition Vehicle,,,Guard,
+Death Korps of Krieg,Astra Militarum Death Korps of Krieg,SKU: AM-018,Guard,
+Death Riders,Astra Militarum Death Riders,SKU: AM-019,Guard,
+Deathstrike,Astra Militarum Deathstrike,SKU: AM-020,Guard,
+Doomhammer,Astra Militarum Doomhammer,SKU: AM-021,Guard,
+Field Ordnance Battery,Astra Militarum Field Ordnance Battery,SKU: AM-022,Guard,
+Gaunts Ghosts,Astra Militarum Gaunt's Ghosts,SKU: AM-023,Guard,
+Hellhammer,Astra Militarum Hellhammer,SKU: AM-025,Guard,
+Hellhound,Astra Militarum Hellhound,SKU: 47-14,Guard,
+Hippogriff AFV,,,Guard,
+Hydra,Astra Militarum Hydra,SKU: AM-026,Guard,
+Kasrkin,,,Guard,
+Krieg Combat Engineers,Astra Militarum Krieg Combat Engineers,SKU: AM-027,Guard,
+Krieg Command Squad,Astra Militarum Krieg Command Squad,SKU: AM-028,Guard,Yes
+Krieg Heavy Weapons Squad,Astra Militarum Krieg Heavy Weapons Squad,SKU: AM-029,Guard,
+Leman Russ Battle Tank,Astra Militarum Leman Russ Battle Tank,SKU: 47-06,Guard,
+Leman Russ Commander,Astra Militarum Leman Russ Battle Tank,SKU: 47-06,Guard,
+Leman Russ Demolisher,Astra Militarum Leman Russ Battle Tank,SKU: 47-06,Guard,
+Leman Russ Eradicator,Astra Militarum Leman Russ Battle Tank,SKU: 47-06,Guard,
+Leman Russ Executioner,Astra Militarum Leman Russ Battle Tank,SKU: 47-06,Guard,
+Leman Russ Exterminator,Astra Militarum Leman Russ Battle Tank,SKU: 47-06,Guard,
+Leman Russ Punisher,Astra Militarum Leman Russ Battle Tank,SKU: 47-06,Guard,
+Leman Russ Vanquisher,Astra Militarum Leman Russ Battle Tank,SKU: 47-06,Guard,
+Lord Marshal Dreir,Astra Militarum Lord Marshal Dreir,SKU: AM-031,Guard,
+Lord Solar Leontus,Astra Militarum Lord Solar Leontus,SKU: AM-032,Guard,
+Manticore,Astra Militarum Manticore,SKU: AM-033,Guard,
+Militarum Tempestus Command Squad,Astra Militarum Militarum Tempestus Scions Command Squad,SKU: AM-034,Guard,
+Ministorum Priest,,,Guard,
+Nork Deddog,,,Guard,
+Ogryn Bodyguard,,,Guard,
+Ogryn Squad,,,Guard,
+Primaris Psyker,,,Guard,
+Ratlings,,,Guard,
+Rogal Dorn Battle Tank,,,Guard,
+Rogal Dorn Commander,,,Guard,
+Scout Sentinels,,,Guard,
+Shadowsword,,,Guard,
+Sly Marbo,,,Guard,
+Stormlord,,,Guard,
+Stormsword,,,Guard,
+Taurox,,,Guard,
+Taurox Prime,,,Guard,
+Tech-Priest Enginseer,,,Guard,
+Tempestus Aquilons,,,Guard,
+Tempestus Scions,,,Guard,
+Ursula Creed,Astra Militarum Lord Castellan Ursula Creed,SKU: AM-030,Guard,
+Valkyrie,,,Guard,
+Wyvern,,,Guard,

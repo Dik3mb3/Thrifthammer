@@ -217,6 +217,25 @@
             </div>
 
             <div class="product-card-pricing">
+              {% if region == 'uk' %}{% with sym='£' %}
+              {% if product.min_price %}
+              <div class="product-card-price-label">Best Price</div>
+              <div class="product-card-price">{{ sym }}{{ product.min_price|floatformat:"2" }}</div>
+              {% if product.msrp_gbp %}
+              <div class="product-card-savings-row">
+                <span class="product-card-msrp">MSRP {{ sym }}{{ product.msrp_gbp }}</span>
+              </div>
+              {% endif %}
+              {% elif product.msrp_gbp %}
+              <div class="product-card-price-label">MSRP</div>
+              <div style="font-size:1rem;font-weight:600;color:var(--text-secondary);">{{ sym }}{{ product.msrp_gbp }}</div>
+              {% elif product.msrp %}
+              <div class="product-card-price-label">MSRP</div>
+              <div style="font-size:1rem;font-weight:600;color:var(--text-secondary);">${{ product.msrp }}</div>
+              {% else %}
+              <div class="product-card-price-label" style="padding-top:var(--sp-2);color:var(--text-muted);">No price yet</div>
+              {% endif %}
+              {% endwith %}{% else %}
               {% if product.min_price %}
               <div class="product-card-price-label">Best Price</div>
               <div class="product-card-price">${{ product.min_price|floatformat:"2" }}</div>
@@ -236,6 +255,7 @@
               <div style="font-size:1rem;font-weight:600;color:var(--text-secondary);">${{ product.msrp }}</div>
               {% else %}
               <div class="product-card-price-label" style="padding-top:var(--sp-2);color:var(--text-muted);">No price yet</div>
+              {% endif %}
               {% endif %}
             </div>
           </div>

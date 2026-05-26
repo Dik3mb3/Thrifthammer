@@ -99,7 +99,7 @@
       <div class="best-price-card">
         <div class="best-price-label">Best Price Available</div>
         <div style="display:flex;align-items:baseline;gap:var(--sp-3);flex-wrap:wrap;">
-          <div class="best-price-amount">${{ best.price|floatformat:"2" }}</div>
+          <div class="best-price-amount">{% if region == 'uk' %}£{% else %}${% endif %}{{ best.price|floatformat:"2" }}</div>
           {# Discount badge vs GW price — shown next to the dollar amount #}
           {% if gw_ref_price %}
           {% with best_disc=best.price|discount_vs:gw_ref_price %}
@@ -109,7 +109,7 @@
           {% endwith %}
           {% endif %}
           {% if pts_per_dollar %}
-          <em style="font-size:0.95rem;color:var(--text-muted);font-weight:500;">({{ pts_per_dollar }} points/dollar)</em>
+          <em style="font-size:0.95rem;color:var(--text-muted);font-weight:500;">({{ pts_per_dollar }} points/{% if region == 'uk' %}pound{% else %}dollar{% endif %})</em>
           {% endif %}
         </div>
         <div class="best-price-retailer">at {{ best.retailer.name }}
@@ -120,14 +120,14 @@
           {% endif %}
         </div>
         {% if gw_ref_price %}
-        <p style="font-size:0.8rem;color:var(--text-muted);">GW MSRP: ${{ gw_ref_price }}</p>
+        <p style="font-size:0.8rem;color:var(--text-muted);">GW MSRP: {% if region == 'uk' %}£{% else %}${% endif %}{{ gw_ref_price }}</p>
         {% endif %}
       </div>
       {% endwith %}
       {% elif product.msrp %}
       <div class="best-price-card">
         <div class="best-price-label">GW MSRP</div>
-        <div class="best-price-amount">${{ product.msrp }}</div>
+        <div class="best-price-amount">{% if region == 'uk' and product.msrp_gbp %}£{{ product.msrp_gbp }}{% else %}${{ product.msrp }}{% endif %}</div>
         <p style="font-size:0.82rem;color:var(--text-muted);margin-top:var(--sp-2);">No retailer prices tracked yet.</p>
       </div>
       {% endif %}
@@ -197,7 +197,7 @@
               {% if cp.not_available %}
               <span style="color:var(--text-muted);">—</span>
               {% else %}
-              ${{ cp.price|floatformat:"2" }}
+              {% if region == 'uk' %}£{% else %}${% endif %}{{ cp.price|floatformat:"2" }}
               {% if forloop.first and cp.in_stock %}
               <span class="badge badge-green" style="margin-left:4px;">Best</span>
               {% endif %}
@@ -242,8 +242,12 @@
       </table>
       </div>{# /price-table-wrap #}
       <p style="font-size:0.72rem;color:var(--text-muted);margin-top:var(--sp-2);">
-        Prices updated: {{ current_prices.0.last_seen|date:"d M Y" }}{% for cp in current_prices %}{% if 'amazon' in cp.retailer.slug %}, Amazon checked {{ cp.last_seen|date:"d M Y" }}{% endif %}{% endfor %}.
+        Prices updated: {{ current_prices.0.last_seen|date:"d M Y" }}.
+        {% if region == 'uk' %}
+        eBay UK links are affiliate links.{% for cp in current_prices %}{% if cp.retailer.slug == 'ebay-uk' and cp.price and not cp.not_available %} eBay UK prices include shipping.{% endif %}{% endfor %}
+        {% else %}
         Amazon, eBay, and Noble Knight links are affiliate links.{% for cp in current_prices %}{% if cp.retailer.slug == 'ebay' and cp.price and not cp.not_available %} eBay prices include shipping.{% endif %}{% endfor %}
+        {% endif %}
       </p>
       {% else %}
       <p style="color:var(--text-muted);font-size:0.9rem;">
@@ -375,15 +379,15 @@
           <div class="product-card-pricing">
             {% if rp.min_price %}
             <div class="product-card-price-label">Best Price</div>
-            <div class="product-card-price">${{ rp.min_price|floatformat:"2" }}</div>
+            <div class="product-card-price">{% if region == 'uk' %}£{% else %}${% endif %}{{ rp.min_price|floatformat:"2" }}</div>
             {% if rp.msrp %}
             <div class="product-card-savings-row">
-              <span class="product-card-msrp">MSRP ${{ rp.msrp }}</span>
+              <span class="product-card-msrp">MSRP {% if region == 'uk' and rp.msrp_gbp %}£{{ rp.msrp_gbp }}{% else %}${{ rp.msrp }}{% endif %}</span>
             </div>
             {% endif %}
             {% elif rp.msrp %}
             <div class="product-card-price-label">MSRP</div>
-            <div style="font-size:1rem;font-weight:600;color:var(--text-secondary);">${{ rp.msrp }}</div>
+            <div style="font-size:1rem;font-weight:600;color:var(--text-secondary);">{% if region == 'uk' and rp.msrp_gbp %}£{{ rp.msrp_gbp }}{% else %}${{ rp.msrp }}{% endif %}</div>
             {% endif %}
           </div>
         </div>

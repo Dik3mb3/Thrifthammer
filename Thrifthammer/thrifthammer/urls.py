@@ -4,6 +4,10 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
 from django.views.generic import RedirectView, TemplateView
 
+# Admin URL is configured via the DJANGO_ADMIN_URL environment variable so
+# the real path never appears in source control. Defaults to 'admin/' locally.
+_ADMIN_URL = getattr(settings, 'ADMIN_URL', 'admin/')
+
 from products.views import about, faq, home, newsletter_signup, privacy_policy
 from thrifthammer.sitemaps import BlogPostSitemap, BlogTagSitemap, FactionSitemap, ProductSitemap, StaticViewSitemap
 
@@ -65,7 +69,7 @@ urlpatterns = [
         ),
     ),
     # ─────────────────────────────────────────────────────────────────────────
-    path('admin/', admin.site.urls),
+    path(_ADMIN_URL, admin.site.urls),
     path('', home, name='home'),
     path('about/', about, name='about'),
     path('privacy-policy/', privacy_policy, name='privacy_policy'),

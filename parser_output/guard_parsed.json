@@ -1,9 +1,271 @@
 {
   "faction": "Guard",
   "source_file": "POINTS_GUARD.html",
-  "extracted_date": "2026-04-12",
-  "total_cards": 66,
+  "extracted_date": "2026-05-20",
+  "total_cards": 72,
   "units": [
+    {
+      "card_name": "Commissar Graves",
+      "points": 110,
+      "primary_stats": {
+        "model": "Commissar Graves",
+        "M": "12\"",
+        "T": "8",
+        "SV": "3+",
+        "W": "12",
+        "LD": "6+",
+        "OC": "5"
+      },
+      "all_model_stats": [
+        {
+          "model": "Commissar Graves",
+          "M": "12\"",
+          "T": "8",
+          "SV": "3+",
+          "W": "12",
+          "LD": "6+",
+          "OC": "5"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Chiron gatling cannon",
+          "range": "24\"",
+          "A": "12",
+          "BS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        },
+        {
+          "name": "Prefectus heavy stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "3+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 3"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Extra Attacks"
+        },
+        {
+          "name": "Enforcer crew",
+          "A": "10",
+          "WS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Extra Attacks"
+        },
+        {
+          "name": "Power sword and Manus Mortis",
+          "A": "5",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": "Lance"
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Brutal Disciplinarian",
+          "description": "Once per turn, at the start of any phase, you can select one friendly Astra Militarum Infantry unit (excluding units that only contain one model) that is Battle‑shocked and within 24\" of and visible to this model. If you do, one model in that unit is destroyed, and that unit is no longer Battle‑shocked."
+        },
+        {
+          "name": "Mechanised Spearhead",
+          "description": "In your Movement phase, each time a friendly Astra Militarum Regiment unit disembarks from a Transport that is within 6\" of this model, after that unit has been set up, this model can issue 1 Order to that Regiment unit, regardless of how many Orders this model has already issued this turn."
+        },
+        {
+          "name": "Aquiline Prow",
+          "description": "Each time this unit ends a Charge move, you can select one enemy unit within Engagement Range of it, then roll one D6: on a 2‑3, that enemy unit suffers D3 mortal wounds; on a 4‑5, that enemy unit suffers 3 mortal wounds; on a 6, that enemy unit suffers D3+3 mortal wounds."
+        },
+        {
+          "name": "Invulnerable Save (4+)",
+          "description": "This model has a 4+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Commissar Graves on Foot",
+      "points": 65,
+      "primary_stats": {
+        "model": "Commissar Graves on Foot",
+        "M": "6\"",
+        "T": "3",
+        "SV": "4+",
+        "W": "4",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Commissar Graves on Foot",
+          "M": "6\"",
+          "T": "3",
+          "SV": "4+",
+          "W": "4",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bolt pistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Power sword and Manus Mortis",
+          "A": "5",
+          "WS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Brutal Disciplinarian",
+          "description": "Once per turn, at the start of any phase, you can select one friendly Astra Militarum Infantry (excluding units that only contain one model) unit that is Battle‑shocked and within 12\" of this model. If you do, one model in that unit is destroyed, and that unit is no longer Battle‑shocked."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units:\n\nCadian Shock Troops\nCatachan Jungle Fighters\nDeath Korps of Krieg\nKasrkin\nKrieg Combat Engineers\nTempestus Scions"
+        },
+        {
+          "name": "Icon of Discipline",
+          "description": "This model’s unit is eligible to shoot and declare a Charge in a turn in which it Fell Back."
+        },
+        {
+          "name": "Using Commissar Graves",
+          "description": "Your army can only include one Commissar Graves or Commissar Graves on Foot unit."
+        },
+        {
+          "name": "Invulnerable Save (5+)",
+          "description": "This model has a 5+ invulnerable save."
+        }
+      ]
+    },
+    {
+      "card_name": "Commissar Yarrick",
+      "points": 150,
+      "primary_stats": {
+        "model": "Commissar Yarrick",
+        "M": "6\"",
+        "T": "4",
+        "SV": "4+",
+        "W": "5",
+        "LD": "6+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Commissar Yarrick",
+          "M": "6\"",
+          "T": "4",
+          "SV": "4+",
+          "W": "5",
+          "LD": "6+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Bale Eye",
+          "range": "12\"",
+          "A": "2",
+          "BS": "2+",
+          "S": "6",
+          "AP": "-2",
+          "D": "D3+1",
+          "keywords": "Precision"
+        },
+        {
+          "name": "Laspistol",
+          "range": "12\"",
+          "A": "1",
+          "BS": "2+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Pistol"
+        },
+        {
+          "name": "Storm bolter",
+          "range": "24\"",
+          "A": "2",
+          "BS": "2+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 2"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Power klaw",
+          "A": "4",
+          "WS": "2+",
+          "S": "8",
+          "AP": "-2",
+          "D": "2",
+          "keywords": ""
+        },
+        {
+          "name": "Power sword",
+          "A": "6",
+          "WS": "2+",
+          "S": "4",
+          "AP": "-2",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Will of Iron",
+          "description": "The first time this model is destroyed, remove it from play, then, at the end of the phase, roll one D6: on a 2+, set this model back up on the battlefield as close as possible to where it was destroyed and not within Engagement Range of one or more enemy units, with 3 wounds remaining."
+        },
+        {
+          "name": "Leader",
+          "description": "This model can be attached to the following units: \n\nCadian Shock Troops\nCatachan Jungle Fighters\nDeath Korps of Krieg\nKasrkin\nKrieg Combat Engineers\nTempestus Scions"
+        },
+        {
+          "name": "Hero of Hades Hive",
+          "description": "In your Command phase, you can select one of the abilities in the Hero of Hades Hive section. Until the start of your next Command phase, this model has that ability."
+        },
+        {
+          "name": "Invulnerable Save (4+)",
+          "description": "This model has a 4+ invulnerable save."
+        }
+      ]
+    },
     {
       "card_name": "Gaunt’s Ghosts",
       "points": 100,
@@ -1810,6 +2072,70 @@
       ]
     },
     {
+      "card_name": "Cadian Recon Squad",
+      "points": 80,
+      "primary_stats": {
+        "model": "Recon Sergeant",
+        "M": "6\"",
+        "T": "3",
+        "SV": "5+",
+        "W": "1",
+        "LD": "7+",
+        "OC": "1"
+      },
+      "all_model_stats": [
+        {
+          "model": "Recon Sergeant",
+          "M": "6\"",
+          "T": "3",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "1"
+        },
+        {
+          "model": "Recon Trooper (x9)",
+          "M": "6\"",
+          "T": "3",
+          "SV": "5+",
+          "W": "1",
+          "LD": "7+",
+          "OC": "1"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Lasgun (x10)",
+          "range": "24\"",
+          "A": "1",
+          "BS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Assault, Rapid Fire 1"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Close combat weapon (x10)",
+          "A": "1",
+          "WS": "4+",
+          "S": "3",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Independent Operatives",
+          "description": "Each time an Order is issued to this unit, that Order affects this unit until a new Order is issued to this unit, or until this unit becomes Battle‑shocked, or until the battle ends (whichever happens first)."
+        }
+      ]
+    },
+    {
       "card_name": "Catachan Heavy Weapons Squad",
       "points": 65,
       "primary_stats": {
@@ -3021,7 +3347,7 @@
           "S": "8",
           "AP": "-2",
           "D": "2",
-          "keywords": "Blast, Indirect Fire,"
+          "keywords": "Blast, Indirect Fire"
         },
         {
           "name": "Heavy bolter",
@@ -3421,6 +3747,71 @@
         {
           "name": "Damaged: 1-4 Wounds Remaining",
           "description": "While this model has 1-4 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Hippogriff AFV",
+      "points": 70,
+      "primary_stats": {
+        "model": "Hippogriff AFV",
+        "M": "12\"",
+        "T": "8",
+        "SV": "3+",
+        "W": "7",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Hippogriff AFV",
+          "M": "12\"",
+          "T": "8",
+          "SV": "3+",
+          "W": "7",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Heavy stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Assault, Rapid Fire 3"
+        },
+        {
+          "name": "Vigilator cannon",
+          "range": "36\"",
+          "A": "D6",
+          "BS": "4+",
+          "S": "8",
+          "AP": "-1",
+          "D": "2",
+          "keywords": "Assault, Blast"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "5",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Convoy Escort Vehicle",
+          "description": "In your Shooting phase, after this unit has shot, it can make a Normal move of up to D6\". If it does, until the end of the turn, this unit is not eligible to declare a charge."
         }
       ]
     },
@@ -4569,6 +4960,61 @@
         {
           "name": "Suppression Bombardment",
           "description": "In your Shooting phase, after this model has shot, select one enemy unit (excluding Monsters and Vehicles) that was hit by one or more attacks made with this model’s Wyvern quad stormshard mortar. Unit the start of your next Shooting phase, that enemy unit is suppressed. While a unit is suppressed, each time a model in that unit makes an attack, subtract 1 from the Hit roll."
+        }
+      ]
+    },
+    {
+      "card_name": "Centaur RSV",
+      "points": 85,
+      "primary_stats": {
+        "model": "Centaur RSV",
+        "M": "12\"",
+        "T": "7",
+        "SV": "3+",
+        "W": "10",
+        "LD": "7+",
+        "OC": "2"
+      },
+      "all_model_stats": [
+        {
+          "model": "Centaur RSV",
+          "M": "12\"",
+          "T": "7",
+          "SV": "3+",
+          "W": "10",
+          "LD": "7+",
+          "OC": "2"
+        }
+      ],
+      "invuln_save": null,
+      "fnp_save": null,
+      "ranged_weapons": [
+        {
+          "name": "Pintle-mounted heavy stubber",
+          "range": "36\"",
+          "A": "3",
+          "BS": "4+",
+          "S": "4",
+          "AP": "0",
+          "D": "1",
+          "keywords": "Rapid Fire 3"
+        }
+      ],
+      "melee_weapons": [
+        {
+          "name": "Armoured hull",
+          "A": "3",
+          "WS": "4+",
+          "S": "6",
+          "AP": "0",
+          "D": "1",
+          "keywords": ""
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Rapid Strike Vehicle",
+          "description": "While one or more units are embarked within this model, unless this model is Battle‑shocked, add 1 to this model’s Objective Control characteristic for every 3 models (rounding down) embarked within it."
         }
       ]
     },

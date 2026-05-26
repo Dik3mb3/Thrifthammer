@@ -105,6 +105,7 @@
                     </div>
                 </div>
                 <a href="{% url 'calculators:space_marines' %}" class="nav-cta">Army Calculator</a>
+
                 {% if user.is_authenticated %}
                     <a href="{% url 'collections:my_collection' %}">Collection</a>
                     <a href="{% url 'calculators:my_armies' %}">My Armies</a>
@@ -120,6 +121,30 @@
                     <a href="{% url 'accounts:login' %}" rel="nofollow">Login</a>
                     <a href="{% url 'accounts:register' %}" rel="nofollow">Register</a>
                 {% endif %}
+
+                {# ── Region switcher — compact flag dropdown at the far right of the nav ── #}
+                <div class="nav-region" id="nav-region">
+                    <button
+                        class="nav-region-btn"
+                        id="nav-region-btn"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        aria-controls="nav-region-menu"
+                        title="Switch region"
+                    >
+                        <span class="nav-region-flag" aria-hidden="true">{% if region == 'uk' %}🇬🇧{% else %}🇺🇸{% endif %}</span>
+                        <span class="nav-region-code">{% if region == 'uk' %}UK{% else %}US{% endif %}</span>
+                        <svg class="nav-region-chevron" xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="nav-region-menu" id="nav-region-menu" role="menu" hidden>
+                        <a href="{{ request.path }}?region=us"
+                           class="nav-region-option{% if region == 'us' %} nav-region-option--active{% endif %}"
+                           role="menuitem">🇺🇸 US / English</a>
+                        <a href="{{ request.path }}?region=uk"
+                           class="nav-region-option{% if region == 'uk' %} nav-region-option--active{% endif %}"
+                           role="menuitem">🇬🇧 UK / English</a>
+                    </div>
+                </div>
 
             </div>
 
@@ -177,7 +202,7 @@
             {# ── Legal strip ── #}
             <div class="footer-legal-strip">
                 <span>
-                    Affiliate links: ThriftHammer earns a small commission on Amazon and Noble Knight purchases at no extra cost to you. Rankings by price — lowest first, always.
+                    Affiliate links: ThriftHammer earns a small commission on Amazon, eBay, and Noble Knight purchases at no extra cost to you. Rankings by price — lowest first, always.
                     {% if last_price_update %}· Prices last updated {{ last_price_update|date:"j M Y" }}.{% endif %}
                 </span>
                 <span>&copy; {% now "Y" %} ThriftHammer &mdash; not affiliated with Games Workshop Ltd.</span>
@@ -245,6 +270,43 @@
         document.addEventListener("click", function () {
             dd.classList.remove("open");
             toggle.setAttribute("aria-expanded", "false");
+        });
+    })();
+    </script>
+
+    {# Region switcher dropdown toggle #}
+    <script>
+    (function () {
+        var container = document.getElementById("nav-region");
+        var btn       = document.getElementById("nav-region-btn");
+        var menu      = document.getElementById("nav-region-menu");
+        if (!container || !btn || !menu) return;
+
+        btn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            var isHidden = menu.hasAttribute("hidden");
+            if (isHidden) {
+                menu.removeAttribute("hidden");
+                btn.setAttribute("aria-expanded", "true");
+            } else {
+                menu.setAttribute("hidden", "");
+                btn.setAttribute("aria-expanded", "false");
+            }
+        });
+
+        document.addEventListener("click", function (e) {
+            if (!container.contains(e.target)) {
+                menu.setAttribute("hidden", "");
+                btn.setAttribute("aria-expanded", "false");
+            }
+        });
+
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && !menu.hasAttribute("hidden")) {
+                menu.setAttribute("hidden", "");
+                btn.setAttribute("aria-expanded", "false");
+                btn.focus();
+            }
         });
     })();
     </script>

@@ -3,6 +3,7 @@ from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from prices.models import CurrentPrice
 from products.models import Product
@@ -103,6 +104,7 @@ def add_to_collection(request, slug):
     })
 
 
+@require_POST
 @login_required
 def remove_from_collection(request, slug):
     """Remove a product from the user's collection."""

@@ -21,7 +21,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from prices.models import CurrentPrice
-from products.models import Faction, Retailer
+from products.models import Category, Faction, Product, Retailer
 from scrapers.retailers.amazon_creators import AmazonCreatorsClient
 
 # ─── Manual ASIN overrides ────────────────────────────────────────────────────
@@ -55,6 +55,38 @@ SKIP_SKUS = {
     '50-53',                        # Ork Burna Boyz
     '50-16',                        # Ork Deff Dread
     '50-59',                        # Ork Warboss with Attack Squig
+    '62-01',                        # Aethon Shaan
+    '48-106',                       # Captain with Relic Shield
+    '48-123',                       # Lieutenant with Storm Shield
+    'P-MUTALITH-VB',                # Mutalith Vortex Beast
+    'P-TZAANGOR-UPG',               # Tzaangor Upgrade Pack
+    'TY-036',                       # Tyranid Prime
+    'TY-035',                       # Tyranid Hierophant Bio-Titan
+    'TY-034',                       # Tyranid Harridan
+    'P-WE-LORD-SKULLS',             # Khorne Lord of Skulls
+    'SR-017',                       # Seraphon Saurus Scar-Veteran on Carnosaur
+    'SR-013',                       # Seraphon Saurus Guard
+    'SR-015',                       # Seraphon Saurus Oldblood on Carnosaur
+    '90-10',                        # Skaven Clanrats
+    'SK-009',                       # Skaven Clawlord
+    'SK-026',                       # Skaven Master Moulder
+    'BB-037',                       # Blood Bowl Dwarf Deathroller
+    'BB-036',                       # Blood Bowl Goblin Secret Weapons
+    'BB-032',                       # Blood Bowl Khorne Bloodspawn
+    'BB-039',                       # Blood Bowl Kiroth Krakeneye
+    'BB-031',                       # Blood Bowl Kroxigor
+    'BB-035',                       # Blood Bowl Minotaur
+    'BB-063',                       # Blood Bowl Nurgle Rotspawn
+    'BB-030',                       # Blood Bowl Rat Ogre
+    'BB-040',                       # Blood Bowl Vargheist
+    'BB-029',                       # Blood Bowl Yhetee
+    'SE-014',                       # Stormcast Eternals Gardus Steel Soul
+    'SE-027',                       # Stormcast Eternals Knight-Arcanum
+    'SE-020',                       # Stormcast Eternals Knight-Questor
+    'SE-026',                       # Stormcast Eternals Lord-Imperatant
+    'SE-028',                       # Stormcast Eternals Prosecutors
+    'SE-006',                       # Stormcast Eternals Stormcoven
+    'SE-010',                       # Stormcast Eternals Vanquishers
 }
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -88,10 +120,14 @@ class Command(BaseCommand):
     )
 
     def add_arguments(self, parser):
-        parser.add_argument(
+        group = parser.add_mutually_exclusive_group(required=True)
+        group.add_argument(
             '--faction',
-            required=True,
             help='Faction slug (e.g. necrons, space-marines)',
+        )
+        group.add_argument(
+            '--category',
+            help='Category slug (e.g. horus-heresy, kill-team, blood-bowl)',
         )
         parser.add_argument(
             '--apply',
@@ -105,15 +141,8 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        faction_slug = options['faction'].strip()
         applying = options['apply']
         use_brand = not options['no_brand_filter']
-
-        try:
-            faction = Faction.objects.get(slug=faction_slug)
-        except Faction.DoesNotExist:
-            self.stderr.write(self.style.ERROR(f'Faction "{faction_slug}" not found.'))
-            return
 
         try:
             amazon_retailer = Retailer.objects.get(slug='amazon')
@@ -121,29 +150,51 @@ class Command(BaseCommand):
             self.stderr.write(self.style.ERROR('Amazon retailer not found in DB.'))
             return
 
-        # All active products in this faction
-        all_products = list(
-            faction.products.filter(is_active=True).order_by('name')
-        )
-
-        # Products that already have an Amazon URL — these are always skipped
-        has_url = set(
-            CurrentPrice.objects
-            .filter(
-                retailer=amazon_retailer,
-                product__faction=faction,
+        # ── Resolve faction or category ───────────────────────────────────────
+        if options['faction']:
+            faction_slug = options['faction'].strip()
+            try:
+                faction = Faction.objects.get(slug=faction_slug)
+            except Faction.DoesNotExist:
+                self.stderr.write(self.style.ERROR(f'Faction "{faction_slug}" not found.'))
+                return
+            scope_label = f'Faction: {faction.name}'
+            all_products = list(faction.products.filter(is_active=True).order_by('name'))
+            has_url = set(
+                CurrentPrice.objects
+                .filter(retailer=amazon_retailer, product__faction=faction)
+                .exclude(url='').exclude(url__isnull=True)
+                .values_list('product_id', flat=True)
             )
-            .exclude(url='')
-            .exclude(url__isnull=True)
-            .values_list('product_id', flat=True)
-        )
+        else:
+            category_slug = options['category'].strip()
+            try:
+                category = Category.objects.get(slug=category_slug)
+            except Category.DoesNotExist:
+                # List available category slugs to help the user
+                slugs = list(Category.objects.order_by('name').values_list('slug', 'name'))
+                self.stderr.write(self.style.ERROR(f'Category "{category_slug}" not found.'))
+                self.stderr.write('Available categories:')
+                for slug, name in slugs:
+                    self.stderr.write(f'  {slug:<35} ({name})')
+                return
+            scope_label = f'Category: {category.name}'
+            all_products = list(
+                Product.objects.filter(category=category, is_active=True).order_by('name')
+            )
+            has_url = set(
+                CurrentPrice.objects
+                .filter(retailer=amazon_retailer, product__category=category)
+                .exclude(url='').exclude(url__isnull=True)
+                .values_list('product_id', flat=True)
+            )
 
         # Candidates: products with no Amazon URL
         candidates = [p for p in all_products if p.id not in has_url]
         skipped_count = len(all_products) - len(candidates)
 
         self.stdout.write(
-            f'\nFaction  : {faction.name}'
+            f'\n{scope_label}'
             f'\nMode     : {"APPLY — writing to DB" if applying else "DRY RUN — nothing will be written"}'
             f'\nBrand    : {"Games Workshop" if use_brand else "none"}'
             f'\nHave URL : {skipped_count} (skipped)'

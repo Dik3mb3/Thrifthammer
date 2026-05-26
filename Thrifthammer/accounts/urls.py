@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
 
 from . import views
@@ -29,7 +29,21 @@ urlpatterns = [
     path('profile/newsletter-toggle/', views.toggle_newsletter, name='newsletter_toggle'),
     # Newsletter preferences update (POST only — checkboxes + faction multi-select)
     path('profile/newsletter-prefs/', views.update_newsletter_prefs, name='newsletter_prefs'),
-    # Self-service password reset via security question (no email required)
-    path('forgot-password/', views.forgot_password, name='forgot_password'),
-    path('forgot-password/verify/', views.forgot_password_verify, name='forgot_password_verify'),
+    # Email-based password reset (Django built-in, 4-step flow)
+    path('forgot-password/', auth_views.PasswordResetView.as_view(
+        template_name='accounts/password_reset_form.html',
+        email_template_name='accounts/password_reset_email.html',
+        subject_template_name='accounts/password_reset_subject.txt',
+        success_url=reverse_lazy('accounts:password_reset_done'),
+    ), name='forgot_password'),
+    path('forgot-password/done/', auth_views.PasswordResetDoneView.as_view(
+        template_name='accounts/password_reset_done.html',
+    ), name='password_reset_done'),
+    path('forgot-password/confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
+        template_name='accounts/password_reset_confirm.html',
+        success_url=reverse_lazy('accounts:password_reset_complete'),
+    ), name='password_reset_confirm'),
+    path('forgot-password/complete/', auth_views.PasswordResetCompleteView.as_view(
+        template_name='accounts/password_reset_complete.html',
+    ), name='password_reset_complete'),
 ]

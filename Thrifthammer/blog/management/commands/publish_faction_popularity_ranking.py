@@ -369,62 +369,6 @@ BODY = """\
   </table>
 </div>
 
-<script>
-(function () {
-  var table = document.getElementById('fpr-table');
-  if (!table) return;
-  var tbody = table.querySelector('tbody');
-  var headers = Array.from(table.querySelectorAll('thead th[data-sort]'));
-  var currentSortIdx = 0;
-  var ascending = true;
-
-  function getVal(row, colIndex) {
-    var cell = row.cells[colIndex];
-    var span = cell.querySelector('[data-val]');
-    if (span) return parseInt(span.getAttribute('data-val'), 10);
-    return parseInt(cell.getAttribute('data-val'), 10) || 0;
-  }
-
-  function updateArrows(activeIdx) {
-    headers.forEach(function (th) {
-      var arrow = th.querySelector('.fpr-arrow');
-      if (!arrow) return;
-      var idx = parseInt(th.getAttribute('data-sort'), 10);
-      if (idx === activeIdx) {
-        arrow.textContent = ascending ? '\u25b2' : '\u25bc';
-        arrow.style.opacity = '1';
-      } else {
-        arrow.textContent = '\u21c5';
-        arrow.style.opacity = '0.5';
-      }
-    });
-  }
-
-  function sortBy(colIndex) {
-    var rows = Array.from(tbody.querySelectorAll('tr'));
-    rows.sort(function (a, b) {
-      var diff = getVal(a, colIndex) - getVal(b, colIndex);
-      return ascending ? diff : -diff;
-    });
-    rows.forEach(function (r) { tbody.appendChild(r); });
-    updateArrows(colIndex);
-  }
-
-  headers.forEach(function (th) {
-    th.addEventListener('click', function () {
-      var colIndex = parseInt(th.getAttribute('data-sort'), 10);
-      if (currentSortIdx === colIndex) {
-        ascending = !ascending;
-      } else {
-        currentSortIdx = colIndex;
-        ascending = true;
-      }
-      sortBy(colIndex);
-    });
-  });
-})();
-</script>
-
 <h2>Key Takeaways</h2>
 
 <h3>Unsurprising Results</h3>

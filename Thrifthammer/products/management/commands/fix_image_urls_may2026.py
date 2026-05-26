@@ -147,6 +147,7 @@ _DELETE_SKUS = [
     'KT-110',
     # Age of Sigmar — zero-price dormant
     '80-15',
+    '80-20',
     # Horus Heresy — zero-price dormant
     'HA-011',
     'HA-050',

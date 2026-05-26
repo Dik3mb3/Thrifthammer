@@ -6,6 +6,8 @@ Provides:
 - PostDetailView: full post with comments and SEO meta tags
 """
 
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -147,6 +149,66 @@ class PostDetailView(DetailView):
 
         context['comments'] = self.object.comments.select_related('author').all()
         context['comment_form'] = CommentForm()
+
+        # ── JSON-LD structured data (built here so json.dumps() handles all
+        #    escaping correctly — avoids the &quot; / \' bugs from |escapejs) ──
+        post = self.object
+        tags = list(post.tags.all())  # prefetched, no extra query
+
+        article_ld = {
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            'headline': post.effective_meta_title,
+            'description': post.effective_meta_description,
+        }
+        if post.featured_image_url:
+            article_ld['image'] = post.featured_image_url
+        if post.published_at:
+            article_ld['datePublished'] = post.published_at.isoformat()
+            article_ld['dateModified'] = post.updated_at.isoformat()
+        article_ld['timeRequired'] = f'PT{post.reading_time}M'
+        article_ld['author'] = {
+            '@type': 'Person',
+            'name': post.author or 'ThriftHammer',
+        }
+        article_ld['publisher'] = {
+            '@type': 'Organization',
+            'name': 'ThriftHammer',
+            'url': 'https://thrifthammer.com',
+        }
+        article_ld['mainEntityOfPage'] = {
+            '@type': 'WebPage',
+            '@id': f'https://thrifthammer.com{post.get_absolute_url()}',
+        }
+        context['json_ld_article'] = json.dumps(article_ld)
+
+        breadcrumb_items = [
+            {'@type': 'ListItem', 'position': 1, 'name': 'Home',
+             'item': 'https://thrifthammer.com/'},
+            {'@type': 'ListItem', 'position': 2, 'name': 'Blog',
+             'item': 'https://thrifthammer.com/blog/'},
+        ]
+        if tags:
+            first_tag = tags[0]
+            breadcrumb_items.append({
+                '@type': 'ListItem', 'position': 3, 'name': first_tag.name,
+                'item': f'https://thrifthammer.com/blog/tag/{first_tag.slug}/',
+            })
+            breadcrumb_items.append({
+                '@type': 'ListItem', 'position': 4, 'name': post.title[:60],
+                'item': f'https://thrifthammer.com{post.get_absolute_url()}',
+            })
+        else:
+            breadcrumb_items.append({
+                '@type': 'ListItem', 'position': 3, 'name': post.title[:60],
+                'item': f'https://thrifthammer.com{post.get_absolute_url()}',
+            })
+        context['json_ld_breadcrumb'] = json.dumps({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            'itemListElement': breadcrumb_items,
+        })
+
         return context
 
     def post(self, request, *args, **kwargs):

@@ -16,12 +16,21 @@ except ImportError:
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get(
-    'DJANGO_SECRET_KEY',
-    'django-insecure-change-me-in-production'
-)
+_secret_key = os.environ.get('DJANGO_SECRET_KEY', '')
+_debug = os.environ.get('DJANGO_DEBUG', 'False').lower() in ('true', '1', 'yes')
 
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() in ('true', '1', 'yes')
+if not _secret_key:
+    if _debug:
+        _secret_key = 'django-insecure-local-dev-only-do-not-use-in-prod'
+    else:
+        from django.core.exceptions import ImproperlyConfigured
+        raise ImproperlyConfigured(
+            'DJANGO_SECRET_KEY environment variable must be set in production. '
+            'Generate one with: python -c "import secrets; print(secrets.token_hex(50))"'
+        )
+
+SECRET_KEY = _secret_key
+DEBUG = _debug
 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
@@ -48,13 +57,13 @@ INSTALLED_APPS = [
     'calculators',
     'blog',
     'factions',
+    'axes',
 ]
 
 if DEBUG:
     INSTALLED_APPS += ['debug_toolbar']
 
 MIDDLEWARE = [
-    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'thrifthammer.middleware.ContentSecurityPolicyMiddleware',
@@ -64,6 +73,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 if DEBUG:
@@ -131,6 +141,7 @@ LOGIN_URL = '/accounts/login/'
 
 # Allow login with username OR email address
 AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
     'accounts.backends.EmailOrUsernameBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
@@ -253,8 +264,19 @@ AMAZON_CREATORS_CLIENT_ID     = os.environ.get('AMAZON_CREATORS_CLIENT_ID', '')
 AMAZON_CREATORS_CLIENT_SECRET = os.environ.get('AMAZON_CREATORS_CLIENT_SECRET', '')
 AMAZON_ASSOCIATE_TAG          = os.environ.get('AMAZON_ASSOCIATE_TAG', 'thrifthammer7-20')
 
+# Password reset link expiry — 24 hours (Django default is 3 days, too long)
+PASSWORD_RESET_TIMEOUT = 86400
+
 # ---------------------------------------------------------------------------
-# Email configuration — for the "Report Issue" feature
+# django-axes — brute force login protection
+# ---------------------------------------------------------------------------
+AXES_FAILURE_LIMIT = 10           # lock after 10 failed attempts
+AXES_COOLOFF_TIME = 1             # auto-unlock after 1 hour
+AXES_RESET_ON_SUCCESS = True      # clear failure count on successful login
+AXES_LOCKOUT_PARAMETERS = ['username', 'ip_address']  # lock per username+IP pair
+
+# ---------------------------------------------------------------------------
+# Email configuration — for password reset and the "Report Issue" feature
 # ---------------------------------------------------------------------------
 # In production set these Railway environment variables:
 #   EMAIL_BACKEND   = django.core.mail.backends.smtp.EmailBackend
@@ -280,3 +302,11 @@ EMAIL_TIMEOUT       = int(os.environ.get('EMAIL_TIMEOUT', '10'))  # seconds; pre
 
 # Address that receives "Report Issue" submissions
 ISSUE_REPORT_EMAIL = 'Thrifthammer.com@gmail.com'
+
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# Admin URL — set DJANGO_ADMIN_URL in Railway to something non-obvious.
+# Defaults to 'admin/' locally so the dev workflow is unchanged.
+# Example production value: 'th-backstage-a7f3k2/'  (trailing slash required)
+# ---------------------------------------------------------------------------
+ADMIN_URL = os.environ.get('DJANGO_ADMIN_URL', 'admin/')

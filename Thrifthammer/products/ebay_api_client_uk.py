@@ -1,5 +1,5 @@
 """
-eBay Browse API client for ThriftHammer.
+eBay Browse API client for ThriftHammer — UK (EBAY_GB / GBP).
 
 Replaces the decommissioned Finding API (shut down 2024) with eBay's
 current Browse API v1. Uses OAuth 2.0 Client Credentials flow.
@@ -24,8 +24,8 @@ Rate limits (Browse API):
   Resets at midnight Pacific Time.
 
 Marketplace:
-  Configured for EBAY_US to return USD prices.
-  Change MARKETPLACE_ID for other regions (e.g. EBAY_GB for GBP).
+  Configured for EBAY_GB to return GBP prices.
+  Mirror of ebay_api_client.py — identical logic, UK-specific settings only.
 """
 
 import base64
@@ -57,8 +57,8 @@ BROWSE_API_ITEM_SANDBOX    = 'https://api.sandbox.ebay.com/buy/browse/v1/item/'
 OAUTH_ENDPOINT        = 'https://api.ebay.com/identity/v1/oauth2/token'
 OAUTH_ENDPOINT_SANDBOX = 'https://api.sandbox.ebay.com/identity/v1/oauth2/token'
 
-# US marketplace — USD prices
-MARKETPLACE_ID        = 'EBAY_US'
+# UK marketplace — GBP prices
+MARKETPLACE_ID        = 'EBAY_GB'
 
 # OAuth scope for public Browse API access (no user login required)
 OAUTH_SCOPE           = 'https://api.ebay.com/oauth/api_scope'
@@ -76,21 +76,28 @@ class EbayAPIError(Exception):
     pass
 
 
-class EbayBrowseAPI:
+class EbayBrowseAPIUK:
     """
-    Client for eBay Browse API v1.
+    Client for eBay Browse API v1 — UK marketplace (EBAY_GB / GBP).
 
-    Searches eBay US for fixed-price 'New' listings, sorted by lowest
+    Searches eBay GB for fixed-price 'New' listings, sorted by lowest
     price, and returns the cheapest validated listing for each product.
 
     Replaces the legacy Finding API which was decommissioned in 2024.
+
+    Mirror of EbayBrowseAPI (ebay_api_client.py) — identical validation
+    logic, keyword blocklists, and search strategy. UK-specific changes:
+      - MARKETPLACE_ID = EBAY_GB
+      - Currency checks: GBP instead of USD
+      - itemLocationCountry: GB
+      - Buyer context: London postcode EC1A1BB
 
     Authentication:
       Uses OAuth 2.0 Client Credentials grant. Tokens are cached and
       auto-refreshed so you don't need to manage them manually.
 
     Usage:
-        api = EbayBrowseAPI(use_sandbox=False)
+        api = EbayBrowseAPIUK(use_sandbox=False)
         result = api.find_best_match_for_product(product)
         if result:
             print(result['price'], result['url'])
@@ -98,7 +105,7 @@ class EbayBrowseAPI:
 
     def __init__(self, app_id=None, cert_id=None, use_sandbox=False):
         """
-        Initialise the eBay Browse API client.
+        Initialise the eBay Browse API UK client.
 
         Args:
             app_id:      Client ID. Defaults to settings.EBAY_APP_ID_PRODUCTION
@@ -142,7 +149,7 @@ class EbayBrowseAPI:
         self._token_expires_at = 0  # Unix timestamp
 
         env_label = 'SANDBOX' if use_sandbox else 'PRODUCTION'
-        logger.info('eBay Browse API client initialised (%s)', env_label)
+        logger.info('eBay Browse API UK client initialised (%s)', env_label)
 
     # -------------------------------------------------------------------------
     # Public methods
@@ -150,7 +157,7 @@ class EbayBrowseAPI:
 
     def find_best_match_for_product(self, product):
         """
-        Find the cheapest valid eBay US listing for a given product.
+        Find the cheapest valid eBay GB listing for a given product.
 
         Search strategy:
           1. Build optimised search query from product name
@@ -168,7 +175,7 @@ class EbayBrowseAPI:
 
         Returns:
             dict with keys:
-                price       (Decimal) — item price in USD
+                price       (Decimal) — item price in GBP
                 shipping    (Decimal) — shipping cost (0 if free)
                 total_cost  (Decimal) — price + shipping
                 title       (str)     — eBay listing title
@@ -176,11 +183,15 @@ class EbayBrowseAPI:
                 item_id     (str)     — eBay item ID
             or None if no valid listing found.
         """
-        # Use ebay_search_name override if set, otherwise fall back to product name.
-        # This lets Deathwatch / faction-aliased products search eBay using the
-        # name their listings actually appear under (e.g. Space Marine kit names)
-        # while keeping their display name unchanged on the site.
-        search_name = getattr(product, 'ebay_search_name', '') or product.name
+        # Use ebay_search_name_uk if set (UK-specific override), then fall back
+        # to ebay_search_name, then product name.  This allows UK and US scrapers
+        # to search under different names when eBay UK / US listings use different
+        # terminology for the same product.
+        search_name = (
+            getattr(product, 'ebay_search_name_uk', '') or
+            getattr(product, 'ebay_search_name', '') or
+            product.name
+        )
 
         # Product-specific negative keywords prevent similarly-named products from
         # appearing in eBay results (e.g. "-plastic" stops Plastic Glue listings
@@ -192,13 +203,13 @@ class EbayBrowseAPI:
         items = self.search_items(query, max_results=10)
 
         if not items:
-            logger.debug('[ebay] No results for "%s"', query)
+            logger.debug('[ebay-uk] No results for "%s"', query)
             return None
 
         valid_items = [item for item in items if self._is_valid_result(item, product)]
 
         if not valid_items:
-            logger.debug('[ebay] No valid match for "%s"', product.name)
+            logger.debug('[ebay-uk] No valid match for "%s"', product.name)
             return None
 
         # Validate all results, then pick the best one.
@@ -226,8 +237,8 @@ class EbayBrowseAPI:
         if cheapest['total_cost'] <= first_valid['total_cost'] * cheaper_threshold:
             best = cheapest
             logger.debug(
-                '[ebay] Cheaper alternative chosen over Best Match: '
-                '"%.60s" $%.2f vs "%.60s" $%.2f',
+                '[ebay-uk] Cheaper alternative chosen over Best Match: '
+                '"%.60s" £%.2f vs "%.60s" £%.2f',
                 cheapest['title'], cheapest['total_cost'],
                 first_valid['title'], first_valid['total_cost'],
             )
@@ -235,46 +246,46 @@ class EbayBrowseAPI:
             best = first_valid
 
         # Refresh shipping from item detail endpoint.
-        # Search results (item_summary/search) sometimes return $0 or missing
+        # Search results (item_summary/search) sometimes return £0 or missing
         # shippingOptions even for listings with real fixed-rate shipping.
         # The item detail endpoint is the authoritative source.
         accurate_shipping = self._fetch_item_shipping(best['item_id'])
         if accurate_shipping is None:
             # CALCULATED or LOCAL_PICKUP confirmed by item detail — discard winner
             logger.debug(
-                '[ebay] Winner discarded after item detail shipping check: "%s"',
+                '[ebay-uk] Winner discarded after item detail shipping check: "%s"',
                 best['title'][:60],
             )
             return None
         if accurate_shipping != best['shipping']:
             logger.debug(
-                '[ebay] Shipping corrected by item detail for "%s": $%.2f → $%.2f',
+                '[ebay-uk] Shipping corrected by item detail for "%s": £%.2f → £%.2f',
                 best['title'][:60], best['shipping'], accurate_shipping,
             )
             best['shipping']    = accurate_shipping
             best['total_cost']  = best['price'] + accurate_shipping
 
         logger.debug(
-            '[ebay] Match: "%s" — $%.2f + $%.2f shipping '
+            '[ebay-uk] Match: "%s" — £%.2f + £%.2f shipping '
             '(%d valid from top-%d Best Match results)',
             best['title'][:60], best['price'], best['shipping'],
             len(valid_items), len(items),
         )
         return best
 
-    # A generic US buyer location passed to the item detail endpoint so eBay
+    # A generic UK buyer location passed to the item detail endpoint so eBay
     # calculates and returns shipping costs.  Without this header, eBay omits
     # shippingOptions from the response entirely for many listings.
-    # The specific zip doesn't affect fixed-rate shipping; for weight-based
-    # listings it gives a representative continental-US estimate.
-    _BUYER_CONTEXT = 'contextualLocation=country%3DUS%2Czip%3D10001'
+    # The specific postcode doesn't affect fixed-rate shipping; for weight-based
+    # listings it gives a representative UK estimate.
+    _BUYER_CONTEXT = 'contextualLocation=country%3DGB%2Czip%3DEC1A1BB'
 
     def _fetch_item_shipping(self, item_id):
         """
-        Fetch the accurate shipping cost for a specific eBay listing.
+        Fetch the accurate shipping cost for a specific eBay GB listing.
 
         Two problems with relying on search results alone:
-          1. item_summary/search often returns $0 or missing shippingOptions.
+          1. item_summary/search often returns £0 or missing shippingOptions.
           2. Even the item detail endpoint omits shippingOptions unless a buyer
              location context is provided via X-EBAY-C-ENDUSERCTX.
 
@@ -294,7 +305,7 @@ class EbayBrowseAPI:
             listing should be skipped (LOCAL_PICKUP or any API/network error).
         """
         if self.api_calls_made >= DAILY_CALL_SAFETY_LIMIT:
-            logger.warning('[ebay] Daily call limit reached — skipping item detail fetch')
+            logger.warning('[ebay-uk] Daily call limit reached — skipping item detail fetch')
             return None
 
         token = self._get_access_token()
@@ -313,24 +324,24 @@ class EbayBrowseAPI:
                 timeout=10,
             )
         except requests.Timeout:
-            logger.warning('[ebay] Timeout fetching item detail for %s', item_id)
+            logger.warning('[ebay-uk] Timeout fetching item detail for %s', item_id)
             return None
         except requests.RequestException as exc:
-            logger.warning('[ebay] Network error fetching item detail for %s: %s', item_id, exc)
+            logger.warning('[ebay-uk] Network error fetching item detail for %s: %s', item_id, exc)
             return None
         finally:
             self.api_calls_made += 1
 
         if not response.ok:
             logger.warning(
-                '[ebay] Item detail HTTP %d for %s', response.status_code, item_id
+                '[ebay-uk] Item detail HTTP %d for %s', response.status_code, item_id
             )
             return None
 
         try:
             data = response.json()
         except ValueError:
-            logger.warning('[ebay] Invalid JSON in item detail for %s', item_id)
+            logger.warning('[ebay-uk] Invalid JSON in item detail for %s', item_id)
             return None
 
         shipping_options = data.get('shippingOptions', [])
@@ -346,14 +357,14 @@ class EbayBrowseAPI:
         # context, eBay returns 'CALCULATED' simply to mean "we calculated this
         # cost for your location" — it IS a real, known dollar amount.
         if type_field == 'LOCAL_PICKUP':
-            logger.debug('[ebay] Item detail confirms LOCAL_PICKUP for %s — skipping', item_id)
+            logger.debug('[ebay-uk] Item detail confirms LOCAL_PICKUP for %s — skipping', item_id)
             return None
 
         ship_cost = first.get('shippingCost', {})
-        currency  = ship_cost.get('currency', 'USD')
+        currency  = ship_cost.get('currency', 'GBP')
         value     = ship_cost.get('value', '0')
 
-        if currency != 'USD':
+        if currency != 'GBP':
             return Decimal('0')
 
         try:
@@ -363,13 +374,13 @@ class EbayBrowseAPI:
 
     def search_items(self, keywords, max_results=10):
         """
-        Search eBay US for items matching keywords using the Browse API.
+        Search eBay GB for items matching keywords using the Browse API.
 
         Filters applied:
           - buyingOptions: FIXED_PRICE (no auctions)
           - conditions: NEW
-          - itemLocationCountry: US
-        Marketplace: EBAY_US (USD prices)
+          - itemLocationCountry: GB
+        Marketplace: EBAY_GB (GBP prices)
         Sort: Best Match (eBay default relevance — full sealed kits from
               reputable sellers rank above cheap bits/spare parts)
 
@@ -397,7 +408,7 @@ class EbayBrowseAPI:
             'filter':      (
                 'buyingOptions:{FIXED_PRICE},'
                 'conditions:{NEW},'
-                'itemLocationCountry:US'
+                'itemLocationCountry:GB'
             ),
             # No 'sort' parameter → eBay "Best Match" (default relevance ranking).
             # Best Match surfaces well-matched listings from reputable sellers first,
@@ -473,7 +484,7 @@ class EbayBrowseAPI:
         if self._access_token and now < self._token_expires_at - TOKEN_REFRESH_BUFFER:
             return self._access_token
 
-        logger.debug('[ebay] Fetching new OAuth access token')
+        logger.debug('[ebay-uk] Fetching new OAuth access token')
 
         # Basic auth: base64(client_id:client_secret)
         credentials = base64.b64encode(
@@ -511,7 +522,7 @@ class EbayBrowseAPI:
         expires_in = token_data.get('expires_in', 7200)
         self._token_expires_at = time.time() + expires_in
 
-        logger.info('[ebay] OAuth token obtained, expires in %ds', expires_in)
+        logger.info('[ebay-uk] OAuth token obtained, expires in %ds', expires_in)
         return self._access_token
 
     # -------------------------------------------------------------------------
@@ -566,7 +577,7 @@ class EbayBrowseAPI:
         # name — e.g. "Space Marine Whirlwind" — without including "Warhammer".
         # Adding "Warhammer" to the query turns it into a required title keyword,
         # causing eBay to silently exclude any listing whose title doesn't contain
-        # that word, even if it is a genuine, new, fixed-price, US-based copy of
+        # that word, even if it is a genuine, new, fixed-price, GB-based copy of
         # exactly the product we want.
         #
         # Product-identity accuracy is handled entirely by _is_valid_result:
@@ -619,13 +630,13 @@ class EbayBrowseAPI:
         """
         Parse a raw Browse API item dict into a clean result dict.
 
-        Browse API price fields use {'value': '34.99', 'currency': 'USD'}
+        Browse API price fields use {'value': '34.99', 'currency': 'GBP'}
         format, unlike the old Finding API's {'__value__': '34.99'} format.
 
-        Only USD listings are returned. Non-USD items (GBP, EUR, etc.) are
+        Only GBP listings are returned. Non-GBP items (USD, EUR, etc.) are
         skipped because:
-          - Their numeric prices appear artificially low when treated as USD
-            (e.g., £30 looks like $30, but is actually ~$38).
+          - Their numeric prices appear artificially low or high when treated
+            as GBP (e.g., $30 looks like £30, but is actually ~£24).
           - Their shipping costs are often missing or also in local currency,
             making total_cost unreliable for price comparison.
 
@@ -633,7 +644,7 @@ class EbayBrowseAPI:
             item: Raw item dict from Browse API itemSummaries array.
 
         Returns:
-            Parsed dict or None if essential fields are missing or non-USD.
+            Parsed dict or None if essential fields are missing or non-GBP.
         """
         try:
             # Some eBay sellers submit their listing title in URL-encoded form
@@ -647,12 +658,12 @@ class EbayBrowseAPI:
             if not url:
                 return None
 
-            # Price — only process USD listings
+            # Price — only process GBP listings
             price_data     = item.get('price', {})
-            price_currency = price_data.get('currency', 'USD')
-            if price_currency != 'USD':
+            price_currency = price_data.get('currency', 'GBP')
+            if price_currency != 'GBP':
                 logger.debug(
-                    '[ebay] Skipping non-USD listing (%s): "%s"',
+                    '[ebay-uk] Skipping non-GBP listing (%s): "%s"',
                     price_currency, title[:60],
                 )
                 return None
@@ -674,7 +685,7 @@ class EbayBrowseAPI:
                 ship_type_field = first_option.get('type', '')
                 if ship_cost_type == 'CALCULATED' or ship_type_field == 'LOCAL_PICKUP':
                     logger.debug(
-                        '[ebay] Skipping %s listing (shippingCostType=%s type=%s): "%s"',
+                        '[ebay-uk] Skipping %s listing (shippingCostType=%s type=%s): "%s"',
                         'CALCULATED' if ship_cost_type == 'CALCULATED' else 'LOCAL_PICKUP',
                         ship_cost_type or '—',
                         ship_type_field or '—',
@@ -683,10 +694,10 @@ class EbayBrowseAPI:
                     return None
 
                 ship_cost     = first_option.get('shippingCost', {})
-                ship_currency = ship_cost.get('currency', 'USD')
+                ship_currency = ship_cost.get('currency', 'GBP')
                 ship_value    = ship_cost.get('value', '0')
-                # Only use shipping cost if it is also in USD
-                if ship_currency == 'USD':
+                # Only use shipping cost if it is also in GBP
+                if ship_currency == 'GBP':
                     try:
                         shipping = Decimal(str(ship_value))
                     except InvalidOperation:
@@ -872,7 +883,7 @@ class EbayBrowseAPI:
         'decor', 'decors',
         # Reference card sets — GW publishes small cardboard datacards/command card
         # sets (e.g. "Space Marine Datacards", "Chaos Space Marines Cards") that
-        # share exact faction/unit names with miniature kits but cost only ~$15–25.
+        # share exact faction/unit names with miniature kits but cost only ~£15–25.
         # Without this exclusion, card sets win the best-price match over the actual
         # miniature box because they are cheaper and pass all keyword checks.
         # Globally blocked (also excluded at eBay query level via -cards -datacards).
@@ -954,10 +965,7 @@ class EbayBrowseAPI:
              unit names (e.g., "Vertus Praetor / Shield Captain") — this is
              the standard eBay format for individual dual-build sprues; full
              retail boxes never use this format.
-          5. Price range: total cost $8–$1,000 ($8 min, or 50% of MSRP).
-             50% of GBP MSRP ≈ 40% of USD street price, reliably catching
-             single-model sprues extracted from multi-model boxes.
-          6. Shipping cap: max $30.
+          5. Shipping cap: max £30.
           7. Description bits filter: shortDescription (from EXTENDED
              fieldgroup) must not contain bits/parts keywords — catches
              cases where the title looks fine but the description reveals
@@ -1021,7 +1029,7 @@ class EbayBrowseAPI:
 
         if matches < min_matches and not unit_suffix_hit:
             logger.debug(
-                '[ebay] Rejected (keyword mismatch): "%s" vs "%s" '
+                '[ebay-uk] Rejected (keyword mismatch): "%s" vs "%s" '
                 '(%d/%d matches, unit suffix match: %s)',
                 result['title'][:60], product.name, matches, min_matches, unit_suffix_hit,
             )
@@ -1043,13 +1051,13 @@ class EbayBrowseAPI:
                 if _neg_kw.isdigit():
                     if _result_item_id and _neg_kw == _result_item_id:
                         logger.debug(
-                            '[ebay] Rejected (blocked item ID %s): "%s"',
+                            '[ebay-uk] Rejected (blocked item ID %s): "%s"',
                             _result_item_id, result['title'][:60],
                         )
                         return False
                 elif re.search(r'\b' + re.escape(_neg_kw) + r'\b', title_lower):
                     logger.debug(
-                        '[ebay] Rejected (negative keyword "%s" in title): "%s"',
+                        '[ebay-uk] Rejected (negative keyword "%s" in title): "%s"',
                         _neg_kw, result['title'][:60],
                     )
                     return False
@@ -1066,10 +1074,10 @@ class EbayBrowseAPI:
         # ── Bits/parts filter ─────────────────────────────────────────────────
         # Split title into words and check against the bits keyword set.
         title_words = set(re.sub(r"[^\w\s]", ' ', title_lower).split())
-        bits_matches = (title_words & EbayBrowseAPI._BITS_KEYWORDS) - _allowed_words
+        bits_matches = (title_words & EbayBrowseAPIUK._BITS_KEYWORDS) - _allowed_words
         if bits_matches:
             logger.debug(
-                '[ebay] Rejected (bits/parts): "%s" matched keywords: %s',
+                '[ebay-uk] Rejected (bits/parts): "%s" matched keywords: %s',
                 result['title'][:60], bits_matches,
             )
             return False
@@ -1099,14 +1107,14 @@ class EbayBrowseAPI:
         ]
         if blocked_digits:
             logger.debug(
-                '[ebay] Rejected (standalone count digit): "%s"',
+                '[ebay-uk] Rejected (standalone count digit): "%s"',
                 result['title'][:60],
             )
             return False
 
         if re.search(r'\b\d+\s+(?:miniatures?|minis?|figures?)\b', title_lower):
             logger.debug(
-                '[ebay] Rejected (count + generic descriptor): "%s"',
+                '[ebay-uk] Rejected (count + generic descriptor): "%s"',
                 result['title'][:60],
             )
             return False
@@ -1115,25 +1123,28 @@ class EbayBrowseAPI:
         # Games Workshop produces many character models as dual-build sprues —
         # one sprue that assembles as either Unit A or Unit B.  eBay sellers of
         # individual sprues consistently title these listings as:
-        #   "Vertus Praetor / Shield Captain"  ($10–20)
-        #   "Captain / Lieutenant"             ($10–20)
+        #   "Vertus Praetor / Shield Captain"  (£10–20)
+        #   "Captain / Lieutenant"             (£10–20)
         #
         # However, GW also sells some full multi-part vehicle boxes as dual-build
         # kits with " / " in the official product name, e.g.:
-        #   "Land Raider Crusader / Redeemer"  ($95–120)
+        #   "Land Raider Crusader / Redeemer"  (£95–120)
         #
         # Distinguishing factor: price.  Single dual-build sprues are priced
-        # at $8–20; full dual-build boxes are priced at $50–120+.
-        # Threshold: 75% of MSRP (stored in GBP, used directly as a floor).
+        # at £8–20; full dual-build boxes are priced at £50–120+.
+        # Threshold: 75% of GBP MSRP. Uses msrp_gbp if available, falls back to msrp.
         # Any " / " listing below this floor is a cheap sprue, not a full box.
         if ' / ' in result['title']:
             slash_floor = Decimal('30.00')  # fallback if MSRP is missing
-            if hasattr(product, 'msrp') and product.msrp and product.msrp > 0:
-                slash_floor = product.msrp * Decimal('0.75')
+            _msrp_gbp = getattr(product, 'msrp_gbp', None)
+            _msrp_ref  = (_msrp_gbp if (_msrp_gbp and _msrp_gbp > 0)
+                          else getattr(product, 'msrp', None))
+            if _msrp_ref and _msrp_ref > 0:
+                slash_floor = _msrp_ref * Decimal('0.75')
             slash_cost = result.get('total_cost', Decimal('0'))
             if slash_cost < slash_floor:
                 logger.debug(
-                    '[ebay] Rejected (dual-kit single sprue, "/" + price $%.2f < floor $%.2f): "%s"',
+                    '[ebay-uk] Rejected (dual-kit single sprue, "/" + price £%.2f < floor £%.2f): "%s"',
                     slash_cost, slash_floor, result['title'][:60],
                 )
                 return False
@@ -1145,7 +1156,7 @@ class EbayBrowseAPI:
         # never include " & ".  No products in the ThriftHammer DB use "&".
         if ' & ' in result['title']:
             logger.debug(
-                '[ebay] Rejected (bundle listing, "&" in title): "%s"',
+                '[ebay-uk] Rejected (bundle listing, "&" in title): "%s"',
                 result['title'][:60],
             )
             return False
@@ -1162,7 +1173,7 @@ class EbayBrowseAPI:
         # A space-hash-word pattern is therefore an unambiguous extraction signal.
         if re.search(r'\s#\w', result['title']):
             logger.debug(
-                '[ebay] Rejected (individual model variant, "#X" in title): "%s"',
+                '[ebay-uk] Rejected (individual model variant, "#X" in title): "%s"',
                 result['title'][:60],
             )
             return False
@@ -1211,37 +1222,31 @@ class EbayBrowseAPI:
                 continue
             if phrase in title_lower:
                 logger.debug(
-                    '[ebay] Rejected (blocked phrase "%s" in title): "%s"',
+                    '[ebay-uk] Rejected (blocked phrase "%s" in title): "%s"',
                     phrase, result['title'][:60],
                 )
                 return False
 
-        # ── Price range ───────────────────────────────────────────────────────
-        total_cost = result.get('total_cost', Decimal('0'))
-        # Absolute minimum $8 — even the cheapest genuine kit (small paint pot,
-        # glue) starts around that price.
-        # MSRP floor: 50% of MSRP (stored in GBP) gives a useful USD lower bound
-        # because GBP MSRP × 0.50 ≈ 40% of the actual USD street price, which
-        # reliably filters out single-model sprues pulled from multi-model boxes
-        # (e.g., a £50 MSRP squadron kit → floor £25; a single sprue at $24.95
-        # fails, the full box at $55 passes).
-        min_price = Decimal('8.00')
-        if hasattr(product, 'msrp') and product.msrp and product.msrp > 0:
-            msrp_floor = product.msrp * Decimal('0.50')
-            min_price = max(min_price, msrp_floor)
-
-        if total_cost < min_price or total_cost > Decimal('1000.00'):
-            logger.debug(
-                '[ebay] Rejected (price out of range): $%.2f for "%s" (min $%.2f)',
-                total_cost, product.name, min_price,
-            )
-            return False
+        # ── Price floor (GBP MSRP) ────────────────────────────────────────────
+        # Only applied when msrp_gbp is populated. No absolute minimum, no
+        # ceiling — UK prices vary too much from US to use a fixed range.
+        # Floor: 60% of GBP MSRP. Skipped entirely if msrp_gbp is not set.
+        _msrp_gbp = getattr(product, 'msrp_gbp', None)
+        if _msrp_gbp and _msrp_gbp > 0:
+            total_cost = result.get('total_cost', Decimal('0'))
+            min_price  = _msrp_gbp * Decimal('0.60')
+            if total_cost < min_price:
+                logger.debug(
+                    '[ebay-uk] Rejected (below GBP MSRP floor): £%.2f for "%s" (min £%.2f, 60%% of msrp_gbp £%.2f)',
+                    total_cost, product.name, min_price, _msrp_gbp,
+                )
+                return False
 
         # ── Shipping ──────────────────────────────────────────────────────────
         shipping = result.get('shipping', Decimal('0'))
         if shipping > Decimal('30.00'):
             logger.debug(
-                '[ebay] Rejected (shipping too high): $%.2f for "%s"',
+                '[ebay-uk] Rejected (shipping too high): £%.2f for "%s"',
                 shipping, product.name,
             )
             return False
@@ -1254,15 +1259,15 @@ class EbayBrowseAPI:
         #
         # NOTE: We intentionally do NOT require product keywords to appear in the
         # description. Legitimate sellers commonly write generic descriptions such as
-        # "Brand new sealed. Ships fast from USA." that contain no unit-specific words.
+        # "Brand new sealed. Ships fast from UK." that contain no unit-specific words.
         # The title keyword check is the right place to verify product identity.
         short_desc = result.get('short_description', '').lower()
         if short_desc:
             desc_words     = set(re.sub(r'[^\w\s]', ' ', short_desc).split())
-            desc_bits_hits = desc_words & EbayBrowseAPI._DESC_BITS_KEYWORDS
+            desc_bits_hits = desc_words & EbayBrowseAPIUK._DESC_BITS_KEYWORDS
             if desc_bits_hits:
                 logger.debug(
-                    '[ebay] Rejected (bits keyword in description): "%s" — %s',
+                    '[ebay-uk] Rejected (bits keyword in description): "%s" — %s',
                     result['title'][:60], desc_bits_hits,
                 )
                 return False
@@ -1286,7 +1291,7 @@ class EbayBrowseAPI:
             )
             if _EXTRACTION_RE.search(short_desc):
                 logger.debug(
-                    '[ebay] Rejected (single model extracted from set, '
+                    '[ebay-uk] Rejected (single model extracted from set, '
                     '"from X [set/kit]" in description): "%s"',
                     result['title'][:60],
                 )
@@ -1320,7 +1325,7 @@ class EbayBrowseAPI:
             for _phrase in _PRINT_PHRASES:
                 if _phrase in short_desc:
                     logger.debug(
-                        '[ebay] Rejected (3D print/aftermarket resin, '
+                        '[ebay-uk] Rejected (3D print/aftermarket resin, '
                         '"%s" in description): "%s"',
                         _phrase, result['title'][:60],
                     )
@@ -1333,7 +1338,7 @@ class EbayBrowseAPI:
             # codes (HAA-xx, GZZ-xx, HAF-xx) and are not sealed retail boxes.
             if re.search(r'\btabletop gaming blog\b', short_desc, re.IGNORECASE):
                 logger.debug(
-                    '[ebay] Rejected (reseller storefront, '
+                    '[ebay-uk] Rejected (reseller storefront, '
                     '"tabletop gaming blog" in description): "%s"',
                     result['title'][:60],
                 )
@@ -1351,10 +1356,43 @@ class EbayBrowseAPI:
                 for neg_kw in shlex.split(raw_negatives.lower()):
                     if re.search(r'\b' + re.escape(neg_kw) + r'\b', short_desc):
                         logger.debug(
-                            '[ebay] Rejected (negative keyword "%s" in description): "%s"',
+                            '[ebay-uk] Rejected (negative keyword "%s" in description): "%s"',
                             neg_kw, result['title'][:60],
                         )
                         return False
+
+            # ── Description-mirrors-title bot detection ────────────────────
+            # Bot/spam storefronts generate listings whose descriptions simply
+            # repeat the listing title followed by generic shipping boilerplate,
+            # e.g.:
+            #   title:       "Astra Militarum Cadian Shock Troops Warhammer 40k"
+            #   description: "warhammer 40k astra militarum Cadian Shock Troops .
+            #                 Condition is New. Shipped with Royal Mail."
+            #
+            # Legitimate sellers write genuine descriptions about condition,
+            # contents, or provenance — they don't just echo the title.
+            #
+            # Detection: if ≥ 70% of meaningful title words (len ≥ 3) appear
+            # in the first 150 characters of the description, the description
+            # is mirroring the title — a reliable bot signal.  The 150-char
+            # window is large enough to catch all title words even when the
+            # description leads with them, and short enough to avoid false
+            # positives from genuine sellers who happen to mention the product
+            # name once near the start of a longer description.
+            title_kws = [
+                w for w in re.sub(r'[^\w\s]', ' ', title_lower).split()
+                if len(w) >= 3
+            ]
+            if len(title_kws) >= 3 and not _allowed_words:
+                desc_prefix = short_desc[:150]
+                mirror_matches = sum(1 for w in title_kws if w in desc_prefix)
+                mirror_ratio = mirror_matches / len(title_kws)
+                if mirror_ratio >= 0.70:
+                    logger.debug(
+                        '[ebay-uk] Rejected (description mirrors title, %.0f%% word overlap): "%s"',
+                        mirror_ratio * 100, result['title'][:60],
+                    )
+                    return False
 
         # ── URL must link to eBay ─────────────────────────────────────────────
         if 'ebay.' not in result['url']:
@@ -1367,7 +1405,7 @@ class EbayBrowseAPI:
         """
         Run each validation check individually and return a list of failure reasons.
 
-        Used by the --debug flag in update_ebay_prices to show exactly why each
+        Used by the --debug flag in update_ebay_uk_prices to show exactly why each
         eBay candidate was rejected without hiding the detail behind a single bool.
 
         Args:
@@ -1419,7 +1457,7 @@ class EbayBrowseAPI:
 
         # Title bits filter
         title_words  = set(re.sub(r"[^\w\s]", ' ', title_lower).split())
-        bits_matches = title_words & EbayBrowseAPI._BITS_KEYWORDS
+        bits_matches = title_words & EbayBrowseAPIUK._BITS_KEYWORDS
         if bits_matches:
             reasons.append(f'title bits keywords: {bits_matches}')
 
@@ -1431,16 +1469,19 @@ class EbayBrowseAPI:
         if re.search(r'\b\d+\s+(?:miniatures?|minis?|figures?)\b', title_lower):
             reasons.append('count+descriptor in title')
 
-        # Slash — price-aware: only reject if cost is below 75% of MSRP
+        # Slash — price-aware: only reject if cost is below 75% of GBP MSRP
         if ' / ' in result['title']:
             slash_floor = Decimal('30.00')
-            if hasattr(product, 'msrp') and product.msrp and product.msrp > 0:
-                slash_floor = product.msrp * Decimal('0.75')
+            _msrp_gbp = getattr(product, 'msrp_gbp', None)
+            _msrp_ref  = (_msrp_gbp if (_msrp_gbp and _msrp_gbp > 0)
+                          else getattr(product, 'msrp', None))
+            if _msrp_ref and _msrp_ref > 0:
+                slash_floor = _msrp_ref * Decimal('0.75')
             slash_cost = result.get('total_cost', Decimal('0'))
             if slash_cost < slash_floor:
                 reasons.append(
-                    f'" / " dual-kit sprue in title, price ${slash_cost:.2f} '
-                    f'< floor ${slash_floor:.2f}'
+                    f'" / " dual-kit sprue in title, price £{slash_cost:.2f} '
+                    f'< floor £{slash_floor:.2f}'
                 )
 
         # Bundle
@@ -1468,28 +1509,27 @@ class EbayBrowseAPI:
                 reasons.append(f'blocked phrase ("{phrase}" in title)')
                 break
 
-        # Price
-        total_cost = result.get('total_cost', Decimal('0'))
-        min_price  = Decimal('8.00')
-        if hasattr(product, 'msrp') and product.msrp and product.msrp > 0:
-            msrp_floor = product.msrp * Decimal('0.50')
-            min_price  = max(min_price, msrp_floor)
-        if total_cost < min_price or total_cost > Decimal('1000.00'):
-            reasons.append(
-                f'price out of range: ${total_cost:.2f} '
-                f'(min ${min_price:.2f}, max $1000.00)'
-            )
+        # Price floor (GBP MSRP) — only active when msrp_gbp is populated
+        _msrp_gbp = getattr(product, 'msrp_gbp', None)
+        if _msrp_gbp and _msrp_gbp > 0:
+            total_cost = result.get('total_cost', Decimal('0'))
+            min_price  = _msrp_gbp * Decimal('0.60')
+            if total_cost < min_price:
+                reasons.append(
+                    f'below GBP MSRP floor: £{total_cost:.2f} '
+                    f'(min £{min_price:.2f}, 60% of msrp_gbp £{_msrp_gbp:.2f})'
+                )
 
         # Shipping
         shipping = result.get('shipping', Decimal('0'))
         if shipping > Decimal('30.00'):
-            reasons.append(f'shipping too high: ${shipping:.2f}')
+            reasons.append(f'shipping too high: £{shipping:.2f}')
 
         # Description bits
         short_desc = result.get('short_description', '').lower()
         if short_desc:
             desc_words     = set(re.sub(r'[^\w\s]', ' ', short_desc).split())
-            desc_bits_hits = desc_words & EbayBrowseAPI._DESC_BITS_KEYWORDS
+            desc_bits_hits = desc_words & EbayBrowseAPIUK._DESC_BITS_KEYWORDS
             if desc_bits_hits:
                 reasons.append(f'description bits keywords: {desc_bits_hits}')
 
@@ -1517,6 +1557,20 @@ class EbayBrowseAPI:
                             f'negative keyword "{neg_kw}" in description'
                         )
                         break
+
+            # Description-mirrors-title bot detection
+            title_kws = [
+                w for w in re.sub(r'[^\w\s]', ' ', title_lower).split()
+                if len(w) >= 3
+            ]
+            if len(title_kws) >= 3:
+                desc_prefix = short_desc[:150]
+                mirror_matches = sum(1 for w in title_kws if w in desc_prefix)
+                mirror_ratio = mirror_matches / len(title_kws)
+                if mirror_ratio >= 0.70:
+                    reasons.append(
+                        f'description mirrors title ({mirror_ratio:.0%} word overlap)'
+                    )
 
         # URL
         if 'ebay.' not in result.get('url', ''):

@@ -140,6 +140,7 @@ _IMAGES = {
 # amazon_asin : 10-char ASIN or None
 # mm_url      : full Miniature Market URL or None
 # nk_slug     : Noble Knight URL path (without ?awid) or None
+
 PRODUCTS = [
     (
         'Blood Bowl – Third Season Edition Starter Set',
