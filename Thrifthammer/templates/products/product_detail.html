@@ -178,6 +178,9 @@
       {# Price comparison table #}
       <h3 style="font-size:1.1rem;margin-bottom:var(--sp-2);">Price Comparison</h3>
       {% if current_prices %}
+      <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:var(--sp-2);">
+        Affiliate links: ThriftHammer earns a small commission on Amazon, eBay, and Noble Knight purchases at no extra cost to you.
+      </p>
       <div class="price-table-wrap">
       <table class="price-table">
         <thead>
@@ -241,9 +244,6 @@
         </tbody>
       </table>
       </div>{# /price-table-wrap #}
-      <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:var(--sp-3);">
-        Affiliate links: ThriftHammer earns a small commission on Amazon, eBay, and Noble Knight purchases at no extra cost to you.
-      </p>
       {% else %}
       <p style="color:var(--text-muted);font-size:0.9rem;">
         No price data yet. Check back after the next scrape.
