@@ -167,13 +167,6 @@
         </a>
       </p>
 
-      {# Affiliate disclosure #}
-      {% if current_prices %}
-      <p style="font-size:0.72rem;color:var(--text-muted);margin-top:var(--sp-2);">
-        Amazon, eBay, and Noble Knight links are affiliate links.{% for cp in current_prices %}{% if cp.retailer.slug == 'ebay' and cp.price and not cp.not_available %} eBay prices include shipping.{% endif %}{% endfor %}
-      </p>
-      {% endif %}
-
       {# Description #}
       {% if product.description %}
       <div class="product-description">
@@ -248,6 +241,9 @@
         </tbody>
       </table>
       </div>{# /price-table-wrap #}
+      <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:var(--sp-3);">
+        Affiliate links: ThriftHammer earns a small commission on Amazon, eBay, and Noble Knight purchases at no extra cost to you.
+      </p>
       {% else %}
       <p style="color:var(--text-muted);font-size:0.9rem;">
         No price data yet. Check back after the next scrape.
