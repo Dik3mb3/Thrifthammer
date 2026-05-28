@@ -715,6 +715,18 @@ _EBAY_SEARCH_OVERRIDES = {
     'CSM-015': 'Chaos Space Marines Huron Blackheart & the Masters of the Maelstrom',
     'CSM-022': 'Chaos Space Marines Red Corsairs Raiders',
     'CSM-023': 'Chaos Space Marines Red Corsairs Reave-Captain',
+    # ── Tyranids ──────────────────────────────────────────────────────────────
+    # TY-011 "Tyranid Hive Guard" — default search uses plural "Hive Guard"
+    # but eBay sellers consistently title listings "Tyranids Hive Guard".
+    'TY-011': 'Tyranids Hive Guard',
+    # ── Deathwatch ────────────────────────────────────────────────────────────
+    # 39-10 "Deathwatch Kill Team" — eBay sellers title this kit as
+    # "Kill Team: Deathwatch" rather than "Deathwatch Kill Team".
+    '39-10': 'Kill Team: Deathwatch',
+    # ── Age of Sigmar: Stormcast Eternals ─────────────────────────────────────
+    # SE-015 "Stormcast Eternals Endless Spells" — default search too generic.
+    # "Endless Spells Stormcast Eternals" matches how sellers title the item.
+    'SE-015': 'Endless Spells Stormcast Eternals',
 }
 
 # ── Per-product eBay "no box" exemptions ─────────────────────────────────────
@@ -1206,7 +1218,9 @@ _EBAY_NEGATIVE_KEYWORDS = {
     # 43-38 "Thousand Sons Exalted Sorcerers" — eBay returns custom conversion
     # listings where sellers replace the kit's hovering/flying-base poses with
     # grounded "walking" poses.  These are conversions, not the sealed kit.
-    '43-38': 'walking',
+    # "Floating" catches listings advertising the disc-hovering conversion pose
+    # explicitly; "x1" filters single-model individual resale listings.
+    '43-38': 'walking Floating x1',
     # 43-36 "Thousand Sons Scarab Occult Terminators" — eBay returns
     # partial-squad listings selling 4 models out of the standard 5-man kit
     # (sellers advertising "4x Scarab Occult Terminators").
@@ -1250,6 +1264,26 @@ _EBAY_NEGATIVE_KEYWORDS = {
     #   stimmers:   Escher faction-themed upgrade listings
     #   weapons/upgrades/cards/tactic/dice: accessory-only listings
     'NM-010': '1x weapons upgrades cards tactic stimmers dice',
+    # ── Tyranids ──────────────────────────────────────────────────────────────
+    # 51-04 "Tyranid Hive Tyrant" — eBay returns winged variant listings
+    # (separately-sold "Winged Hive Tyrant" or "Wings" conversion kits) that
+    # are a different product from the standard walking Hive Tyrant box.
+    '51-04': 'Wings',
+    # ── Chaos Space Marines ───────────────────────────────────────────────────
+    # CSM-024 "Chaos Space Marine Traitor Enforcer" — eBay returns "Blooded"
+    # warband listings (a separate Chaos Cultist-style product) that share
+    # enough keyword overlap with "Traitor Enforcer" to pass match threshold.
+    'CSM-024': 'Blooded',
+    # ── Astra Militarum ───────────────────────────────────────────────────────
+    # 47-12 "Astra Militarum Sentinel" — eBay returns multi-kit bundle listings
+    # that use "/" as a separator between unit names (e.g. "Sentinel / Chimera").
+    # Excluding "/" filters these combined-lot listings from results.
+    '47-12': '/',
+    # ── Age of Sigmar: Stormcast Eternals ─────────────────────────────────────
+    # SE-015 "Stormcast Eternals Endless Spells" — eBay returns listings for
+    # the "Celestian Vortex" standalone spell model (a separate AOS accessory).
+    # Excluding "CELESTIAN VORTEX" prevents that item appearing in results.
+    'SE-015': 'CELESTIAN VORTEX',
 }
 
 
