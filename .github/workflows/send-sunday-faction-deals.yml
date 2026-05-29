@@ -15,6 +15,10 @@ on:
         description: 'Number of top deals per subscriber to include (default: 10)'
         type: string
         default: '10'
+      recipient:
+        description: 'Send only to this address (leave blank for all subscribers)'
+        type: string
+        default: ''
 
 jobs:
   send-email:
@@ -60,5 +64,8 @@ jobs:
           fi
           if [ -n "${{ github.event.inputs.limit }}" ]; then
             FLAGS="$FLAGS --limit ${{ github.event.inputs.limit }}"
+          fi
+          if [ -n "${{ github.event.inputs.recipient }}" ]; then
+            FLAGS="$FLAGS --recipient ${{ github.event.inputs.recipient }}"
           fi
           python manage.py send_sunday_faction_deals $FLAGS
