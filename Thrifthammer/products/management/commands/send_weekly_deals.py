@@ -171,6 +171,8 @@ class Command(BaseCommand):
         # Annotate each active product with its cheapest in-stock price.
         # We calculate pct_saving in Python to avoid ORM type-inference
         # issues with mixed Decimal/Float arithmetic across DB backends.
+        # Exclude UK retailers so GBP prices never appear as cheap USD deals.
+        _uk_slugs = frozenset({'ebay-uk', 'amazon-uk'})
         qs = Product.objects.filter(is_active=True, msrp__isnull=False)
         if category_name:
             qs = qs.filter(category__name=category_name)
@@ -182,7 +184,7 @@ class Command(BaseCommand):
                     filter=Q(
                         current_prices__in_stock=True,
                         current_prices__not_available=False,
-                    ),
+                    ) & ~Q(current_prices__retailer__slug__in=_uk_slugs),
                 )
             )
             .filter(min_price__isnull=False, min_price__gt=0)
@@ -210,6 +212,7 @@ class Command(BaseCommand):
                     not_available=False,
                     price=product.min_price,
                 )
+                .exclude(retailer__slug__in=_uk_slugs)
                 .select_related('retailer')
                 .first()
             )

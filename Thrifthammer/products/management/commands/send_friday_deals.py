@@ -160,6 +160,8 @@ class Command(BaseCommand):
         Excludes Warhammer 40,000 products. Covers Age of Sigmar, Horus Heresy,
         Kill Team, Paint & Supplies, and everything else.
         """
+        # Exclude UK retailers so GBP prices never appear as cheap USD deals.
+        _uk_slugs = frozenset({'ebay-uk', 'amazon-uk'})
         candidates = (
             Product.objects
             .filter(is_active=True, msrp__isnull=False)
@@ -170,7 +172,7 @@ class Command(BaseCommand):
                     filter=Q(
                         current_prices__in_stock=True,
                         current_prices__not_available=False,
-                    ),
+                    ) & ~Q(current_prices__retailer__slug__in=_uk_slugs),
                 )
             )
             .filter(min_price__isnull=False, min_price__gt=0)
@@ -195,6 +197,7 @@ class Command(BaseCommand):
                     not_available=False,
                     price=product.min_price,
                 )
+                .exclude(retailer__slug__in=_uk_slugs)
                 .select_related('retailer')
                 .first()
             )
