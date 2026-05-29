@@ -211,6 +211,14 @@ class Command(BaseCommand):
                  'Useful for diagnosing a specific listing with --debug --dry-run.',
         )
         parser.add_argument(
+            '--skus',
+            type=str,
+            default=None,
+            metavar='SKUS',
+            help='Comma-separated GW SKUs to update (e.g. "55-23,TY-011,53-21"). '
+                 'Useful for verifying keyword changes on a targeted set of products.',
+        )
+        parser.add_argument(
             '--batch-tag',
             type=str,
             default=None,
@@ -230,8 +238,9 @@ class Command(BaseCommand):
         category   = options['category']
         debug      = options['debug']
         list_overrides = options['list_overrides']
-        sku_filter = (options['sku'] or '').strip()
-        batch_tag  = (options.get('batch_tag') or '').strip()
+        sku_filter  = (options['sku'] or '').strip()
+        skus_filter = [s.strip() for s in (options.get('skus') or '').split(',') if s.strip()]
+        batch_tag   = (options.get('batch_tag') or '').strip()
 
         # ── --list-overrides: print audit table and exit (no API calls) ──────
         if list_overrides:
@@ -277,6 +286,8 @@ class Command(BaseCommand):
             self.stdout.write(f'  Product ID  : {product_id}')
         if sku_filter:
             self.stdout.write(f'  SKU filter  : {sku_filter}')
+        if skus_filter:
+            self.stdout.write(f'  SKUs filter : {", ".join(skus_filter)}')
         self.stdout.write('=' * 50 + '\n')
 
         # ── Initialise API client ────────────────────────────────────────────
@@ -325,6 +336,15 @@ class Command(BaseCommand):
             if not products.exists():
                 self.stderr.write(
                     self.style.ERROR(f'No active product found with SKU "{sku_filter}".')
+                )
+                return
+        elif skus_filter:
+            products = Product.objects.filter(gw_sku__in=skus_filter, is_active=True)
+            if not products.exists():
+                self.stderr.write(
+                    self.style.ERROR(
+                        f'No active products found for SKUs: {", ".join(skus_filter)}.'
+                    )
                 )
                 return
         else:

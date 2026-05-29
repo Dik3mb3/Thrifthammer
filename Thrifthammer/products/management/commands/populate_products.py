@@ -719,10 +719,6 @@ _EBAY_SEARCH_OVERRIDES = {
     # TY-011 "Tyranid Hive Guard" — default search uses plural "Hive Guard"
     # but eBay sellers consistently title listings "Tyranids Hive Guard".
     'TY-011': 'Tyranids Hive Guard',
-    # ── Deathwatch ────────────────────────────────────────────────────────────
-    # 39-10 "Deathwatch Kill Team" — eBay sellers title this kit as
-    # "Kill Team: Deathwatch" rather than "Deathwatch Kill Team".
-    '39-10': 'Kill Team: Deathwatch',
     # ── Age of Sigmar: Stormcast Eternals ─────────────────────────────────────
     # SE-015 "Stormcast Eternals Endless Spells" — default search too generic.
     # "Endless Spells Stormcast Eternals" matches how sellers title the item.
