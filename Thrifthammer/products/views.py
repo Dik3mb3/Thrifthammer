@@ -661,7 +661,7 @@ def search_autocomplete(request):
                 filter=Q(
                     current_prices__not_available=False,
                     current_prices__in_stock=True,
-                ),
+                ) & ~Q(current_prices__retailer__slug__in=_UK_RETAILER_SLUGS),
             )
         )
         .values('name', 'slug', 'min_price')
