@@ -212,6 +212,17 @@ class Product(models.Model):
         related_name='products',
         db_index=True,
     )
+    secondary_factions = models.ManyToManyField(
+        Faction,
+        blank=True,
+        related_name='secondary_products',
+        help_text=(
+            'Additional factions this product should appear under on the site. '
+            'The primary faction FK above is unchanged. '
+            'Use this to surface cross-faction units (e.g. Chaos Daemons units '
+            'that also belong to a mono-god faction).'
+        ),
+    )
     description = models.TextField(blank=True)
     gw_url = models.URLField(blank=True, help_text='Official GW product page')
     image_url = models.URLField(blank=True)

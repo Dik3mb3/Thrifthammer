@@ -103,8 +103,14 @@ class FactionDetailView(DetailView):
 
         # ── Top Deals ────────────────────────────────────────────────────────
         # Include products from the faction itself plus any parent faction
-        # (e.g. Emperor's Children page also shows shared CSM kits).
-        faction_filter = Q(faction=faction)
+        # (e.g. Emperor's Children page also shows shared CSM kits),
+        # and any products whose secondary_factions include this faction
+        # (e.g. cross-faction Chaos Daemons units that dual-tag onto a mono-god
+        # faction page and vice versa).
+        # We use pk__in with a subquery rather than Q(secondary_factions=faction)
+        # directly, to avoid M2M JOIN duplication that would corrupt Min() results.
+        secondary_pks = Product.objects.filter(secondary_factions=faction).values('pk')
+        faction_filter = Q(faction=faction) | Q(pk__in=secondary_pks)
         if faction.parent_faction_id:
             faction_filter |= Q(faction=faction.parent_faction)
 
