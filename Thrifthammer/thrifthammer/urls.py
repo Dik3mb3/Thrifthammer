@@ -68,6 +68,12 @@ urlpatterns = [
             permanent=True,
         ),
     ),
+    # adeptus-custodes was accidentally created as a duplicate of the real
+    # custodes faction (discovered 2026-05-24). Redirect to canonical page.
+    path(
+        'factions/adeptus-custodes/',
+        RedirectView.as_view(url='/factions/custodes/', permanent=True),
+    ),
     # ─────────────────────────────────────────────────────────────────────────
     path(_ADMIN_URL, admin.site.urls),
     path('', home, name='home'),
