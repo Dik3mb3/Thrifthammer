@@ -85,6 +85,7 @@ urlpatterns = [
     path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
     path('accounts/', include('accounts.urls')),
     path('products/', include('products.urls')),
+    path('uk/products/', include('products.urls_uk')),
     path('prices/', include('prices.urls')),
     path('collection/', include('collections_app.urls')),
     path('army-calculator/', include('calculators.urls')),

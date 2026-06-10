@@ -40,13 +40,6 @@ from prices.models import CurrentPrice
 from .forms import IssueReportForm
 from .models import Category, Faction, IssueReport, NewsletterSignup, Product
 
-# Explicit set of UK retailer slugs — used throughout to isolate UK prices
-# from US prices. Filtering by slug (not country) is required because migration
-# 0002 added the country field with default='UK', so all existing US retailers
-# received country='UK' before populate_products corrected them. Slug-based
-# filtering is always correct regardless of the country field's value.
-_UK_RETAILER_SLUGS = frozenset({'ebay-uk', 'amazon-uk'})
-
 
 # ---------------------------------------------------------------------------
 # Hot Deals selection strategy
@@ -106,7 +99,7 @@ def _get_spotlight_deals(count=SPOTLIGHT_COUNT, category_name=None, exclude_cate
             not_available=False,
         )
         .exclude(retailer__slug='games-workshop')
-        .exclude(retailer__slug__in=_UK_RETAILER_SLUGS)
+        .exclude(retailer__is_uk=True)
     )
 
     if category_name:
@@ -212,6 +205,9 @@ def product_list(request):
     if sort not in SORT_OPTIONS:
         sort = 'discount'
 
+    region_param = request.GET.get('region', '').strip()
+    if region_param in ('us', 'uk'):
+        request.session['region'] = region_param
     region = request.session.get('region', 'us')
 
     # Stable cache key covers every filter dimension including region.
@@ -258,13 +254,13 @@ def product_list(request):
         _min_price_filter = Q(
             current_prices__not_available=False,
             current_prices__in_stock=True,
-            current_prices__retailer__slug__in=_UK_RETAILER_SLUGS,
+            current_prices__retailer__is_uk=True,
         )
     else:
         _min_price_filter = Q(
             current_prices__not_available=False,
             current_prices__in_stock=True,
-        ) & ~Q(current_prices__retailer__slug__in=_UK_RETAILER_SLUGS)
+        ) & ~Q(current_prices__retailer__is_uk=True)
 
     products = (
         Product.objects
@@ -383,6 +379,9 @@ def product_detail(request, slug):
     The bulk of the context is cached for 30 minutes per region (US/UK).
     Watchlist status is per-user and always fetched fresh outside the cache.
     """
+    region_param = request.GET.get('region', '').strip()
+    if region_param in ('us', 'uk'):
+        request.session['region'] = region_param
     region     = request.session.get('region', 'us')
     cache_key  = f'product_detail|{slug}|{region}'
     cached_ctx = cache.get(cache_key)
@@ -401,7 +400,7 @@ def product_detail(request, slug):
         if region == 'uk':
             current_prices = list(
                 CurrentPrice.objects
-                .filter(product=product, retailer__slug__in=_UK_RETAILER_SLUGS)
+                .filter(product=product, retailer__is_uk=True)
                 .select_related('retailer')
                 .order_by('not_available', '-in_stock', 'price')
             )
@@ -409,7 +408,7 @@ def product_detail(request, slug):
             current_prices = list(
                 CurrentPrice.objects
                 .filter(product=product)
-                .exclude(retailer__slug__in=_UK_RETAILER_SLUGS)
+                .exclude(retailer__is_uk=True)
                 .select_related('retailer')
                 # Sort: available first, then in-stock before out-of-stock,
                 # then cheapest first.
@@ -661,7 +660,7 @@ def search_autocomplete(request):
                 filter=Q(
                     current_prices__not_available=False,
                     current_prices__in_stock=True,
-                ) & ~Q(current_prices__retailer__slug__in=_UK_RETAILER_SLUGS),
+                ) & ~Q(current_prices__retailer__is_uk=True),
             )
         )
         .values('name', 'slug', 'min_price')

@@ -106,7 +106,7 @@ PRODUCTS = [
         94.00,
         '99120207031_DeathLordsMortarchsArkhantheBlack01a.jpg',
         f'{_GW}Deathlords-Mortarchs-Arkhan',
-        'Arkhan the Black, Mortarch of Sacrament Ossiarch Bonereapers',
+        'Deathlords Mortarchs Age of Sigmar',
     ),
     (
         'mortisan-soulreaper',
@@ -233,7 +233,7 @@ PRODUCTS = [
         60.00,
         '60030207022_engOssiarchBonereapersBattletome01.jpg',
         f'{_GW}battletome-ossiarch-bonereapers-2026-eng',
-        'Death Battletome: Ossiarch Bonereapers',
+        'Death Battletome Ossiarch Bonereapers 4th edition',
     ),
 ]
 

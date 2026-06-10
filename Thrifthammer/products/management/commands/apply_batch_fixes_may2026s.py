@@ -1,0 +1,73 @@
+"""
+Management command: apply_batch_fixes_may2026s
+
+Changes:
+  59-10  Adeptus Mechanicus Skitarii Rangers
+    ebay_negative_keywords: add 'Imperium Magazine issue'
+    Old: 'legions imperialis Resin 04-113 transuranic Arquebus'
+    New: 'legions imperialis Resin 04-113 transuranic Arquebus Imperium Magazine issue'
+
+  59-11  Adeptus Mechanicus Skitarii Vanguard
+    ebay_negative_keywords: add 'backpacks'
+    Old: 'legions imperialis Resin 04-113 Arc Rifle transuranic arquebus'
+    New: 'legions imperialis Resin 04-113 Arc Rifle transuranic arquebus backpacks'
+
+  59-16  Adeptus Mechanicus Dunecrawler
+    ebay_negative_keywords: add 'Beamer eradication'
+    Old: 'legions imperialis Resin 04-113 Neutron Laser Search Light ray'
+    New: 'legions imperialis Resin 04-113 Neutron Laser Search Light ray Beamer eradication'
+"""
+
+from django.core.management.base import BaseCommand
+
+from products.models import Product
+
+
+_FIXES = [
+    (
+        '59-10',
+        'Adeptus Mechanicus Skitarii Rangers',
+        'legions imperialis Resin 04-113 transuranic Arquebus Imperium Magazine issue',
+    ),
+    (
+        '59-11',
+        'Adeptus Mechanicus Skitarii Vanguard',
+        'legions imperialis Resin 04-113 Arc Rifle transuranic arquebus backpacks',
+    ),
+    (
+        '59-16',
+        'Adeptus Mechanicus Dunecrawler',
+        'legions imperialis Resin 04-113 Neutron Laser Search Light ray Beamer eradication',
+    ),
+]
+
+
+class Command(BaseCommand):
+    """Extend eBay negative keywords for Skitarii Rangers, Skitarii Vanguard, and Dunecrawler."""
+
+    help = (
+        'Sets ebay_negative_keywords for 59-10 (add Imperium/Magazine/issue), '
+        '59-11 (add backpacks), 59-16 (add Beamer/eradication). Idempotent.'
+    )
+
+    def handle(self, *args, **options):
+        """Run the command."""
+        updated_total = 0
+
+        for gw_sku, name, keywords in _FIXES:
+            updated = Product.objects.filter(gw_sku=gw_sku).update(
+                ebay_negative_keywords=keywords,
+            )
+            if updated:
+                self.stdout.write(
+                    f'  Updated ebay_negative_keywords: {name} ({gw_sku})'
+                )
+                updated_total += updated
+            else:
+                self.stdout.write(self.style.WARNING(
+                    f'  Not found: {name} ({gw_sku}) -- skipped.'
+                ))
+
+        self.stdout.write(self.style.SUCCESS(
+            f'apply_batch_fixes_may2026s complete. {updated_total} product(s) updated.'
+        ))

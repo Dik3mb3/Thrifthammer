@@ -122,8 +122,8 @@
                     <a href="{% url 'accounts:register' %}" rel="nofollow">Register</a>
                 {% endif %}
 
-                {% comment %}
-                {# ── Region switcher — disabled until UK version is ready for launch ── #}
+                {% if debug %}
+                {# ── Region switcher — local dev only (debug=True); hidden on live site ── #}
                 <div class="nav-region" id="nav-region">
                     <button
                         class="nav-region-btn"
@@ -138,15 +138,15 @@
                         <svg class="nav-region-chevron" xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
                     <div class="nav-region-menu" id="nav-region-menu" role="menu" hidden>
-                        <a href="{{ request.path }}?region=us"
+                        <a href="/products/"
                            class="nav-region-option{% if region == 'us' %} nav-region-option--active{% endif %}"
                            role="menuitem">🇺🇸 US / English</a>
-                        <a href="{{ request.path }}?region=uk"
+                        <a href="/uk/products/"
                            class="nav-region-option{% if region == 'uk' %} nav-region-option--active{% endif %}"
                            role="menuitem">🇬🇧 UK / English</a>
                     </div>
                 </div>
-                {% endcomment %}
+                {% endif %}
 
             </div>
 

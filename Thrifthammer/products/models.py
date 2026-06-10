@@ -157,6 +157,10 @@ class Retailer(models.Model):
         help_text='Primary country this retailer serves (e.g. UK, US)',
     )
     is_active = models.BooleanField(default=True)
+    is_uk = models.BooleanField(
+        default=False,
+        help_text='True for UK-only retailers (GBP prices). Used to isolate UK prices from US pages.',
+    )
 
     class Meta:
         ordering = ['name']

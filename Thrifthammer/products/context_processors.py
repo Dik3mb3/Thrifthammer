@@ -41,8 +41,11 @@ def site_stats(request):
     # Round down to nearest 10 for the display value (e.g. 357 → "350+")
     display_count = (count // 10) * 10
 
+    region = request.session.get('region', 'us')
+
     return {
         'product_count': count,
         'product_count_display': f'{display_count}+',
         'last_price_update': last_update,
+        'region': region,
     }
