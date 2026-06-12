@@ -729,6 +729,19 @@ def report_issue(request, slug):
     )
 
     if request.method == 'POST':
+        # Rate limit: 5 reports per IP per hour to block bot floods
+        ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', ''))
+        ip = ip.split(',')[0].strip()
+        rate_key = f'report_issue_rate_{ip}'
+        rate_count = cache.get(rate_key, 0)
+        if rate_count >= 5:
+            messages.error(
+                request,
+                'Too many reports submitted. Please wait an hour before trying again.',
+            )
+            return redirect('products:detail', slug=slug)
+        cache.set(rate_key, rate_count + 1, 3600)
+
         form = IssueReportForm(request.POST)
         if form.is_valid():
             issue_label = dict(IssueReportForm.ISSUE_TYPE_CHOICES).get(

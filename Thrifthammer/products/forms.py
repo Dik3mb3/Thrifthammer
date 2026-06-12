@@ -44,3 +44,9 @@ class IssueReportForm(forms.Form):
         }),
         help_text='Leave your email if you would like a reply.',
     )
+
+    def clean_contact_email(self):
+        email = self.cleaned_data.get('contact_email', '')
+        if email and email.lower().endswith('@example.com'):
+            raise forms.ValidationError('Please enter a valid email address.')
+        return email
