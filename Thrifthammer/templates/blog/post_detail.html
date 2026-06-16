@@ -246,7 +246,58 @@
 {% endblock %}
 
 {% block extra_js %}
-{% if post.slug == 'warhammer-40k-faction-popularity-ranking' %}
+{% if post.slug == 'where-to-buy-warhammer-bits' %}
+<script>
+(function () {
+  var table = document.getElementById('btc-table');
+  if (!table) return;
+  var tbody = table.querySelector('tbody');
+  var headers = Array.from(table.querySelectorAll('thead th[data-sort]'));
+  var currentSortIdx = null;
+  var ascending = true;
+
+  function getVal(row, colIndex) {
+    var cell = row.cells[colIndex];
+    var v = parseInt(cell.getAttribute('data-val'), 10);
+    return isNaN(v) ? 0 : v;
+  }
+
+  function updateArrows(activeIdx) {
+    headers.forEach(function (th) {
+      var arrow = th.querySelector('.btc-arrow');
+      if (!arrow) return;
+      var idx = parseInt(th.getAttribute('data-sort'), 10);
+      if (idx === activeIdx) {
+        arrow.textContent = ascending ? '▲' : '▼';
+        arrow.style.opacity = '1';
+      } else {
+        arrow.textContent = '⇅';
+        arrow.style.opacity = '0.7';
+      }
+    });
+  }
+
+  headers.forEach(function (th) {
+    th.addEventListener('click', function () {
+      var colIndex = parseInt(th.getAttribute('data-sort'), 10);
+      if (currentSortIdx === colIndex) {
+        ascending = !ascending;
+      } else {
+        currentSortIdx = colIndex;
+        ascending = true;
+      }
+      var rows = Array.from(tbody.querySelectorAll('tr'));
+      rows.sort(function (a, b) {
+        var diff = getVal(a, colIndex) - getVal(b, colIndex);
+        return ascending ? diff : -diff;
+      });
+      rows.forEach(function (r) { tbody.appendChild(r); });
+      updateArrows(colIndex);
+    });
+  });
+}());
+</script>
+{% elif post.slug == 'warhammer-40k-faction-popularity-ranking' %}
 <script>
 (function () {
   var table = document.getElementById('fpr-table');
