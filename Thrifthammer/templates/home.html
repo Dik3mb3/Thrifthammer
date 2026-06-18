@@ -1,10 +1,12 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Warhammer 40K Price Comparison — Best Deals | ThriftHammer{% endblock %}
 
 {% block meta_description %}<meta name="description" content="ThriftHammer tracks Warhammer 40,000 prices across US retailers. Save 20 to 25% on every kit. Compare prices and find the cheapest deal instantly.">{% endblock %}
 
 {% block extra_head %}
+<link rel="preload" as="image" href="{% static 'images/bg-grimdark.webp' %}" type="image/webp" fetchpriority="high">
 <meta name="keywords" content="Warhammer 40K price comparison, cheap Warhammer, best price Warhammer 40000, Games Workshop deals, Warhammer discount, buy Warhammer online USA, save on Warhammer kits, Warhammer price tracker">
 <meta property="og:title" content="ThriftHammer: Warhammer Price Comparison">
 <meta property="og:description" content="Compare Warhammer 40,000 prices across US retailers. Save 20 to 25% on every kit, every day.">
