@@ -229,9 +229,10 @@ class Command(BaseCommand):
                 found.append((product, asin, '(override — not searched)', None, 'OVERRIDE'))
                 continue
 
+            search_term = product.ebay_search_name or product.name
             try:
                 items = client.search_items(
-                    keywords=product.name,
+                    keywords=search_term,
                     marketplace='www.amazon.com',
                     brand=brand,
                     item_count=1,
