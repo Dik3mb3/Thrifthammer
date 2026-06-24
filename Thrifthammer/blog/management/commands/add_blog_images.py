@@ -81,6 +81,11 @@ BLOG_IMAGES = [
         'static_path': 'images/blog/11th-edition-box.png',
         'alt': 'Warhammer 40K Armageddon 11th Edition launch box contents revealed',
     },
+    {
+        'slug': 'warhammer-40k-battleforce-boxes-11th-edition-ranked',
+        'static_path': 'images/blog/blog-11th-edition-battleforces.png',
+        'alt': 'Warhammer 40K 11th Edition Battleforce boxes: Astra Militarum, Tyranids, Chaos Space Marines, and Necrons',
+    },
 ]
 
 BASE_URL = 'https://thrifthammer.com'
