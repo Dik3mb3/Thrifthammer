@@ -86,6 +86,11 @@ BLOG_IMAGES = [
         'static_path': 'images/blog/blog-11th-edition-battleforces.png',
         'alt': 'Warhammer 40K 11th Edition Battleforce boxes: Astra Militarum, Tyranids, Chaos Space Marines, and Necrons',
     },
+    {
+        'slug': 'warhammer-40k-app-review-11th-edition',
+        'static_path': 'images/blog/blog-40k-app-review.png',
+        'alt': 'ThriftHammer Warhammer 40K app review with screenshots of the app list builder on mobile',
+    },
 ]
 
 BASE_URL = 'https://thrifthammer.com'
