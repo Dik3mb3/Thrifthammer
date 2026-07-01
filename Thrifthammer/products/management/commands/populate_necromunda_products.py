@@ -47,6 +47,10 @@ _EBAY_NEG_KEYWORDS = {
     'ironhead-squat-prospectors-exo-kyn': 'x1 1x',
     # Arachni-rig: same single-model quantity notation issue
     'van-saar-ash-wastes-arachni-rig': 'x1 1x',
+    # Delaque Gang: single-model listings use "5x" quantity notation
+    'delaque-gang': '5x',
+    # Orlock Arms Masters: gets confused with Cyber-mastiff unit listings
+    'orlock-arms-masters-and-wreckers': 'Cyber-mastiff',
 }
 
 _EBAY_ALLOWED_TITLE_WORDS = {
