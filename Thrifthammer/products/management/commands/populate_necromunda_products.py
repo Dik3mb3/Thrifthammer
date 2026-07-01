@@ -37,6 +37,16 @@ _IMG = 'https://www.warhammer.com/app/resources/catalog/product/920x950/{filenam
 _EBAY_NEG_KEYWORDS = {
     'cargo-8-ridgehauler': 'Tanks Trailer Frames Promethium',
     'cawdor-gang': 'redemptionists',
+    # Subjugator patrol gets confused with Sanctioner Automata listings
+    'palanite-subjugator-patrol': 'Sanctioner',
+    # Ambot gets confused with Bot listings (short name triggers too-broad results)
+    'luther-pattern-excavation-automata-ambot': 'Bot',
+    # Gang Stronghold terrain gets confused with Watchtower terrain listings
+    'zone-mortalis-gang-stronghold': 'Watch Tower',
+    # Exo-kyn: single-model listings use "x1" / "1x" quantity notation
+    'ironhead-squat-prospectors-exo-kyn': 'x1 1x',
+    # Arachni-rig: same single-model quantity notation issue
+    'van-saar-ash-wastes-arachni-rig': 'x1 1x',
 }
 
 _EBAY_ALLOWED_TITLE_WORDS = {
