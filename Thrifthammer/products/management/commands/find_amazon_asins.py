@@ -38,6 +38,15 @@ ASIN_OVERRIDES = {
     'MC-003': 'B0899J6L6G',   # Adeptus Mechanicus Archaeopter Transvector
     'MC-011': 'B0899FYZHD',   # Adeptus Mechanicus Pteraxii Sterylizors
     'MC-019': 'B0965W1ZD8',   # Adeptus Mechanicus Sydonian Dragoon
+    # Horus Heresy — Astartes Legions
+    'AL-058': 'B0D6RF5M8H',   # MKVI Legion Command Squad — search returned MKIII
+    # Horus Heresy — Cult Mechanicum
+    'CM-005': 'B0F29MCWW5',   # Ursarax Cohort — search returned Thallax Cohort
+    # Horus Heresy — Forces of the Emperor
+    'FOE-013': 'B0D2J217CZ',  # Solar Auxilia Basilisk/Medusa — search returned Battle Group
+    'FOE-015': 'B0CYCQGBJY',  # Malcador Heavy Tank — search returned Malcador Infernus
+    'FOE-018': 'B0CYCSZ4QV',  # Solar Auxilia Tactical Command Section — search returned Lasrifle Section
+    'FOE-020': 'B0CYCPJR16',  # Solar Auxilia Leman Russ Strike/Command Tank — search returned Assault Tank
 }
 
 # SKUs to explicitly exclude from Amazon URL discovery.
@@ -87,6 +96,16 @@ SKIP_SKUS = {
     'SE-028',                       # Stormcast Eternals Prosecutors
     'SE-006',                       # Stormcast Eternals Stormcoven
     'SE-010',                       # Stormcast Eternals Vanquishers
+    # Horus Heresy — no valid Amazon listing; API returned wrong product
+    'AL-002',                       # Legiones Astartes: Maximus Battle Group — matched LI Battle Group
+    'AL-020',                       # Saturnine Praetor — matched Saturnine Terminator Squad
+    'AL-027',                       # Scimitar Jetbike Squadron — matched Sky-Hunter Squadron
+    'AL-037',                       # Contemptor Dreadnought Weapons Frame 1 — matched Frame 2
+    'AL-045',                       # Araknae Quad Accelerator Platform — not found
+    'AL-046',                       # Disintegrator Weapons Upgrade Set — matched Melee Weapons Set
+    'AL-061',                       # Leviathan Siege Dreadnought Close Combat Weapons — matched Ranged Frame
+    'CM-003',                       # Vultarax Stratos-Automata — matched Skitarii Corpus
+    'CM-016',                       # Age of Darkness Knight Questoris — matched Cerastus Knight Castigator
 }
 # ─────────────────────────────────────────────────────────────────────────────
 

@@ -1141,9 +1141,10 @@ class EbayBrowseAPI:
         # ── Bundle detection ──────────────────────────────────────────────────
         # " & " between product names indicates a bundle of two separate
         # products (e.g. "Predator Annihilator/Destructor & Razorback").
-        # GW sealed retail kits are single products — their official names
-        # never include " & ".  No products in the ThriftHammer DB use "&".
-        if ' & ' in result['title']:
+        # Per-product override: add '&' to ebay_allowed_title_words to bypass
+        # this check for products whose official name contains "&"
+        # (e.g. "Weapons & Upgrades", "Archeoteks & Grav-cutters").
+        if ' & ' in result['title'] and '&' not in _allowed_words:
             logger.debug(
                 '[ebay] Rejected (bundle listing, "&" in title): "%s"',
                 result['title'][:60],
