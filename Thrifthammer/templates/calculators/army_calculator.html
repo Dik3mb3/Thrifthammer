@@ -88,7 +88,7 @@
              data-points="{{ unit.points_cost|default:0 }}"
              data-typical-qty="{{ unit.typical_quantity }}"
              data-price="{% if unit.product %}{% with best=unit.product.get_cheapest_price %}{% if best %}{{ best.price }}{% endif %}{% endwith %}{% endif %}"
-             data-msrp="{% if unit.product and unit.product.msrp %}{{ unit.product.msrp }}{% endif %}">
+             data-msrp="{% if unit.product %}{{ unit.product.get_gw_us_price_value|default:'' }}{% endif %}">
 
           {# Card main row #}
           <div class="ab-card-main">
@@ -106,14 +106,14 @@
 
               <div class="ab-card-price-row">
                 {% if unit.product %}
-                  {% with best=unit.product.get_cheapest_price %}
+                  {% with best=unit.product.get_cheapest_price gw_price=unit.product.get_gw_us_price_value %}
                   {% if best %}
                     <span class="ab-best-price">${{ best.price }}</span>
-                    {% if unit.product.msrp and unit.product.msrp > best.price %}
+                    {% if gw_price and gw_price > best.price %}
                     <span class="ab-discount-badge">% off GW</span>
                     {% endif %}
-                    {% if unit.product.msrp %}
-                    <span class="ab-msrp-label">GW ${{ unit.product.msrp }}</span>
+                    {% if gw_price %}
+                    <span class="ab-msrp-label">GW ${{ gw_price }}</span>
                     {% endif %}
                   {% else %}
                     <span class="ab-no-price">No price available</span>

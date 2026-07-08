@@ -408,10 +408,11 @@ class ViewSavedArmyView(DetailView):
         # Collect product IDs that have a linked Product
         product_ids = [ut.product_id for ut in unit_map.values() if ut.product_id]
 
-        # Fetch all in-stock prices for those products, ordered cheapest first
+        # Fetch all in-stock US prices for those products, ordered cheapest first
         all_prices = (
             CurrentPrice.objects
             .filter(product_id__in=product_ids, in_stock=True, not_available=False)
+            .exclude(retailer__is_uk=True)
             .select_related('retailer')
             .order_by('product_id', 'price')
         )

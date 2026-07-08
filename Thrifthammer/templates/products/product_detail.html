@@ -249,6 +249,9 @@
         No price data yet. Check back after the next scrape.
       </p>
       {% endif %}
+      {% if product.description %}
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-top:var(--sp-3);">{{ product.description }}</p>
+      {% endif %}
 
     </div>
   </div>{# end product-layout #}

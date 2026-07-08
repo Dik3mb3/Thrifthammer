@@ -347,22 +347,26 @@ class Product(models.Model):
         than checking `if cached is not None`, because a product with no
         prices would cache None and then always re-query on every request.
         """
-        cache_key = f'cheapest_price_{self.pk}'
+        cache_key = f'cheapest_price_us_{self.pk}'
         cached = cache.get(cache_key, _CACHE_MISS)
         if cached is not _CACHE_MISS:
             return cached
 
-        # Prefer in-stock, fall back to cheapest overall
+        # Prefer in-stock, fall back to cheapest overall. UK retailers are
+        # excluded so GBP prices (stored as raw numbers) never win a USD
+        # cheapest-price comparison for US users.
         from prices.models import CurrentPrice  # avoid circular import at module level
         result = (
             CurrentPrice.objects
             .filter(product=self, in_stock=True)
+            .exclude(retailer__is_uk=True)
             .select_related('retailer')
             .order_by('price')
             .first()
         ) or (
             CurrentPrice.objects
             .filter(product=self)
+            .exclude(retailer__is_uk=True)
             .select_related('retailer')
             .order_by('price')
             .first()

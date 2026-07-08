@@ -222,7 +222,26 @@ class EbayBrowseAPI:
         first_valid = valid_items[0]
         cheapest    = min(valid_items, key=lambda x: x['total_cost'])
 
+        # For Discount Box Splits, refresh both candidates' shipping before
+        # comparing — search results frequently show $0 for real fixed-rate
+        # shipping, causing the algorithm to swap to a listing that is actually
+        # more expensive once accurate shipping is applied.
+        _cat = getattr(product, 'category', None)
+        _is_split = _cat is not None and getattr(_cat, 'slug', '') == 'discount-box-splits'
         cheaper_threshold = Decimal('0.90')  # must be ≥10% cheaper to beat Best Match
+        if _is_split and cheapest is not first_valid:
+            for candidate in (first_valid, cheapest):
+                real_ship = self._fetch_item_shipping(candidate['item_id'])
+                if real_ship is not None:
+                    if real_ship != candidate['shipping']:
+                        logger.debug(
+                            '[ebay] pre-comparison shipping corrected: '
+                            '"%.60s" $%.2f → $%.2f',
+                            candidate['title'][:60], candidate['shipping'], real_ship,
+                        )
+                    candidate['shipping']   = real_ship
+                    candidate['total_cost'] = candidate['price'] + real_ship
+
         if cheapest['total_cost'] <= first_valid['total_cost'] * cheaper_threshold:
             best = cheapest
             logger.debug(
@@ -1227,7 +1246,9 @@ class EbayBrowseAPI:
         # (e.g., a £50 MSRP squadron kit → floor £25; a single sprue at $24.95
         # fails, the full box at $55 passes).
         min_price = Decimal('8.00')
-        if hasattr(product, 'msrp') and product.msrp and product.msrp > 0:
+        _cat = getattr(product, 'category', None)
+        _is_split = _cat is not None and getattr(_cat, 'slug', '') == 'discount-box-splits'
+        if not _is_split and hasattr(product, 'msrp') and product.msrp and product.msrp > 0:
             msrp_floor = product.msrp * Decimal('0.50')
             min_price = max(min_price, msrp_floor)
 
@@ -1260,7 +1281,7 @@ class EbayBrowseAPI:
         short_desc = result.get('short_description', '').lower()
         if short_desc:
             desc_words     = set(re.sub(r'[^\w\s]', ' ', short_desc).split())
-            desc_bits_hits = desc_words & EbayBrowseAPI._DESC_BITS_KEYWORDS
+            desc_bits_hits = (desc_words & EbayBrowseAPI._DESC_BITS_KEYWORDS) - _allowed_words
             if desc_bits_hits:
                 logger.debug(
                     '[ebay] Rejected (bits keyword in description): "%s" — %s',
@@ -1285,7 +1306,7 @@ class EbayBrowseAPI:
                 r'\b(?:model kit|box set|army box|army set|starter set|combat patrol)\b',
                 re.IGNORECASE,
             )
-            if _EXTRACTION_RE.search(short_desc):
+            if _EXTRACTION_RE.search(short_desc) and not allow_no_box:
                 logger.debug(
                     '[ebay] Rejected (single model extracted from set, '
                     '"from X [set/kit]" in description): "%s"',
@@ -1388,6 +1409,9 @@ class EbayBrowseAPI:
         title_lower    = result['title'].lower()
         effective_name = getattr(product, 'ebay_search_name', '') or product.name
         product_name_lower = effective_name.lower()
+        _raw_allowed   = getattr(product, 'ebay_allowed_title_words', '') or ''
+        _allowed_words = set(shlex.split(_raw_allowed.lower())) if _raw_allowed else set()
+        allow_no_box   = getattr(product, 'ebay_allow_no_box', False)
 
         # Keyword match
         keywords    = [w for w in product_name_lower.split() if len(w) >= 3]
@@ -1420,13 +1444,14 @@ class EbayBrowseAPI:
 
         # Title bits filter
         title_words  = set(re.sub(r"[^\w\s]", ' ', title_lower).split())
-        bits_matches = title_words & EbayBrowseAPI._BITS_KEYWORDS
+        bits_matches = (title_words & EbayBrowseAPI._BITS_KEYWORDS) - _allowed_words
         if bits_matches:
             reasons.append(f'title bits keywords: {bits_matches}')
 
-        # Standalone count digit
-        if re.search(r'\b[1-9]\b', title_lower):
-            reasons.append('standalone count digit in title')
+        # Standalone count digit (mirrors _is_valid_result: respect _allowed_words)
+        _blocked_digits = [d for d in re.findall(r'\b([1-9])\b', title_lower) if d not in _allowed_words]
+        if _blocked_digits:
+            reasons.append(f'standalone count digit in title: {_blocked_digits}')
 
         # Count + generic descriptor
         if re.search(r'\b\d+\s+(?:miniatures?|minis?|figures?)\b', title_lower):
@@ -1445,7 +1470,7 @@ class EbayBrowseAPI:
                 )
 
         # Bundle
-        if ' & ' in result['title']:
+        if ' & ' in result['title'] and '&' not in _allowed_words:
             reasons.append('" & " (bundle) in title')
 
         # Individual model variant (#A / #B / #C pattern)
@@ -1472,7 +1497,9 @@ class EbayBrowseAPI:
         # Price
         total_cost = result.get('total_cost', Decimal('0'))
         min_price  = Decimal('8.00')
-        if hasattr(product, 'msrp') and product.msrp and product.msrp > 0:
+        _cat = getattr(product, 'category', None)
+        _is_split = _cat is not None and getattr(_cat, 'slug', '') == 'discount-box-splits'
+        if not _is_split and hasattr(product, 'msrp') and product.msrp and product.msrp > 0:
             msrp_floor = product.msrp * Decimal('0.50')
             min_price  = max(min_price, msrp_floor)
         if total_cost < min_price or total_cost > Decimal('1000.00'):
@@ -1490,7 +1517,7 @@ class EbayBrowseAPI:
         short_desc = result.get('short_description', '').lower()
         if short_desc:
             desc_words     = set(re.sub(r'[^\w\s]', ' ', short_desc).split())
-            desc_bits_hits = desc_words & EbayBrowseAPI._DESC_BITS_KEYWORDS
+            desc_bits_hits = (desc_words & EbayBrowseAPI._DESC_BITS_KEYWORDS) - _allowed_words
             if desc_bits_hits:
                 reasons.append(f'description bits keywords: {desc_bits_hits}')
 
@@ -1500,7 +1527,7 @@ class EbayBrowseAPI:
                 r'\b(?:model kit|box set|army box|army set|starter set|combat patrol)\b',
                 re.IGNORECASE,
             )
-            if _EXTRACTION_RE.search(short_desc):
+            if _EXTRACTION_RE.search(short_desc) and not allow_no_box:
                 reasons.append(
                     'single model extracted from set '
                     '("from X [set/kit]" in description)'
