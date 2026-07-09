@@ -76,17 +76,18 @@ entirely, while others have raised international shipping costs to uncomfortable
 /* ── Bits Retailer Comparison Table ── */
 #btc-wrap {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
   margin: 1.5rem 0;
   border-radius: 6px;
+  border: 1px solid var(--border-subtle, #2a2e3a);
 }
 #btc-table {
+  min-width: 600px;
   width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem;
   background: var(--bg-card, #1a1b1c);
-  border: 1px solid var(--border-subtle, #2a2e3a);
-  border-radius: 6px;
-  overflow: hidden;
   white-space: nowrap;
 }
 #btc-table thead th {

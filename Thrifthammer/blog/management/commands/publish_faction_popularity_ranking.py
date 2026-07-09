@@ -79,16 +79,18 @@ BODY = """\
 <style>
 #fpr-wrap {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
   margin: var(--sp-6, 1.5rem) 0;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
 }
 #fpr-table {
+  min-width: 520px;
   width: 100%;
   border-collapse: collapse;
   font-size: 0.88rem;
   background: var(--bg-card, #1a1b1c);
-  border: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
-  border-radius: 6px;
-  overflow: hidden;
 }
 #fpr-table thead th {
   background: #9a6e10;
@@ -603,7 +605,6 @@ class Command(BaseCommand):
             ),
             body=BODY,
             status=Post.STATUS_PUBLISHED,
-            published_at=timezone.now(),
             meta_title='Most Popular Warhammer 40K Factions Ranked (2026 Data)',
             meta_description=(
                 'We ranked all 28 Warhammer 40K factions using Reddit, Instagram, '
@@ -622,7 +623,7 @@ class Command(BaseCommand):
                 )
             )
         else:
-            post = Post(**defaults)
+            post = Post(**defaults, published_at=timezone.now())
             post.save()
             self.stdout.write(
                 self.style.SUCCESS(

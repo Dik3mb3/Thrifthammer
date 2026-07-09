@@ -87,138 +87,352 @@ BODY = """\
 
 <h2>The Big Picture: US Launch Box Prices Across Editions</h2>
 
-<p style="font-size:0.82rem;color:var(--text-muted);margin-top:-0.5rem;">US inflation estimates sourced from <a href="https://www.usinflationcalculator.com/" target="_blank" rel="noopener">usinflationcalculator.com</a>. 2nd and 3rd Edition USD prices were estimated from community forums and Reddit threads based on exchange rates at the time.</p>
+<style>
+/* ── Economics of Warhammer Part 1 ────────────────────────────────────── */
+
+/* Source / footnote paragraphs */
+.ec-source   { font-size: 0.82rem; color: var(--text-muted, #777); margin-top: -0.5rem; }
+.ec-footnote { font-size: 0.72rem; color: var(--text-muted, #777); margin-top: -0.25rem; }
+
+/* Chart card */
+.ec-card {
+  background: #1c2230;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+}
+.ec-card-title {
+  font-family: Oswald, sans-serif;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #c8bfb0;
+  margin-bottom: 0.25rem;
+}
+.ec-card-sub {
+  font-size: 0.72rem;
+  color: #5c6480;
+  margin-bottom: 1.1rem;
+}
+
+/* Legend */
+.ec-legend {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.1rem;
+  flex-wrap: wrap;
+}
+.ec-legend-item {
+  font-size: 0.72rem;
+  color: #7a8090;
+  font-family: Oswald, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.ec-sw { display: inline-block; width: 14px; height: 3px; border-radius: 2px; }
+.ec-sw-gold { background: #c8922a; }
+.ec-sw-adj  { background: rgba(240,192,96,0.3); }
+
+/* Bar rows — price charts (75px label | bars | 68px values) */
+.ec-row {
+  display: grid;
+  grid-template-columns: 75px 1fr 68px;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+/* Bar rows — points chart (75px label | bar track | 62px value) */
+.ec-row-pts {
+  display: grid;
+  grid-template-columns: 75px 1fr 62px;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+/* Edition label */
+.ec-label {
+  font-family: Oswald, sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #7a8090;
+  text-align: right;
+}
+.ec-label-hi { color: #c8bfb0; }
+
+/* Price chart: two stacked bars per row */
+.ec-bars { display: flex; flex-direction: column; gap: 3px; }
+.ec-bar-gold { height: 9px; background: #c8922a; border-radius: 3px; }
+.ec-bar-adj  { height: 9px; background: rgba(240,192,96,0.28); border-radius: 3px; }
+
+/* Points chart: single bar with track */
+.ec-bar-track {
+  height: 22px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.ec-bar-fill {
+  position: absolute;
+  left: 0; top: 0;
+  height: 100%;
+  border-radius: 4px;
+}
+.ec-fill-g { background: #4aab72; opacity: 0.85; }
+.ec-fill-o { background: #c8922a; opacity: 0.85; }
+.ec-fill-r { background: #d44040; opacity: 0.75; }
+
+/* Price chart values */
+.ec-vals { font-size: 0.74rem; line-height: 1.4; }
+.ec-val-launch { color: #c8922a; font-weight: 700; }
+.ec-val-adj    { color: rgba(240,192,96,0.5); font-size: 0.68rem; }
+
+/* Points chart values */
+.ec-val-g { font-size: 0.8rem; font-weight: 700; color: #4aab72; text-align: right; }
+.ec-val-o { font-size: 0.8rem; font-weight: 700; color: #c8922a; text-align: right; }
+.ec-val-r { font-size: 0.8rem; font-weight: 700; color: #d44040; text-align: right; }
+
+/* Divider + footer summary row */
+.ec-divider { height: 1px; background: #2a2e3a; margin: 0.75rem 0; }
+.ec-footer {
+  display: grid;
+  grid-template-columns: 75px 1fr 68px;
+  align-items: center;
+  gap: 0.5rem;
+}
+.ec-footer-label {
+  font-family: Oswald, sans-serif;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: #5c6480;
+  text-align: right;
+}
+.ec-footer-val {
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: #5c6480;
+}
+
+/* Bar widths — all unique values across 3 charts */
+.bw-217 { width: 21.7%; }
+.bw-224 { width: 22.4%; }
+.bw-248 { width: 24.8%; }
+.bw-280 { width: 28.0%; }
+.bw-311 { width: 31.1%; }
+.bw-336 { width: 33.6%; }
+.bw-349 { width: 34.9%; }
+.bw-373 { width: 37.3%; }
+.bw-404 { width: 40.4%; }
+.bw-410 { width: 41.0%; }
+.bw-425 { width: 42.5%; }
+.bw-435 { width: 43.5%; }
+.bw-453 { width: 45.3%; }
+.bw-472 { width: 47.2%; }
+.bw-485 { width: 48.5%; }
+.bw-507 { width: 50.7%; }
+.bw-530 { width: 53.0%; }
+.bw-567 { width: 56.7%; }
+.bw-590 { width: 59.0%; }
+.bw-597 { width: 59.7%; }
+.bw-609 { width: 60.9%; }
+.bw-632 { width: 63.2%; }
+.bw-672 { width: 67.2%; }
+.bw-689 { width: 68.9%; }
+.bw-745 { width: 74.5%; }
+.bw-746 { width: 74.6%; }
+.bw-776 { width: 77.6%; }
+.bw-795 { width: 79.5%; }
+.bw-932 { width: 93.2%; }
+.bw-933 { width: 93.3%; }
+.bw-934 { width: 93.4%; }
+.bw-943 { width: 94.3%; }
+.bw-944 { width: 94.4%; }
+.bw-988 { width: 98.8%; }
+.bw-100 { width: 100%; }
+
+/* Tables */
+#ec-us-tbl,
+#ec-uk-tbl,
+#ec-pts-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+.ec-muted { color: #5c6480; }
+.ec-good  { color: #4aab72; font-weight: 600; }
+.ec-bad   { color: #d44040; font-weight: 600; }
+.ec-mod   { color: #f0c060; font-weight: 600; }
+.ec-tbl-footer { border-top: 1px solid #3a3e4a; }
+.ec-tbl-footer-label {
+  font-family: Oswald, sans-serif;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #7a8090;
+}
+.ec-predict-lo { color: #4aab72; font-weight: 700; }
+.ec-predict-hi { color: #d44040; font-weight: 700; }
+
+/* Mobile — stack label above bars on small screens */
+@media (max-width: 500px) {
+  .ec-row,
+  .ec-row-pts {
+    grid-template-columns: 1fr 68px;
+    grid-template-rows: auto auto;
+  }
+  .ec-label,
+  .ec-label-hi {
+    grid-column: 1 / -1;
+    text-align: left;
+    font-size: 0.8rem;
+    color: #c8bfb0;
+    padding-bottom: 0.1rem;
+  }
+  .ec-footer {
+    grid-template-columns: 1fr auto;
+  }
+  .ec-footer-label {
+    text-align: left;
+    color: #c8bfb0;
+    font-size: 0.8rem;
+  }
+}
+</style>
+
+<p class="ec-source">US inflation estimates sourced from <a href="https://www.usinflationcalculator.com/" target="_blank" rel="noopener">usinflationcalculator.com</a>. 2nd and 3rd Edition USD prices were estimated from community forums and Reddit threads based on exchange rates at the time.</p>
 
 <!-- ── US PRICE BAR CHART ─────────────────────────────────────────────── -->
-<div style="background:#1c2230;border-radius:10px;padding:0.75rem 1rem;margin:1rem 0;overflow-x:auto;">
-  <div style="font-family:Oswald,sans-serif;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:#c8bfb0;margin-bottom:0.25rem;">Launch Box Price vs. 2026 Inflation-Adjusted Value (USD)</div>
-  <div style="font-size:0.72rem;color:#5c6480;margin-bottom:1.1rem;">Bars show actual launch price (gold) and what inflation would suggest it should cost today (faint).</div>
-  <div style="display:flex;gap:1.5rem;margin-bottom:1.1rem;">
-    <span style="font-size:0.72rem;color:#7a8090;font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:0.04em;display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:3px;background:#c8922a;border-radius:2px;"></span>Launch Price</span>
-    <span style="font-size:0.72rem;color:#7a8090;font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:0.04em;display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:3px;background:rgba(240,192,96,0.3);border-radius:2px;"></span>2026 Adjusted Value</span>
+<div class="ec-card">
+  <div class="ec-card-title">Launch Box Price vs. 2026 Inflation-Adjusted Value (USD)</div>
+  <div class="ec-card-sub">Bars show actual launch price (gold) and what inflation would suggest it should cost today (faint).</div>
+  <div class="ec-legend">
+    <span class="ec-legend-item"><span class="ec-sw ec-sw-gold"></span>Launch Price</span>
+    <span class="ec-legend-item"><span class="ec-sw ec-sw-adj"></span>2026 Adjusted Value</span>
   </div>
-  <div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">2nd Ed &rsquo;93</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:22.4%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:50.7%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">$60</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">$136 adj</div>
-      </div>
+  <div class="ec-row">
+    <div class="ec-label">2nd Ed &rsquo;93</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-224"></div>
+      <div class="ec-bar-adj bw-507"></div>
     </div>
-
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">3rd Ed &rsquo;98</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:33.6%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:67.2%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">$90</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">$180 adj</div>
-      </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">$60</div>
+      <div class="ec-val-adj">$136 adj</div>
     </div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">4th Ed &rsquo;04</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:28.0%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:48.5%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">$75</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">$130 adj</div>
-      </div>
+  <div class="ec-row">
+    <div class="ec-label">3rd Ed &rsquo;98</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-336"></div>
+      <div class="ec-bar-adj bw-672"></div>
     </div>
-
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">5th Ed &rsquo;08</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:28.0%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:42.5%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">$75</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">$114 adj</div>
-      </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">$90</div>
+      <div class="ec-val-adj">$180 adj</div>
     </div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">6th Ed &rsquo;12</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:37.3%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:53.0%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">$100</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">$142 adj</div>
-      </div>
+  <div class="ec-row">
+    <div class="ec-label">4th Ed &rsquo;04</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-280"></div>
+      <div class="ec-bar-adj bw-485"></div>
     </div>
-
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">7th Ed &rsquo;14</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:41.0%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:56.7%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">$110</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">$152 adj</div>
-      </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">$75</div>
+      <div class="ec-val-adj">$130 adj</div>
     </div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">8th Ed &rsquo;17</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:59.7%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:79.5%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">$160</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">$213 adj</div>
-      </div>
+  <div class="ec-row">
+    <div class="ec-label">5th Ed &rsquo;08</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-280"></div>
+      <div class="ec-bar-adj bw-425"></div>
     </div>
-
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">9th Ed &rsquo;20</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:74.6%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:94.4%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">$200</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">$253 adj</div>
-      </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">$75</div>
+      <div class="ec-val-adj">$114 adj</div>
     </div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#c8bfb0;text-align:right;">10th Ed &rsquo;23</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:93.3%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:100%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">$250</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">$268 adj</div>
-      </div>
+  <div class="ec-row">
+    <div class="ec-label">6th Ed &rsquo;12</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-373"></div>
+      <div class="ec-bar-adj bw-530"></div>
     </div>
-
-    <div style="height:1px;background:#2a2e3a;margin:0.75rem 0;"></div>
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.72rem;text-transform:uppercase;color:#5c6480;text-align:right;">Total change</div>
-      <div></div>
-      <div style="font-size:0.72rem;line-height:1.4;color:#5c6480;">+97% adj &nbsp;|&nbsp; 111% inflation</div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">$100</div>
+      <div class="ec-val-adj">$142 adj</div>
     </div>
+  </div>
 
+  <div class="ec-row">
+    <div class="ec-label">7th Ed &rsquo;14</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-410"></div>
+      <div class="ec-bar-adj bw-567"></div>
+    </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">$110</div>
+      <div class="ec-val-adj">$152 adj</div>
+    </div>
+  </div>
+
+  <div class="ec-row">
+    <div class="ec-label">8th Ed &rsquo;17</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-597"></div>
+      <div class="ec-bar-adj bw-795"></div>
+    </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">$160</div>
+      <div class="ec-val-adj">$213 adj</div>
+    </div>
+  </div>
+
+  <div class="ec-row">
+    <div class="ec-label">9th Ed &rsquo;20</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-746"></div>
+      <div class="ec-bar-adj bw-944"></div>
+    </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">$200</div>
+      <div class="ec-val-adj">$253 adj</div>
+    </div>
+  </div>
+
+  <div class="ec-row">
+    <div class="ec-label ec-label-hi">10th Ed &rsquo;23</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-933"></div>
+      <div class="ec-bar-adj bw-100"></div>
+    </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">$250</div>
+      <div class="ec-val-adj">$268 adj</div>
+    </div>
+  </div>
+
+  <div class="ec-divider"></div>
+  <div class="ec-footer">
+    <div class="ec-footer-label">Total change</div>
+    <div></div>
+    <div class="ec-footer-val">+97% adj &nbsp;|&nbsp; 111% inflation</div>
   </div>
 </div>
 
 <!-- ── US DATA TABLE ──────────────────────────────────────────────────── -->
-<table style="text-align:center;">
+<table id="ec-us-tbl">
   <thead>
     <tr>
       <th>Edition</th>
@@ -237,8 +451,8 @@ BODY = """\
       <td>1993</td>
       <td>$60</td>
       <td>$136</td>
-      <td style="color:#5c6480;">&#8212;</td>
-      <td style="color:#5c6480;">&#8212;</td>
+      <td class="ec-muted">&#8212;</td>
+      <td class="ec-muted">&#8212;</td>
     </tr>
     <tr>
       <td><strong>3rd Ed</strong></td>
@@ -246,7 +460,7 @@ BODY = """\
       <td>1998</td>
       <td>$90</td>
       <td>$180</td>
-      <td style="color:#d44040;font-weight:600;">+32%</td>
+      <td class="ec-bad">+32%</td>
       <td>13%</td>
     </tr>
     <tr>
@@ -255,7 +469,7 @@ BODY = """\
       <td>2004</td>
       <td>$75</td>
       <td>$130</td>
-      <td style="color:#4aab72;font-weight:600;">&#8722;28%</td>
+      <td class="ec-good">&#8722;28%</td>
       <td>16%</td>
     </tr>
     <tr>
@@ -264,7 +478,7 @@ BODY = """\
       <td>2008</td>
       <td>$75</td>
       <td>$114</td>
-      <td style="color:#4aab72;font-weight:600;">&#8722;12%</td>
+      <td class="ec-good">&#8722;12%</td>
       <td>14%</td>
     </tr>
     <tr>
@@ -273,7 +487,7 @@ BODY = """\
       <td>2012</td>
       <td>$100</td>
       <td>$142</td>
-      <td style="color:#d44040;font-weight:600;">+25%</td>
+      <td class="ec-bad">+25%</td>
       <td>7%</td>
     </tr>
     <tr>
@@ -282,7 +496,7 @@ BODY = """\
       <td>2014</td>
       <td>$110</td>
       <td>$152</td>
-      <td style="color:#f0c060;font-weight:600;">+7%</td>
+      <td class="ec-mod">+7%</td>
       <td>3%</td>
     </tr>
     <tr>
@@ -291,7 +505,7 @@ BODY = """\
       <td>2017</td>
       <td>$160</td>
       <td>$213</td>
-      <td style="color:#d44040;font-weight:600;">+40%</td>
+      <td class="ec-bad">+40%</td>
       <td>4%</td>
     </tr>
     <tr>
@@ -300,7 +514,7 @@ BODY = """\
       <td>2020</td>
       <td>$200</td>
       <td>$253</td>
-      <td style="color:#d44040;font-weight:600;">+19%</td>
+      <td class="ec-bad">+19%</td>
       <td>6%</td>
     </tr>
     <tr>
@@ -309,154 +523,151 @@ BODY = """\
       <td>2023</td>
       <td>$250</td>
       <td>$268</td>
-      <td style="color:#f0c060;font-weight:600;">+6%</td>
+      <td class="ec-mod">+6%</td>
       <td>18%</td>
     </tr>
-    <tr style="border-top:1px solid #3a3e4a;">
-      <td colspan="3" style="font-family:Oswald,sans-serif;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;color:#7a8090;">Across All Editions</td>
-      <td style="color:#5c6480;">&#8212;</td>
-      <td style="color:#5c6480;">&#8212;</td>
-      <td style="color:#f0c060;font-weight:600;">+97%</td>
+    <tr class="ec-tbl-footer">
+      <td colspan="3" class="ec-tbl-footer-label">Across All Editions</td>
+      <td class="ec-muted">&#8212;</td>
+      <td class="ec-muted">&#8212;</td>
+      <td class="ec-mod">+97%</td>
       <td>111%</td>
     </tr>
   </tbody>
 </table>
-<p style="font-size:0.72rem;color:var(--text-muted);margin-top:-0.25rem;">¹ What the launch price is worth in 2026 dollars &nbsp;&middot;&nbsp; ² Price change vs. prior edition, inflation-adjusted &nbsp;&middot;&nbsp; ³ Total inflation during each edition's lifespan</p>
+<p class="ec-footnote">¹ What the launch price is worth in 2026 dollars &nbsp;&middot;&nbsp; ² Price change vs. prior edition, inflation-adjusted &nbsp;&middot;&nbsp; ³ Total inflation during each edition's lifespan</p>
 
 <h2>The Big Picture: UK Launch Box Prices Across Editions</h2>
 
-<p style="font-size:0.82rem;color:var(--text-muted);margin-top:-0.5rem;">UK inflation estimates sourced from the <a href="https://www.bankofengland.co.uk/monetary-policy/inflation/inflation-calculator" target="_blank" rel="noopener">Bank of England Inflation Calculator</a>.</p>
+<p class="ec-source">UK inflation estimates sourced from the <a href="https://www.bankofengland.co.uk/monetary-policy/inflation/inflation-calculator" target="_blank" rel="noopener">Bank of England Inflation Calculator</a>.</p>
 
 <!-- ── UK PRICE BAR CHART ─────────────────────────────────────────────── -->
-<div style="background:#1c2230;border-radius:10px;padding:0.75rem 1rem;margin:1rem 0;overflow-x:auto;">
-  <div style="font-family:Oswald,sans-serif;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:#c8bfb0;margin-bottom:0.25rem;">Launch Box Price vs. 2026 Inflation-Adjusted Value (GBP)</div>
-  <div style="font-size:0.72rem;color:#5c6480;margin-bottom:1.1rem;">Bars show actual launch price (gold) and what inflation would suggest it should cost today (faint).</div>
-  <div style="display:flex;gap:1.5rem;margin-bottom:1.1rem;">
-    <span style="font-size:0.72rem;color:#7a8090;font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:0.04em;display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:3px;background:#c8922a;border-radius:2px;"></span>Launch Price</span>
-    <span style="font-size:0.72rem;color:#7a8090;font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:0.04em;display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:3px;background:rgba(240,192,96,0.3);border-radius:2px;"></span>2026 Adjusted Value</span>
+<div class="ec-card">
+  <div class="ec-card-title">Launch Box Price vs. 2026 Inflation-Adjusted Value (GBP)</div>
+  <div class="ec-card-sub">Bars show actual launch price (gold) and what inflation would suggest it should cost today (faint).</div>
+  <div class="ec-legend">
+    <span class="ec-legend-item"><span class="ec-sw ec-sw-gold"></span>Launch Price</span>
+    <span class="ec-legend-item"><span class="ec-sw ec-sw-adj"></span>2026 Adjusted Value</span>
   </div>
-  <div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">2nd Ed &rsquo;93</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:21.7%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:47.2%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">&pound;35</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">&pound;76 adj</div>
-      </div>
+  <div class="ec-row">
+    <div class="ec-label">2nd Ed &rsquo;93</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-217"></div>
+      <div class="ec-bar-adj bw-472"></div>
     </div>
-
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">3rd Ed &rsquo;98</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:31.1%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:60.9%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">&pound;50</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">&pound;98 adj</div>
-      </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">&pound;35</div>
+      <div class="ec-val-adj">&pound;76 adj</div>
     </div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">4th Ed &rsquo;04</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:24.8%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:45.3%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">&pound;40</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">&pound;73 adj</div>
-      </div>
+  <div class="ec-row">
+    <div class="ec-label">3rd Ed &rsquo;98</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-311"></div>
+      <div class="ec-bar-adj bw-609"></div>
     </div>
-
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">5th Ed &rsquo;08</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:24.8%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:41.0%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">&pound;40</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">&pound;66 adj</div>
-      </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">&pound;50</div>
+      <div class="ec-val-adj">&pound;98 adj</div>
     </div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">6th Ed &rsquo;12</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:40.4%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:59.0%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">&pound;65</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">&pound;95 adj</div>
-      </div>
+  <div class="ec-row">
+    <div class="ec-label">4th Ed &rsquo;04</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-248"></div>
+      <div class="ec-bar-adj bw-453"></div>
     </div>
-
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">7th Ed &rsquo;14</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:43.5%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:60.9%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">&pound;70</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">&pound;98 adj</div>
-      </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">&pound;40</div>
+      <div class="ec-val-adj">&pound;73 adj</div>
     </div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">8th Ed &rsquo;17</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:59.0%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:79.5%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">&pound;95</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">&pound;128 adj</div>
-      </div>
+  <div class="ec-row">
+    <div class="ec-label">5th Ed &rsquo;08</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-248"></div>
+      <div class="ec-bar-adj bw-410"></div>
     </div>
-
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">9th Ed &rsquo;20</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:77.6%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:100%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">&pound;125</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">&pound;161 adj</div>
-      </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">&pound;40</div>
+      <div class="ec-val-adj">&pound;66 adj</div>
     </div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#c8bfb0;text-align:right;">10th Ed &rsquo;23</div>
-      <div style="display:flex;flex-direction:column;gap:3px;">
-        <div style="height:9px;background:#c8922a;border-radius:3px;width:93.2%;"></div>
-        <div style="height:9px;background:rgba(240,192,96,0.28);border-radius:3px;width:98.8%;"></div>
-      </div>
-      <div style="font-size:0.74rem;line-height:1.4;">
-        <div style="color:#c8922a;font-weight:700;">&pound;150</div>
-        <div style="color:rgba(240,192,96,0.5);font-size:0.68rem;">&pound;159 adj</div>
-      </div>
+  <div class="ec-row">
+    <div class="ec-label">6th Ed &rsquo;12</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-404"></div>
+      <div class="ec-bar-adj bw-590"></div>
     </div>
-
-    <div style="height:1px;background:#2a2e3a;margin:0.75rem 0;"></div>
-    <div style="display:grid;grid-template-columns:75px 1fr 68px;align-items:center;gap:0.5rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.72rem;text-transform:uppercase;color:#5c6480;text-align:right;">Total change</div>
-      <div></div>
-      <div style="font-size:0.72rem;line-height:1.4;color:#5c6480;">+109% adj &nbsp;|&nbsp; 106% inflation</div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">&pound;65</div>
+      <div class="ec-val-adj">&pound;95 adj</div>
     </div>
+  </div>
 
+  <div class="ec-row">
+    <div class="ec-label">7th Ed &rsquo;14</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-435"></div>
+      <div class="ec-bar-adj bw-609"></div>
+    </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">&pound;70</div>
+      <div class="ec-val-adj">&pound;98 adj</div>
+    </div>
+  </div>
+
+  <div class="ec-row">
+    <div class="ec-label">8th Ed &rsquo;17</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-590"></div>
+      <div class="ec-bar-adj bw-795"></div>
+    </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">&pound;95</div>
+      <div class="ec-val-adj">&pound;128 adj</div>
+    </div>
+  </div>
+
+  <div class="ec-row">
+    <div class="ec-label">9th Ed &rsquo;20</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-776"></div>
+      <div class="ec-bar-adj bw-100"></div>
+    </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">&pound;125</div>
+      <div class="ec-val-adj">&pound;161 adj</div>
+    </div>
+  </div>
+
+  <div class="ec-row">
+    <div class="ec-label ec-label-hi">10th Ed &rsquo;23</div>
+    <div class="ec-bars">
+      <div class="ec-bar-gold bw-932"></div>
+      <div class="ec-bar-adj bw-988"></div>
+    </div>
+    <div class="ec-vals">
+      <div class="ec-val-launch">&pound;150</div>
+      <div class="ec-val-adj">&pound;159 adj</div>
+    </div>
+  </div>
+
+  <div class="ec-divider"></div>
+  <div class="ec-footer">
+    <div class="ec-footer-label">Total change</div>
+    <div></div>
+    <div class="ec-footer-val">+109% adj &nbsp;|&nbsp; 106% inflation</div>
   </div>
 </div>
 
 <!-- ── UK DATA TABLE ──────────────────────────────────────────────────── -->
-<table style="text-align:center;">
+<table id="ec-uk-tbl">
   <thead>
     <tr>
       <th>Edition</th>
@@ -475,8 +686,8 @@ BODY = """\
       <td>1993</td>
       <td>&pound;35</td>
       <td>&pound;76</td>
-      <td style="color:#5c6480;">&#8212;</td>
-      <td style="color:#5c6480;">&#8212;</td>
+      <td class="ec-muted">&#8212;</td>
+      <td class="ec-muted">&#8212;</td>
     </tr>
     <tr>
       <td><strong>3rd Ed</strong></td>
@@ -484,7 +695,7 @@ BODY = """\
       <td>1998</td>
       <td>&pound;50</td>
       <td>&pound;98</td>
-      <td style="color:#d44040;font-weight:600;">+29%</td>
+      <td class="ec-bad">+29%</td>
       <td>11%</td>
     </tr>
     <tr>
@@ -493,7 +704,7 @@ BODY = """\
       <td>2004</td>
       <td>&pound;40</td>
       <td>&pound;73</td>
-      <td style="color:#4aab72;font-weight:600;">&#8722;26%</td>
+      <td class="ec-good">&#8722;26%</td>
       <td>8%</td>
     </tr>
     <tr>
@@ -502,7 +713,7 @@ BODY = """\
       <td>2008</td>
       <td>&pound;40</td>
       <td>&pound;66.07</td>
-      <td style="color:#4aab72;font-weight:600;">&#8722;9%</td>
+      <td class="ec-good">&#8722;9%</td>
       <td>11%</td>
     </tr>
     <tr>
@@ -511,7 +722,7 @@ BODY = """\
       <td>2012</td>
       <td>&pound;65</td>
       <td>&pound;95</td>
-      <td style="color:#d44040;font-weight:600;">+44%</td>
+      <td class="ec-bad">+44%</td>
       <td>13%</td>
     </tr>
     <tr>
@@ -520,7 +731,7 @@ BODY = """\
       <td>2014</td>
       <td>&pound;70</td>
       <td>&pound;98</td>
-      <td style="color:#f0c060;font-weight:600;">+3%</td>
+      <td class="ec-mod">+3%</td>
       <td>4%</td>
     </tr>
     <tr>
@@ -529,7 +740,7 @@ BODY = """\
       <td>2017</td>
       <td>&pound;95</td>
       <td>&pound;128</td>
-      <td style="color:#d44040;font-weight:600;">+31%</td>
+      <td class="ec-bad">+31%</td>
       <td>3%</td>
     </tr>
     <tr>
@@ -538,7 +749,7 @@ BODY = """\
       <td>2020</td>
       <td>&pound;125</td>
       <td>&pound;161</td>
-      <td style="color:#d44040;font-weight:600;">+26%</td>
+      <td class="ec-bad">+26%</td>
       <td>5%</td>
     </tr>
     <tr>
@@ -547,99 +758,96 @@ BODY = """\
       <td>2023</td>
       <td>&pound;150</td>
       <td>&pound;159</td>
-      <td style="color:#4aab72;font-weight:600;">&#8722;1%</td>
+      <td class="ec-good">&#8722;1%</td>
       <td>22%</td>
     </tr>
-    <tr style="border-top:1px solid #3a3e4a;">
-      <td colspan="3" style="font-family:Oswald,sans-serif;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;color:#7a8090;">Across All Editions</td>
-      <td style="color:#5c6480;">&#8212;</td>
-      <td style="color:#5c6480;">&#8212;</td>
-      <td style="color:#d44040;font-weight:600;">+109%</td>
+    <tr class="ec-tbl-footer">
+      <td colspan="3" class="ec-tbl-footer-label">Across All Editions</td>
+      <td class="ec-muted">&#8212;</td>
+      <td class="ec-muted">&#8212;</td>
+      <td class="ec-bad">+109%</td>
       <td>106%</td>
     </tr>
   </tbody>
 </table>
-<p style="font-size:0.72rem;color:var(--text-muted);margin-top:-0.25rem;">¹ What the launch price is worth in 2026 pounds &nbsp;&middot;&nbsp; ² Price change vs. prior edition, inflation-adjusted &nbsp;&middot;&nbsp; ³ Total inflation during each edition's lifespan</p>
+<p class="ec-footnote">¹ What the launch price is worth in 2026 pounds &nbsp;&middot;&nbsp; ² Price change vs. prior edition, inflation-adjusted &nbsp;&middot;&nbsp; ³ Total inflation during each edition's lifespan</p>
 
 <h2>What Did Players Get in the Box?</h2>
 
-<p style="font-size:0.82rem;color:var(--text-muted);margin-top:-0.5rem;"><strong>Standard Game Size</strong> is an estimated metric based on online research. It attempts to create an apples-to-apples comparison between editions where games were played at different point values. For example, earlier editions were often played at lower point totals than the standard 2,000 points, so points-per-dollar figures are scaled up to account for those smaller game sizes.</p>
+<p class="ec-source"><strong>Standard Game Size</strong> is an estimated metric based on online research. It attempts to create an apples-to-apples comparison between editions where games were played at different point values. For example, earlier editions were often played at lower point totals than the standard 2,000 points, so points-per-dollar figures are scaled up to account for those smaller game sizes.</p>
 
 <!-- ── POINTS PER DOLLAR BAR CHART ────────────────────────────────────── -->
-<div style="background:#1c2230;border-radius:10px;padding:0.75rem 1rem;margin:1rem 0;overflow-x:auto;">
-  <div style="font-family:Oswald,sans-serif;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:#c8bfb0;margin-bottom:0.25rem;">Points per 2026 Dollar (Adjusted for Game Size)</div>
-  <div style="font-size:0.72rem;color:#5c6480;margin-bottom:1.1rem;">Higher is better value. Green = great (&ge;9 pts/$) &nbsp;&middot;&nbsp; Gold = decent (7&ndash;9 pts/$) &nbsp;&middot;&nbsp; Red = poor (&lt;7 pts/$).</div>
-  <div>
+<div class="ec-card">
+  <div class="ec-card-title">Points per 2026 Dollar (Adjusted for Game Size)</div>
+  <div class="ec-card-sub">Higher is better value. Green = great (&ge;9 pts/$) &nbsp;&middot;&nbsp; Gold = decent (7&ndash;9 pts/$) &nbsp;&middot;&nbsp; Red = poor (&lt;7 pts/$).</div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">3rd Ed &rsquo;98</div>
-      <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
-        <div style="position:absolute;left:0;top:0;height:100%;width:34.9%;background:#d44040;border-radius:4px;opacity:0.75;"></div>
-      </div>
-      <div style="font-size:0.8rem;font-weight:700;color:#d44040;text-align:right;">3.7 pts/$</div>
+  <div class="ec-row-pts">
+    <div class="ec-label">3rd Ed &rsquo;98</div>
+    <div class="ec-bar-track">
+      <div class="ec-bar-fill ec-fill-r bw-349"></div>
     </div>
+    <div class="ec-val-r">3.7 pts/$</div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">4th Ed &rsquo;04</div>
-      <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
-        <div style="position:absolute;left:0;top:0;height:100%;width:63.2%;background:#d44040;border-radius:4px;opacity:0.75;"></div>
-      </div>
-      <div style="font-size:0.8rem;font-weight:700;color:#d44040;text-align:right;">6.7 pts/$</div>
+  <div class="ec-row-pts">
+    <div class="ec-label">4th Ed &rsquo;04</div>
+    <div class="ec-bar-track">
+      <div class="ec-bar-fill ec-fill-r bw-632"></div>
     </div>
+    <div class="ec-val-r">6.7 pts/$</div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">5th Ed &rsquo;08</div>
-      <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
-        <div style="position:absolute;left:0;top:0;height:100%;width:94.3%;background:#4aab72;border-radius:4px;opacity:0.85;"></div>
-      </div>
-      <div style="font-size:0.8rem;font-weight:700;color:#4aab72;text-align:right;">10.0 pts/$</div>
+  <div class="ec-row-pts">
+    <div class="ec-label">5th Ed &rsquo;08</div>
+    <div class="ec-bar-track">
+      <div class="ec-bar-fill ec-fill-g bw-943"></div>
     </div>
+    <div class="ec-val-g">10.0 pts/$</div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#c8bfb0;text-align:right;">6th Ed &rsquo;12 &#9733;</div>
-      <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
-        <div style="position:absolute;left:0;top:0;height:100%;width:100%;background:#4aab72;border-radius:4px;opacity:0.85;"></div>
-      </div>
-      <div style="font-size:0.8rem;font-weight:700;color:#4aab72;text-align:right;">10.6 pts/$</div>
+  <div class="ec-row-pts">
+    <div class="ec-label ec-label-hi">6th Ed &rsquo;12 &#9733;</div>
+    <div class="ec-bar-track">
+      <div class="ec-bar-fill ec-fill-g bw-100"></div>
     </div>
+    <div class="ec-val-g">10.6 pts/$</div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">7th Ed &rsquo;14</div>
-      <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
-        <div style="position:absolute;left:0;top:0;height:100%;width:93.4%;background:#4aab72;border-radius:4px;opacity:0.85;"></div>
-      </div>
-      <div style="font-size:0.8rem;font-weight:700;color:#4aab72;text-align:right;">9.9 pts/$</div>
+  <div class="ec-row-pts">
+    <div class="ec-label">7th Ed &rsquo;14</div>
+    <div class="ec-bar-track">
+      <div class="ec-bar-fill ec-fill-g bw-934"></div>
     </div>
+    <div class="ec-val-g">9.9 pts/$</div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">8th Ed &rsquo;17</div>
-      <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
-        <div style="position:absolute;left:0;top:0;height:100%;width:68.9%;background:#c8922a;border-radius:4px;opacity:0.85;"></div>
-      </div>
-      <div style="font-size:0.8rem;font-weight:700;color:#c8922a;text-align:right;">7.3 pts/$</div>
+  <div class="ec-row-pts">
+    <div class="ec-label">8th Ed &rsquo;17</div>
+    <div class="ec-bar-track">
+      <div class="ec-bar-fill ec-fill-o bw-689"></div>
     </div>
+    <div class="ec-val-o">7.3 pts/$</div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#7a8090;text-align:right;">9th Ed &rsquo;20</div>
-      <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
-        <div style="position:absolute;left:0;top:0;height:100%;width:74.5%;background:#c8922a;border-radius:4px;opacity:0.85;"></div>
-      </div>
-      <div style="font-size:0.8rem;font-weight:700;color:#c8922a;text-align:right;">7.9 pts/$</div>
+  <div class="ec-row-pts">
+    <div class="ec-label">9th Ed &rsquo;20</div>
+    <div class="ec-bar-track">
+      <div class="ec-bar-fill ec-fill-o bw-745"></div>
     </div>
+    <div class="ec-val-o">7.9 pts/$</div>
+  </div>
 
-    <div style="display:grid;grid-template-columns:75px 1fr 62px;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
-      <div style="font-family:Oswald,sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.03em;color:#c8bfb0;text-align:right;">10th Ed &rsquo;23</div>
-      <div style="height:22px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;position:relative;">
-        <div style="position:absolute;left:0;top:0;height:100%;width:63.2%;background:#d44040;border-radius:4px;opacity:0.75;"></div>
-      </div>
-      <div style="font-size:0.8rem;font-weight:700;color:#d44040;text-align:right;">6.7 pts/$</div>
+  <div class="ec-row-pts">
+    <div class="ec-label ec-label-hi">10th Ed &rsquo;23</div>
+    <div class="ec-bar-track">
+      <div class="ec-bar-fill ec-fill-r bw-632"></div>
     </div>
-
+    <div class="ec-val-r">6.7 pts/$</div>
   </div>
 </div>
 
 <!-- ── POINTS DATA TABLE ──────────────────────────────────────────────── -->
-<table style="text-align:center;">
+<table id="ec-pts-tbl">
   <thead>
     <tr>
       <th>Edition</th>
@@ -658,10 +866,10 @@ BODY = """\
       <td>1993</td>
       <td>$60</td>
       <td>$136</td>
-      <td style="color:#5c6480;">&#8212;</td>
-      <td style="color:#5c6480;">&#8212;</td>
-      <td style="color:#5c6480;">&#8212;</td>
-      <td style="color:#5c6480;">&#8212;</td>
+      <td class="ec-muted">&#8212;</td>
+      <td class="ec-muted">&#8212;</td>
+      <td class="ec-muted">&#8212;</td>
+      <td class="ec-muted">&#8212;</td>
     </tr>
     <tr>
       <td><strong>3rd Ed</strong></td>
@@ -671,7 +879,7 @@ BODY = """\
       <td>500</td>
       <td>667</td>
       <td>2.8</td>
-      <td style="color:#d44040;font-weight:600;">3.7</td>
+      <td class="ec-bad">3.7</td>
     </tr>
     <tr>
       <td><strong>4th Ed</strong></td>
@@ -681,7 +889,7 @@ BODY = """\
       <td>650</td>
       <td>867</td>
       <td>5.0</td>
-      <td style="color:#d44040;font-weight:600;">6.7</td>
+      <td class="ec-bad">6.7</td>
     </tr>
     <tr>
       <td><strong>5th Ed</strong></td>
@@ -691,7 +899,7 @@ BODY = """\
       <td>1,000</td>
       <td>1,143</td>
       <td>8.8</td>
-      <td style="color:#4aab72;font-weight:600;">10.0</td>
+      <td class="ec-good">10.0</td>
     </tr>
     <tr>
       <td><strong>6th Ed &#9733;</strong></td>
@@ -701,7 +909,7 @@ BODY = """\
       <td>1,500</td>
       <td>1,500</td>
       <td>10.6</td>
-      <td style="color:#4aab72;font-weight:600;">10.6</td>
+      <td class="ec-good">10.6</td>
     </tr>
     <tr>
       <td><strong>7th Ed</strong></td>
@@ -711,7 +919,7 @@ BODY = """\
       <td>1,500</td>
       <td>1,500</td>
       <td>9.9</td>
-      <td style="color:#4aab72;font-weight:600;">9.9</td>
+      <td class="ec-good">9.9</td>
     </tr>
     <tr>
       <td><strong>8th Ed</strong></td>
@@ -721,7 +929,7 @@ BODY = """\
       <td>1,550</td>
       <td>1,550</td>
       <td>7.3</td>
-      <td style="color:#c8922a;font-weight:600;">7.3</td>
+      <td class="ec-mod">7.3</td>
     </tr>
     <tr>
       <td><strong>9th Ed</strong></td>
@@ -731,7 +939,7 @@ BODY = """\
       <td>2,000</td>
       <td>2,000</td>
       <td>7.9</td>
-      <td style="color:#c8922a;font-weight:600;">7.9</td>
+      <td class="ec-mod">7.9</td>
     </tr>
     <tr>
       <td><strong>10th Ed</strong></td>
@@ -741,11 +949,11 @@ BODY = """\
       <td>1,800</td>
       <td>1,800</td>
       <td>6.7</td>
-      <td style="color:#d44040;font-weight:600;">6.7</td>
+      <td class="ec-bad">6.7</td>
     </tr>
   </tbody>
 </table>
-<p style="font-size:0.72rem;color:var(--text-muted);margin-top:0.25rem;">&#9733; Best all-time value per inflation-adjusted dollar &nbsp;&middot;&nbsp; ¹ Launch price adjusted to 2026 dollars &nbsp;&middot;&nbsp; ² Points scaled to a standard 2,000pt game for cross-edition comparison &nbsp;&middot;&nbsp; ³ Points per 2026 dollar (raw box count) &nbsp;&middot;&nbsp; ⁴ Points per 2026 dollar (game-size scaled)</p>
+<p class="ec-footnote">&#9733; Best all-time value per inflation-adjusted dollar &nbsp;&middot;&nbsp; ¹ Launch price adjusted to 2026 dollars &nbsp;&middot;&nbsp; ² Points scaled to a standard 2,000pt game for cross-edition comparison &nbsp;&middot;&nbsp; ³ Points per 2026 dollar (raw box count) &nbsp;&middot;&nbsp; ⁴ Points per 2026 dollar (game-size scaled)</p>
 
 <h2>Top Takeaways</h2>
 
@@ -796,12 +1004,12 @@ BODY = """\
   <tbody>
     <tr>
       <td><strong>Low End</strong></td>
-      <td style="color:#4aab72;font-weight:700;">$285</td>
+      <td class="ec-predict-lo">$285</td>
       <td>GW provides close to 2,000 total points, similar to recent editions, at roughly 7 points per dollar in line with recent edition launches.</td>
     </tr>
     <tr>
       <td><strong>High End</strong></td>
-      <td style="color:#d44040;font-weight:700;">$300</td>
+      <td class="ec-predict-hi">$300</td>
       <td>Follows the pattern of $40 increases (7th&rarr;8th, 8th&rarr;9th) and the $50 jump from 9th&rarr;10th, suggesting a further $50 increase is plausible.</td>
     </tr>
   </tbody>
@@ -856,7 +1064,6 @@ class Command(BaseCommand):
             ),
             body=BODY,
             status=Post.STATUS_PUBLISHED,
-            published_at=timezone.now(),
             meta_title='Is Warhammer 40K Getting More Expensive? Launch Box Prices 2nd-10th Ed',
             meta_description=(
                 'Inflation-adjusted 40K launch box prices from 2nd to 10th Edition. '
@@ -873,7 +1080,7 @@ class Command(BaseCommand):
                 self.style.SUCCESS(f'Updated existing post (pk={post.pk}, slug={post.slug}).')
             )
         else:
-            post = Post(**defaults)
+            post = Post(**defaults, published_at=timezone.now())
             post.save()
             self.stdout.write(
                 self.style.SUCCESS(f'Created post (pk={post.pk}, slug={post.slug}).')

@@ -67,8 +67,8 @@ OAUTH_SCOPE           = 'https://api.ebay.com/oauth/api_scope'
 TOKEN_REFRESH_BUFFER  = 300
 
 # Daily call safety limit
-DAILY_CALL_SAFETY_LIMIT = 4500
-DAILY_CALL_LIMIT        = 5000
+DAILY_CALL_SAFETY_LIMIT = 45000
+DAILY_CALL_LIMIT        = 50000
 
 # ---------------------------------------------------------------------------
 class EbayAPIError(Exception):

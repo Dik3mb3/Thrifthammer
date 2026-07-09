@@ -31,18 +31,18 @@ BODY = """\
 <style>
 #bf-rank-wrap {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
   margin: var(--sp-6, 1.5rem) 0;
-  width: fit-content;
-  max-width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
 }
 #bf-rank-table {
+  min-width: 520px;
   width: 100%;
   border-collapse: collapse;
   font-size: 0.88rem;
   background: var(--bg-card, #1a1b1c);
-  border: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
-  border-radius: 6px;
-  overflow: hidden;
 }
 #bf-rank-table thead th {
   background: #9a6e10;
@@ -335,7 +335,6 @@ class Command(BaseCommand):
             ),
             body=BODY,
             status=Post.STATUS_PUBLISHED,
-            published_at=timezone.now(),
             meta_title='Warhammer 40K 11th Edition Battleforces: Are They Worth It?',
             meta_description=(
                 'We ranked all four 11th Edition Warhammer 40K Battleforce boxes by points, '
@@ -352,7 +351,7 @@ class Command(BaseCommand):
                 self.style.SUCCESS(f'Updated existing post (pk={post.pk}, slug={post.slug}).')
             )
         else:
-            post = Post(**defaults)
+            post = Post(**defaults, published_at=timezone.now())
             post.save()
             self.stdout.write(
                 self.style.SUCCESS(f'Created post (pk={post.pk}, slug={post.slug}).')

@@ -376,6 +376,17 @@ class Product(models.Model):
         cache.set(cache_key, result, timeout=3600)
         return result
 
+    def get_gw_us_price_value(self):
+        """
+        Return the GW US retail price as a Decimal, using prefetched current_prices
+        if available (army calculator prefetches product__current_prices__retailer).
+        Falls back to msrp if no GW US price record exists.
+        """
+        for cp in self.current_prices.all():
+            if not cp.retailer.is_uk and 'games workshop' in cp.retailer.name.lower():
+                return cp.price
+        return self.msrp
+
     def get_best_deal(self):
         """
         Return the Retailer offering the lowest current price.
