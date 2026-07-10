@@ -9,10 +9,12 @@ Usage:
     python manage.py publish_armageddon_units_guide --force  # overwrite existing
 """
 
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 SLUG = 'armageddon-individual-units-price-guide'
+BASE_URL = 'https://thrifthammer.com'
 
 BODY = """\
 <p>The Warhammer 40K 11th edition Armageddon Box is an incredible value for those new and old to Warhammer 40K. While buying an entire box is already good value, some players may not be interested in adding more intercessors or adding another 20 Ork Boyz to their 120+ Ork Boyz collections (cough cough, this writer).</p>
@@ -401,6 +403,13 @@ class Command(BaseCommand):
             help='Overwrite the post body/meta even if it already exists.',
         )
 
+    def _static(self, path):
+        """Return the absolute static URL for a committed image, or empty string if missing."""
+        try:
+            return f'{BASE_URL}{staticfiles_storage.url(path)}'
+        except Exception:
+            return ''
+
     def handle(self, *args, **options):
         from blog.models import Post, Tag
 
@@ -426,6 +435,11 @@ class Command(BaseCommand):
             meta_description=(
                 'Compare every Space Marine and Ork Armageddon unit price to GW retail and find '
                 'the best secondhand deals before buying the whole 40k box set.'
+            ),
+            featured_image_url=self._static('images/blog/armageddon-units-guide-header.webp'),
+            featured_image_alt=(
+                'ThriftHammer Recommends: Must Buy Units, featuring the Warhammer 40,000 '
+                'Armageddon boxed set'
             ),
         )
 
