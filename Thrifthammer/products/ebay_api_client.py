@@ -20,7 +20,8 @@ Token caching:
   in memory and auto-refreshes it before it expires.
 
 Rate limits (Browse API):
-  5,000 calls/day for standard developer accounts.
+  100,000 calls/day (extended limit approved for this app — shared
+  with the UK scraper in ebay_api_client_uk.py, same credentials).
   Resets at midnight Pacific Time.
 
 Marketplace:
@@ -67,8 +68,8 @@ OAUTH_SCOPE           = 'https://api.ebay.com/oauth/api_scope'
 TOKEN_REFRESH_BUFFER  = 300
 
 # Daily call safety limit
-DAILY_CALL_SAFETY_LIMIT = 45000
-DAILY_CALL_LIMIT        = 50000
+DAILY_CALL_SAFETY_LIMIT = 90000
+DAILY_CALL_LIMIT        = 100000
 
 # ---------------------------------------------------------------------------
 class EbayAPIError(Exception):

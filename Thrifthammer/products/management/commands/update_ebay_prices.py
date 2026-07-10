@@ -6,7 +6,7 @@ eBay Browse API v1. Saves results to the CurrentPrice model.
 
 Compliance:
   - Uses official eBay Browse API (not scraping)
-  - Respects 5,000 calls/day limit
+  - Respects 100,000 calls/day limit (shared with UK scraper)
   - Links to viewItemURL provided by eBay API
   - Attributes eBay as price source
 
@@ -47,7 +47,12 @@ from django.utils.text import slugify
 
 from prices.models import CurrentPrice
 from products.models import Product, Retailer
-from products.ebay_api_client import EbayBrowseAPI, EbayAPIError
+from products.ebay_api_client import (
+    EbayBrowseAPI,
+    EbayAPIError,
+    DAILY_CALL_SAFETY_LIMIT,
+    DAILY_CALL_LIMIT,
+)
 
 # EPN affiliate tracking parameters (US marketplace).
 # Appended to every eBay URL we save so clicks generate affiliate revenue.
@@ -431,10 +436,10 @@ class Command(BaseCommand):
                 pass  # No existing entry — proceed to create one
 
             # Check daily call limit before each request
-            if ebay_api.api_calls_made >= 4500:
+            if ebay_api.api_calls_made >= DAILY_CALL_SAFETY_LIMIT:
                 self.stdout.write(self.style.WARNING(
                     f'\nApproaching eBay daily limit '
-                    f'({ebay_api.api_calls_made}/5000 calls). Stopping safely.'
+                    f'({ebay_api.api_calls_made}/{DAILY_CALL_LIMIT} calls). Stopping safely.'
                 ))
                 break
 
@@ -563,7 +568,7 @@ class Command(BaseCommand):
 
         # ── Summary ──────────────────────────────────────────────────────────
         api_calls_used = ebay_api.api_calls_made - api_calls_start
-        calls_remaining = 5000 - ebay_api.api_calls_made
+        calls_remaining = DAILY_CALL_LIMIT - ebay_api.api_calls_made
 
         self.stdout.write('\n' + '=' * 50)
         self.stdout.write(self.style.SUCCESS('Summary'))

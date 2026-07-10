@@ -4,4 +4,4 @@ builder = "nixpacks"
 # Note: Railway cron jobs must be configured as separate services in the
 # Railway dashboard (Settings → Cron Schedule), not in railway.toml.
 # Scheduled tasks are handled via GitHub Actions:
-#   .github/workflows/update-ebay-prices.yml  — daily 03:00 UTC
+#   .github/workflows/update-ebay-prices.yml  — 4x daily (4AM/10AM/4PM/10PM ET)

@@ -2,8 +2,11 @@ name: Update eBay Prices
 
 on:
   schedule:
-    # Daily at 03:00 UTC (matches Railway cron as backup)
-    - cron: '0 3 * * *'
+    # All times EDT (UTC-4). Adjust +1hr in winter when EST (UTC-5) kicks in.
+    - cron: '0 8 * * *'   #  4:00 AM EDT
+    - cron: '0 14 * * *'  # 10:00 AM EDT
+    - cron: '0 20 * * *'  #  4:00 PM EDT
+    - cron: '0 2 * * *'   # 10:00 PM EDT
   workflow_dispatch:
     # Allow manual trigger from GitHub Actions tab
     inputs:
