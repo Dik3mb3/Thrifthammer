@@ -176,6 +176,9 @@ class Command(BaseCommand):
         qs = Product.objects.filter(is_active=True, msrp__isnull=False)
         if category_name:
             qs = qs.filter(category__name=category_name)
+        # Temporary: hold Battletech and Paint & Supplies out of newsletters
+        # while these newer catalog lines are being monitored.
+        qs = qs.exclude(category__slug__in=('battletech', 'paint-supplies'))
         candidates = (
             qs
             .annotate(

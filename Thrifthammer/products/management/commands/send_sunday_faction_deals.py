@@ -167,6 +167,9 @@ class Command(BaseCommand):
         candidates = (
             Product.objects
             .filter(is_active=True, msrp__isnull=False, faction_id__in=faction_ids)
+            # Temporary: hold Battletech and Paint & Supplies out of newsletters
+            # while these newer catalog lines are being monitored.
+            .exclude(category__slug__in=('battletech', 'paint-supplies'))
             .annotate(
                 min_price=Min(
                     'current_prices__price',
