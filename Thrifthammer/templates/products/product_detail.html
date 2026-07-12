@@ -120,13 +120,13 @@
           {% endif %}
         </div>
         {% if gw_ref_price %}
-        <p style="font-size:0.8rem;color:var(--text-muted);">GW MSRP: {% if region == 'uk' %}£{% else %}${% endif %}{{ gw_ref_price }}</p>
+        <p style="font-size:0.8rem;color:var(--text-muted);">{% if product.category.slug == 'paint-supplies' %}MSRP{% else %}GW MSRP{% endif %}: {% if region == 'uk' %}£{% else %}${% endif %}{{ gw_ref_price }}</p>
         {% endif %}
       </div>
       {% endwith %}
       {% elif product.msrp %}
       <div class="best-price-card">
-        <div class="best-price-label">GW MSRP</div>
+        <div class="best-price-label">{% if product.category.slug == 'paint-supplies' %}MSRP{% else %}GW MSRP{% endif %}</div>
         <div class="best-price-amount">{% if region == 'uk' and product.msrp_gbp %}£{{ product.msrp_gbp }}{% else %}${{ product.msrp }}{% endif %}</div>
         <p style="font-size:0.82rem;color:var(--text-muted);margin-top:var(--sp-2);">No retailer prices tracked yet.</p>
       </div>

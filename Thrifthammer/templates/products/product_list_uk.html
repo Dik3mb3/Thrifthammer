@@ -133,14 +133,14 @@
       {% if selected_category %}
       <div class="sidebar-section">
         <button class="sidebar-toggle open" data-target="facs-body" aria-expanded="true">
-          Factions
+          {% if selected_category == 'paint-supplies' %}Brands{% else %}Factions{% endif %}
           <span class="toggle-icon" aria-hidden="true">▾</span>
         </button>
         <div class="sidebar-body" id="facs-body">
           {% if factions %}
           <a href="?{% if query %}q={{ query }}&{% endif %}category={{ selected_category }}{% if sort and sort != 'name' %}&sort={{ sort }}{% endif %}"
              class="sidebar-link{% if not selected_faction %} active{% endif %}">
-            All Factions
+            {% if selected_category == 'paint-supplies' %}All Brands{% else %}All Factions{% endif %}
           </a>
           {% for f in factions %}
           <a href="?{% if query %}q={{ query }}&{% endif %}category={{ selected_category }}&faction={{ f.slug }}{% if sort and sort != 'name' %}&sort={{ sort }}{% endif %}"
