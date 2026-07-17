@@ -718,6 +718,10 @@ class EbayBrowseAPI:
             # It is a plain-text excerpt from the seller's full description.
             short_description = item.get('shortDescription', '')
 
+            # seller.username is included in itemSummaries at no extra API
+            # cost — used for the category-scoped seller blocklist below.
+            seller_username = item.get('seller', {}).get('username', '')
+
             return {
                 'title':             title,
                 'url':               url,
@@ -726,10 +730,26 @@ class EbayBrowseAPI:
                 'shipping':          shipping,
                 'total_cost':        total_cost,
                 'short_description': short_description,
+                'seller_username':   seller_username,
             }
 
         except (KeyError, InvalidOperation, TypeError):
             return None
+
+    # Sellers blocked from matching, scoped per product category.  Keyed by
+    # Category.slug so a bad-actor seller flooding one game line's listings
+    # (templated descriptions, suspiciously-cheap prices across many
+    # different SKUs) doesn't require adding them to ebay_negative_keywords
+    # on every affected product individually. Scoped rather than global
+    # since this has only been observed on one category so far.
+    _CATEGORY_BLOCKED_SELLERS = {
+        # fantasyfigurines: confirmed 2026-07-16 flooding Star Wars: Legion
+        # results with a templated, garbled description ("...aStar Wars
+        # Legion model kit inspired by... This model may/will
+        # requiremodeling...") across many different SKUs, all priced well
+        # below genuine retail.
+        'star-wars-legion': {'fantasyfigurines'},
+    }
 
     # Keywords that indicate a listing is a spare part/bit, not a full kit.
     # eBay is flooded with individual components — we must exclude them.
@@ -1073,6 +1093,16 @@ class EbayBrowseAPI:
                         _neg_kw, result['title'][:60],
                     )
                     return False
+
+        # ── Category-scoped seller blocklist ──────────────────────────────────
+        _category_slug = getattr(getattr(product, 'category', None), 'slug', None)
+        _blocked_sellers = EbayBrowseAPI._CATEGORY_BLOCKED_SELLERS.get(_category_slug, ())
+        if _blocked_sellers and result.get('seller_username', '').lower() in _blocked_sellers:
+            logger.debug(
+                '[ebay] Rejected (blocked seller "%s" for category "%s"): "%s"',
+                result.get('seller_username', ''), _category_slug, result['title'][:60],
+            )
+            return False
 
         # ── Per-product allowed title words ───────────────────────────────────
         # Some products legitimately appear in listings that include words
@@ -1442,6 +1472,12 @@ class EbayBrowseAPI:
                 elif re.search(r'\b' + re.escape(_neg_kw) + r'\b', title_lower):
                     reasons.append(f'negative keyword "{_neg_kw}" in title')
                     break
+
+        # Category-scoped seller blocklist
+        _category_slug = getattr(getattr(product, 'category', None), 'slug', None)
+        _blocked_sellers = EbayBrowseAPI._CATEGORY_BLOCKED_SELLERS.get(_category_slug, ())
+        if _blocked_sellers and result.get('seller_username', '').lower() in _blocked_sellers:
+            reasons.append(f'blocked seller "{result.get("seller_username", "")}"')
 
         # Title bits filter
         title_words  = set(re.sub(r"[^\w\s]", ' ', title_lower).split())
