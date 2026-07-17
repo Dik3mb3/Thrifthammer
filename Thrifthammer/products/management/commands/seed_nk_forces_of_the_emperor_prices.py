@@ -30,8 +30,6 @@ NK_PRICES = [
     ('venatari-sodality', 'Venatari Sodality', None, 'https://www.nobleknight.com/P/2148451391/Venatari-Sodality?awid=1576', False, False),
     ('custodian-guard-sodality', 'Custodian Guard Sodality', None, 'https://www.nobleknight.com/P/2148451399/Custodian-Guard-Sodality?awid=1576', False, False),
     ('solar-auxilia-combat-force', 'Combat Force - Solar Auxilia', None, 'https://www.nobleknight.com/P/2148352420/Combat-Force---Solar-Auxilia?awid=1576', False, False),
-    # Combined NK listing covers both Malcador Infernus and Valdor; FOE-010 (Valdor) has no separate listing
-    ('malcador-infernus', 'Malcador Infernus and Valdor Tank Destroyers', None, 'https://www.nobleknight.com/P/2148118492/Malcador-Infernus-and-Valdor-Tank-Destroyers?awid=1576', False, False),
     ('hermes-light-veletaris-sentinel-squadron', 'Solar Auxilia - Hermes Sentinel Squadron', None, 'https://www.nobleknight.com/P/2148139671/Solar-Auxilia---Hermes-Sentinel-Squadron?awid=1576', False, False),
     ('solar-auxilia-basilisk-medusa', 'Solar Auxilia - Basilisk/Medusa', None, 'https://www.nobleknight.com/P/2148139743/Solar-Auxilia---Basilisk-Medusa?awid=1576', False, False),
     ('solar-auxilia-leman-russ-assault-tank', 'Leman Russ Assault Tank', None, 'https://www.nobleknight.com/P/2148420563/Leman-Russ-Assault-Tank?awid=1576', False, False),

@@ -46,8 +46,6 @@ NK_PRICES = [
     ('typhon-heavy-siege-tank', 'Legion Typhon Heavy Siege Tank', None, 'https://www.nobleknight.com/P/2148040492/Legion-Typhon-Heavy-Siege-Tank?awid=1576', False, False),
     ('scorpius-missile-tank', 'Legiones Astartes Scorpius Missile Tank', None, 'https://www.nobleknight.com/P/2148025611/Legiones-Astartes-Scorpius-Missile-Tank?awid=1576', False, False),
     ('deimos-pattern-predator-support-tank', 'Deimos Pattern Predator Support Tank', None, 'https://www.nobleknight.com/P/2148011894/Deimos-Pattern-Predator-Support-Tank?awid=1576', False, False),
-    # NK listing title uses "Land Rover" — same product as Land Raider Explorator/Carrier
-    ('land-raider-explorator-carrier', 'Land Rover Proteus Explorator Squadron', None, 'https://www.nobleknight.com/P/2148132730/Land-Rover-Proteus-Explorator-Squadron?awid=1576', False, False),
     ('heavy-weapons-upgrade-set-volkite-culverins-lascannons-and-autocannons', 'Heavy Weapons Upgrade Set - Volkite Culverins, Lascannons and Autocannons', None, 'https://www.nobleknight.com/P/2148002468/Heavy-Weapons-Upgrade-Set---Volkite-Culverins-Lascannons-and-Autocannons?awid=1576', False, False),
     ('heavy-weapons-upgrade-set-heavy-flamers-multi-meltas-and-plasma-cannons', 'Heavy Weapons Upgrade Set - Heavy Flamers, Multi-Meltas and Plasma Cannon', None, 'https://www.nobleknight.com/P/2148002461/Heavy-Weapons-Upgrade-Set---Heavy-Flamers-Multi-Meltas-and-Plasma-Cannon?awid=1576', False, False),
     ('leviathan-siege-dreadnought-with-claw-and-drill-weapons', 'Leviathan Siege Dreadnought w/ Claw and Drill Weapons', None, 'https://www.nobleknight.com/P/2147993200/Leviathan-Siege-Dreadnought-w--Claw-and-Drill-Weapons?awid=1576', False, False),
