@@ -4,8 +4,12 @@ Management command: apply_batch_fixes_mar2026af
 Thirty-first wave of March 2026 batch corrections for ThriftHammer.
 
 Changes covered:
-  Fix 1  -- General sweep: for every active product that has Product.gw_url
-             set, ensure the Games Workshop CurrentPrice row is healthy:
+  Fix 1  -- General sweep: for every active product whose Product.gw_url
+             points to warhammer.com (i.e. a genuine GW product page, not a
+             brand site repurposing this field for its own "View" button --
+             see Marvel Crisis Protocol, Star Wars: Legion, BattleTech,
+             Trench Crusade, Malifaux), ensure the Games Workshop
+             CurrentPrice row is healthy:
                price         = product.msrp  (GW sells at full retail)
                url           = product.gw_url
                in_stock      = True
@@ -22,6 +26,14 @@ Changes covered:
              This covers wave AE's 13 SKUs (safety net in case msrp was None
              on production at wave AE run-time) plus any additional products
              such as 70-12 Spearhead: Daughters of Khaine.
+
+             2026-07-17: scoped the candidate query to gw_url containing
+             "warhammer.com" (was: any non-empty gw_url). This command runs
+             on every deploy via the Procfile, and without the domain check
+             it was resurrecting a bogus "Games Workshop" CurrentPrice row
+             -- priced at product.msrp, linked to the brand site's own URL
+             -- for every product in the non-GW categories listed above,
+             every single deploy.
 """
 
 from django.core.management.base import BaseCommand
@@ -59,10 +71,10 @@ class Command(BaseCommand):
 
         candidates = (
             Product.objects
-            .filter(is_active=True, gw_url__gt='')
+            .filter(is_active=True, gw_url__icontains='warhammer.com')
             .order_by('name')
         )
-        self.stdout.write(f'  Fix 1: scanning {candidates.count()} products with gw_url set...')
+        self.stdout.write(f'  Fix 1: scanning {candidates.count()} products with a warhammer.com gw_url...')
 
         updated = 0
         already_ok = 0

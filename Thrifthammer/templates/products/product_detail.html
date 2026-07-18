@@ -152,7 +152,7 @@
         {% endif %}
         {% if product.gw_url %}
         <a href="{{ product.gw_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-ext">
-          {% if product.category.slug == 'marvel-crisis-protocol' %}View on Asmodee{% else %}View on GW{% endif %}
+          {% if product.category.slug == 'marvel-crisis-protocol' %}View on Asmodee{% elif product.category.slug == 'trench-crusade' %}View on Trench Crusade{% elif product.category.slug == 'malifaux' %}View on Wyrd Games{% else %}View on GW{% endif %}
         </a>
         {% endif %}
       </div>

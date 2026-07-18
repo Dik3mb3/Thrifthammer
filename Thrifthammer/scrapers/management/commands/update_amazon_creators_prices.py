@@ -33,10 +33,12 @@ Usage:
 """
 
 import json
+import time
 from datetime import datetime
 
 import requests
 from django.core.management.base import BaseCommand
+from django.db import OperationalError, connection
 
 from prices.models import CurrentPrice
 from products.models import Retailer
@@ -175,6 +177,7 @@ class Command(BaseCommand):
         updated = 0
         no_price = 0
         unchanged = 0
+        failed = 0
 
         for asin, result in api_results.items():
             entry_list = asin_to_entries.get(asin)
@@ -195,7 +198,8 @@ class Command(BaseCommand):
                     if not dry_run and (entry.price is not None or entry.in_stock):
                         entry.price = None
                         entry.in_stock = False
-                        entry.save(update_fields=['price', 'in_stock', 'last_seen'])
+                        if not self._save_entry(entry, ['price', 'in_stock', 'last_seen']):
+                            failed += 1
                     continue
 
                 price_changed = (entry.price != new_price)
@@ -223,7 +227,9 @@ class Command(BaseCommand):
                     entry.price = new_price
                     entry.in_stock = new_in_stock
                     entry.not_available = False
-                    entry.save(update_fields=['price', 'in_stock', 'not_available', 'last_seen'])
+                    if not self._save_entry(entry, ['price', 'in_stock', 'not_available', 'last_seen']):
+                        failed += 1
+                        continue
 
                 updated += 1
 
@@ -235,11 +241,47 @@ class Command(BaseCommand):
             ))
 
         dry_label = ' (DRY RUN — no changes saved)' if dry_run else ''
-        self.stdout.write(self.style.SUCCESS(
+        summary_style = self.style.ERROR if failed else self.style.SUCCESS
+        self.stdout.write(summary_style(
             f'\nDone{dry_label}. '
             f'Updated: {updated}  |  Unchanged: {unchanged}  |  '
-            f'No price: {no_price}  |  Missing from API: {len(missing_from_api)}'
+            f'No price: {no_price}  |  Missing from API: {len(missing_from_api)}  |  '
+            f'Failed: {failed}'
         ))
+
+    def _save_entry(self, entry, update_fields):
+        """
+        Save a CurrentPrice entry, recovering from a dropped DB connection.
+
+        This batch run holds one DB connection open for its entire
+        duration, including several idle minutes while fetching prices
+        from the Amazon API before any writes happen. That connection has
+        occasionally been found dead on first reuse (psycopg2 "SSL
+        SYSCALL error: EOF detected"), which previously crashed the whole
+        command and lost every remaining entry in the batch. On
+        OperationalError, close the stale connection so Django opens a
+        fresh one, wait briefly, and retry once.
+
+        Returns True on success, False if the retry also failed (caller
+        should skip this entry and continue with the rest of the batch).
+        """
+        try:
+            entry.save(update_fields=update_fields)
+            return True
+        except OperationalError as exc:
+            self.stderr.write(self.style.WARNING(
+                f'  [db-retry] {entry.product.gw_sku} — connection error, retrying: {exc}'
+            ))
+            connection.close()
+            time.sleep(2)
+            try:
+                entry.save(update_fields=update_fields)
+                return True
+            except OperationalError as exc2:
+                self.stderr.write(self.style.ERROR(
+                    f'  [db-error] {entry.product.gw_sku} — save failed after retry, skipping: {exc2}'
+                ))
+                return False
 
     def _test_auth(self, client):
         """Attempt to acquire an OAuth2 token and print the result."""
