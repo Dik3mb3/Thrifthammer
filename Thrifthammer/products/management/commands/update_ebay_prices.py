@@ -43,6 +43,7 @@ from decimal import Decimal
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.db import OperationalError, connection
 from django.utils.text import slugify
 
 from prices.models import CurrentPrice
@@ -127,6 +128,42 @@ def _debug_search(ebay_api, product, stdout, style):
             stdout.write(style.SUCCESS(f'      [{i}] PASS  ${price:.2f}  "{title}"'))
         if short_desc:
             stdout.write(f'           Desc: {short_desc}')
+
+
+def _with_db_retry(operation, stderr, style):
+    """
+    Execute a single DB operation, recovering from a dropped connection.
+
+    This command holds one DB connection open for the whole run and
+    touches it on every product in the loop. That connection has been
+    observed dying mid-run (psycopg2 "SSL SYSCALL error: EOF detected" /
+    "server closed the connection unexpectedly") -- without this, one
+    dropped connection crashes the entire run and loses every remaining
+    product. On OperationalError, close the stale connection so Django
+    opens a fresh one, wait briefly, and retry once.
+
+    Any exception other than OperationalError (e.g.
+    CurrentPrice.DoesNotExist) propagates normally -- only connection
+    drops are handled here.
+
+    Returns (result, True) on success, (None, False) if the retry also
+    failed -- caller should skip this product and continue the loop.
+    """
+    try:
+        return operation(), True
+    except OperationalError as exc:
+        stderr.write(style.WARNING(
+            f'  [db-retry] connection error, retrying: {exc}'
+        ))
+        connection.close()
+        time.sleep(2)
+        try:
+            return operation(), True
+        except OperationalError as exc2:
+            stderr.write(style.ERROR(
+                f'  [db-error] failed after retry, skipping: {exc2}'
+            ))
+            return None, False
 
 
 class Command(BaseCommand):
@@ -422,10 +459,14 @@ class Command(BaseCommand):
             # by the daily automated cron (e.g. hard-to-find products, Celestian
             # Sacresants Amazon URL, etc.).
             try:
-                existing_cp = CurrentPrice.objects.get(
-                    product=product,
-                    retailer=ebay_retailer,
+                existing_cp, db_ok = _with_db_retry(
+                    lambda: CurrentPrice.objects.get(product=product, retailer=ebay_retailer),
+                    self.stderr, self.style,
                 )
+                if not db_ok:
+                    errors += 1
+                    time.sleep(delay)
+                    continue
                 if existing_cp.manual_url_override:
                     self.stdout.write(
                         self.style.WARNING('  [manual override] URL is manually set — skipping.')
@@ -526,18 +567,25 @@ class Command(BaseCommand):
                     self.stdout.write(f'  Desc: {desc_preview}')
 
                 if not dry_run:
-                    CurrentPrice.objects.update_or_create(
-                        product=product,
-                        retailer=ebay_retailer,
-                        defaults={
-                            'price': price,
-                            'url': url,
-                            'in_stock': True,
-                            'not_available': False,
-                            'shipping_cost': shipping,
-                            'currency': 'USD',
-                        },
+                    _, db_ok = _with_db_retry(
+                        lambda: CurrentPrice.objects.update_or_create(
+                            product=product,
+                            retailer=ebay_retailer,
+                            defaults={
+                                'price': price,
+                                'url': url,
+                                'in_stock': True,
+                                'not_available': False,
+                                'shipping_cost': shipping,
+                                'currency': 'USD',
+                            },
+                        ),
+                        self.stderr, self.style,
                     )
+                    if not db_ok:
+                        errors += 1
+                        time.sleep(delay)
+                        continue
                 else:
                     self.stdout.write(
                         self.style.WARNING('  [DRY RUN] Not saved to DB.')
@@ -551,17 +599,24 @@ class Command(BaseCommand):
                 if debug:
                     _debug_search(ebay_api, product, self.stdout, self.style)
                 if not dry_run:
-                    CurrentPrice.objects.update_or_create(
-                        product=product,
-                        retailer=ebay_retailer,
-                        defaults={
-                            'price': None,
-                            'url': '',
-                            'in_stock': False,
-                            'not_available': True,
-                            'currency': 'USD',
-                        },
+                    _, db_ok = _with_db_retry(
+                        lambda: CurrentPrice.objects.update_or_create(
+                            product=product,
+                            retailer=ebay_retailer,
+                            defaults={
+                                'price': None,
+                                'url': '',
+                                'in_stock': False,
+                                'not_available': True,
+                                'currency': 'USD',
+                            },
+                        ),
+                        self.stderr, self.style,
                     )
+                    if not db_ok:
+                        errors += 1
+                        time.sleep(delay)
+                        continue
                 not_found += 1
 
             time.sleep(delay)

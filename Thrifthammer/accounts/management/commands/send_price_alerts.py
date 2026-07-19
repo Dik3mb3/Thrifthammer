@@ -17,11 +17,13 @@ Usage:
     python manage.py send_price_alerts --dry-run # log matches, send nothing
 """
 
+import time
 from datetime import timedelta
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.core.management.base import BaseCommand
+from django.db import OperationalError, connection
 from django.template.loader import render_to_string
 from django.utils import timezone
 
@@ -44,6 +46,41 @@ class Command(BaseCommand):
             help='Log matches without sending emails or updating last_alerted_at.',
         )
 
+    def _with_db_retry(self, operation):
+        """
+        Execute a single DB operation, recovering from a dropped connection.
+
+        This command holds one DB connection open for its entire run and
+        touches it on every watchlist item in the loop -- including the
+        product price lookup, since the cache backend (DatabaseCache) is
+        itself a Postgres table, so even a cache read is a DB query. That
+        connection has been observed dying mid-run elsewhere in the same
+        class of long-running command (psycopg2 "SSL SYSCALL error: EOF
+        detected" / "server closed the connection unexpectedly") --
+        without this, one dropped connection can crash the whole run or
+        silently fail every remaining item. On OperationalError, close
+        the stale connection so Django opens a fresh one, wait briefly,
+        and retry once.
+
+        Returns (result, True) on success, (None, False) if the retry
+        also failed -- caller should skip and continue.
+        """
+        try:
+            return operation(), True
+        except OperationalError as exc:
+            self.stderr.write(self.style.WARNING(
+                f'  [db-retry] connection error, retrying: {exc}'
+            ))
+            connection.close()
+            time.sleep(2)
+            try:
+                return operation(), True
+            except OperationalError as exc2:
+                self.stderr.write(self.style.ERROR(
+                    f'  [db-error] failed after retry, skipping: {exc2}'
+                ))
+                return None, False
+
     def handle(self, *args, **options):
         """Main entry point — iterates candidates and dispatches alerts."""
         dry_run = options['dry_run']
@@ -59,7 +96,12 @@ class Command(BaseCommand):
             .prefetch_related('product__current_prices__retailer')
         )
 
-        for item in candidates:
+        candidate_list, db_ok = self._with_db_retry(lambda: list(candidates))
+        if not db_ok:
+            self.stderr.write(self.style.ERROR('Could not load watchlist items — aborting.'))
+            return
+
+        for item in candidate_list:
             # Must have an email address on the account
             if not item.user.email:
                 self.stdout.write(f'  [skip] {item} — no email on account')
@@ -67,7 +109,10 @@ class Command(BaseCommand):
                 continue
 
             # Check alert condition against live best price
-            best = item.product.get_cheapest_price()
+            best, db_ok = self._with_db_retry(item.product.get_cheapest_price)
+            if not db_ok:
+                errors += 1
+                continue
             if not item.alert_condition_met(best):
                 skipped += 1
                 continue
@@ -92,7 +137,12 @@ class Command(BaseCommand):
                 # Record timestamp so we don't re-alert for another 7 days
                 item.last_alerted_at = now
                 item.last_alerted_price = current_price  # keep for backwards compat
-                item.save(update_fields=['last_alerted_at', 'last_alerted_price'])
+                _, db_ok = self._with_db_retry(
+                    lambda: item.save(update_fields=['last_alerted_at', 'last_alerted_price'])
+                )
+                if not db_ok:
+                    errors += 1
+                    continue
                 sent += 1
                 self.stdout.write(
                     self.style.SUCCESS(
