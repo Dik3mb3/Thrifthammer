@@ -38,7 +38,7 @@ from datetime import datetime
 
 import requests
 from django.core.management.base import BaseCommand
-from django.db import OperationalError, connection
+from django.db import InterfaceError, OperationalError, connection
 
 from prices.models import CurrentPrice
 from products.models import Retailer
@@ -259,8 +259,16 @@ class Command(BaseCommand):
         occasionally been found dead on first reuse (psycopg2 "SSL
         SYSCALL error: EOF detected"), which previously crashed the whole
         command and lost every remaining entry in the batch. On
-        OperationalError, close the stale connection so Django opens a
-        fresh one, wait briefly, and retry once.
+        OperationalError or InterfaceError, close the stale connection so
+        Django opens a fresh one, wait briefly, and retry once.
+
+        Both exception classes are handled because a dropped connection
+        can surface either way: OperationalError from the save itself, or
+        InterfaceError ("connection already closed") from a post_save
+        signal handler (e.g. cache-busting) that runs a second query on
+        the same connection after it has already failed once. They are
+        sibling classes in django.db.utils, so both must be caught
+        explicitly.
 
         Returns True on success, False if the retry also failed (caller
         should skip this entry and continue with the rest of the batch).
@@ -268,7 +276,7 @@ class Command(BaseCommand):
         try:
             entry.save(update_fields=update_fields)
             return True
-        except OperationalError as exc:
+        except (OperationalError, InterfaceError) as exc:
             self.stderr.write(self.style.WARNING(
                 f'  [db-retry] {entry.product.gw_sku} — connection error, retrying: {exc}'
             ))
@@ -277,7 +285,7 @@ class Command(BaseCommand):
             try:
                 entry.save(update_fields=update_fields)
                 return True
-            except OperationalError as exc2:
+            except (OperationalError, InterfaceError) as exc2:
                 self.stderr.write(self.style.ERROR(
                     f'  [db-error] {entry.product.gw_sku} — save failed after retry, skipping: {exc2}'
                 ))

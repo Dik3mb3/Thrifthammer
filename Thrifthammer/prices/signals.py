@@ -29,11 +29,16 @@ Price signals for the prices app.
    effectively invalidates every cached list page at once.
 """
 
+import logging
+
 from django.core.cache import cache
+from django.db import InterfaceError, OperationalError
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 from .models import CurrentPrice, PriceHistory
+
+logger = logging.getLogger(__name__)
 
 
 @receiver(pre_save, sender=CurrentPrice)
@@ -99,16 +104,35 @@ def bust_price_caches(sender, instance, **kwargs):
 
     This keeps the home page deals, list cards, and detail pages all in sync
     immediately after any scraper run updates a CurrentPrice record.
+
+    The cache backend is DatabaseCache (a Postgres table), so every call
+    below is itself a DB query on the same connection the caller's save()
+    just used. This signal fires synchronously inside every CurrentPrice
+    save, in every command that writes prices -- including ones with no
+    connection-retry protection of their own. If the connection has just
+    been dropped (observed in production as OperationalError or the
+    sibling InterfaceError "connection already closed"), a cache write
+    failing here must not crash the caller's save. Cache-busting is
+    best-effort: on failure, skip it and log a warning -- worst case is a
+    stale list/detail cache for a few minutes until the next successful
+    save, not a crashed batch job.
     """
-    slug = getattr(instance.product, 'slug', None)
-    if slug:
-        cache.delete(f'product_detail|{slug}')
-    cache.delete('home_page_data_v6')
-    cache.delete(f'cheapest_price_{instance.product_id}')
-    cache.delete('site_last_price_update')
-    # Bust all list-page caches by incrementing the shared generation counter.
-    # timeout=None → key never expires on its own; without this the default
-    # 5-minute TTL can cause the counter to reset to 0, allowing the list view
-    # to hit old gen=0 cache entries that are still within their 15-minute TTL.
-    cache.add('product_list_generation', 0, timeout=None)
-    cache.incr('product_list_generation')
+    try:
+        slug = getattr(instance.product, 'slug', None)
+        if slug:
+            cache.delete(f'product_detail|{slug}')
+        cache.delete('home_page_data_v6')
+        cache.delete(f'cheapest_price_{instance.product_id}')
+        cache.delete('site_last_price_update')
+        # Bust all list-page caches by incrementing the shared generation counter.
+        # timeout=None → key never expires on its own; without this the default
+        # 5-minute TTL can cause the counter to reset to 0, allowing the list view
+        # to hit old gen=0 cache entries that are still within their 15-minute TTL.
+        cache.add('product_list_generation', 0, timeout=None)
+        cache.incr('product_list_generation')
+    except (OperationalError, InterfaceError) as exc:
+        logger.warning(
+            'bust_price_caches: skipped cache invalidation for CurrentPrice pk=%s '
+            'after a DB connection error: %s',
+            instance.pk, exc,
+        )

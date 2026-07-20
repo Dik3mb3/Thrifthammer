@@ -2,12 +2,14 @@ name: Send Friday AoS & More Deal Digest
 
 on:
   schedule:
-    # Every Friday at 06:00 UTC — after all daily scrapers have finished:
+    # Every Friday at 12:00 PM Eastern (16:00 UTC during EDT; adjust to
+    # 17:00 UTC in winter when EST/UTC-5 kicks in) — well after all daily
+    # scrapers have finished:
     #   eBay      03:00 UTC  (daily)
     #   Amazon    04:00 UTC  (daily)
     #   MM        04:00 UTC  (daily)
-    #   --> email 06:00 UTC  (Friday) <-- all prices are fresh
-    - cron: '0 6 * * 5'
+    #   --> email 16:00 UTC  (Friday) <-- all prices are fresh
+    - cron: '0 16 * * 5'
   workflow_dispatch:
     # Allow manual trigger from the GitHub Actions tab (great for testing)
     inputs:

@@ -19,11 +19,12 @@ Usage:
 
 import time
 from datetime import timedelta
+from types import SimpleNamespace
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.core.management.base import BaseCommand
-from django.db import OperationalError, connection
+from django.db import InterfaceError, OperationalError, connection
 from django.template.loader import render_to_string
 from django.utils import timezone
 
@@ -39,11 +40,21 @@ class Command(BaseCommand):
     help = 'Send price-alert emails for watchlist items where the alert condition is met.'
 
     def add_arguments(self, parser):
-        """Add --dry-run flag."""
+        """Add --dry-run and --test-email flags."""
         parser.add_argument(
             '--dry-run',
             action='store_true',
             help='Log matches without sending emails or updating last_alerted_at.',
+        )
+        parser.add_argument(
+            '--test-email',
+            type=str,
+            default=None,
+            help=(
+                'Send one real alert email to this address using a real '
+                'product price, bypassing the watchlist table entirely '
+                '(no WatchlistItem or last_alerted_at is touched).'
+            ),
         )
 
     def _with_db_retry(self, operation):
@@ -58,16 +69,24 @@ class Command(BaseCommand):
         class of long-running command (psycopg2 "SSL SYSCALL error: EOF
         detected" / "server closed the connection unexpectedly") --
         without this, one dropped connection can crash the whole run or
-        silently fail every remaining item. On OperationalError, close
-        the stale connection so Django opens a fresh one, wait briefly,
-        and retry once.
+        silently fail every remaining item. On OperationalError or
+        InterfaceError, close the stale connection so Django opens a
+        fresh one, wait briefly, and retry once.
+
+        Both exception classes are handled because a dropped connection
+        can surface either way: OperationalError from the query itself,
+        or InterfaceError ("connection already closed") from a post_save
+        signal handler (e.g. cache-busting) that runs a second query on
+        the same connection after it has already failed once. They are
+        sibling classes in django.db.utils, so both must be caught
+        explicitly.
 
         Returns (result, True) on success, (None, False) if the retry
         also failed -- caller should skip and continue.
         """
         try:
             return operation(), True
-        except OperationalError as exc:
+        except (OperationalError, InterfaceError) as exc:
             self.stderr.write(self.style.WARNING(
                 f'  [db-retry] connection error, retrying: {exc}'
             ))
@@ -75,15 +94,63 @@ class Command(BaseCommand):
             time.sleep(2)
             try:
                 return operation(), True
-            except OperationalError as exc2:
+            except (OperationalError, InterfaceError) as exc2:
                 self.stderr.write(self.style.ERROR(
                     f'  [db-error] failed after retry, skipping: {exc2}'
                 ))
                 return None, False
 
+    def _send_test_email(self, email, dry_run):
+        """
+        Send one real alert email to `email` using a real product's current
+        price, bypassing WatchlistItem entirely — no last_alerted_at or any
+        other user's data is touched. Used to verify the send path works
+        without waiting for a real watchlist condition to trigger.
+        """
+        from products.models import Product
+
+        product = None
+        best = None
+        for candidate in Product.objects.filter(is_active=True).order_by('id')[:10]:
+            price = candidate.get_cheapest_price()
+            if price is not None:
+                product, best = candidate, price
+                break
+
+        if product is None:
+            self.stderr.write(self.style.ERROR(
+                'Could not find an active product with a current price to test with.'
+            ))
+            return
+
+        if dry_run:
+            self.stdout.write(
+                f'  [dry-run] Would send test alert to {email} — '
+                f'{product.name} @ ${best.price}'
+            )
+            return
+
+        fake_item = SimpleNamespace(
+            user=SimpleNamespace(username=email.split('@')[0], email=email),
+            product=product,
+            alert_type=WatchlistItem.ALERT_PRICE,
+            target_price=best.price,
+            alert_percent=None,
+        )
+        self._send_alert(fake_item, best, timezone.now())
+        self.stdout.write(self.style.SUCCESS(
+            f'  [sent] test email to {email} — {product.name} @ ${best.price}'
+        ))
+
     def handle(self, *args, **options):
         """Main entry point — iterates candidates and dispatches alerts."""
         dry_run = options['dry_run']
+        test_email = options['test_email']
+
+        if test_email:
+            self._send_test_email(test_email, dry_run)
+            return
+
         sent = skipped = errors = 0
         now = timezone.now()
         weekly_cutoff = now - timedelta(days=ALERT_INTERVAL_DAYS)

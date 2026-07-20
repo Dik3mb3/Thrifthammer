@@ -9,7 +9,8 @@
       "cwd": "${workspaceRoot}/Thrifthammer",
       "env": {
         "DJANGO_DEBUG": "true",
-        "DJANGO_ALLOWED_HOSTS": "*"
+        "DJANGO_ALLOWED_HOSTS": "*",
+        "DATABASE_URL": "sqlite:///C:/Users/khleu/ThriftHammer/Thrifthammer/db.sqlite3"
       }
     }
   ]

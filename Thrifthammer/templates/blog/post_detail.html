@@ -362,6 +362,40 @@
   });
 }());
 </script>
+{% elif post.slug == 'cheap-warhammer-miniatures-target' %}
+<script>
+(function () {
+  'use strict';
+  document.querySelectorAll('.tm-gallery').forEach(function (gallery) {
+    var track = gallery.querySelector('.tm-gallery-track');
+    var dots = Array.prototype.slice.call(gallery.querySelectorAll('.tm-gallery-dot'));
+    if (!track || !dots.length) return;
+
+    function setActive(idx) {
+      dots.forEach(function (d, i) {
+        d.classList.toggle('tm-gallery-dot-active', i === idx);
+      });
+    }
+
+    dots.forEach(function (dot, idx) {
+      dot.addEventListener('click', function (e) {
+        e.preventDefault();
+        var slide = track.children[idx];
+        if (slide) track.scrollTo({ left: slide.offsetLeft, behavior: 'smooth' });
+      });
+    });
+
+    var scrollTimeout;
+    track.addEventListener('scroll', function () {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(function () {
+        var idx = Math.round(track.scrollLeft / track.clientWidth);
+        setActive(idx);
+      }, 80);
+    });
+  });
+}());
+</script>
 {% endif %}
 <script>
 function shareThisPage() {

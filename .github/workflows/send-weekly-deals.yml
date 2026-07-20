@@ -2,14 +2,16 @@ name: Send Weekly Deal Digest
 
 on:
   schedule:
-    # Every Monday at 06:00 UTC — after all Monday scrapers have finished:
+    # Every Monday at 12:00 PM Eastern (16:00 UTC during EDT; adjust to
+    # 17:00 UTC in winter when EST/UTC-5 kicks in) — well after all Monday
+    # scrapers have finished:
     #   eBay      03:00 UTC  (daily)
     #   Amazon    04:00 UTC  (daily)
     #   MM        04:00 UTC  (daily)
     #   AZ stock  05:00 UTC  (Monday)
     #   NK import 05:30 UTC  (Monday)
-    #   --> email 06:00 UTC  (Monday) <-- all prices are fresh
-    - cron: '0 6 * * 1'
+    #   --> email 16:00 UTC  (Monday) <-- all prices are fresh
+    - cron: '0 16 * * 1'
   workflow_dispatch:
     # Allow manual trigger from the GitHub Actions tab (great for testing)
     inputs:

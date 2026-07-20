@@ -43,7 +43,7 @@ from decimal import Decimal
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from django.db import OperationalError, connection
+from django.db import InterfaceError, OperationalError, connection
 from django.utils.text import slugify
 
 from prices.models import CurrentPrice
@@ -139,19 +139,25 @@ def _with_db_retry(operation, stderr, style):
     observed dying mid-run (psycopg2 "SSL SYSCALL error: EOF detected" /
     "server closed the connection unexpectedly") -- without this, one
     dropped connection crashes the entire run and loses every remaining
-    product. On OperationalError, close the stale connection so Django
-    opens a fresh one, wait briefly, and retry once.
+    product. On OperationalError or InterfaceError, close the stale
+    connection so Django opens a fresh one, wait briefly, and retry once.
 
-    Any exception other than OperationalError (e.g.
-    CurrentPrice.DoesNotExist) propagates normally -- only connection
-    drops are handled here.
+    Both exception classes are handled because a dropped connection can
+    surface either way: OperationalError from the query itself, or
+    InterfaceError ("connection already closed") from a post_save signal
+    handler (e.g. cache-busting) that runs a second query on the same
+    connection after it has already failed once. They are sibling
+    classes in django.db.utils, so both must be caught explicitly.
+
+    Any other exception (e.g. CurrentPrice.DoesNotExist) propagates
+    normally -- only connection drops are handled here.
 
     Returns (result, True) on success, (None, False) if the retry also
     failed -- caller should skip this product and continue the loop.
     """
     try:
         return operation(), True
-    except OperationalError as exc:
+    except (OperationalError, InterfaceError) as exc:
         stderr.write(style.WARNING(
             f'  [db-retry] connection error, retrying: {exc}'
         ))
@@ -159,7 +165,7 @@ def _with_db_retry(operation, stderr, style):
         time.sleep(2)
         try:
             return operation(), True
-        except OperationalError as exc2:
+        except (OperationalError, InterfaceError) as exc2:
             stderr.write(style.ERROR(
                 f'  [db-error] failed after retry, skipping: {exc2}'
             ))

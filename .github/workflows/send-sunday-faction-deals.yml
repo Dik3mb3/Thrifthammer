@@ -2,8 +2,9 @@ name: Send Sunday Faction Deal Digest
 
 on:
   schedule:
-    # Every Sunday at 09:00 UTC
-    - cron: '0 9 * * 0'
+    # Every Sunday at 12:00 PM Eastern (16:00 UTC during EDT; adjust to
+    # 17:00 UTC in winter when EST/UTC-5 kicks in)
+    - cron: '0 16 * * 0'
   workflow_dispatch:
     # Allow manual trigger from the GitHub Actions tab (great for testing)
     inputs:
