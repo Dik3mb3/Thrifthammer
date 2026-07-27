@@ -273,6 +273,15 @@ class Product(models.Model):
             'retail packaging (e.g. Bloodletters, small infantry sets).'
         ),
     )
+    ebay_allow_forge_world = models.BooleanField(
+        default=False,
+        help_text=(
+            'When True, eBay listings with "forge world" in the title are not filtered '
+            'out for this product. Use only when Forge World IS the official manufacturer '
+            'of this exact catalog SKU (e.g. Blood Bowl Star Players) rather than a '
+            'different, untracked resin product sharing the same unit name.'
+        ),
+    )
     ebay_negative_keywords = models.CharField(
         max_length=200, blank=True, default='',
         help_text=(

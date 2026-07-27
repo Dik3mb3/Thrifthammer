@@ -223,14 +223,17 @@ class EbayBrowseAPI:
         first_valid = valid_items[0]
         cheapest    = min(valid_items, key=lambda x: x['total_cost'])
 
-        # For Discount Box Splits, refresh both candidates' shipping before
-        # comparing — search results frequently show $0 for real fixed-rate
-        # shipping, causing the algorithm to swap to a listing that is actually
-        # more expensive once accurate shipping is applied.
-        _cat = getattr(product, 'category', None)
-        _is_split = _cat is not None and getattr(_cat, 'slug', '') == 'discount-box-splits'
+        # Refresh both candidates' shipping before comparing — search results
+        # frequently show $0 or an inaccurate figure for real fixed-rate
+        # shipping, causing the algorithm to swap to a listing that is
+        # actually more expensive once accurate shipping is applied. This
+        # was previously scoped to Discount Box Splits only; generalised
+        # site-wide after the same failure mode was confirmed on Star Wars:
+        # Shatterpoint products (SWS-029, SWS-045) — a ~10%-cheaper listing
+        # with apparent $0 shipping turned out to have $9-13 real shipping,
+        # making it more expensive than the Best Match #1 pick it beat.
         cheaper_threshold = Decimal('0.90')  # must be ≥10% cheaper to beat Best Match
-        if _is_split and cheapest is not first_valid:
+        if cheapest is not first_valid:
             for candidate in (first_valid, cheapest):
                 real_ship = self._fetch_item_shipping(candidate['item_id'])
                 if real_ship is not None:

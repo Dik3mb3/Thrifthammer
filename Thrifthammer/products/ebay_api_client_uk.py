@@ -90,7 +90,8 @@ class EbayBrowseAPIUK:
     logic, keyword blocklists, and search strategy. UK-specific changes:
       - MARKETPLACE_ID = EBAY_GB
       - Currency checks: GBP instead of USD
-      - itemLocationCountry: GB
+      - deliveryCountry: GB (any seller worldwide who ships to GB — not
+        restricted to GB-located sellers; see search_items() docstring)
       - Buyer context: London postcode EC1A1BB
 
     Authentication:
@@ -200,7 +201,10 @@ class EbayBrowseAPIUK:
         raw_negatives = getattr(product, 'ebay_negative_keywords', '') or ''
         extra_negatives = shlex.split(raw_negatives) if raw_negatives else None
 
-        query = self._build_search_query(search_name, extra_negatives)
+        raw_allowed = getattr(product, 'ebay_allowed_title_words', '') or ''
+        allowed_words = set(raw_allowed.lower().split()) if raw_allowed else None
+
+        query = self._build_search_query(search_name, extra_negatives, allowed_words)
         items = self.search_items(query, max_results=10)
 
         if not items:
@@ -380,7 +384,11 @@ class EbayBrowseAPIUK:
         Filters applied:
           - buyingOptions: FIXED_PRICE (no auctions)
           - conditions: NEW
-          - itemLocationCountry: GB
+          - deliveryCountry: GB (seller can be located anywhere, as long as
+            they ship to GB — broader than itemLocationCountry:GB, which
+            would exclude legitimate US/CA sellers who ship internationally.
+            deliveryCountry still excludes sellers who do NOT ship to GB,
+            unlike dropping the location filter entirely.)
         Marketplace: EBAY_GB (GBP prices)
         Sort: Best Match (eBay default relevance — full sealed kits from
               reputable sellers rank above cheap bits/spare parts)
@@ -409,7 +417,7 @@ class EbayBrowseAPIUK:
             'filter':      (
                 'buyingOptions:{FIXED_PRICE},'
                 'conditions:{NEW},'
-                'itemLocationCountry:GB'
+                'deliveryCountry:GB'
             ),
             # No 'sort' parameter → eBay "Best Match" (default relevance ranking).
             # Best Match surfaces well-matched listings from reputable sellers first,
@@ -531,7 +539,7 @@ class EbayBrowseAPIUK:
     # -------------------------------------------------------------------------
 
     @staticmethod
-    def _build_search_query(product_name, extra_negatives=None):
+    def _build_search_query(product_name, extra_negatives=None, allowed_words=None):
         """
         Build an optimised eBay search query from a product name.
 
@@ -555,6 +563,12 @@ class EbayBrowseAPIUK:
             extra_negatives: Optional list of words to exclude via eBay -word syntax.
                              These are appended after the standard -bits -bitz -sprue
                              exclusions. Sourced from Product.ebay_negative_keywords.
+            allowed_words:   Optional set of lowercased words to exempt from the
+                             standard boilerplate exclusion list below (e.g. a
+                             product literally named "3D Objective Tokens" needs
+                             "3D" exempted, since -"3D" is normally appended to
+                             filter out 3D-printed proxy listings). Sourced from
+                             Product.ebay_allowed_title_words.
 
         Returns:
             Clean search query string with negative keyword suffixes.
@@ -607,7 +621,20 @@ class EbayBrowseAPIUK:
         # eBay query level prevents card sets from winning the best-price match over
         # the actual miniature box.
         if not is_citadel:
-            query = f'{query.strip()} -bits -bitz -sprue -parts -decor -cards -datacards -"ny rangers" -"D&D" -5e -"3D" -printing'
+            _allowed = allowed_words or set()
+            # (term, quoted) pairs — quoting matches the original hardcoded
+            # string exactly: -bits -bitz -sprue -parts -decor -cards
+            # -datacards -"ny rangers" -"D&D" -5e -"3D" -printing
+            _boilerplate = [
+                ('bits', False), ('bitz', False), ('sprue', False),
+                ('parts', False), ('decor', False), ('cards', False),
+                ('datacards', False), ('ny rangers', True), ('D&D', True),
+                ('5e', False), ('3D', True), ('printing', False),
+            ]
+            for _term, _quoted in _boilerplate:
+                if _term.lower() in _allowed:
+                    continue
+                query += f' -"{_term}"' if _quoted else f' -{_term}'
 
         # Product-specific negative keywords: exclude similarly-named products
         # that our keyword validator cannot distinguish (e.g. Plastic Glue vs
@@ -924,6 +951,11 @@ class EbayBrowseAPIUK:
         # Conversion/proxy — not a genuine GW kit
         'kitbash', 'kitbashed',
         'proxy',
+        # Garage/Etsy-style 3D-print resin sellers consistently describe their
+        # output resolution as "Printed in 12k for a crisp detailed finish" —
+        # observed across dozens of listings (Star Wars: Legion character/unit
+        # proxies in particular), never used by a genuine sealed retail kit.
+        '12k',
         # Non-miniature product types
         'minifigure', 'minifigures', 'minifigs', 'minifig', 'figurine', 'figurines',
         'finecast',
@@ -1133,15 +1165,19 @@ class EbayBrowseAPIUK:
         #
         # Distinguishing factor: price.  Single dual-build sprues are priced
         # at £8–20; full dual-build boxes are priced at £50–120+.
-        # Threshold: 75% of GBP MSRP. Uses msrp_gbp if available, falls back to msrp.
+        # Threshold: 75% of GBP MSRP (msrp_gbp only -- product.msrp is USD and
+        # must never be used here even as a fallback; treating a dollar figure
+        # as a pound figure silently inflates the floor and rejects genuine
+        # cheaper GBP listings, e.g. $73.50 read as £73.50 produced a £55.12
+        # floor that kept blocking real £36-45 dual-kit boxes across several
+        # factions before msrp_gbp coverage existed. Falls back to a flat £30
+        # floor only when msrp_gbp itself is unset).
         # Any " / " listing below this floor is a cheap sprue, not a full box.
-        if ' / ' in result['title']:
-            slash_floor = Decimal('30.00')  # fallback if MSRP is missing
+        if ' / ' in result['title'] and '/' not in _allowed_words:
+            slash_floor = Decimal('30.00')  # fallback if msrp_gbp is missing
             _msrp_gbp = getattr(product, 'msrp_gbp', None)
-            _msrp_ref  = (_msrp_gbp if (_msrp_gbp and _msrp_gbp > 0)
-                          else getattr(product, 'msrp', None))
-            if _msrp_ref and _msrp_ref > 0:
-                slash_floor = _msrp_ref * Decimal('0.75')
+            if _msrp_gbp and _msrp_gbp > 0:
+                slash_floor = _msrp_gbp * Decimal('0.75')
             slash_cost = result.get('total_cost', Decimal('0'))
             if slash_cost < slash_floor:
                 logger.debug(
@@ -1153,9 +1189,11 @@ class EbayBrowseAPIUK:
         # ── Bundle detection ──────────────────────────────────────────────────
         # " & " between product names indicates a bundle of two separate
         # products (e.g. "Predator Annihilator/Destructor & Razorback").
-        # GW sealed retail kits are single products — their official names
-        # never include " & ".  No products in the ThriftHammer DB use "&".
-        if ' & ' in result['title']:
+        # GW sealed retail kits are single products -- their official names
+        # never include " & ", except products whose real name itself has an
+        # ampersand-joined pair (e.g. "Freeguild Marshal and Relic Envoy" --
+        # resellers write "&"); those set '&' in ebay_allowed_title_words.
+        if ' & ' in result['title'] and '&' not in _allowed_words:
             logger.debug(
                 '[ebay-uk] Rejected (bundle listing, "&" in title): "%s"',
                 result['title'][:60],
@@ -1216,10 +1254,16 @@ class EbayBrowseAPIUK:
             'action figure',
         )
         allow_no_box = getattr(product, 'ebay_allow_no_box', False)
+        allow_forge_world = getattr(product, 'ebay_allow_forge_world', False)
         for phrase in _MISSING_PHRASES:
             # Per-product override: skip the "no box" check for products that
             # are commonly sold as loose sprues without retail packaging.
             if phrase == 'no box' and allow_no_box:
+                continue
+            # Per-product override: skip the "forge world" check for products
+            # where Forge World IS the official manufacturer of this exact SKU
+            # (e.g. Blood Bowl Star Players) rather than a different product.
+            if phrase == 'forge world' and allow_forge_world:
                 continue
             if phrase in title_lower:
                 logger.debug(
@@ -1231,14 +1275,17 @@ class EbayBrowseAPIUK:
         # ── Price floor (GBP MSRP) ────────────────────────────────────────────
         # Only applied when msrp_gbp is populated. No absolute minimum, no
         # ceiling — UK prices vary too much from US to use a fixed range.
-        # Floor: 60% of GBP MSRP. Skipped entirely if msrp_gbp is not set.
+        # Floor: 35% of GBP MSRP (max discount allowed 65% off). Skipped
+        # entirely if msrp_gbp is not set -- as of 2026-07, msrp_gbp has ~0%
+        # coverage on Age of Sigmar products, so this floor is currently
+        # dormant for most AoS matches; revisit once GBP MSRP is backfilled.
         _msrp_gbp = getattr(product, 'msrp_gbp', None)
         if _msrp_gbp and _msrp_gbp > 0:
             total_cost = result.get('total_cost', Decimal('0'))
-            min_price  = _msrp_gbp * Decimal('0.60')
+            min_price  = _msrp_gbp * Decimal('0.35')
             if total_cost < min_price:
                 logger.debug(
-                    '[ebay-uk] Rejected (below GBP MSRP floor): £%.2f for "%s" (min £%.2f, 60%% of msrp_gbp £%.2f)',
+                    '[ebay-uk] Rejected (below GBP MSRP floor): £%.2f for "%s" (min £%.2f, 35%% of msrp_gbp £%.2f)',
                     total_cost, product.name, min_price, _msrp_gbp,
                 )
                 return False
@@ -1265,7 +1312,7 @@ class EbayBrowseAPIUK:
         short_desc = result.get('short_description', '').lower()
         if short_desc:
             desc_words     = set(re.sub(r'[^\w\s]', ' ', short_desc).split())
-            desc_bits_hits = desc_words & EbayBrowseAPIUK._DESC_BITS_KEYWORDS
+            desc_bits_hits = (desc_words & EbayBrowseAPIUK._DESC_BITS_KEYWORDS) - _allowed_words
             if desc_bits_hits:
                 logger.debug(
                     '[ebay-uk] Rejected (bits keyword in description): "%s" — %s',
@@ -1362,38 +1409,16 @@ class EbayBrowseAPIUK:
                         )
                         return False
 
-            # ── Description-mirrors-title bot detection ────────────────────
-            # Bot/spam storefronts generate listings whose descriptions simply
-            # repeat the listing title followed by generic shipping boilerplate,
-            # e.g.:
-            #   title:       "Astra Militarum Cadian Shock Troops Warhammer 40k"
-            #   description: "warhammer 40k astra militarum Cadian Shock Troops .
-            #                 Condition is New. Shipped with Royal Mail."
-            #
-            # Legitimate sellers write genuine descriptions about condition,
-            # contents, or provenance — they don't just echo the title.
-            #
-            # Detection: if ≥ 70% of meaningful title words (len ≥ 3) appear
-            # in the first 150 characters of the description, the description
-            # is mirroring the title — a reliable bot signal.  The 150-char
-            # window is large enough to catch all title words even when the
-            # description leads with them, and short enough to avoid false
-            # positives from genuine sellers who happen to mention the product
-            # name once near the start of a longer description.
-            title_kws = [
-                w for w in re.sub(r'[^\w\s]', ' ', title_lower).split()
-                if len(w) >= 3
-            ]
-            if len(title_kws) >= 3 and not _allowed_words:
-                desc_prefix = short_desc[:150]
-                mirror_matches = sum(1 for w in title_kws if w in desc_prefix)
-                mirror_ratio = mirror_matches / len(title_kws)
-                if mirror_ratio >= 0.70:
-                    logger.debug(
-                        '[ebay-uk] Rejected (description mirrors title, %.0f%% word overlap): "%s"',
-                        mirror_ratio * 100, result['title'][:60],
-                    )
-                    return False
+            # NOTE: UK client intentionally has no description-mirrors-title
+            # bot-detection check (present in the US client). Every UK search
+            # already filters to conditions:{NEW} at the API level, and bits/
+            # digit/bundle/price-floor checks above catch the bad listings
+            # that matter. The mirror-title heuristic produced repeated false
+            # positives on short-but-genuine listings (e.g. "Brand new and in
+            # box! (star)(sparkle)" at 80 chars, "Having a massive clear out
+            # of my personal collection." at 119 chars) without a reliable
+            # way to distinguish them from actual spam echoes -- removed
+            # rather than kept as a net negative.
 
         # ── URL must link to eBay ─────────────────────────────────────────────
         if 'ebay.' not in result['url']:
@@ -1471,13 +1496,13 @@ class EbayBrowseAPIUK:
             reasons.append('count+descriptor in title')
 
         # Slash — price-aware: only reject if cost is below 75% of GBP MSRP
+        # (msrp_gbp only -- never fall back to the USD msrp field, see
+        # matching note in _is_valid_result())
         if ' / ' in result['title']:
             slash_floor = Decimal('30.00')
             _msrp_gbp = getattr(product, 'msrp_gbp', None)
-            _msrp_ref  = (_msrp_gbp if (_msrp_gbp and _msrp_gbp > 0)
-                          else getattr(product, 'msrp', None))
-            if _msrp_ref and _msrp_ref > 0:
-                slash_floor = _msrp_ref * Decimal('0.75')
+            if _msrp_gbp and _msrp_gbp > 0:
+                slash_floor = _msrp_gbp * Decimal('0.75')
             slash_cost = result.get('total_cost', Decimal('0'))
             if slash_cost < slash_floor:
                 reasons.append(
@@ -1514,11 +1539,11 @@ class EbayBrowseAPIUK:
         _msrp_gbp = getattr(product, 'msrp_gbp', None)
         if _msrp_gbp and _msrp_gbp > 0:
             total_cost = result.get('total_cost', Decimal('0'))
-            min_price  = _msrp_gbp * Decimal('0.60')
+            min_price  = _msrp_gbp * Decimal('0.35')
             if total_cost < min_price:
                 reasons.append(
                     f'below GBP MSRP floor: £{total_cost:.2f} '
-                    f'(min £{min_price:.2f}, 60% of msrp_gbp £{_msrp_gbp:.2f})'
+                    f'(min £{min_price:.2f}, 35% of msrp_gbp £{_msrp_gbp:.2f})'
                 )
 
         # Shipping
@@ -1558,20 +1583,6 @@ class EbayBrowseAPIUK:
                             f'negative keyword "{neg_kw}" in description'
                         )
                         break
-
-            # Description-mirrors-title bot detection
-            title_kws = [
-                w for w in re.sub(r'[^\w\s]', ' ', title_lower).split()
-                if len(w) >= 3
-            ]
-            if len(title_kws) >= 3:
-                desc_prefix = short_desc[:150]
-                mirror_matches = sum(1 for w in title_kws if w in desc_prefix)
-                mirror_ratio = mirror_matches / len(title_kws)
-                if mirror_ratio >= 0.70:
-                    reasons.append(
-                        f'description mirrors title ({mirror_ratio:.0%} word overlap)'
-                    )
 
         # URL
         if 'ebay.' not in result.get('url', ''):

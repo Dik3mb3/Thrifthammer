@@ -10,7 +10,7 @@
       "env": {
         "DJANGO_DEBUG": "true",
         "DJANGO_ALLOWED_HOSTS": "*",
-        "DATABASE_URL": "sqlite:///C:/Users/khleu/ThriftHammer/Thrifthammer/db.sqlite3"
+        "DATABASE_URL": "postgresql://postgres:LtrLGiOsRpJNuFhFaARpuBdDSlGsHHIv@caboose.proxy.rlwy.net:49747/railway"
       }
     }
   ]

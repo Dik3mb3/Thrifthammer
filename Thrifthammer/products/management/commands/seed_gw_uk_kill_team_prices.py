@@ -14,6 +14,7 @@ _GW_UK_SLUG = 'games-workshop-uk'
 
 # (gw_sku, label, gbp_price, gw_uk_url, in_stock)
 _PRICES = [
+    ('KT-002', 'Killzone: Tomb World',                 Decimal('98.00'), 'https://www.warhammer.com/en-GB/shop/killzone-tomb-world-2025',                         True),
     ('KT-003', 'Kill Team: Starter Set',              Decimal('69.50'), 'https://www.warhammer.com/en-GB/shop/kill-team-starter-set-2024-eng',                   True),
     ('KT-004', 'Kill Team: Battleclade',              Decimal('44.50'), 'https://www.warhammer.com/en-GB/shop/kill-team-battleclade-2025',                        True),
     ('KT-005', 'Kill Team: Sanctifiers',              Decimal('42.50'), 'https://www.warhammer.com/en-GB/shop/kill-team-sanctifiers-2025',                        True),

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "top10-table",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "C:\Users\khleu\AppData\Local\Temp\top10_table"],
+      "port": 8765
+    }
+  ]
+}
