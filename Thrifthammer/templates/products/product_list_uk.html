@@ -12,7 +12,7 @@
 
 {% block title %}{% if selected_faction_obj %}{{ selected_faction_obj.name }} Kits — Best UK Prices | ThriftHammer{% elif selected_category_obj %}{{ selected_category_obj.name }} Kits — Best UK Prices | ThriftHammer{% elif query %}Search: {{ query }} | ThriftHammer{% else %}Browse Warhammer 40K Products — UK Prices | ThriftHammer{% endif %}{% endblock %}
 
-{% block meta_description %}<meta name="description" content="{% if selected_faction_obj %}Compare UK prices on {{ selected_faction_obj.name }} kits. Find the best deal in GBP from UK Warhammer retailers before you buy.{% elif selected_category_obj %}Compare UK prices on {{ selected_category_obj.name }} kits. Find the best deal in GBP from UK Warhammer retailers before you buy.{% elif query %}ThriftHammer UK price results for "{{ query }}". Compare GBP prices across UK Warhammer retailers.{% else %}Browse all Warhammer kits and compare UK prices in GBP across Games Workshop, eBay UK, Amazon UK and more.{% endif %}">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if selected_faction_obj %}Compare UK prices on {{ selected_faction_obj.name }} kits. Find the best deal in GBP from UK Warhammer retailers before you buy.{% elif selected_category_obj %}Compare UK prices on {{ selected_category_obj.name }} kits. Find the best deal in GBP from UK Warhammer retailers before you buy.{% elif query %}ThriftHammer UK price results for "{{ query }}". Compare GBP prices across UK Warhammer retailers.{% else %}Browse all Warhammer kits and compare UK prices in GBP across Games Workshop, eBay UK, Firestorm Games and more.{% endif %}">{% endblock %}
 
 {% block extra_head %}
 <meta property="og:title" content="Browse Warhammer 40K Products — UK Prices | ThriftHammer">

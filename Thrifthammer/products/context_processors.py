@@ -42,6 +42,8 @@ def site_stats(request):
     display_count = (count // 10) * 10
 
     region = request.session.get('region', 'us')
+    if request.path.startswith('/uk/'):
+        region = 'uk'
 
     return {
         'product_count': count,

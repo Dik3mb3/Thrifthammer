@@ -9,11 +9,19 @@ from django.views.generic import RedirectView, TemplateView
 _ADMIN_URL = getattr(settings, 'ADMIN_URL', 'admin/')
 
 from products.views import about, faq, home, newsletter_signup, privacy_policy
-from thrifthammer.sitemaps import BlogPostSitemap, BlogTagSitemap, FactionSitemap, ProductSitemap, StaticViewSitemap
+from thrifthammer.sitemaps import (
+    BlogPostSitemap,
+    BlogTagSitemap,
+    FactionSitemap,
+    ProductSitemap,
+    ProductSitemapUK,
+    StaticViewSitemap,
+)
 
 SITEMAPS = {
     'static': StaticViewSitemap,
     'products': ProductSitemap,
+    'products_uk': ProductSitemapUK,
     'blog': BlogPostSitemap,
     'blog_tags': BlogTagSitemap,
     'factions': FactionSitemap,

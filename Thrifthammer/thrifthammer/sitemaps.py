@@ -122,6 +122,30 @@ class ProductSitemap(Sitemap):
         return getattr(obj, 'updated_at', None) or getattr(obj, 'created_at', None)
 
 
+class ProductSitemapUK(Sitemap):
+    """
+    Sitemap entry for every active product's UK page (/uk/products/<slug>/).
+
+    Same product set as ProductSitemap (US) -- every active product has
+    either a live UK retailer price or a msrp_gbp reference price, so
+    none of these pages render blank.
+    """
+
+    priority = 0.8
+    changefreq = 'daily'
+
+    def items(self):
+        """Return all active products ordered by name."""
+        return Product.objects.filter(is_active=True).order_by('name')
+
+    def location(self, obj):
+        return f'/uk/products/{obj.slug}/'
+
+    def lastmod(self, obj):
+        """Use the product's most recent update timestamp."""
+        return getattr(obj, 'updated_at', None) or getattr(obj, 'created_at', None)
+
+
 class FactionSitemap(Sitemap):
     """
     Sitemap entry for each live faction landing page.

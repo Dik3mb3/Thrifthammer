@@ -122,8 +122,7 @@
                     <a href="{% url 'accounts:register' %}" rel="nofollow">Register</a>
                 {% endif %}
 
-                {% if debug %}
-                {# ── Region switcher — local dev only (debug=True); hidden on live site ── #}
+                {# ── Region switcher ── #}
                 <div class="nav-region" id="nav-region">
                     <button
                         class="nav-region-btn"
@@ -139,14 +138,15 @@
                     </button>
                     <div class="nav-region-menu" id="nav-region-menu" role="menu" hidden>
                         <a href="/products/"
+                           id="nav-region-us"
                            class="nav-region-option{% if region == 'us' %} nav-region-option--active{% endif %}"
                            role="menuitem">🇺🇸 US / English</a>
                         <a href="/uk/products/"
+                           id="nav-region-uk"
                            class="nav-region-option{% if region == 'uk' %} nav-region-option--active{% endif %}"
                            role="menuitem">🇬🇧 UK / English</a>
                     </div>
                 </div>
-                {% endif %}
 
             </div>
 
@@ -283,6 +283,30 @@
         var btn       = document.getElementById("nav-region-btn");
         var menu      = document.getElementById("nav-region-menu");
         if (!container || !btn || !menu) return;
+
+        // Point each region option at the equivalent page in that region,
+        // instead of always sending the user back to the product list root.
+        var usLink = document.getElementById("nav-region-us");
+        var ukLink = document.getElementById("nav-region-uk");
+        if (usLink && ukLink) {
+            var path   = window.location.pathname;
+            var search = window.location.search;
+
+            var ukDetail = path.match(/^\/uk\/products\/([^\/]+)\/?$/);
+            var usDetail = path.match(/^\/products\/([^\/]+)\/?$/);
+            var isUkList = path === "/uk/products/" || path === "/uk/products";
+            var isUsList = path === "/products/" || path === "/products";
+
+            if (ukDetail) {
+                usLink.href = "/products/" + ukDetail[1] + "/";
+            } else if (usDetail) {
+                ukLink.href = "/uk/products/" + usDetail[1] + "/";
+            } else if (isUkList) {
+                usLink.href = "/products/" + search;
+            } else if (isUsList) {
+                ukLink.href = "/uk/products/" + search;
+            }
+        }
 
         btn.addEventListener("click", function (e) {
             e.stopPropagation();

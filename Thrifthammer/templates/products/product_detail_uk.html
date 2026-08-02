@@ -179,7 +179,7 @@
       <h3 style="font-size:1.1rem;margin-bottom:var(--sp-2);">UK Price Comparison</h3>
       {% if current_prices %}
       <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:var(--sp-2);">
-        Affiliate links: ThriftHammer earns a small commission on Amazon UK and eBay UK purchases at no extra cost to you.
+        Affiliate links: ThriftHammer earns a small commission on eBay UK and Firestorm Games purchases at no extra cost to you.
       </p>
       <div class="price-table-wrap">
       <table class="price-table">
@@ -244,6 +244,17 @@
         </tbody>
       </table>
       </div>
+      {% for cp in current_prices %}
+      {% if cp.retailer.slug == 'catalyst-game-labs-uk' %}
+      <p style="font-size:0.78rem;color:var(--text-muted);margin-top:var(--sp-2);">
+        *UK prices from Catalyst Labs were converted from USD prices, your price may vary.
+      </p>
+      {% elif cp.retailer.slug == 'trench-crusade-uk' %}
+      <p style="font-size:0.78rem;color:var(--text-muted);margin-top:var(--sp-2);">
+        *UK prices from Trench Crusade were converted from Euro prices, your price may vary.
+      </p>
+      {% endif %}
+      {% endfor %}
       {% else %}
       <p style="color:var(--text-muted);font-size:0.9rem;">
         No UK price data yet. Check back after the next scrape.
