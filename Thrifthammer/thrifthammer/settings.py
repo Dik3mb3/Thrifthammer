@@ -247,6 +247,11 @@ EBAY_DELAY_BETWEEN_CALLS = 0.5
 # so clicks generate affiliate revenue.
 EBAY_AFFILIATE_CAMPAIGN_ID = os.environ.get('EBAY_AFFILIATE_CAMPAIGN_ID', '')
 
+# Separate EPN campaign for the UK marketplace (own campaign in the EPN
+# dashboard, tracked independently from the US EBAY_AFFILIATE_CAMPAIGN_ID).
+# Set EBAY_UK_AFFILIATE_CAMPAIGN_ID in Railway environment variables.
+EBAY_UK_AFFILIATE_CAMPAIGN_ID = os.environ.get('EBAY_UK_AFFILIATE_CAMPAIGN_ID', '')
+
 # ---------------------------------------------------------------------------
 # Amazon Creators API — OAuth2-based affiliate price lookup
 # ---------------------------------------------------------------------------

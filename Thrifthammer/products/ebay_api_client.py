@@ -1080,11 +1080,17 @@ class EbayBrowseAPI:
         _raw_neg = getattr(product, 'ebay_negative_keywords', '') or ''
         if _raw_neg:
             _result_item_id = result.get('item_id', '')
+            # Browse API item IDs are formatted "v1|<legacyItemId>|0" -- extract
+            # the legacy numeric ID, since that's what gets stored as a blocked
+            # negative keyword (comparing against the raw "v1|...|0" string never matched).
+            _result_legacy_id = (
+                _result_item_id.split('|')[1] if _result_item_id.count('|') == 2 else _result_item_id
+            )
             for _neg_kw in shlex.split(_raw_neg.lower()):
                 # Pure-digit tokens are treated as blocked eBay item IDs rather
                 # than title keywords (item IDs never appear in listing titles).
                 if _neg_kw.isdigit():
-                    if _result_item_id and _neg_kw == _result_item_id:
+                    if _result_legacy_id and _neg_kw == _result_legacy_id:
                         logger.debug(
                             '[ebay] Rejected (blocked item ID %s): "%s"',
                             _result_item_id, result['title'][:60],
@@ -1467,9 +1473,15 @@ class EbayBrowseAPI:
         _raw_neg = getattr(product, 'ebay_negative_keywords', '') or ''
         if _raw_neg:
             _result_item_id = result.get('item_id', '')
+            # Browse API item IDs are formatted "v1|<legacyItemId>|0" -- extract
+            # the legacy numeric ID, since that's what gets stored as a blocked
+            # negative keyword (comparing against the raw "v1|...|0" string never matched).
+            _result_legacy_id = (
+                _result_item_id.split('|')[1] if _result_item_id.count('|') == 2 else _result_item_id
+            )
             for _neg_kw in shlex.split(_raw_neg.lower()):
                 if _neg_kw.isdigit():
-                    if _result_item_id and _neg_kw == _result_item_id:
+                    if _result_legacy_id and _neg_kw == _result_legacy_id:
                         reasons.append(f'blocked item ID {_result_item_id}')
                         break
                 elif re.search(r'\b' + re.escape(_neg_kw) + r'\b', title_lower):

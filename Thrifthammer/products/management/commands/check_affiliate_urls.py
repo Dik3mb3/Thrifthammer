@@ -3,7 +3,8 @@ Audit and optionally fix affiliate tracking tags on all retailer URLs.
 
 Checks every CurrentPrice URL for the correct affiliate identifier:
   Amazon       — ?tag=thrifthammer7-20
-  eBay         — campid= (EPN campaign ID) + mkcid=1
+  eBay (US)    — campid= (EPN campaign ID) + mkcid=1
+  eBay UK      — campid= (separate EPN UK campaign ID) + mkcid=1
   Noble Knight — ?awid=1576
 
 Games Workshop and Miniature Market have no affiliate programmes and
@@ -19,6 +20,7 @@ Usage:
   # Check a single retailer:
   python manage.py check_affiliate_urls --retailer amazon
   python manage.py check_affiliate_urls --retailer ebay
+  python manage.py check_affiliate_urls --retailer ebay-uk
   python manage.py check_affiliate_urls --retailer noble-knight
 """
 
@@ -34,10 +36,14 @@ from prices.models import CurrentPrice
 
 AMAZON_TAG   = 'thrifthammer7-20'
 NK_AWID      = '1576'
-# EPN static params — campid is appended separately from settings
-_EPN_STATIC  = 'mkcid=1&mkrid=711-53200-19255-0&toolid=10001&mkevt=1'
-# Fallback campid if env var is not set (matches migration 0008)
-_EPN_CAMPID_FALLBACK = '5339151938'
+# EPN static params — campid is appended separately from settings.
+# mkrid is the marketplace rotation ID and differs between US and UK.
+_EPN_STATIC     = 'mkcid=1&mkrid=711-53200-19255-0&toolid=10001&mkevt=1'
+_EPN_STATIC_UK  = 'mkcid=1&mkrid=710-53481-19255-0&toolid=10001&mkevt=1'
+# Fallback campid if the env var is not set (US matches migration 0008;
+# UK matches the dedicated "UK Thrifthammer" EPN campaign).
+_EPN_CAMPID_FALLBACK    = '5339151938'
+_EPN_CAMPID_FALLBACK_UK = '5339181589'
 
 _AMAZON_ASIN_RE = re.compile(r'/dp/([A-Z0-9]{10})')
 
@@ -45,6 +51,7 @@ _AMAZON_ASIN_RE = re.compile(r'/dp/([A-Z0-9]{10})')
 AFFILIATE_RETAILERS = {
     'amazon':             'Amazon',
     'ebay':               'eBay',
+    'ebay-uk':            'eBay UK',
     'noble-knight-games': 'Noble Knight',
 }
 
@@ -72,7 +79,7 @@ def _check_ebay(url, campid):
     return 'mkcid=1' in url and f'campid={campid}' in url
 
 
-def _fix_ebay(url, campid):
+def _fix_ebay(url, campid, static_params=_EPN_STATIC):
     """Strip old EPN params then append a fresh set including campid."""
     # Remove previously appended EPN block (everything from mkcid= onward)
     for marker in ('&mkcid=1', '?mkcid=1', 'mkcid=1'):
@@ -81,7 +88,7 @@ def _fix_ebay(url, campid):
             url = url[:idx].rstrip('?&')
             break
     separator = '&' if '?' in url else '?'
-    return f'{url}{separator}{_EPN_STATIC}&campid={campid}'
+    return f'{url}{separator}{static_params}&campid={campid}'
 
 
 def _check_nk(url):
@@ -115,7 +122,7 @@ class Command(BaseCommand):
         )
         parser.add_argument(
             '--retailer',
-            choices=['amazon', 'ebay', 'noble-knight'],
+            choices=['amazon', 'ebay', 'ebay-uk', 'noble-knight'],
             default=None,
             help='Limit the check to one retailer slug.',
         )
@@ -130,8 +137,9 @@ class Command(BaseCommand):
                 'DRY RUN — no changes will be saved. Use --apply to fix.\n'
             ))
 
-        # Resolve EPN campaign ID from settings (set via Railway env var)
-        ebay_campid = getattr(settings, 'EBAY_AFFILIATE_CAMPAIGN_ID', '') or _EPN_CAMPID_FALLBACK
+        # Resolve EPN campaign IDs from settings (set via Railway env vars)
+        ebay_campid    = getattr(settings, 'EBAY_AFFILIATE_CAMPAIGN_ID', '') or _EPN_CAMPID_FALLBACK
+        ebay_uk_campid = getattr(settings, 'EBAY_UK_AFFILIATE_CAMPAIGN_ID', '') or _EPN_CAMPID_FALLBACK_UK
 
         # Map short CLI alias → DB slug
         slug_alias = {'noble-knight': 'noble-knight-games'}
@@ -181,6 +189,9 @@ class Command(BaseCommand):
                 elif slug == 'ebay':
                     ok      = _check_ebay(url, ebay_campid)
                     new_url = _fix_ebay(url, ebay_campid) if not ok else url
+                elif slug == 'ebay-uk':
+                    ok      = _check_ebay(url, ebay_uk_campid)
+                    new_url = _fix_ebay(url, ebay_uk_campid, _EPN_STATIC_UK) if not ok else url
                 else:  # noble-knight-games
                     ok      = _check_nk(url)
                     new_url = _fix_nk(url) if not ok else url

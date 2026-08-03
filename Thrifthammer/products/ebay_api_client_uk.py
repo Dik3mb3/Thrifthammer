@@ -1078,11 +1078,17 @@ class EbayBrowseAPIUK:
         _raw_neg = getattr(product, 'ebay_negative_keywords', '') or ''
         if _raw_neg:
             _result_item_id = result.get('item_id', '')
+            # Browse API item IDs are formatted "v1|<legacyItemId>|0" -- extract
+            # the legacy numeric ID, since that's what gets stored as a blocked
+            # negative keyword (comparing against the raw "v1|...|0" string never matched).
+            _result_legacy_id = (
+                _result_item_id.split('|')[1] if _result_item_id.count('|') == 2 else _result_item_id
+            )
             for _neg_kw in shlex.split(_raw_neg.lower()):
                 # Pure-digit tokens are treated as blocked eBay item IDs rather
                 # than title keywords (item IDs never appear in listing titles).
                 if _neg_kw.isdigit():
-                    if _result_item_id and _neg_kw == _result_item_id:
+                    if _result_legacy_id and _neg_kw == _result_legacy_id:
                         logger.debug(
                             '[ebay-uk] Rejected (blocked item ID %s): "%s"',
                             _result_item_id, result['title'][:60],
@@ -1275,17 +1281,15 @@ class EbayBrowseAPIUK:
         # ── Price floor (GBP MSRP) ────────────────────────────────────────────
         # Only applied when msrp_gbp is populated. No absolute minimum, no
         # ceiling — UK prices vary too much from US to use a fixed range.
-        # Floor: 35% of GBP MSRP (max discount allowed 65% off). Skipped
-        # entirely if msrp_gbp is not set -- as of 2026-07, msrp_gbp has ~0%
-        # coverage on Age of Sigmar products, so this floor is currently
-        # dormant for most AoS matches; revisit once GBP MSRP is backfilled.
+        # Floor: 50% of GBP MSRP (max discount allowed 50% off), matching the
+        # US client's msrp_floor. Skipped entirely if msrp_gbp is not set.
         _msrp_gbp = getattr(product, 'msrp_gbp', None)
         if _msrp_gbp and _msrp_gbp > 0:
             total_cost = result.get('total_cost', Decimal('0'))
-            min_price  = _msrp_gbp * Decimal('0.35')
+            min_price  = _msrp_gbp * Decimal('0.50')
             if total_cost < min_price:
                 logger.debug(
-                    '[ebay-uk] Rejected (below GBP MSRP floor): £%.2f for "%s" (min £%.2f, 35%% of msrp_gbp £%.2f)',
+                    '[ebay-uk] Rejected (below GBP MSRP floor): £%.2f for "%s" (min £%.2f, 50%% of msrp_gbp £%.2f)',
                     total_cost, product.name, min_price, _msrp_gbp,
                 )
                 return False
@@ -1472,9 +1476,15 @@ class EbayBrowseAPIUK:
         _raw_neg = getattr(product, 'ebay_negative_keywords', '') or ''
         if _raw_neg:
             _result_item_id = result.get('item_id', '')
+            # Browse API item IDs are formatted "v1|<legacyItemId>|0" -- extract
+            # the legacy numeric ID, since that's what gets stored as a blocked
+            # negative keyword (comparing against the raw "v1|...|0" string never matched).
+            _result_legacy_id = (
+                _result_item_id.split('|')[1] if _result_item_id.count('|') == 2 else _result_item_id
+            )
             for _neg_kw in shlex.split(_raw_neg.lower()):
                 if _neg_kw.isdigit():
-                    if _result_item_id and _neg_kw == _result_item_id:
+                    if _result_legacy_id and _neg_kw == _result_legacy_id:
                         reasons.append(f'blocked item ID {_result_item_id}')
                         break
                 elif re.search(r'\b' + re.escape(_neg_kw) + r'\b', title_lower):
@@ -1539,11 +1549,11 @@ class EbayBrowseAPIUK:
         _msrp_gbp = getattr(product, 'msrp_gbp', None)
         if _msrp_gbp and _msrp_gbp > 0:
             total_cost = result.get('total_cost', Decimal('0'))
-            min_price  = _msrp_gbp * Decimal('0.35')
+            min_price  = _msrp_gbp * Decimal('0.50')
             if total_cost < min_price:
                 reasons.append(
                     f'below GBP MSRP floor: £{total_cost:.2f} '
-                    f'(min £{min_price:.2f}, 35% of msrp_gbp £{_msrp_gbp:.2f})'
+                    f'(min £{min_price:.2f}, 50% of msrp_gbp £{_msrp_gbp:.2f})'
                 )
 
         # Shipping
