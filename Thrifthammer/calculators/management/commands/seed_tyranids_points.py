@@ -1,35 +1,64 @@
 """
 Management command: seed_tyranids_points
 
-Sets the points_cost on UnitType records for all Tyranids units,
-using official 10th Edition points values sourced from New Recruit.
+Sets points_cost, category, and active status on UnitType records for
+Tyranids units, using official 11th Edition data sourced from the BSData
+community BattleScribe project (github.com/BSData/wh40k-11e), the same
+data New Recruit itself is built on.
 
 Usage:
     python manage.py seed_tyranids_points
+    python manage.py seed_tyranids_points --dry-run
 
-The command is fully idempotent — safe to re-run. It looks up each product by
-its Games Workshop SKU (gw_sku), then filters for the Tyranids UnitType
-specifically and updates only that row's points_cost.
+The command is fully idempotent -- safe to re-run. It looks up each unit by
+(name, faction) -- the same pair UnitType enforces uniqueness on.
 
 Notes:
-- Run AFTER populate_products and populate_units.
-- Do NOT add to the Procfile yet.
-- Line-by-line verified against the New Recruit Tyranids 10th Edition list.
-- SKUs not yet in the DB skip gracefully — add products later and re-run.
-- Currently seeded SKUs in DB:
-    51-04 (Hive Tyrant), 51-06 (Carnifex), 51-08 (Tyranid Warriors),
-    51-16 (Termagants)
-- Kit collision — 51-04 (Hive Tyrant): one kit builds both the ground Hive Tyrant
-  (195pts) and the Winged Hive Tyrant (170pts). Seeded at 170pts (Winged, lowest
-  cost). Add a separate product for the ground variant later.
-- Kit collision — 51-08 (Tyranid Warriors): builds Warriors with Ranged (65pts) or
-  Melee (75pts) Bio-Weapons. Seeded at 65pts (Ranged, base/lowest cost).
-  Add a separate product for the Melee variant later.
-- 71-19 (Combat Patrol) is a bundle — no standalone UnitType entry.
-- Forge World / Apocalypse products (Harridan 610pts, Hierophant 810pts)
-  use placeholder SKUs; skip gracefully until added to DB.
-- SKU range note: Genestealer Cults also use 51-xx (51-40 to 51-44);
-  Tyranids use the lower range (51-04 to 51-35 approx.).
+- Source: "Tyranids.json" -- a thin roster (66 root-level entryLinks),
+  same split-roster+library pattern as Aeldari/Drukhari/Imperial Knights.
+  45 of the 66 root entries resolve against the file's own 61
+  sharedSelectionEntries; the other 21 (Lictor, Trygon, Mawloc,
+  Deathleaper, Raveners, Winged Hive Tyrant, Winged Tyranid Prime,
+  Gargoyles, Von Ryan's Leapers, Ripper Swarms, Parasite of Mortrex,
+  Tyrannocyte, Neurolictor, Hyperadapted Raveners, The Red Terror, plus
+  BattleScribe meta/Crucible entries) resolve against the separate
+  "Library - Tyranids.json" catalogue. 50 real 11e units total (35 from
+  the main file + 15 real, priced, non-Legends/non-Crucible units from
+  the library).
+- Supersedes the old `seed_tyranids_points` command (10th Edition, never
+  added to the Procfile).
+- Only 5 UnitType rows existed before this pass despite a rich
+  48-product line already in the catalog (`51-xx` legacy SKUs + `TY-xxx`)
+  -- most of the roster was a fresh create, not a refresh.
+- **Tyranid Warriors 2-way multi-build split** (`51-08`): "with Ranged
+  Bio-Weapons" (60pts) / "with Melee Bio-Weapons" (75pts).
+- **Tyranid Prime 2-way multi-build split** (`TY-036`/`TY-037`, same
+  $43.50 MSRP): `TY-037` "Tyranid Prime with Lash Whip" -> "Tyranid
+  Prime with Lash Whip" (75pts); `TY-036` "Tyranid Prime" (plain name,
+  kept as display name) -> "Winged Tyranid Prime" (65pts). User
+  confirmed 2026-08-09.
+- **Carnifex/Screamer-Killer**: only one priced Carnifex-chassis generic
+  unit exists in BSData ("Screamer-killer", 125pts, Monster) -- no plain
+  "Carnifex" entry at all. Two products compete for it: `51-06` "Tyranid
+  Carnifex" ($45 MSRP) and `TY-027` "Screamer-Killer Brood" ($106 MSRP).
+  User chose to link `51-06` (2026-08-09); `TY-027` is left unlinked --
+  a real, active product with no current-edition UnitType row, same
+  precedent as Dark Angels' Interrogator-Chaplain / Sisters' Ministorum
+  Priest with Vindictor.
+- **`TY-014` "Tyranid Horrors of the Hive"** ($114 MSRP) does not match
+  any single BSData unit name -- treated as a themed multi-model bundle,
+  same as Combat Patrol boxes. No UnitType row.
+- **Neurotyrant** (130pts, Character) -- confirmed real unit, but no
+  product exists anywhere in the catalog (the `TY-012` SKU slot is
+  genuinely empty, not just inactive). Backlogged.
+- 5 units confirmed real in 11e with no product anywhere: Spore Mines
+  (55pts, Beast), Ripper Swarms (30pts, Swarm), Hyperadapted Raveners
+  (165pts, Character), The Red Terror (130pts, Epic Hero), Neurotyrant
+  (130pts, Character). User confirmed backlog for all 5 (2026-08-09).
+- **Deactivated**: the old unified "Tyranid Warriors" row (65pts,
+  `51-08`) is superseded by the Ranged/Melee Bio-Weapons split above and
+  would otherwise sit active and stale on the same SKU as its two new
+  successors. User confirmed deactivation 2026-08-09.
 """
 
 from django.core.management.base import BaseCommand
@@ -37,127 +66,154 @@ from django.core.management.base import BaseCommand
 from calculators.models import UnitType
 from products.models import Faction, Product
 
+# Names to deactivate -- superseded by a multi-build split.
+TYRANIDS_DEACTIVATE = ['Tyranid Warriors']
+
 # ---------------------------------------------------------------------------
-# Points data: (gw_sku, points_cost, display_name_for_logging)
-#
-# Sourced from New Recruit — Tyranids 10th Edition list.
-# Verified line-by-line against the full New Recruit army list.
+# Unit data: (gw_sku, points_cost, category, name)
 # ---------------------------------------------------------------------------
-TYRANIDS_POINTS = [
-    # ── Named characters ──────────────────────────────────────────────────────
-    ('51-20', 220, 'The Swarmlord'),                   # 220pts ✓
-    ('51-21', 150, 'Old One Eye'),                     # 150pts ✓
-    ('51-22',  80, 'Deathleaper'),                     # 80pts  ✓
-    ('51-23',  80, 'Broodlord'),                       # 80pts  ✓
-    # ── Generic characters ────────────────────────────────────────────────────
-    ('51-04', 170, 'Winged Hive Tyrant'),              # 170pts ✓ (ground Hive Tyrant=195pts, same kit)
-    ('51-24', 105, 'Neurotyrant'),                     # 105pts ✓
-    ('51-25', 160, 'Tervigon'),                        # 160pts ✓
-    ('51-26',  80, 'Parasite of Mortrex'),             # 80pts  ✓
-    ('51-27',  65, 'Winged Tyranid Prime'),            # 65pts  ✓
-    ('51-28', 165, 'Hyperadapted Raveners'),           # 165pts ✓
-    # ── Battleline ────────────────────────────────────────────────────────────
-    ('51-16',  60, 'Termagants'),                      # 60pts  ✓
-    ('51-29',  65, 'Hormagaunts'),                     # 65pts  ✓
-    ('51-30',  85, 'Gargoyles'),                       # 85pts  ✓
-    # ── Infantry ──────────────────────────────────────────────────────────────
-    ('51-08',  65, 'Tyranid Warriors with Ranged Bio-Weapons'), # 65pts ✓ (Melee=75pts, same kit)
-    ('51-31',  75, 'Genestealers'),                    # 75pts  ✓
-    ('51-32',  55, 'Barbgaunts'),                      # 55pts  ✓
-    ('51-33',  45, 'Neurogaunts'),                     # 45pts  ✓
-    ('51-34',  70, 'Von Ryan\'s Leapers'),             # 70pts  ✓
-    # ── Fast Attack ───────────────────────────────────────────────────────────
-    ('51-35', 125, 'Raveners'),                        # 125pts ✓
-    ('51-36',  25, 'Ripper Swarms'),                   # 25pts  ✓
-    ('51-37',  30, 'Mucolid Spores'),                  # 30pts  ✓
-    ('51-38',  55, 'Spore Mines'),                     # 55pts  ✓
-    # ── Elites ────────────────────────────────────────────────────────────────
-    ('51-39',  90, 'Hive Guard'),                      # 90pts  ✓
-    ('51-45',  60, 'Lictor'),                          # 60pts  ✓
-    ('51-46', 100, 'Zoanthropes'),                     # 100pts ✓ (includes Neurothrope variant)
-    ('51-47',  70, 'Venomthropes'),                    # 70pts  ✓
-    ('51-48',  80, 'Tyrant Guard'),                    # 80pts  ✓
-    ('51-49',  70, 'Neurolictor'),                     # 70pts  ✓
-    # ── Heavy Support ─────────────────────────────────────────────────────────
-    ('51-06',  90, 'Carnifexes'),                      # 90pts  ✓
-    ('51-50', 125, 'Screamer-killer'),                 # 125pts ✓
-    ('51-51', 125, 'Haruspex'),                        # 125pts ✓
-    ('51-52', 140, 'Exocrine'),                        # 140pts ✓
-    ('51-53', 150, 'Toxicrene'),                       # 150pts ✓
-    ('51-54', 170, 'Maleceptor'),                      # 170pts ✓
-    ('51-55', 110, 'Psychophage'),                     # 110pts ✓
-    ('51-56',  50, 'Biovores'),                        # 50pts  ✓
-    ('51-57',  40, 'Pyrovores'),                       # 40pts  ✓
-    ('51-58', 200, 'Tyrannofex'),                      # 200pts ✓
-    ('51-59', 105, 'Tyrannocyte'),                     # 105pts ✓
-    ('51-60', 145, 'Sporocyst'),                       # 145pts ✓
-    # ── Monsters ──────────────────────────────────────────────────────────────
-    ('51-61', 135, 'Mawloc'),                          # 135pts ✓
-    ('51-62', 140, 'Trygon'),                          # 140pts ✓
-    ('51-63', 275, 'Norn Assimilator'),                # 275pts ✓
-    ('51-64', 260, 'Norn Emissary'),                   # 260pts ✓
-    # ── Aircraft ──────────────────────────────────────────────────────────────
-    ('51-65', 215, 'Harpy'),                           # 215pts ✓
-    ('51-66', 200, 'Hive Crone'),                      # 200pts ✓
-    # ── Forge World / Super-heavies ───────────────────────────────────────────
-    ('51-67', 610, 'Harridan'),                        # 610pts ✓ (FW placeholder)
-    ('51-68', 810, 'Hierophant'),                      # 810pts ✓ (FW placeholder)
+TYRANIDS_UNITS = [
+    ('TY-001', 55, 'infantry', 'Tyranid Barbgaunts'),
+    ('TY-002', 60, 'infantry', 'Tyranid Biovore'),
+    ('TY-003', 80, 'character', 'Tyranid Broodlord'),
+    ('TY-005', 80, 'epic_hero', 'Tyranid Deathleaper'),
+    ('TY-006', 140, 'monster', 'Tyranid Exocrine'),
+    ('TY-007', 80, 'battleline', 'Tyranid Gargoyle Brood'),
+    ('TY-008', 75, 'infantry', 'Tyranid Genestealers'),
+    ('TY-009', 125, 'monster', 'Tyranid Haruspex'),
+    ('TY-010', 170, 'monster', 'Tyranid Hive Crone'),
+    ('TY-011', 80, 'infantry', 'Tyranid Hive Guard'),
+    ('51-04', 195, 'character', 'Tyranid Hive Tyrant'),
+    ('TY-013', 70, 'battleline', 'Tyranid Hormagaunts'),
+    ('TY-015', 125, 'infantry', 'Tyranid Raveners'),
+    ('TY-016', 60, 'infantry', 'Tyranid Lictor'),
+    ('TY-017', 190, 'monster', 'Tyranid Maleceptor'),
+    ('TY-018', 135, 'monster', 'Tyranid Mawloc'),
+    ('TY-019', 45, 'infantry', 'Tyranid Neurogaunts'),
+    ('TY-020', 80, 'infantry', 'Tyranid Neurolictor'),
+    ('TY-021', 250, 'monster', 'Tyranid Norn Assimilator'),
+    ('TY-022', 250, 'monster', 'Tyranid Norn Emissary'),
+    ('TY-023', 140, 'epic_hero', "Tyranid Old One Eye's Carnifex Brood"),
+    ('TY-024', 70, 'character', 'Tyranid Parasite of Mortrex'),
+    ('TY-025', 110, 'monster', 'Tyranid Psychophage'),
+    ('TY-026', 45, 'infantry', 'Tyranid Pyrovore'),
+    ('51-06', 125, 'monster', 'Tyranid Carnifex'),
+    ('TY-028', 145, 'monster', 'Tyranid Sporocyst and Mucolid Spore'),
+    ('TY-029', 160, 'character', 'Tyranid Tervigon'),
+    ('TY-030', 210, 'epic_hero', 'Tyranid The Swarmlord'),
+    ('TY-031', 120, 'monster', 'Tyranid Toxicrene'),
+    ('TY-032', 140, 'monster', 'Tyranid Trygon'),
+    ('TY-033', 185, 'monster', 'Tyranid Harpy'),
+    ('TY-034', 610, 'monster', 'Tyranid Harridan'),
+    ('TY-035', 810, 'monster', 'Tyranid Hierophant Bio-Titan'),
+    ('TY-036', 65, 'character', 'Winged Tyranid Prime'),
+    ('TY-037', 75, 'character', 'Tyranid Prime with Lash Whip'),
+    ('TY-038', 80, 'transport', 'Tyranid Tyrannocyte'),
+    ('TY-039', 180, 'monster', 'Tyranid Tyrannofex'),
+    ('TY-040', 80, 'infantry', 'Tyranid Tyrant Guard'),
+    ('TY-041', 55, 'infantry', 'Tyranid Venomthropes'),
+    ('TY-042', 55, 'infantry', "Tyranid Von Ryan's Leapers"),
+    ('TY-043', 185, 'character', 'Tyranid Winged Hive Tyrant'),
+    ('TY-044', 90, 'infantry', 'Tyranid Zoanthropes'),
+    ('51-16', 60, 'battleline', 'Tyranid Termagants'),
+    ('51-08', 60, 'infantry', 'Tyranid Warriors with Ranged Bio-Weapons'),
+    ('51-08', 75, 'infantry', 'Tyranid Warriors with Melee Bio-Weapons'),
 ]
 
 
 class Command(BaseCommand):
     """
-    Seed official 10th Edition points costs for Tyranids units.
+    Seed 11th Edition points, category, and active status for Tyranids
+    units.
 
-    Looks up each product by GW SKU, then filters for the Tyranids
-    UnitType specifically and updates only that row's points_cost.
-    SKUs not found in the DB are skipped with a warning — add the products
-    later and re-run. Idempotent — safe to re-run at any time.
+    Looks up each unit by (name, faction) and updates points_cost, category,
+    and is_active in place; creates the row if it doesn't exist yet (linking
+    the product by gw_sku when one is given). Idempotent -- safe to re-run.
     """
 
-    help = 'Seed 10th Edition points values for Tyranids units.'
+    help = 'Seed 11th Edition points and categories for Tyranids units.'
+
+    def add_arguments(self, parser):
+        """Add --dry-run option."""
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Preview changes without saving anything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        self.stdout.write('Seeding Tyranids points…\n')
+        dry_run = options['dry_run']
+        self.stdout.write(
+            'Seeding Tyranids points (11th Edition)' + (' [DRY RUN]' if dry_run else '') + '…\n'
+        )
 
-        tyranids_faction = Faction.objects.filter(name='Tyranids').first()
-        if not tyranids_faction:
+        fac = Faction.objects.filter(name='Tyranids').first()
+        if not fac:
             self.stdout.write(self.style.ERROR(
                 'Tyranids faction not found. Run populate_products first.'
             ))
             return
 
+        for name in TYRANIDS_DEACTIVATE:
+            unit = UnitType.objects.filter(name=name, faction=fac, is_active=True).first()
+            if unit:
+                self.stdout.write(f'  [deactivate] {name!r}')
+                if not dry_run:
+                    unit.is_active = False
+                    unit.save(update_fields=['is_active'])
+
         updated_count = 0
+        created_count = 0
         skipped_count = 0
 
-        for gw_sku, points, label in TYRANIDS_POINTS:
-            product = Product.objects.filter(gw_sku=gw_sku).first()
+        for gw_sku, points, category, label in TYRANIDS_UNITS:
+            product = Product.objects.filter(gw_sku=gw_sku).first() if gw_sku else None
 
-            if not product:
+            if gw_sku and not product:
                 self.stdout.write(
                     self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
                 )
                 skipped_count += 1
                 continue
 
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=tyranids_faction,
-            ).update(points_cost=points)
+            unit = UnitType.objects.filter(name=label, faction=fac).first()
 
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
+            if unit:
+                changes = []
+                if unit.points_cost != points:
+                    changes.append(f'points {unit.points_cost}->{points}')
+                if unit.category != category:
+                    changes.append(f'category {unit.category}->{category}')
+                if not unit.is_active:
+                    changes.append('reactivating')
+                change_note = f" ({', '.join(changes)})" if changes else ' (no change)'
+
+                if not dry_run:
+                    unit.points_cost = points
+                    unit.category = category
+                    unit.is_active = True
+                    update_fields = ['points_cost', 'category', 'is_active']
+                    if product and unit.product_id != product.id:
+                        unit.product = product
+                        update_fields.append('product')
+                    unit.save(update_fields=update_fields)
+                self.stdout.write(f'  [update] {label} > {points} pts ({category}){change_note}')
                 updated_count += 1
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {label} (SKU {gw_sku}) — Tyranids UnitType not found. '
-                        f'Run populate_units first.'
+                if not dry_run:
+                    UnitType.objects.create(
+                        name=label,
+                        faction=fac,
+                        product=product,
+                        category=category,
+                        points_cost=points,
+                        typical_quantity=1,
+                        is_active=True,
                     )
-                )
-                skipped_count += 1
+                self.stdout.write(f'  [create] {label} > {points} pts ({category})')
+                created_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
+            f'\nDone! Updated: {updated_count}  |  Created: {created_count}  |  Skipped: {skipped_count}'
         ))

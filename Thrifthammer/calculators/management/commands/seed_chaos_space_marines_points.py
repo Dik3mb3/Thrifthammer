@@ -1,28 +1,55 @@
 """
 Management command: seed_chaos_space_marines_points
 
-Sets the points_cost on UnitType records for all Chaos Space Marines units,
-using official 10th Edition points values sourced from New Recruit.
+Sets points_cost, category, and active status on UnitType records for
+Chaos Space Marines units, using official 11th Edition data sourced from
+the BSData community BattleScribe project (github.com/BSData/wh40k-11e),
+the same data New Recruit itself is built on.
 
 Usage:
     python manage.py seed_chaos_space_marines_points
 
-The command is fully idempotent — safe to re-run. It looks up each product by
-its Games Workshop SKU (gw_sku), then filters for the Chaos Space Marines
-UnitType specifically and updates only that row's points_cost.
+The command is fully idempotent -- safe to re-run. It looks up each unit by
+(name, faction) -- the same pair UnitType enforces uniqueness on.
 
 Notes:
-- Run AFTER populate_products and populate_units.
-- Do NOT add to the Procfile yet.
-- Line-by-line verified against the New Recruit Chaos Space Marines 10th Edition list.
-- As of initial creation, NO dedicated Chaos Space Marines products exist in the DB.
-  All entries will [skip] until populate_products.py is updated with CSM SKUs.
-- Cross-faction kits (Plague Marines 43-50, Rubric Marines 43-35, Khorne Berzerkers
-  43-60) exist in the DB under Death Guard / Thousand Sons / World Eaters factions.
-  This seed targets the Chaos Space Marines UnitType row for those products, which
-  only exists once populate_units creates a cross-faction entry for them.
-- Placeholder SKUs use the 102-xx range (CSM catalogue numbers begin with 43-xx
-  for the shared god-faction range; dedicated CSM boxes typically 43-xx or separate).
+- Chaos Space Marines is architecturally the base faction here, same role
+  as Space Marines on the loyalist side -- Death Guard, Emperor's Children,
+  Thousand Sons, and World Eaters all have parent_faction = Chaos Space
+  Marines, and its own BSData file ("Chaos - Chaos Space Marines.json") is
+  self-contained (142 entries), not a thin chapter-style overlay.
+- Renames (old DB name -> real BSData name):
+    ('Chaos Defiler', 'Defiler'),
+    ('Chaos Helbrute', 'Helbrute'),
+    ('Chaos Sorcerer Lord in Terminator Armour', 'Sorcerer in Terminator Armour'),
+    ('Chaos Space Marines Legionaries', 'Legionaries'),
+    ('Chaos Space Marines Sorcerer', 'Sorcerer'),
+- Two multi-build splits, same pattern as the Space Marines Predator
+  split done earlier this project:
+    * 'Chaos Predator' (43-09) -> Chaos Predator Annihilator (145pts) /
+      Chaos Predator Destructor (150pts)
+    * 'Daemon Prince' (99120201130) -> Heretic Astartes Daemon Prince
+      (165pts, no wings) / Heretic Astartes Daemon Prince with wings
+      (180pts) -- the kit has an optional-wings build.
+- ~32 new units link to the dedicated CSM-series product line
+  (CSM-001 through CSM-034), including two dual-unit boxes sharing one
+  SKU each: Huron Blackheart + Masters of the Maelstrom (CSM-015),
+  Venomcrawler + Obliterators (CSM-027). 'Cultist Mob' and
+  'Fellgor Beastmen' matched existing CSM-series products under different
+  retail names (Chaos Cultists / Fellgor Ravagers) -- user-confirmed
+  2026-08-07.
+- 4 units CSM's list includes are legion-specific products already
+  faction-tagged to Death Guard / Emperor's Children / Thousand Sons /
+  World Eaters: Khorne Berzerkers, Rubric Marines, Plague Marines, Noise
+  Marines. Linked as new cross-faction shared-SKU rows under Chaos Space
+  Marines (same product, same "one product many faction-scoped rows"
+  pattern used since Aeldari/Agents of the Imperium) -- user confirmed
+  CSM lists can take these 2026-08-07.
+- 'Chaos Space Marines Combat Patrol' deactivated -- a bundle box, not a
+  unit. User confirmed 2026-08-07.
+- 'Warp Talons' (125pts, Infantry) confirmed real in 11e with no matching
+  product anywhere in the catalog -- tracked in
+  memory/project_11e_calculator_migration.md, not fabricated here.
 """
 
 from django.core.management.base import BaseCommand
@@ -31,127 +58,191 @@ from calculators.models import UnitType
 from products.models import Faction, Product
 
 # ---------------------------------------------------------------------------
-# Points data: (gw_sku, points_cost, display_name_for_logging)
-#
-# Sourced from New Recruit — Chaos Space Marines 10th Edition list.
-# Verified line-by-line against the full New Recruit army list.
+# Renames applied first: (old_name, new_name)
 # ---------------------------------------------------------------------------
-CHAOS_SM_POINTS = [
-    # ── Named characters ──────────────────────────────────────────────────────
-    ('43-01', 270, 'Abaddon the Despoiler'),               # 270pts ✓
-    ('43-05',  90, 'Cypher'),                              # 90pts  ✓
-    ('43-06', 100, 'Fabius Bile'),                         # 100pts ✓
-    ('43-07',  90, 'Haarken Worldclaimer'),                # 90pts  ✓
-    ('43-09', 120, 'Huron Blackheart'),                    # 120pts ✓
-    ('43-10', 115, 'Masters of the Maelstrom'),            # 115pts ✓
-    ('43-11', 175, 'Vashtorr the Arkifane'),               # 175pts ✓
-    # ── Generic characters ────────────────────────────────────────────────────
-    ('43-12',  90, 'Chaos Lord'),                          # 90pts  ✓
-    ('43-13',  85, 'Chaos Lord in Terminator Armour'),     # 85pts  ✓
-    ('43-14',  80, 'Chaos Lord with Jump Pack'),           # 80pts  ✓
-    ('43-15',  45, 'Cultist Firebrand'),                   # 45pts  ✓
-    ('43-16',  65, 'Dark Apostle'),                        # 65pts  ✓
-    ('43-17',  90, 'Dark Commune'),                        # 90pts  ✓
-    ('43-18', 165, 'Heretic Astartes Daemon Prince'),      # 165pts ✓
-    ('43-19', 180, 'Heretic Astartes Daemon Prince with Wings'), # 180pts ✓
-    ('43-20',  80, 'Master of Executions'),                # 80pts  ✓
-    ('43-21',  60, 'Master of Possession'),                # 60pts  ✓
-    ('43-22',  75, 'Red Corsairs Reave-captain'),          # 75pts  ✓
-    ('43-23',  60, 'Sorcerer'),                            # 60pts  ✓
-    ('43-24',  80, 'Sorcerer in Terminator Armour'),       # 80pts  ✓
-    ('43-25',  55, 'Traitor Enforcer'),                    # 55pts  ✓
-    ('43-26',  70, 'Warpsmith'),                           # 70pts  ✓
-    # ── Battleline ────────────────────────────────────────────────────────────
-    ('43-27',  50, 'Cultist Mob'),                         # 50pts  ✓
-    ('43-60', 180, 'Khorne Berzerkers'),                   # 180pts ✓ (kit in DB as World Eaters)
-    ('43-28',  90, 'Legionaries'),                         # 90pts  ✓
-    ('43-50',  95, 'Plague Marines'),                      # 95pts  ✓ (kit in DB as Death Guard)
-    ('43-35', 100, 'Rubric Marines'),                      # 100pts ✓ (kit in DB as Thousand Sons)
-    # ── Infantry ──────────────────────────────────────────────────────────────
-    ('43-29',  90, 'Accursed Cultists'),                   # 90pts  ✓
-    ('43-31',  70, 'Chaos Bikers'),                        # 70pts  ✓
-    ('43-32',  70, 'Chaos Spawn'),                         # 70pts  ✓
-    ('43-33', 180, 'Chaos Terminator Squad'),              # 180pts ✓
-    ('43-34', 125, 'Chosen'),                              # 125pts ✓
-    ('43-37',  70, 'Fellgor Beastmen'),                    # 70pts  ✓
-    ('43-39', 145, 'Noise Marines'),                       # 145pts ✓
-    ('43-40', 160, 'Obliterators'),                        # 160pts ✓
-    ('43-41', 120, 'Possessed'),                           # 120pts ✓
-    ('43-42', 110, 'Raptors'),                             # 110pts ✓
-    ('43-43', 110, 'Red Corsairs Raiders'),                # 110pts ✓
-    ('43-44',  70, 'Traitor Guardsmen Squad'),             # 70pts  ✓
-    ('43-45', 125, 'Warp Talons'),                         # 125pts ✓
-    ('43-46', 110, 'Nemesis Claw'),                        # 110pts ✓
-    ('43-47', 125, 'Havocs'),                              # 125pts ✓
-    # ── Vehicles / Daemon Engines ─────────────────────────────────────────────
-    ('43-48', 220, 'Chaos Land Raider'),                   # 220pts ✓
-    ('43-49', 135, 'Chaos Predator Annihilator'),          # 135pts ✓
-    ('43-51', 140, 'Chaos Predator Destructor'),           # 140pts ✓
-    ('43-52',  75, 'Chaos Rhino'),                         # 75pts  ✓
-    ('43-53', 185, 'Chaos Vindicator'),                    # 185pts ✓
-    ('43-55', 190, 'Defiler'),                             # 190pts ✓
-    ('43-57', 170, 'Forgefiend'),                          # 170pts ✓
-    ('43-58', 130, 'Helbrute'),                            # 130pts ✓
-    ('43-59', 205, 'Heldrake'),                            # 205pts ✓
-    ('43-61', 450, 'Khorne Lord of Skulls'),               # 450pts ✓
-    ('43-63', 130, 'Maulerfiend'),                         # 130pts ✓
-    ('43-65', 110, 'Venomcrawler'),                        # 110pts ✓
+CSM_RENAMES = [
+    ('Chaos Defiler', 'Defiler'),
+    ('Chaos Helbrute', 'Helbrute'),
+    ('Chaos Sorcerer Lord in Terminator Armour', 'Sorcerer in Terminator Armour'),
+    ('Chaos Space Marines Legionaries', 'Legionaries'),
+    ('Chaos Space Marines Sorcerer', 'Sorcerer'),
+]
+
+# ---------------------------------------------------------------------------
+# Bundle rows -- deactivated, never given points.
+# ---------------------------------------------------------------------------
+CSM_DEACTIVATE = [
+    'Chaos Space Marines Combat Patrol',
+    # Superseded by the Predator/Daemon Prince splits above -- the original
+    # unified rows were left active by mistake on the first run, caught
+    # while building the datasheets command (2026-08-07).
+    'Chaos Predator',
+    'Daemon Prince',
+]
+
+# ---------------------------------------------------------------------------
+# Unit data: (gw_sku, points_cost, category, name)
+# ---------------------------------------------------------------------------
+CHAOS_SPACE_MARINES_UNITS = [
+    ('CSM-001', 295, 'epic_hero', 'Abaddon the Despoiler'),
+    ('CSM-002', 90, 'infantry', 'Accursed Cultists'),
+    ('CSM-003', 70, 'mounted', 'Chaos Bikers'),
+    ('99120102052', 220, 'vehicle', 'Chaos Land Raider'),
+    ('CSM-029', 90, 'character', 'Chaos Lord'),
+    ('CSM-005', 85, 'character', 'Chaos Lord in Terminator Armour'),
+    ('CSM-006', 80, 'character', 'Chaos Lord with Jump Pack'),
+    ('43-09', 145, 'vehicle', 'Chaos Predator Annihilator'),
+    ('43-09', 150, 'vehicle', 'Chaos Predator Destructor'),
+    ('99120102092', 65, 'transport', 'Chaos Rhino'),
+    ('99120201050', 60, 'monster', 'Chaos Spawn'),
+    ('99120102097', 175, 'infantry', 'Chaos Terminator Squad'),
+    ('P-CSM-VINDICATOR', 185, 'vehicle', 'Chaos Vindicator'),
+    ('CSM-007', 135, 'infantry', 'Chosen'),
+    ('CSM-008', 45, 'character', 'Cultist Firebrand'),
+    ('CSM-004', 50, 'battleline', 'Cultist Mob'),
+    ('CSM-009', 90, 'epic_hero', 'Cypher'),
+    ('CSM-010', 65, 'character', 'Dark Apostle'),
+    ('CSM-011', 90, 'character', 'Dark Commune'),
+    ('P-CSM-DEFILER-2026', 300, 'vehicle', 'Defiler'),
+    ('CSM-012', 100, 'epic_hero', 'Fabius Bile'),
+    ('CSM-032', 60, 'infantry', 'Fellgor Beastmen'),
+    ('99120102089', 160, 'vehicle', 'Forgefiend'),
+    ('CSM-013', 90, 'epic_hero', 'Haarken Worldclaimer'),
+    ('CSM-014', 125, 'infantry', 'Havocs'),
+    ('prod2430129-99120102043', 130, 'vehicle', 'Helbrute'),
+    ('99120102090', 175, 'vehicle', 'Heldrake'),
+    ('99120201130', 165, 'character', 'Heretic Astartes Daemon Prince'),
+    ('99120201130', 180, 'character', 'Heretic Astartes Daemon Prince with wings'),
+    ('CSM-015', 130, 'epic_hero', 'Huron Blackheart'),
+    ('43-60', 170, 'battleline', 'Khorne Berzerkers'),
+    ('CSM-016', 120, 'epic_hero', 'Kravek Morne'),
+    ('43-06', 90, 'battleline', 'Legionaries'),
+    ('CSM-017', 160, 'character', 'Lord Discordant on Helstalker'),
+    ('P-CSM-MASTER-EXEC', 70, 'character', 'Master of Executions'),
+    ('CSM-018', 60, 'character', 'Master of Possession'),
+    ('CSM-015', 145, 'epic_hero', 'Masters of the Maelstrom'),
+    ('99120102089', 130, 'vehicle', 'Maulerfiend'),
+    ('CSM-019', 165, 'infantry', 'Mutilators'),
+    ('CSM-034', 100, 'infantry', 'Nemesis Claw'),
+    ('CSM-020', 125, 'fortification', 'Noctilith Crown'),
+    ('99120102204', 145, 'infantry', 'Noise Marines'),
+    ('CSM-027', 160, 'infantry', 'Obliterators'),
+    ('43-50', 90, 'battleline', 'Plague Marines'),
+    ('CSM-021', 120, 'infantry', 'Possessed'),
+    ('CSM-022', 110, 'infantry', 'Red Corsairs Raiders'),
+    ('CSM-023', 60, 'character', 'Red Corsairs Reave-captain'),
+    ('43-35', 100, 'battleline', 'Rubric Marines'),
+    ('99070102015', 60, 'character', 'Sorcerer'),
+    ('P-CSM-SORC-TERM', 80, 'character', 'Sorcerer in Terminator Armour'),
+    ('CSM-024', 70, 'character', 'Traitor Enforcer'),
+    ('CSM-025', 70, 'infantry', 'Traitor Guardsmen Squad'),
+    ('CSM-026', 220, 'epic_hero', 'Vashtorr the Arkifane'),
+    ('CSM-027', 120, 'vehicle', 'Venomcrawler'),
+    ('CSM-028', 60, 'character', 'Warpsmith'),
 ]
 
 
 class Command(BaseCommand):
     """
-    Seed official 10th Edition points costs for Chaos Space Marines units.
+    Seed 11th Edition points, category, and active status for Chaos Space
+    Marines units.
 
-    Looks up each product by GW SKU, then filters for the Chaos Space Marines
-    UnitType specifically and updates only that row's points_cost.
-    SKUs not found in the DB are skipped with a warning — add the products
-    later and re-run. Idempotent — safe to re-run at any time.
+    Looks up each unit by (name, faction) and updates points_cost, category,
+    and is_active in place; creates the row if it doesn't exist yet (linking
+    the product by gw_sku when one is given). Idempotent -- safe to re-run.
     """
 
-    help = 'Seed 10th Edition points values for Chaos Space Marines units.'
+    help = 'Seed 11th Edition points and categories for Chaos Space Marines units.'
+
+    def add_arguments(self, parser):
+        """Add --dry-run option."""
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Preview changes without saving anything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        self.stdout.write('Seeding Chaos Space Marines points…\n')
+        dry_run = options['dry_run']
+        self.stdout.write(
+            'Seeding Chaos Space Marines points (11th Edition)' + (' [DRY RUN]' if dry_run else '') + '\u2026\n'
+        )
 
-        csm_faction = Faction.objects.filter(name='Chaos Space Marines').first()
-        if not csm_faction:
+        fac = Faction.objects.filter(name='Chaos Space Marines').first()
+        if not fac:
             self.stdout.write(self.style.ERROR(
                 'Chaos Space Marines faction not found. Run populate_products first.'
             ))
             return
 
+        for old_name, new_name in CSM_RENAMES:
+            unit = UnitType.objects.filter(name=old_name, faction=fac).first()
+            if unit:
+                self.stdout.write(f'  [rename] {old_name!r} -> {new_name!r}')
+                if not dry_run:
+                    unit.name = new_name
+                    unit.save(update_fields=['name'])
+
+        for name in CSM_DEACTIVATE:
+            unit = UnitType.objects.filter(name=name, faction=fac).first()
+            if unit and unit.is_active:
+                self.stdout.write(f'  [deactivate] {name!r}')
+                if not dry_run:
+                    unit.is_active = False
+                    unit.save(update_fields=['is_active'])
+
         updated_count = 0
+        created_count = 0
         skipped_count = 0
 
-        for gw_sku, points, label in CHAOS_SM_POINTS:
-            product = Product.objects.filter(gw_sku=gw_sku).first()
+        for gw_sku, points, category, label in CHAOS_SPACE_MARINES_UNITS:
+            product = Product.objects.filter(gw_sku=gw_sku).first() if gw_sku else None
 
-            if not product:
+            if gw_sku and not product:
                 self.stdout.write(
                     self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
                 )
                 skipped_count += 1
                 continue
 
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=csm_faction,
-            ).update(points_cost=points)
+            unit = UnitType.objects.filter(name=label, faction=fac).first()
 
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
+            if unit:
+                changes = []
+                if unit.points_cost != points:
+                    changes.append(f'points {unit.points_cost}->{points}')
+                if unit.category != category:
+                    changes.append(f'category {unit.category}->{category}')
+                if not unit.is_active:
+                    changes.append('reactivating')
+                change_note = f" ({', '.join(changes)})" if changes else ' (no change)'
+
+                if not dry_run:
+                    unit.points_cost = points
+                    unit.category = category
+                    unit.is_active = True
+                    update_fields = ['points_cost', 'category', 'is_active']
+                    if product and unit.product_id != product.id:
+                        unit.product = product
+                        update_fields.append('product')
+                    unit.save(update_fields=update_fields)
+                self.stdout.write(f'  [update] {label} > {points} pts ({category}){change_note}')
                 updated_count += 1
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {label} (SKU {gw_sku}) — CSM UnitType not found. '
-                        f'Run populate_units first.'
+                if not dry_run:
+                    UnitType.objects.create(
+                        name=label,
+                        faction=fac,
+                        product=product,
+                        category=category,
+                        points_cost=points,
+                        typical_quantity=1,
+                        is_active=True,
                     )
-                )
-                skipped_count += 1
+                self.stdout.write(f'  [create] {label} > {points} pts ({category})')
+                created_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
+            f'\nDone! Updated: {updated_count}  |  Created: {created_count}  |  Skipped: {skipped_count}'
         ))

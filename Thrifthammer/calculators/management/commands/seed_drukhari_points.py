@@ -1,30 +1,52 @@
 """
 Management command: seed_drukhari_points
 
-Sets the points_cost on UnitType records for all Drukhari units,
-using official 10th Edition points values sourced from New Recruit.
+Sets points_cost, category, and active status on UnitType records for
+Drukhari units, using official 11th Edition data sourced from the
+BSData community BattleScribe project (github.com/BSData/wh40k-11e), the
+same data New Recruit itself is built on.
 
 Usage:
     python manage.py seed_drukhari_points
+    python manage.py seed_drukhari_points --dry-run
 
-The command is fully idempotent — safe to re-run. It looks up each product by
-its Games Workshop SKU (gw_sku), then filters for the Drukhari UnitType
-specifically and updates only that row's points_cost.
+The command is fully idempotent -- safe to re-run. It looks up each unit by
+(name, faction) -- the same pair UnitType enforces uniqueness on.
 
 Notes:
-- Run AFTER populate_products and populate_units.
-- Do NOT add to the Procfile yet.
-- Line-by-line verified against the New Recruit Drukhari 10th Edition list.
-- SKUs not yet in the DB skip gracefully — add products later and re-run.
-- The Drukhari faction keyword in 10th Edition includes units from Kabal,
-  Wych Cult, Haemonculus Covens, Corsairs, and Harlequins sub-factions.
-  Corsair and Harlequin units (Skyweavers, Starweaver, Troupe etc.) that
-  appear in Drukhari lists use placeholder SKUs — they may be filed under
-  the Harlequins faction in the DB when added.
-- Currently seeded SKUs in DB:
-    45-02 (Archon), 45-06 (Wyches), 45-07 (Kabalite Warriors),
-    45-10 (Raider), 45-12 (Ravager)
-- 45-25 (Combat Patrol) is a bundle — no UnitType entry.
+- Source: "Aeldari - Drukhari.json" -- a thin roster of entryLinks with no
+  sharedSelectionEntries of its own, resolved against the shared
+  "Aeldari - Aeldari Library.json" catalogue. Same split-file pattern as
+  the Aeldari (Craftworlds) migration.
+- The old 10th Edition file used `.filter(product=...).update()` keyed on
+  ~34 aspirational `45-xx` SKUs that were never actually onboarded as real
+  products (only 45-02/06/07/10/12/25 exist) -- it silently no-op'd for
+  almost everything, every time it ran. Rebuilt entirely from the live
+  DR-xxx product line + the real 45-xx products.
+- Drukhari had only 6 UnitType rows before this pass (Archon, Kabalite
+  Warriors, Raider, Ravager, Wyches, plus an inactive Combat Patrol
+  bundle) despite an 18-product DR-xxx line existing in the catalog --
+  this is mostly fresh creates, not a refresh. Resolves the deferred
+  "Drukhari missing UnitType rows" backlog item (Incubi, Reavers,
+  Succubus, Venom, plus more that also turned out to have no row).
+- 'Codex: Drukhari' (DR-006) and 'Drukhari Combat Patrol' (45-25, already
+  inactive) are book/bundle SKUs -- no unit created for either.
+- **Scourges 2-way multi-build split** (DR-013, "Drukhari Scourges"):
+  Scourges with Heavy Weapons (110pts) / Scourges with Shardcarbines
+  (75pts), both Infantry, same SKU. User confirmed 2026-08-07.
+- **12 cross-faction shared-SKU rows, user confirmed 2026-08-07**: BSData's
+  Drukhari roster also legally includes several Harlequins/Corsair units
+  (allied army-list inclusions). All 12 already exist as active,
+  correctly-pointed UnitType rows under the Aeldari faction (that
+  catalogue covers Craftworlds/Corsairs/Harlequins/Ynnari under one
+  book) -- these rows link Drukhari to the *same* products, same
+  mechanism as the Ynnari cross-links added during the Aeldari
+  migration: Corsair Skyreavers, Corsair Voidreavers, Corsair
+  Voidscarred, Death Jester, Kharseth, Prince Yriel, Shadowseer,
+  Solitaire, Troupe, Skyweavers, Starweaver, Voidweaver.
+- 'Troupe Master' (75pts, Character) is also roster-linked here but has
+  no product anywhere in the catalog -- already tracked on Aeldari's
+  backlog list, not duplicated here.
 """
 
 from django.core.management.base import BaseCommand
@@ -33,115 +55,134 @@ from calculators.models import UnitType
 from products.models import Faction, Product
 
 # ---------------------------------------------------------------------------
-# Points data: (gw_sku, points_cost, display_name_for_logging)
-#
-# Sourced from New Recruit — Drukhari 10th Edition list.
-# Verified line-by-line against the full New Recruit army list.
+# Unit data: (gw_sku, points_cost, category, name)
 # ---------------------------------------------------------------------------
-DRUKHARI_POINTS = [
-    # ── Named characters ──────────────────────────────────────────────────────
-    ('45-01',  85, 'Drazhar'),                             # 85pts  ✓
-    ('45-03',  95, 'Kharseth'),                            # 95pts  ✓
-    ('45-04', 100, 'Lady Malys'),                          # 100pts ✓
-    ('45-05',  85, 'Lelith Hesperax'),                     # 85pts  ✓
-    ('45-08',  95, 'Prince Yriel'),                        # 95pts  ✓
-    # ── Named characters — Harlequins ─────────────────────────────────────────
-    ('45-09', 115, 'Solitaire'),                           # 115pts ✓
-    # ── Generic characters — Kabal ────────────────────────────────────────────
-    ('45-02',  80, 'Archon'),                              # 80pts  ✓
-    ('45-11',  70, 'Haemonculus'),                         # 70pts  ✓
-    ('45-13',  50, 'Succubus'),                            # 50pts  ✓
-    # ── Generic characters — Harlequins ───────────────────────────────────────
-    ('45-14',  90, 'Death Jester'),                        # 90pts  ✓
-    ('45-15',  60, 'Shadowseer'),                          # 60pts  ✓
-    ('45-16',  75, 'Troupe Master'),                       # 75pts  ✓
-    # ── Battleline ────────────────────────────────────────────────────────────
-    ('45-07', 115, 'Kabalite Warriors'),                   # 115pts ✓
-    ('45-06',  90, 'Wyches'),                              # 90pts  ✓
-    ('45-17',  65, 'Wracks'),                              # 65pts  ✓
-    ('45-18',  65, 'Corsair Voidreavers'),                 # 65pts  ✓
-    # ── Infantry ──────────────────────────────────────────────────────────────
-    ('45-19',  85, 'Hellions'),                            # 85pts  ✓
-    ('45-20',  90, 'Incubi'),                              # 90pts  ✓
-    ('45-21',  75, 'Mandrakes'),                           # 75pts  ✓
-    ('45-22', 125, 'Hand of the Archon'),                  # 125pts ✓
-    ('45-23', 130, 'Scourges with Heavy Weapons'),         # 130pts ✓
-    ('45-24',  80, 'Scourges with Shardcarbines'),         # 80pts  ✓
-    ('45-26',  55, 'Cronos'),                              # 55pts  ✓
-    ('45-27',  80, 'Talos'),                               # 80pts  ✓
-    # ── Fast Attack / Mounted ─────────────────────────────────────────────────
-    ('45-28',  70, 'Reavers'),                             # 70pts  ✓
-    ('45-29',  75, 'Corsair Skyreavers'),                  # 75pts  ✓
-    ('45-30',  80, 'Corsair Voidscarred'),                 # 80pts  ✓
-    # ── Harlequins units ──────────────────────────────────────────────────────
-    ('45-31',  95, 'Skyweavers'),                          # 95pts  ✓
-    ('45-32',  85, 'Troupe'),                              # 85pts  ✓
-    # ── Vehicles ──────────────────────────────────────────────────────────────
-    ('45-10',  85, 'Raider'),                              # 85pts  ✓
-    ('45-12', 110, 'Ravager'),                             # 110pts ✓
-    ('45-33',  70, 'Venom'),                               # 70pts  ✓
-    ('45-34',  75, 'Starfangs'),                           # 75pts  ✓
-    ('45-35',  80, 'Starweaver'),                          # 80pts  ✓
-    ('45-36', 125, 'Voidweaver'),                          # 125pts ✓
-    # ── Aircraft ──────────────────────────────────────────────────────────────
-    ('45-37', 170, 'Razorwing Jetfighter'),                # 170pts ✓
-    ('45-38', 245, 'Voidraven Bomber'),                    # 245pts ✓
+DRUKHARI_UNITS = [
+    # -- Core Drukhari --
+    ('45-02', 80, 'character', 'Archon'),
+    ('45-07', 110, 'battleline', 'Kabalite Warriors'),
+    ('45-10', 75, 'transport', 'Raider'),
+    ('45-12', 110, 'vehicle', 'Ravager'),
+    ('45-06', 90, 'battleline', 'Wyches'),
+    ('DR-001', 80, 'epic_hero', 'Lelith Hesperax'),
+    ('DR-002', 85, 'epic_hero', 'Drazhar'),
+    ('DR-003', 50, 'character', 'Haemonculus'),
+    ('DR-004', 50, 'character', 'Succubus'),
+    ('DR-005', 60, 'battleline', 'Wracks'),
+    ('DR-007', 90, 'infantry', 'Incubi'),
+    ('DR-008', 75, 'monster', 'Talos'),
+    ('DR-009', 55, 'monster', 'Cronos'),
+    ('DR-010', 65, 'transport', 'Venom'),
+    ('DR-011', 245, 'vehicle', 'Voidraven Bomber'),
+    ('DR-012', 170, 'vehicle', 'Razorwing Jetfighter'),
+    ('DR-013', 110, 'infantry', 'Scourges with Heavy Weapons'),
+    ('DR-013', 75, 'infantry', 'Scourges with Shardcarbines'),
+    ('DR-014', 115, 'infantry', 'Hand of the Archon'),
+    ('DR-015', 80, 'infantry', 'Mandrakes'),
+    ('DR-016', 100, 'epic_hero', 'Lady Malys'),
+    ('DR-017', 75, 'mounted', 'Reavers'),
+    ('DR-018', 90, 'mounted', 'Hellions'),
+    # -- Cross-faction Harlequins/Corsairs (share products with Aeldari) --
+    ('P-240922', 75, 'infantry', 'Corsair Skyreavers'),
+    ('P-240923', 65, 'battleline', 'Corsair Voidreavers'),
+    ('P-240923', 70, 'infantry', 'Corsair Voidscarred'),
+    ('prod2620120', 70, 'character', 'Death Jester'),
+    ('P-240921', 85, 'epic_hero', 'Kharseth'),
+    ('P-240880', 95, 'epic_hero', 'Prince Yriel'),
+    ('prod2620121', 50, 'character', 'Shadowseer'),
+    ('prod2620122', 115, 'epic_hero', 'Solitaire'),
+    ('prod3530579', 85, 'infantry', 'Troupe'),
+    ('prod2620124', 95, 'mounted', 'Skyweavers'),
+    ('prod2600170', 70, 'transport', 'Starweaver'),
+    ('prod2780228', 115, 'vehicle', 'Voidweaver'),
 ]
 
 
 class Command(BaseCommand):
     """
-    Seed official 10th Edition points costs for Drukhari units.
+    Seed 11th Edition points, category, and active status for Drukhari
+    units.
 
-    Looks up each product by GW SKU, then filters for the Drukhari
-    UnitType specifically and updates only that row's points_cost.
-    SKUs not found in the DB are skipped with a warning — add the products
-    later and re-run. Idempotent — safe to re-run at any time.
+    Looks up each unit by (name, faction) and updates points_cost, category,
+    and is_active in place; creates the row if it doesn't exist yet (linking
+    the product by gw_sku when one is given). Idempotent -- safe to re-run.
     """
 
-    help = 'Seed 10th Edition points values for Drukhari units.'
+    help = 'Seed 11th Edition points and categories for Drukhari units.'
+
+    def add_arguments(self, parser):
+        """Add --dry-run option."""
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Preview changes without saving anything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        self.stdout.write('Seeding Drukhari points…\n')
+        dry_run = options['dry_run']
+        self.stdout.write(
+            'Seeding Drukhari points (11th Edition)' + (' [DRY RUN]' if dry_run else '') + '…\n'
+        )
 
-        drukhari_faction = Faction.objects.filter(name='Drukhari').first()
-        if not drukhari_faction:
+        fac = Faction.objects.filter(name='Drukhari').first()
+        if not fac:
             self.stdout.write(self.style.ERROR(
                 'Drukhari faction not found. Run populate_products first.'
             ))
             return
 
         updated_count = 0
+        created_count = 0
         skipped_count = 0
 
-        for gw_sku, points, label in DRUKHARI_POINTS:
-            product = Product.objects.filter(gw_sku=gw_sku).first()
+        for gw_sku, points, category, label in DRUKHARI_UNITS:
+            product = Product.objects.filter(gw_sku=gw_sku).first() if gw_sku else None
 
-            if not product:
+            if gw_sku and not product:
                 self.stdout.write(
                     self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
                 )
                 skipped_count += 1
                 continue
 
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=drukhari_faction,
-            ).update(points_cost=points)
+            unit = UnitType.objects.filter(name=label, faction=fac).first()
 
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
+            if unit:
+                changes = []
+                if unit.points_cost != points:
+                    changes.append(f'points {unit.points_cost}->{points}')
+                if unit.category != category:
+                    changes.append(f'category {unit.category}->{category}')
+                if not unit.is_active:
+                    changes.append('reactivating')
+                change_note = f" ({', '.join(changes)})" if changes else ' (no change)'
+
+                if not dry_run:
+                    unit.points_cost = points
+                    unit.category = category
+                    unit.is_active = True
+                    update_fields = ['points_cost', 'category', 'is_active']
+                    if product and unit.product_id != product.id:
+                        unit.product = product
+                        update_fields.append('product')
+                    unit.save(update_fields=update_fields)
+                self.stdout.write(f'  [update] {label} > {points} pts ({category}){change_note}')
                 updated_count += 1
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {label} (SKU {gw_sku}) — Drukhari UnitType not found. '
-                        f'Run populate_units first.'
+                if not dry_run:
+                    UnitType.objects.create(
+                        name=label,
+                        faction=fac,
+                        product=product,
+                        category=category,
+                        points_cost=points,
+                        typical_quantity=1,
+                        is_active=True,
                     )
-                )
-                skipped_count += 1
+                self.stdout.write(f'  [create] {label} > {points} pts ({category})')
+                created_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
+            f'\nDone! Updated: {updated_count}  |  Created: {created_count}  |  Skipped: {skipped_count}'
         ))

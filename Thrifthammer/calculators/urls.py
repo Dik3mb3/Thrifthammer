@@ -51,6 +51,7 @@ urlpatterns = [
     path('chaos-knights/',        _calc, {'faction': 'chaos-knights'},        name='chaos_knights'),
     path('leagues-of-votann/',    _calc, {'faction': 'leagues-of-votann'},    name='leagues_of_votann'),
     path('drukhari/',             _calc, {'faction': 'drukhari'},             name='drukhari'),
+    path('agents-of-the-imperium/', _calc, {'faction': 'agents-of-the-imperium'}, name='agents_of_the_imperium'),
 
     # ── Functional endpoints ──────────────────────────────────────────────────
     path('save/',                     views.SaveArmyView.as_view(),      name='save_army'),

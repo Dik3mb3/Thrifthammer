@@ -1,42 +1,49 @@
 """
 Management command: seed_imperial_knights_points
 
-Sets the points_cost on UnitType records for all Imperial Knights units,
-using official 10th Edition points values sourced from New Recruit.
+Sets points_cost, category, and active status on UnitType records for
+Imperial Knights units, using official 11th Edition data sourced from
+the BSData community BattleScribe project (github.com/BSData/wh40k-11e),
+the same data New Recruit itself is built on.
 
 Usage:
     python manage.py seed_imperial_knights_points
+    python manage.py seed_imperial_knights_points --dry-run
 
-The command is fully idempotent — safe to re-run. It looks up each product by
-its Games Workshop SKU (gw_sku), then filters for the Imperial Knights UnitType
-specifically and updates only that row's points_cost.
+The command is fully idempotent -- safe to re-run. It looks up each unit by
+(name, faction) -- the same pair UnitType enforces uniqueness on.
 
 Notes:
-- Run AFTER populate_products and populate_units.
-- Do NOT add to the Procfile yet.
-- Line-by-line verified against the New Recruit Imperial Knights 10th Edition list.
-- SKUs not yet in the DB skip gracefully — add products later and re-run.
-
-Kit → Variant mapping:
-  54-22 (Knight Questoris) builds:
-      Knight Paladin (375pts), Knight Errant (365pts), Knight Gallant (365pts),
-      Knight Warden (375pts), Knight Crusader (385pts), Knight Defender (415pts)
-  54-15 (Knight Preceptor / Canis Rex) builds:
-      Knight Preceptor (365pts), Canis Rex (415pts — named character)
-  54-21 (Knight Dominus) builds:
-      Knight Castellan (410pts), Knight Valiant (410pts)
-  54-20 (Knight Armigers) builds:
-      Armiger Warglaive (140pts) OR Armiger Helverin (140pts)
-  31-06: Cerastus Knight Lancer (395pts) — single-variant kit
-  31-66: Cerastus Knight Castigator (395pts) — single-variant kit
-  31-67: Cerastus Knight Acheron (395pts) — single-variant kit
-
-Multi-variant kits (54-22, 54-15, 54-21, 54-20): one product row covers all
-variants built from that kit. Points seeded at the most common/base variant.
-Forge World resin kits (Atrapos, Moirax, Acastus Porphyrion/Asterius,
-Magaera, Styrix) are included with placeholder SKUs for future use.
-
-Currently seeded SKUs in DB: 54-15, 54-20, 54-21, 54-22, 31-06, 31-66, 31-67
+- Source: "Imperium - Imperial Knights.json" roster (0 own entries, 8
+  entryLinks) resolved against "Imperium - Imperial Knights - Library.json"
+  (44 entries) -- same split-file pattern as Aeldari/Drukhari/Astra
+  Militarum. The roster also links a handful of Adeptus Mechanicus
+  Skitarii units (Tech-Priest Manipulus/Dominus, Skitarii Marshal/
+  Rangers/Vanguard) as legal allied includes -- intentionally out of
+  scope here, same precedent as Genestealer Cults' Astra Militarum
+  "Brood Brothers" links (no Imperial-Knights-specific product for any
+  of them).
+- Old 10th Edition file used placeholder SKUs (54-23 through 54-28) for
+  5 units that turned out to already be real products in the catalog --
+  just tagged under a different faction (see below).
+- **5 cross-faction shared-SKU links, user confirmed 2026-08-07**: Acastus
+  Knight Asterius/Porphyrion, Cerastus Knight Atrapos, Questoris Knight
+  Magaera/Styrix all have real products already in the catalog
+  (CK-013/014/016/017/018) -- but tagged to the `Chaos Knights` faction,
+  literally named "Chaos Acastus Knight Asterius" etc. GW sells the same
+  physical kit buildable as either loyalist or Chaos. Neither faction had
+  a calculator row for these before this pass. User approved cross-
+  linking Imperial Knights to these Chaos-Knights-tagged products despite
+  the product name, same mechanism as every other cross-faction shared-
+  SKU link this project.
+- **Armiger Moirax** (150pts, Vehicle) and **Knight Destrier** (265pts,
+  Character) have no product anywhere in the catalog -- added to the
+  project backlog, not created here. User confirmed 2026-08-07.
+- Multi-build kits (all pre-existing, confirmed correct before this pass):
+  54-15 builds Knight Preceptor/Canis Rex, 54-20 builds Armiger Warglaive/
+  Helverin, 54-21 builds Knight Castellan/Valiant, 54-22 builds Knight
+  Errant/Gallant/Paladin/Warden/Crusader/Defender (six-way, largest
+  fan-out after the Leman Russ 8-way and Deathwatch Kill Team 6-way).
 """
 
 from django.core.management.base import BaseCommand
@@ -45,108 +52,118 @@ from calculators.models import UnitType
 from products.models import Faction, Product
 
 # ---------------------------------------------------------------------------
-# Points data: (gw_sku, points_cost, display_name_for_logging)
-#
-# Sourced from New Recruit — Imperial Knights 10th Edition list.
-# Verified line-by-line against the full New Recruit army list.
-#
-# Multi-build kits are seeded at their lowest-cost variant as the base.
-# All Questoris variants share 54-22; all Dominus variants share 54-21;
-# both Armigers share 54-20.
+# Unit data: (gw_sku, points_cost, category, name)
 # ---------------------------------------------------------------------------
-IMPERIAL_KNIGHTS_POINTS = [
-    # ── Named characters (unique single-variant kits) ─────────────────────────
-    # Canis Rex is built from 54-15 (Knight Preceptor / Canis Rex kit).
-    # Seeded as the Canis Rex points (415pts) since the product name reflects both.
-    ('54-15', 365, 'Knight Preceptor / Canis Rex'),        # Preceptor=365, CRex=415 — base at Preceptor
-
-    # ── Questoris-class Knights (54-22 builds all six variants) ──────────────
-    # Seeded at Knight Errant (365pts) as the base/lowest-cost Questoris variant.
-    # All six share the same physical kit — one UnitType row in the DB.
-    ('54-22', 365, 'Knight Questoris'),                    # Errant=365, Gallant=365, Paladin=375, Warden=375, Crusader=385, Defender=415
-
-    # ── Dominus-class Knights (54-21 builds Castellan or Valiant) ────────────
-    # Both cost 410pts — seeded at 410pts.
-    ('54-21', 410, 'Knight Dominus'),                      # Castellan=410, Valiant=410
-
-    # ── Armiger-class Knights (54-20 builds Warglaive or Helverin) ───────────
-    # Both cost 140pts — seeded at 140pts.
-    ('54-20', 140, 'Knight Armigers'),                     # Warglaive=140, Helverin=140
-
-    # ── Armiger Moirax (Forge World resin — placeholder SKU) ─────────────────
-    ('54-23', 150, 'Armiger Moirax'),                      # 150pts ✓ (FW resin, not yet in DB)
-
-    # ── Cerastus-class Knights (separate plastic kits, one variant each) ─────
-    ('31-06', 395, 'Cerastus Knight Lancer'),              # 395pts ✓
-    ('31-66', 395, 'Cerastus Knight Castigator'),          # 395pts ✓
-    ('31-67', 395, 'Cerastus Knight Acheron'),             # 395pts ✓
-
-    # ── Cerastus Knight Atrapos (Forge World resin — placeholder SKU) ─────────
-    ('54-24', 405, 'Cerastus Knight Atrapos'),             # 405pts ✓ (FW resin, not yet in DB)
-
-    # ── Questoris Knight Magaera / Styrix (Forge World resin) ────────────────
-    ('54-25', 385, 'Questoris Knight Magaera'),            # 385pts ✓ (FW resin, not yet in DB)
-    ('54-26', 385, 'Questoris Knight Styrix'),             # 385pts ✓ (FW resin, not yet in DB)
-
-    # ── Acastus-class Knights (Forge World resin — placeholder SKUs) ──────────
-    ('54-27', 700, 'Acastus Knight Porphyrion'),           # 700pts ✓ (FW resin, not yet in DB)
-    ('54-28', 765, 'Acastus Knight Asterius'),             # 765pts ✓ (FW resin, not yet in DB)
+IMPERIAL_KNIGHTS_UNITS = [
+    ('54-15', 415, 'epic_hero', 'Canis Rex'),
+    ('54-15', 365, 'character', 'Knight Preceptor'),
+    ('54-20', 140, 'vehicle', 'Armiger Helverin'),
+    ('54-20', 140, 'vehicle', 'Armiger Warglaive'),
+    ('54-21', 425, 'character', 'Knight Castellan'),
+    ('54-21', 400, 'character', 'Knight Valiant'),
+    ('54-22', 395, 'character', 'Knight Crusader'),
+    ('54-22', 400, 'character', 'Knight Defender'),
+    ('54-22', 355, 'character', 'Knight Errant'),
+    ('54-22', 355, 'character', 'Knight Gallant'),
+    ('54-22', 375, 'character', 'Knight Paladin'),
+    ('54-22', 375, 'character', 'Knight Warden'),
+    ('31-06', 415, 'character', 'Cerastus Knight Lancer'),
+    ('31-66', 380, 'character', 'Cerastus Knight Castigator'),
+    ('31-67', 380, 'character', 'Cerastus Knight Acheron'),
+    # -- Cross-faction (share products tagged to Chaos Knights) --
+    ('CK-016', 785, 'vehicle', 'Acastus Knight Asterius'),
+    ('CK-017', 725, 'vehicle', 'Acastus Knight Porphyrion'),
+    ('CK-018', 405, 'character', 'Cerastus Knight Atrapos'),
+    ('CK-013', 385, 'character', 'Questoris Knight Magaera'),
+    ('CK-014', 375, 'character', 'Questoris Knight Styrix'),
 ]
 
 
 class Command(BaseCommand):
     """
-    Seed official 10th Edition points costs for Imperial Knights units.
+    Seed 11th Edition points, category, and active status for Imperial
+    Knights units.
 
-    Looks up each product by GW SKU, then filters for the Imperial Knights
-    UnitType specifically and updates only that row's points_cost.
-    SKUs not found in the DB are skipped with a warning — add the products
-    later and re-run. Idempotent — safe to re-run at any time.
+    Looks up each unit by (name, faction) and updates points_cost, category,
+    and is_active in place; creates the row if it doesn't exist yet (linking
+    the product by gw_sku when one is given). Idempotent -- safe to re-run.
     """
 
-    help = 'Seed 10th Edition points values for Imperial Knights units.'
+    help = 'Seed 11th Edition points and categories for Imperial Knights units.'
+
+    def add_arguments(self, parser):
+        """Add --dry-run option."""
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Preview changes without saving anything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        self.stdout.write('Seeding Imperial Knights points…\n')
+        dry_run = options['dry_run']
+        self.stdout.write(
+            'Seeding Imperial Knights points (11th Edition)' + (' [DRY RUN]' if dry_run else '') + '…\n'
+        )
 
-        knights_faction = Faction.objects.filter(name='Imperial Knights').first()
-        if not knights_faction:
+        fac = Faction.objects.filter(name='Imperial Knights').first()
+        if not fac:
             self.stdout.write(self.style.ERROR(
                 'Imperial Knights faction not found. Run populate_products first.'
             ))
             return
 
         updated_count = 0
+        created_count = 0
         skipped_count = 0
 
-        for gw_sku, points, label in IMPERIAL_KNIGHTS_POINTS:
-            product = Product.objects.filter(gw_sku=gw_sku).first()
+        for gw_sku, points, category, label in IMPERIAL_KNIGHTS_UNITS:
+            product = Product.objects.filter(gw_sku=gw_sku).first() if gw_sku else None
 
-            if not product:
+            if gw_sku and not product:
                 self.stdout.write(
                     self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
                 )
                 skipped_count += 1
                 continue
 
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=knights_faction,
-            ).update(points_cost=points)
+            unit = UnitType.objects.filter(name=label, faction=fac).first()
 
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
+            if unit:
+                changes = []
+                if unit.points_cost != points:
+                    changes.append(f'points {unit.points_cost}->{points}')
+                if unit.category != category:
+                    changes.append(f'category {unit.category}->{category}')
+                if not unit.is_active:
+                    changes.append('reactivating')
+                change_note = f" ({', '.join(changes)})" if changes else ' (no change)'
+
+                if not dry_run:
+                    unit.points_cost = points
+                    unit.category = category
+                    unit.is_active = True
+                    update_fields = ['points_cost', 'category', 'is_active']
+                    if product and unit.product_id != product.id:
+                        unit.product = product
+                        update_fields.append('product')
+                    unit.save(update_fields=update_fields)
+                self.stdout.write(f'  [update] {label} > {points} pts ({category}){change_note}')
                 updated_count += 1
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {label} (SKU {gw_sku}) — Imperial Knights UnitType not found. '
-                        f'Run populate_units first.'
+                if not dry_run:
+                    UnitType.objects.create(
+                        name=label,
+                        faction=fac,
+                        product=product,
+                        category=category,
+                        points_cost=points,
+                        typical_quantity=1,
+                        is_active=True,
                     )
-                )
-                skipped_count += 1
+                self.stdout.write(f'  [create] {label} > {points} pts ({category})')
+                created_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
+            f'\nDone! Updated: {updated_count}  |  Created: {created_count}  |  Skipped: {skipped_count}'
         ))

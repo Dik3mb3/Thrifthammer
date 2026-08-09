@@ -613,6 +613,69 @@
     });
   }
 
+  /* ── Faction bar: convert vertical wheel scroll to horizontal ──
+     Desktop mouse wheels only send vertical delta, and the scrollbar is
+     hidden for a cleaner look, so without this the bar has no way to
+     scroll on desktop even though overflow-x is set. Touch/trackpad swipe
+     already works natively and is unaffected by this.
+     Listener is on the outer -wrap (not just the inner scrollable bar)
+     because the wrap's own padding is part of the same visible bar --
+     wheel events fired while hovering that padding target the wrap, and
+     a listener on the child alone would never see them (events don't
+     bubble parent-to-child). ── */
+  const factionBar = document.querySelector('.ab-faction-bar');
+  const factionBarWrap = document.querySelector('.ab-faction-bar-wrap');
+  if (factionBar && factionBarWrap) {
+    factionBarWrap.addEventListener('wheel', e => {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; // already horizontal (trackpad)
+      const maxScroll = factionBar.scrollWidth - factionBar.clientWidth;
+      if (maxScroll <= 0) return; // nothing to scroll
+      const atStart = factionBar.scrollLeft <= 0;
+      const atEnd = factionBar.scrollLeft >= maxScroll;
+      // Once the bar is fully scrolled in the gesture's direction, let the
+      // event fall through to normal page scrolling instead of trapping it
+      // (the bar sits in a sticky header, so it's often under the cursor).
+      if ((e.deltaY < 0 && atStart) || (e.deltaY > 0 && atEnd)) return;
+      e.preventDefault();
+      // Normalize delta across browsers: deltaMode 1 ("line" mode, e.g.
+      // Firefox's default) reports small values like 3 per notch, versus
+      // pixel mode's 100+ -- scale line mode up so the scroll distance
+      // feels consistent either way.
+      const delta = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+      factionBar.scrollLeft += delta;
+    }, { passive: false });
+
+    /* ── Click-and-drag horizontal scroll ──
+       Independent of wheel events entirely -- works with any mouse,
+       regardless of wheel/trackpad hardware quirks. Listens on window for
+       mousemove/mouseup so dragging still tracks correctly even if the
+       cursor moves outside the bar mid-drag. */
+    let dragging = false;
+    let dragStartX = 0;
+    let dragStartScroll = 0;
+    let dragMoved = false;
+
+    factionBarWrap.addEventListener('mousedown', e => {
+      dragging = true;
+      dragMoved = false;
+      dragStartX = e.pageX;
+      dragStartScroll = factionBar.scrollLeft;
+    });
+    window.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      const dx = e.pageX - dragStartX;
+      if (Math.abs(dx) > 3) dragMoved = true;
+      factionBar.scrollLeft = dragStartScroll - dx;
+    });
+    window.addEventListener('mouseup', () => { dragging = false; });
+    // A drag ending on a pill would otherwise also fire its click/navigation --
+    // suppress that click only when the pointer actually moved past the
+    // threshold above, so normal taps still work.
+    factionBarWrap.addEventListener('click', e => {
+      if (dragMoved) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+  }
+
   /* ── Search ── */
   const searchInput = $('ab-search');
   if (searchInput) {

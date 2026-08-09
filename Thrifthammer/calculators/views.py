@@ -34,6 +34,7 @@ CATEGORY_ORDER = [
     'battleline',
     'infantry',
     'mounted',
+    'monster',
     'vehicle',
     'transport',
     'fortification',

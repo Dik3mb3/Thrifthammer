@@ -1,31 +1,57 @@
 """
 Management command: seed_agents_points
 
-Sets the points_cost on UnitType records for all Agents of the Imperium units,
-using official 10th Edition points values sourced from New Recruit.
+Sets points_cost, category, and active status on UnitType records for all
+Agents of the Imperium units, using official 11th Edition data sourced from
+the BSData community BattleScribe project (github.com/BSData/wh40k-11e),
+the same data New Recruit itself is built on.
 
 Usage:
     python manage.py seed_agents_points
 
-The command is fully idempotent — safe to re-run. It looks up each product by
-its Games Workshop SKU (gw_sku), then filters for the Agents of the Imperium
-UnitType specifically and updates only that row's points_cost.
+The command is fully idempotent -- safe to re-run. It looks up each unit by
+(name, faction) -- the same pair UnitType enforces uniqueness on.
 
 Notes:
-- Run AFTER populate_products and populate_units.
-- Do NOT add to the Procfile yet.
-- Line-by-line verified against the New Recruit Agents of the Imperium 10th Edition list.
-- Agents is a cross-faction list — units from Deathwatch, Grey Knights, and Sisters
-  of Battle appear here with faction-specific points costs that may differ from
-  their home-faction seed files. Each faction row is independent.
-  Examples:
-    Sisters Immolator:    Agents = 100pts  vs  Sororitas = 115pts
-    Sisters Battle Squad: Agents = 100pts  vs  Sororitas = 105pts
-- SKUs not yet in the DB skip gracefully — add products later and re-run.
-- Currently seeded SKUs in DB:
-    Deathwatch: 39-01, 39-02, 39-04, 39-06, 39-10
-    Grey Knights: 57-08
-    Sisters: 52-09, 52-20
+- This faction had ZERO UnitType rows of any kind before this command --
+  the old points file only ever used `.update()` filtered on `product=`,
+  which silently did nothing since no rows existed to update. Every row
+  below is a fresh `[create]`, not a refresh.
+- Agents of the Imperium is a genuinely cross-faction army list by design
+  (BSData confirms it in-source: several units carry Agents-specific point
+  costs that differ from their home-faction value for the same physical
+  kit, e.g. Sisters of Battle Squad is 100pts here vs 105pts under
+  Sororitas). Cross-faction units below are new UnitType rows under
+  'Agents of the Imperium', sharing gw_sku with the existing product under
+  its home faction -- the same "one product, many faction-scoped rows"
+  pattern already used for Space Marine chapter squads and (as of
+  2026-08-07) the Aeldari/Drukhari Ynnari units. Approved by user
+  2026-08-07.
+- 'Inquisitor' (the generic, unnamed 55pt Character entry) has no product
+  of its own -- per user direction, it reuses the Inquisitor Greyfax
+  product (IA-010) as its physical model, giving that one product two
+  UnitType rows under the *same* faction: 'Inquisitor Greyfax' (65pts,
+  epic_hero) and 'Inquisitor' (55pts, character). Same shared-SKU
+  mechanism as the cross-faction case, just within one faction.
+- IA-012 ("Rogue Trader Entourage and Voidsmen-at-Arms") is a genuine
+  dual-unit box -- one product, two separate UnitType rows (Rogue Trader
+  Entourage 75pts Character, Voidsmen-at-Arms 50pts Infantry).
+- Product/unit mapping decisions confirmed by user 2026-08-07:
+    Imperial Rhino      -> 48-128 "Rhino" (Space Marines)
+    Sanctifiers          -> AS-005 "Kill Team: Sanctifiers" (Sisters of
+                             Battle), not the untagged KT-005 duplicate
+    Ministorum Priest    -> AS-025 "Adepta Sororitas Ministorum Priest"
+                             (Sisters of Battle)
+    Inquisitorial Chimera -> 47-05 "Astra Militarum Chimera"
+- Eisenhorn (product IA-003 already exists in the catalog) is deliberately
+  left out entirely -- BSData's only 11e entry for him is
+  "Inquisitor Eisenhorn [Legends]", not legal in standard matched play.
+  Not a backlog item (the product already exists), just excluded per the
+  standard Legends-exclusion rule until/unless he gets a non-Legends
+  datasheet.
+- Units confirmed real in 11e with NO matching product at all (Aquila Kill
+  Team, Subductor Squad, Vigilant Squad) are tracked in
+  memory/project_11e_calculator_migration.md, not fabricated here.
 """
 
 from django.core.management.base import BaseCommand
@@ -34,106 +60,127 @@ from calculators.models import UnitType
 from products.models import Faction, Product
 
 # ---------------------------------------------------------------------------
-# Points data: (gw_sku, points_cost, display_name_for_logging)
+# Unit data: (gw_sku, points_cost, category, name)
 #
-# Sourced from New Recruit — Agents of the Imperium 10th Edition list.
-# Verified line-by-line against the full New Recruit army list.
+# Sourced from BSData/wh40k-11e ("Imperium - Agents of the Imperium.json"),
+# 11th Edition. Base points only, no wargear or squad-size modifiers.
 # ---------------------------------------------------------------------------
-AGENTS_POINTS = [
-    # ── Assassins ─────────────────────────────────────────────────────────────
-    ('53-01', 100, 'Callidus Assassin'),                   # 100pts ✓
-    ('53-02',  85, 'Culexus Assassin'),                    # 85pts  ✓
-    ('53-03', 110, 'Eversor Assassin'),                    # 110pts ✓
-    ('53-04', 110, 'Vindicare Assassin'),                  # 110pts ✓
-    # ── Inquisitors ───────────────────────────────────────────────────────────
-    ('54-01',  55, 'Inquisitor'),                          # 55pts  ✓
-    ('54-02',  75, 'Inquisitor Coteaz'),                   # 75pts  ✓
-    ('54-03',  75, 'Inquisitor Draxus'),                   # 75pts  ✓
-    ('54-04',  65, 'Inquisitor Greyfax'),                  # 65pts  ✓
-    ('54-05',  70, 'Inquisitor in Terminator Armour'),     # 70pts  ✓ [Legends]
-    ('54-06',  50, 'Ministorum Priest'),                   # 50pts  ✓ (Agents list: 40pts? NR shows 40)
-    ('54-07',  60, 'Navigator'),                           # 60pts  ✓
-    ('54-08',  75, 'Rogue Trader Entourage'),              # 75pts  ✓
-    # ── Deathwatch characters ─────────────────────────────────────────────────
-    ('39-01',  65, 'Watch Captain Artemis'),               # 65pts  ✓
-    ('39-02',  95, 'Watch Master'),                        # 95pts  ✓
-    # ── Infantry ──────────────────────────────────────────────────────────────
-    ('54-09', 100, 'Aquila Kill Team'),                    # 100pts ✓
-    ('39-06', 100, 'Deathwatch Kill Team'),                # 100pts ✓ (Veteran Squad box)
-    ('39-10', 100, 'Deathwatch Kill Team'),                # 100pts ✓ (basic Kill Team box)
-    ('54-10',  90, 'Imperial Navy Breachers'),             # 90pts  ✓
-    ('54-11',  50, 'Inquisitorial Agents'),                # 50pts  ✓
-    ('54-12',  85, 'Vigilant Squad'),                      # 85pts  ✓
-    ('54-13',  85, 'Exaction Squad'),                      # 85pts  ✓  (note: same pts as Vigilant)
-    ('54-14',  85, 'Subductor Squad'),                     # 85pts  ✓
-    ('54-15', 100, 'Sanctifiers'),                         # 100pts ✓
-    ('54-16',  30, 'Jokaero Weaponsmith'),                 # 30pts  ✓ [Legends]
-    ('54-17',  50, 'Voidsmen-at-Arms'),                    # 50pts  ✓
-    # ── Grey Knights ──────────────────────────────────────────────────────────
-    ('57-08', 190, 'Grey Knights Terminator Squad'),       # 190pts ✓
-    # ── Sisters of Battle (different pts from home-faction seed) ──────────────
-    ('52-09', 100, 'Sisters of Battle Immolator'),         # 100pts ✓ (Sororitas = 115pts)
-    ('52-20', 100, 'Sisters of Battle Squad'),             # 100pts ✓ (Sororitas = 105pts)
-    # ── Vehicles ──────────────────────────────────────────────────────────────
-    ('39-04', 180, 'Corvus Blackstar'),                    # 180pts ✓
-    ('54-18',  70, 'Inquisitorial Chimera'),               # 70pts  ✓
-    ('54-19',  75, 'Imperial Rhino'),                      # 75pts  ✓
+AGENTS_UNITS = [
+    # ── Agents-native products (IA-series) ──────────────────────────────────
+    ('IA-002', 100, 'epic_hero',  'Inquisitor Kroyle'),
+    ('IA-004',  75, 'epic_hero',  'Inquisitor Coteaz'),
+    ('IA-005',  60, 'character',  'Navigator'),
+    ('IA-006', 100, 'epic_hero',  'Callidus Assassin'),
+    ('IA-007', 110, 'epic_hero',  'Vindicare Assassin'),
+    ('IA-008',  85, 'epic_hero',  'Culexus Assassin'),
+    ('IA-009', 100, 'epic_hero',  'Eversor Assassin'),
+    ('IA-010',  65, 'epic_hero',  'Inquisitor Greyfax'),
+    ('IA-010',  55, 'character',  'Inquisitor'),  # generic -- reuses Greyfax model, see docstring
+    ('IA-011',  75, 'epic_hero',  'Inquisitor Draxus'),
+    ('IA-013',  50, 'infantry',   'Inquisitorial Agents'),
+    # ── IA-012 dual-unit box ─────────────────────────────────────────────────
+    ('IA-012',  75, 'character',  'Rogue Trader Entourage'),
+    ('IA-012',  50, 'infantry',   'Voidsmen-at-Arms'),
+    # ── Cross-faction shared-SKU units ──────────────────────────────────────
+    ('39-01',   65, 'epic_hero',  'Watch Captain Artemis'),     # Deathwatch product
+    ('39-02',   95, 'character',  'Watch Master'),              # Deathwatch product
+    ('39-10',  100, 'battleline', 'Deathwatch Kill Team'),      # Deathwatch product
+    ('39-04',  180, 'vehicle',    'Corvus Blackstar'),          # Deathwatch product
+    ('57-08',  175, 'infantry',   'Grey Knights Terminator Squad'),  # Grey Knights product
+    ('52-09',   90, 'transport',  'Sisters of Battle Immolator'),    # Sisters of Battle product
+    ('52-20',  100, 'infantry',   'Sisters of Battle Squad'),        # Sisters of Battle product
+    ('48-128',  65, 'transport',  'Imperial Rhino'),                 # Space Marines product
+    ('AS-005', 100, 'infantry',   'Sanctifiers'),                    # Sisters of Battle product
+    ('AS-025',  40, 'character',  'Ministorum Priest'),               # Sisters of Battle product
+    ('47-05',   60, 'transport',  'Inquisitorial Chimera'),           # Astra Militarum product
 ]
 
 
 class Command(BaseCommand):
     """
-    Seed official 10th Edition points costs for Agents of the Imperium units.
+    Seed 11th Edition points, category, and active status for Agents of the
+    Imperium units.
 
-    Looks up each product by GW SKU, then filters for the Agents of the Imperium
-    UnitType specifically and updates only that row's points_cost.
-    SKUs not found in the DB are skipped with a warning — add the products
-    later and re-run. Idempotent — safe to re-run at any time.
+    Looks up each unit by (name, faction) and updates points_cost, category,
+    and is_active in place; creates the row if it doesn't exist yet (linking
+    the product by gw_sku when one is given). Idempotent -- safe to re-run.
     """
 
-    help = 'Seed 10th Edition points values for Agents of the Imperium units.'
+    help = 'Seed 11th Edition points and categories for Agents of the Imperium units.'
+
+    def add_arguments(self, parser):
+        """Add --dry-run option."""
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Preview changes without saving anything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        self.stdout.write('Seeding Agents of the Imperium points…\n')
+        dry_run = options['dry_run']
+        self.stdout.write(
+            'Seeding Agents of the Imperium points (11th Edition)' + (' [DRY RUN]' if dry_run else '') + '…\n'
+        )
 
-        agents_faction = Faction.objects.filter(name='Agents of the Imperium').first()
-        if not agents_faction:
+        fac = Faction.objects.filter(name='Agents of the Imperium').first()
+        if not fac:
             self.stdout.write(self.style.ERROR(
                 'Agents of the Imperium faction not found. Run populate_products first.'
             ))
             return
 
         updated_count = 0
+        created_count = 0
         skipped_count = 0
 
-        for gw_sku, points, label in AGENTS_POINTS:
-            product = Product.objects.filter(gw_sku=gw_sku).first()
+        for gw_sku, points, category, label in AGENTS_UNITS:
+            product = Product.objects.filter(gw_sku=gw_sku).first() if gw_sku else None
 
-            if not product:
+            if gw_sku and not product:
                 self.stdout.write(
                     self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
                 )
                 skipped_count += 1
                 continue
 
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=agents_faction,
-            ).update(points_cost=points)
+            unit = UnitType.objects.filter(name=label, faction=fac).first()
 
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
+            if unit:
+                changes = []
+                if unit.points_cost != points:
+                    changes.append(f'points {unit.points_cost}->{points}')
+                if unit.category != category:
+                    changes.append(f'category {unit.category}->{category}')
+                if not unit.is_active:
+                    changes.append('reactivating')
+                change_note = f" ({', '.join(changes)})" if changes else ' (no change)'
+
+                if not dry_run:
+                    unit.points_cost = points
+                    unit.category = category
+                    unit.is_active = True
+                    update_fields = ['points_cost', 'category', 'is_active']
+                    if product and unit.product_id != product.id:
+                        unit.product = product
+                        update_fields.append('product')
+                    unit.save(update_fields=update_fields)
+                self.stdout.write(f'  [update] {label} > {points} pts ({category}){change_note}')
                 updated_count += 1
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {label} (SKU {gw_sku}) — Agents UnitType not found. '
-                        f'Run populate_units first.'
+                if not dry_run:
+                    UnitType.objects.create(
+                        name=label,
+                        faction=fac,
+                        product=product,
+                        category=category,
+                        points_cost=points,
+                        typical_quantity=1,
+                        is_active=True,
                     )
-                )
-                skipped_count += 1
+                self.stdout.write(f'  [create] {label} > {points} pts ({category})')
+                created_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
+            f'\nDone! Updated: {updated_count}  |  Created: {created_count}  |  Skipped: {skipped_count}'
         ))

@@ -10,6 +10,19 @@ Current mappings (10th Edition):
       Space Wolves, Deathwatch
   Excluded (use own datasheets only):
     - Grey Knights (removed -- GK don't use generic SM datasheets)
+    - Death Guard, Emperor's Children, Thousand Sons, World Eaters
+      (cleared 2026-08-07 -- unlike loyalist SM chapters, Chaos legions
+      each have their own separate codex and do NOT share a generic
+      "Chaos Space Marines" army list. populate_ec_products.py had
+      incorrectly set parent_faction=Chaos Space Marines for all four,
+      causing CSM-exclusive characters like Cypher and Fabius Bile to
+      show up on Death Guard's calculator page. A legion CAN legitimately
+      use a specific CSM unit sometimes, but BSData says so explicitly
+      via that legion's own catalogue entries -- handle those as
+      individually-confirmed cross-faction shared-SKU links (same
+      mechanism CSM's own file used for Khorne Berzerkers/Rubric Marines/
+      Plague Marines/Noise Marines), never via a blanket parent_faction
+      fallback.)
 
 Idempotent — safe to re-run; only updates rows where parent_faction differs.
 

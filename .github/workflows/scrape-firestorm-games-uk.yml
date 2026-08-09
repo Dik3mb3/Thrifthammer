@@ -1,0 +1,64 @@
+name: Scrape Firestorm Games UK
+
+on:
+  schedule:
+    # Every Friday at 12:00 PM Eastern (16:00 UTC during EDT; adjust to
+    # 17:00 UTC in winter when EST/UTC-5 kicks in) — see send-friday-deals.yml
+    # for the same convention used elsewhere in this repo.
+    - cron: '0 16 * * 5'
+  workflow_dispatch:
+    inputs:
+      batch_tag:
+        description: 'Only scrape products with this batch_tag (e.g. old-world, kill-team)'
+        type: string
+        default: ''
+
+jobs:
+  scrape:
+    name: Firestorm Games UK Scraper
+    runs-on: ubuntu-latest
+    # ~2,150 products, ~2s/item (polite delay + jitter, mirrors Noble Knight's
+    # Cloudflare-safe pacing) -> ~90 min in the typical case. Sized generously
+    # since this only runs once a week -- no reason to rush requests and risk
+    # a Cloudflare block just to fit a tighter window.
+    timeout-minutes: 150
+    defaults:
+      run:
+        working-directory: ./Thrifthammer
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: Thrifthammer/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Firestorm Games UK scraper
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_ALLOWED_HOSTS: thrifthammer.com,www.thrifthammer.com,web-production-b6056.up.railway.app
+          DJANGO_DEBUG: 'False'
+          RAILWAY_ENVIRONMENT: production
+        run: |
+          FLAGS=""
+          if [ -n "${{ github.event.inputs.batch_tag }}" ]; then
+            FLAGS="$FLAGS --batch-tag ${{ github.event.inputs.batch_tag }}"
+          fi
+          python manage.py run_scrapers firestorm-games $FLAGS
+
+      - name: Clear cache after price update
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_ALLOWED_HOSTS: thrifthammer.com,www.thrifthammer.com,web-production-b6056.up.railway.app
+          DJANGO_DEBUG: 'False'
+          RAILWAY_ENVIRONMENT: production
+        run: python manage.py clear_cache

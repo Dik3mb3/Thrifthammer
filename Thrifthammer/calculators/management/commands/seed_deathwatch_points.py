@@ -1,25 +1,42 @@
 """
 Management command: seed_deathwatch_points
 
-Sets the points_cost on UnitType records for all Deathwatch units,
-using official 10th Edition points values sourced from New Recruit.
+Sets points_cost, category, and active status on UnitType records for
+Deathwatch units, using official 11th Edition data sourced from the
+BSData community BattleScribe project (github.com/BSData/wh40k-11e), the
+same data New Recruit itself is built on.
 
 Usage:
     python manage.py seed_deathwatch_points
 
-The command is fully idempotent — safe to re-run. It looks up each product by
-its Games Workshop SKU (gw_sku), then filters for the Deathwatch UnitType
-specifically and updates only that row's points_cost.
+The command is fully idempotent -- safe to re-run. It looks up each unit by
+(name, faction) -- the same pair UnitType enforces uniqueness on.
 
 Notes:
-- Run AFTER populate_products and populate_units.
-- Do NOT add to the Procfile yet.
-- Line-by-line verified against the New Recruit Deathwatch 10th Edition list.
-- Key difference vs Space Marines: Chaplain 60pts (SM=75pts).
-- DW-exclusive units: Watch Captain Artemis, Watch Master, Deathwatch Veterans,
-  Deathwatch Kill Team, Deathwatch Terminator Squad, Corvus Blackstar,
-  Decimus Kill Team, Fortis Kill Team, Indomitor Kill Team,
-  Spectrus Kill Team, Talonstrike Kill Team.
+- Same hybrid-catalogue pattern as Black Templars/Blood Angels/Dark Angels
+  -- BSData's Deathwatch file defines only 10 DW-exclusive units directly;
+  everything else falls back to the base Space Marines faction via the
+  calculator's parent-faction fallback.
+- Renames: {'Deathwatch Kill Team': 'Deathwatch Veterans'}
+- 6-way multi-build split on SKU 39-10 ("Deathwatch Kill Team", $40 MSRP,
+  described as "Five heavily customisable Deathwatch Space Marines"):
+  Deathwatch Veterans (100pts), Decimus Kill Team (100pts), Fortis Kill
+  Team (195pts), Indomitor Kill Team (275pts), Spectrus Kill Team
+  (170pts), Talonstrike Kill Team (265pts). Same mechanism as the Leman
+  Russ 8-way split. User confirmed 2026-08-07.
+- 'Deathwatch Veteran Squad' was a stale duplicate of the same concept
+  (inactive, 100pts, no product) -- deactivated rather than reused.
+- 'Deathwatch Terminator Squad' has no dedicated product -- cross-linked
+  to the base Space Marines Terminator Squad product (48-06), same
+  pattern as every other cross-faction shared-SKU link this project.
+  User confirmed 2026-08-07.
+- 'Judiciar'/'Suppressor Squad' were inactive productless placeholders
+  here too -- refreshed to the same values established for every other
+  chapter.
+- The ~67 generic Space-Marine-squad rows this chapter had duplicated
+  with no BSData DW-specific override are deactivated here so they
+  correctly fall back to the current base Space Marines rows for the
+  same product, same reasoning as every chapter so far.
 """
 
 from django.core.management.base import BaseCommand
@@ -28,157 +45,206 @@ from calculators.models import UnitType
 from products.models import Faction, Product
 
 # ---------------------------------------------------------------------------
-# Points data: (gw_sku, points_cost, display_name_for_logging)
-#
-# Sourced from New Recruit — Deathwatch 10th Edition list.
-# Every line with pts in the list has been checked individually.
+# Renames applied first: (old_name, new_name)
 # ---------------------------------------------------------------------------
-DEATHWATCH_POINTS = [
-    # ── DW-exclusive named characters ────────────────────────────────────────
-    ('39-01',  65, 'Watch Captain Artemis'),       # 65pts ✓
-    ('39-02',  95, 'Watch Master'),                # 95pts ✓
-    # ── DW-exclusive units ────────────────────────────────────────────────────
-    ('39-06', 100, 'Deathwatch Veterans'),         # 100pts ✓
-    ('39-10', 100, 'Deathwatch Kill Team'),        # 100pts ✓
-    ('39-03', 100, 'Decimus Kill Team'),           # 100pts ✓
-    ('39-04', 180, 'Corvus Blackstar'),            # 180pts ✓
-    ('39-05', 190, 'Deathwatch Terminator Squad'), # 190pts ✓
-    ('39-07', 180, 'Fortis Kill Team'),            # 180pts ✓
-    ('39-08', 265, 'Indomitor Kill Team'),         # 265pts ✓
-    ('39-09', 180, 'Spectrus Kill Team'),          # 180pts ✓
-    ('39-11', 275, 'Talonstrike Kill Team'),       # 275pts ✓
-    # ── Shared SM characters — DW-specific costs ──────────────────────────────
-    ('48-34',  50, 'Ancient'),                     # 50pts ✓ same as SM
-    ('48-33',  50, 'Apothecary'),                  # 50pts ✓ same as SM
-    ('48-32',  60, 'Chaplain'),                    # 60pts ✓ DW | SM=75pts
-    ('48-36',  70, 'Judiciar'),                    # 70pts ✓ same as SM
-    ('48-30',  65, 'Librarian'),                   # 65pts ✓ same as SM
-    ('48-61',  55, 'Lieutenant'),                  # 55pts ✓ same as SM
-    ('48-62',  80, 'Captain'),                     # 80pts ✓ same as SM
-    ('48-37', 105, 'Company Heroes'),              # 105pts ✓ same as SM
-    # ── Battleline ────────────────────────────────────────────────────────────
-    ('48-75',  80, 'Intercessor Squad'),           # 80pts ✓ same as SM
-    ('48-76',  75, 'Assault Intercessor Squad'),   # 75pts ✓ same as SM
-    ('48-29',  70, 'Scout Squad'),                 # 70pts ✓ same as SM
-    ('48-45',  90, 'Infernus Squad'),              # 90pts ✓ same as SM
-    # ── Infantry ──────────────────────────────────────────────────────────────
-    ('48-06', 170, 'Terminator Squad'),            # 170pts ✓ same as SM
-    ('48-92',  95, 'Aggressor Squad'),             # 95pts ✓ same as SM
-    ('48-38',  80, 'Bladeguard Veteran Squad'),    # 80pts ✓ same as SM
-    ('48-15', 120, 'Devastator Squad'),            # 120pts ✓ same as SM
-    ('48-98',  85, 'Eliminator Squad'),            # 85pts ✓ same as SM
-    ('48-39',  90, 'Eradicator Squad'),            # 90pts ✓ same as SM
-    ('48-96',  80, 'Incursor Squad'),              # 80pts ✓ same as SM
-    ('48-41', 100, 'Infiltrator Squad'),           # 100pts ✓ same as SM
-    ('48-43', 100, 'Sternguard Veteran Squad'),    # 100pts ✓ same as SM
-    ('48-08', 100, 'Vanguard Veteran Squad'),      # 100pts ✓ same as SM
-    # ── Mounted / Fast Attack ──────────────────────────────────────────────────
-    ('48-40',  80, 'Outrider Squad'),              # 80pts ✓ same as SM
-    ('48-42',  60, 'Invader ATV'),                 # 60pts ✓ same as SM
-    ('48-97', 120, 'Inceptor Squad'),              # 120pts ✓ same as SM
-    ('48-99',  75, 'Suppressor Squad'),            # 75pts ✓ same as SM
-    # ── Vehicles / Dreadnoughts ────────────────────────────────────────────────
-    ('48-46', 150, 'Ballistus Dreadnought'),       # 150pts ✓ same as SM
-    ('48-44', 160, 'Brutalis Dreadnought'),        # 160pts ✓ same as SM
-    ('48-93', 195, 'Redemptor Dreadnought'),       # 195pts ✓ same as SM
-    ('48-23', 140, 'Predator Destructor'),         # 140pts ✓ same as SM
-    ('48-25', 190, 'Whirlwind'),                   # 190pts ✓ same as SM
-    ('48-26', 185, 'Vindicator'),                  # 185pts ✓ same as SM
-    ('48-95', 220, 'Repulsor Executioner'),        # 220pts ✓ same as SM
-    # ── Transports ────────────────────────────────────────────────────────────
-    ('48-94',  80, 'Impulsor'),                    # 80pts ✓ same as SM
-    ('48-85', 180, 'Repulsor'),                    # 180pts ✓ same as SM
-    ('48-21', 220, 'Land Raider'),                 # 220pts ✓ same as SM
-    ('48-22', 220, 'Land Raider Crusader'),        # 220pts ✓ same as SM
-    # ── Fortifications ────────────────────────────────────────────────────────
-    ('48-27', 175, 'Hammerfall Bunker'),           # 175pts ✓ same as SM
-    ('48-28',  75, 'Firestrike Servo-Turrets'),    # 75pts ✓ same as SM
+DEATHWATCH_RENAMES = [
+    ('Deathwatch Kill Team', 'Deathwatch Veterans'),
+]
+
+# ---------------------------------------------------------------------------
+# Stale duplicate + generic Space-Marine-squad rows -- deactivated.
+# ---------------------------------------------------------------------------
+DEATHWATCH_DEACTIVATE = [
+    'Deathwatch Veteran Squad',
+    'Ancient',
+    'Ancient in Terminator Armor',
+    'Apothecary',
+    'Apothecary Biologis',
+    'Assault Intercessors with Jump Packs',
+    'Ballistus Dreadnought',
+    'Bladeguard Veteran Squad',
+    'Brutalis Dreadnought',
+    'Captain',
+    'Captain in Gravis Armour',
+    'Captain in Phobos Armour',
+    'Captain in Terminator Armour',
+    'Captain with Jump Pack',
+    'Centurion Assault Squad',
+    'Centurion Devastator Squad',
+    'Chaplain',
+    'Chaplain in Terminator Armour',
+    'Chaplain on Bike',
+    'Chaplain with Jump Pack',
+    'Company Heroes',
+    'Desolation Squad',
+    'Dreadnought',
+    'Drop Pod',
+    'Eliminator Squad',
+    'Firestrike Servo-Turrets',
+    'Gladiator Lancer',
+    'Gladiator Reaper',
+    'Gladiator Valiant',
+    'Hammerfall Bunker',
+    'Heavy Intercessor Squad',
+    'Hellblaster Squad',
+    'Impulsor',
+    'Inceptor Squad',
+    'Incursor Squad',
+    'Infernus Squad',
+    'Infiltrator Squad',
+    'Intercessor Squad',
+    'Invader ATV',
+    'Invictor Tactical Warsuit',
+    'Land Raider',
+    'Land Raider Crusader',
+    'Land Raider Redeemer',
+    'Librarian',
+    'Librarian in Phobos Armour',
+    'Librarian in Terminator Armour',
+    'Lieutenant',
+    'Lieutenant in Reiver Armour',
+    'Outrider Squad',
+    'Predator Annihilator',
+    'Predator Destructor',
+    'Razorback',
+    'Redemptor Dreadnought',
+    'Reiver Squad',
+    'Repulsor',
+    'Repulsor Executioner',
+    'Rhino',
+    'Sternguard Veteran Squad',
+    'Storm Speeder Hailstrike',
+    'Storm Speeder Hammerstrike',
+    'Storm Speeder Thunderstrike',
+    'Stormhawk Interceptor',
+    'Stormraven Gunship',
+    'Stormtalon Gunship',
+    'Techmarine',
+    'Vanguard Veteran Squad with Jump Packs',
+    'Vindicator',
+    'Whirlwind',
+]
+
+# ---------------------------------------------------------------------------
+# Unit data: (gw_sku, points_cost, category, name)
+# ---------------------------------------------------------------------------
+DEATHWATCH_UNITS = [
+    ('39-04', 180, 'vehicle', 'Corvus Blackstar'),
+    ('48-06', 180, 'infantry', 'Deathwatch Terminator Squad'),
+    ('39-10', 100, 'battleline', 'Deathwatch Veterans'),
+    ('39-10', 100, 'battleline', 'Decimus Kill Team'),
+    ('39-10', 195, 'infantry', 'Fortis Kill Team'),
+    ('39-10', 275, 'infantry', 'Indomitor Kill Team'),
+    (None, 55, 'character', 'Judiciar'),
+    ('39-10', 170, 'infantry', 'Spectrus Kill Team'),
+    (None, 85, 'infantry', 'Suppressor Squad'),
+    ('39-10', 265, 'infantry', 'Talonstrike Kill Team'),
+    ('39-01', 65, 'epic_hero', 'Watch Captain Artemis'),
+    ('39-02', 95, 'character', 'Watch Master'),
 ]
 
 
 class Command(BaseCommand):
     """
-    Seed official 10th Edition points costs for Deathwatch units.
+    Seed 11th Edition points, category, and active status for Deathwatch
+    units.
 
-    Looks up each product by GW SKU, then filters for the Deathwatch
-    UnitType specifically and updates only that row's points_cost. This
-    ensures Space Marines UnitType rows for the same product are untouched.
-    Idempotent — safe to re-run at any time.
+    Looks up each unit by (name, faction) and updates points_cost, category,
+    and is_active in place; creates the row if it doesn't exist yet (linking
+    the product by gw_sku when one is given). Idempotent -- safe to re-run.
     """
 
-    help = 'Seed 10th Edition points values for Deathwatch units.'
+    help = 'Seed 11th Edition points and categories for Deathwatch units.'
+
+    def add_arguments(self, parser):
+        """Add --dry-run option."""
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Preview changes without saving anything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        self.stdout.write('Seeding Deathwatch points…\n')
+        dry_run = options['dry_run']
+        self.stdout.write(
+            'Seeding Deathwatch points (11th Edition)' + (' [DRY RUN]' if dry_run else '') + '\u2026\n'
+        )
 
-        dw_faction = Faction.objects.filter(name='Deathwatch').first()
-        if not dw_faction:
+        fac = Faction.objects.filter(name='Deathwatch').first()
+        if not fac:
             self.stdout.write(self.style.ERROR(
                 'Deathwatch faction not found. Run populate_products first.'
             ))
             return
 
+        for old_name, new_name in DEATHWATCH_RENAMES:
+            unit = UnitType.objects.filter(name=old_name, faction=fac).first()
+            if unit:
+                self.stdout.write(f'  [rename] {old_name!r} -> {new_name!r}')
+                if not dry_run:
+                    unit.name = new_name
+                    unit.save(update_fields=['name'])
+
+        for name in DEATHWATCH_DEACTIVATE:
+            unit = UnitType.objects.filter(name=name, faction=fac).first()
+            if unit and unit.is_active:
+                self.stdout.write(f'  [deactivate] {name!r}')
+                if not dry_run:
+                    unit.is_active = False
+                    unit.save(update_fields=['is_active'])
+
         updated_count = 0
+        created_count = 0
         skipped_count = 0
 
-        for gw_sku, points, label in DEATHWATCH_POINTS:
-            product = Product.objects.filter(gw_sku=gw_sku).first()
+        for gw_sku, points, category, label in DEATHWATCH_UNITS:
+            product = Product.objects.filter(gw_sku=gw_sku).first() if gw_sku else None
 
-            if not product:
+            if gw_sku and not product:
                 self.stdout.write(
                     self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
                 )
                 skipped_count += 1
                 continue
 
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=dw_faction,
-            ).update(points_cost=points)
+            unit = UnitType.objects.filter(name=label, faction=fac).first()
 
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
+            if unit:
+                changes = []
+                if unit.points_cost != points:
+                    changes.append(f'points {unit.points_cost}->{points}')
+                if unit.category != category:
+                    changes.append(f'category {unit.category}->{category}')
+                if not unit.is_active:
+                    changes.append('reactivating')
+                change_note = f" ({', '.join(changes)})" if changes else ' (no change)'
+
+                if not dry_run:
+                    unit.points_cost = points
+                    unit.category = category
+                    unit.is_active = True
+                    update_fields = ['points_cost', 'category', 'is_active']
+                    if product and unit.product_id != product.id:
+                        unit.product = product
+                        update_fields.append('product')
+                    unit.save(update_fields=update_fields)
+                self.stdout.write(f'  [update] {label} > {points} pts ({category}){change_note}')
                 updated_count += 1
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {label} (SKU {gw_sku}) — DW UnitType not found. '
-                        f'Run populate_units first.'
+                if not dry_run:
+                    UnitType.objects.create(
+                        name=label,
+                        faction=fac,
+                        product=product,
+                        category=category,
+                        points_cost=points,
+                        typical_quantity=1,
+                        is_active=True,
                     )
-                )
-                skipped_count += 1
-
-        # ── 48-07 SKU collision (Tactical Squad + Terminator Assault Squad) ──────
-        # Both products share gw_sku 48-07; must use name filtering to distinguish.
-        DW_SKU_COLLISIONS = [
-            ('48-07', 'Tactical',   140, 'Tactical Squad'),            # 140pts ✓
-            ('48-07', 'Terminator', 180, 'Terminator Assault Squad'),  # 180pts ✓
-        ]
-        for gw_sku, name_filter, points, label in DW_SKU_COLLISIONS:
-            product = Product.objects.filter(
-                gw_sku=gw_sku, name__icontains=name_filter
-            ).first()
-            if not product:
-                self.stdout.write(self.style.WARNING(
-                    f'  [skip]    {label} (SKU {gw_sku} not found in DB)'
-                ))
-                skipped_count += 1
-                continue
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=dw_faction,
-            ).update(points_cost=points)
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
-                updated_count += 1
-            else:
-                self.stdout.write(self.style.WARNING(
-                    f'  [no unit] {label} (SKU {gw_sku}) — DW UnitType not found. '
-                    f'Run populate_units first.'
-                ))
-                skipped_count += 1
+                self.stdout.write(f'  [create] {label} > {points} pts ({category})')
+                created_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
+            f'\nDone! Updated: {updated_count}  |  Created: {created_count}  |  Skipped: {skipped_count}'
         ))

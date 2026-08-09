@@ -1,24 +1,61 @@
 """
 Management command: seed_black_templars_points
 
-Sets the points_cost on UnitType records for all Black Templars units,
-using official 10th Edition points values sourced from New Recruit.
+Sets points_cost, category, and active status on UnitType records for
+Black Templars units, using official 11th Edition data sourced from the
+BSData community BattleScribe project (github.com/BSData/wh40k-11e), the
+same data New Recruit itself is built on.
 
 Usage:
     python manage.py seed_black_templars_points
 
-The command is fully idempotent — safe to re-run. It looks up each product by
-its Games Workshop SKU (gw_sku), then filters for the Black Templars UnitType
-specifically and updates only that row's points_cost.
+The command is fully idempotent -- safe to re-run. It looks up each unit by
+(name, faction) -- the same pair UnitType enforces uniqueness on.
 
 Notes:
-- Run AFTER populate_products and populate_units — those commands create the
-  products and UnitType rows respectively.
-- Do NOT add to the Procfile yet (same rule as seed_ultramarines_points).
-- Points values are for standard unit sizes as listed in New Recruit.
-- Some values DIFFER from the Space Marines equivalents (e.g. Chaplain 60pts
-  here vs 75pts for Space Marines, Repulsor Executioner 235pts vs 220pts).
-  The faction filter on the update call ensures these remain independent.
+- BSData's Black Templars catalogue ("Imperium - Black Templars.json") only
+  defines 18 BT-exclusive/BT-override units directly (a 19th, "Emperor's
+  Champion (Anointed)", has no matching product and goes to the backlog
+  instead). Everything else a Black Templars army can take is a plain
+  Space Marines unit with no BT-specific override -- the calculator's own
+  parent-faction fallback (calculators/views.py) already surfaces those
+  automatically once the base "Space Marines" faction has current data
+  (migrated 2026-08-07, prerequisite for this command).
+- This is a MUCH smaller scope than the old 10th Edition file, which
+  duplicated a BT-specific row for every unit whether or not BT actually
+  had its own points/rules for it. This command intentionally does not
+  replicate that -- see the deactivation list below.
+- Renames (old DB name -> real BSData name) applied first, so points/
+  category updates below can target units by their correct name:
+    ('Black Templars Castellan', 'Castellan'),
+    ('Black Templars Chaplain Grimaldus', 'Chaplain Grimaldus'),
+    ('Black Templars Crusade Ancient', 'Crusade Ancient'),
+    ('Black Templars Primaris Crusader Squad', 'Crusader Squad'),
+    ("Black Templars Emperor's Champion", "Emperor's Champion"),
+    ('Black Templars Execrator', 'Execrator'),
+    ('Black Templars Helbrecht', 'High Marshal Helbrecht'),
+    ('Black Templars Marshal', 'Marshal'),
+    ('Black Templars Sword Brethren', 'Sword Brethren Squad'),
+- 3 new units created, sharing gw_sku with the base Space Marines product
+  for the same physical kit (Gladiator Lancer/Reaper/Valiant) -- BT gets
+  explicit access per its own BSData entries, at identical points/category
+  to the base Space Marines version.
+- 'Terminator Squad' already existed as an inactive BT row linked to
+  48-06 -- reactivated and refreshed, not recreated.
+- 2 bundle/book rows (Combat Patrol, Codex Supplement) deactivated --
+  never real units.
+- The generic Space-Marine-squad rows this chapter had duplicated with no
+  BSData BT-specific override (Ancient, Apothecary, Captain, Chaplain,
+  Intercessor Squad, Tactical Squad, Devastator Squad, every Dreadnought
+  variant, etc. -- 29 rows) are deactivated here so they correctly fall
+  back to the now-current base Space Marines rows for the same product,
+  rather than sitting frozen on stale 10th Edition points forever.
+  EXCEPTION: 'Judiciar' and 'Suppressor Squad' are deliberately left
+  active even though they fit this pattern -- both are productless
+  placeholder rows and, as of this pass, the ONLY place either unit
+  appears anywhere on the site (base Space Marines doesn't have them
+  either). Deactivating them would be a net loss of calculator coverage,
+  not a cleanup. Confirmed with user 2026-08-07.
 """
 
 from django.core.management.base import BaseCommand
@@ -27,157 +64,191 @@ from calculators.models import UnitType
 from products.models import Faction, Product
 
 # ---------------------------------------------------------------------------
-# Points data: (gw_sku, points_cost, display_name_for_logging)
-#
-# Sourced from New Recruit — Black Templars 10th Edition list.
-# Includes both BT-exclusive units (55-xx SKUs) and shared SM kits (48-xx).
+# Renames applied first: (old_name, new_name)
 # ---------------------------------------------------------------------------
-BLACK_TEMPLARS_POINTS = [
-    # ── BT-exclusive characters & units ─────────────────────────────────────
-    ('55-22', 100, "Emperor's Champion"),
-    ('55-21', 120, 'High Marshal Helbrecht'),
-    ('55-20', 150, 'Primaris Crusader Squad'),
-    ('55-23', 105, 'Sword Brethren'),
-    ('55-24', 110, 'Chaplain Grimaldus'),
-    ('55-25',  70, 'Castellan'),
-    ('55-26',  60, 'Execrator'),
-    ('55-27',  55, 'Crusade Ancient'),
-    ('55-28',  80, 'Marshal'),
-    # ── Shared SM characters — BT-specific costs ─────────────────────────────
-    ('48-34',  50, 'Ancient'),
-    ('48-33',  50, 'Apothecary'),
-    ('48-32',  60, 'Chaplain'),          # 60pts BT | 75pts Space Marines
-    ('48-30',  65, 'Librarian'),
-    ('48-36',  70, 'Judiciar'),
-    ('48-61',  55, 'Lieutenant'),
-    ('48-62',  80, 'Captain'),
-    ('48-37', 105, 'Company Heroes'),
-    # ── Battleline ───────────────────────────────────────────────────────────
-    ('48-75',  80, 'Intercessor Squad'),
-    ('48-76',  75, 'Assault Intercessor Squad'),
-    ('48-29',  70, 'Scout Squad'),
-    ('48-45',  90, 'Infernus Squad'),
-    # ── Infantry ─────────────────────────────────────────────────────────────
-    ('48-06', 175, 'Terminator Squad'),  # 175pts BT | 170pts Space Marines
-    ('48-92',  95, 'Aggressor Squad'),
-    ('48-38',  80, 'Bladeguard Veteran Squad'),
-    ('48-15', 120, 'Devastator Squad'),
-    ('48-98',  85, 'Eliminator Squad'),
-    ('48-39',  90, 'Eradicator Squad'),
-    ('48-96',  80, 'Incursor Squad'),
-    ('48-41', 100, 'Infiltrator Squad'),
-    ('48-43',  85, 'Sternguard Veteran Squad'),  # 85pts BT | 100pts Space Marines
-    ('48-08', 100, 'Vanguard Veteran Squad'),
-    # ── Mounted / Fast Attack ─────────────────────────────────────────────────
-    ('48-40',  80, 'Outrider Squad'),
-    ('48-42',  60, 'Invader ATV'),
-    ('48-97', 120, 'Inceptor Squad'),
-    ('48-99',  75, 'Suppressor Squad'),
-    # ── Vehicles / Dreadnoughts ───────────────────────────────────────────────
-    ('48-46', 150, 'Ballistus Dreadnought'),
-    ('48-44', 160, 'Brutalis Dreadnought'),
-    ('48-93', 195, 'Redemptor Dreadnought'),
-    ('48-23', 140, 'Predator Destructor'),
-    ('48-25', 190, 'Whirlwind'),
-    ('48-26', 185, 'Vindicator'),
-    ('48-95', 235, 'Repulsor Executioner'),  # 235pts BT | 220pts Space Marines
-    # ── Transports ───────────────────────────────────────────────────────────
-    ('48-94',  85, 'Impulsor'),              # 85pts BT | 80pts Space Marines
-    ('48-85', 180, 'Repulsor'),
-    ('48-21', 220, 'Land Raider'),
-    ('48-22', 220, 'Land Raider Crusader'),
-    # ── Fortifications ────────────────────────────────────────────────────────
-    ('48-27', 175, 'Hammerfall Bunker'),
-    ('48-28',  75, 'Firestrike Servo-Turrets'),
+BT_RENAMES = [
+    ('Black Templars Castellan', 'Castellan'),
+    ('Black Templars Chaplain Grimaldus', 'Chaplain Grimaldus'),
+    ('Black Templars Crusade Ancient', 'Crusade Ancient'),
+    ('Black Templars Primaris Crusader Squad', 'Crusader Squad'),
+    ("Black Templars Emperor's Champion", "Emperor's Champion"),
+    ('Black Templars Execrator', 'Execrator'),
+    ('Black Templars Helbrecht', 'High Marshal Helbrecht'),
+    ('Black Templars Marshal', 'Marshal'),
+    ('Black Templars Sword Brethren', 'Sword Brethren Squad'),
+]
+
+# ---------------------------------------------------------------------------
+# Bundle/book rows -- deactivated, never given points.
+# ---------------------------------------------------------------------------
+BT_DEACTIVATE = [
+    'Black Templars Combat Patrol',
+    'Codex Supplement: Black Templars',
+    'Ancient',
+    'Apothecary',
+    'Ballistus Dreadnought',
+    'Bladeguard Veteran Squad',
+    'Brutalis Dreadnought',
+    'Captain',
+    'Chaplain',
+    'Company Heroes',
+    'Devastator Squad',
+    'Eliminator Squad',
+    'Firestrike Servo-Turrets',
+    'Hammerfall Bunker',
+    'Inceptor Squad',
+    'Incursor Squad',
+    'Infernus Squad',
+    'Infiltrator Squad',
+    'Intercessor Squad',
+    'Invader ATV',
+    'Land Raider',
+    'Librarian',
+    'Lieutenant',
+    'Outrider Squad',
+    'Predator Destructor',
+    'Redemptor Dreadnought',
+    'Scout Squad',
+    'Tactical Squad',
+    'Vanguard Veteran Squad',
+    'Vindicator',
+    'Whirlwind',
+]
+
+# ---------------------------------------------------------------------------
+# Unit data: (gw_sku, points_cost, category, name)
+#
+# Sourced from BSData/wh40k-11e ("Imperium - Black Templars.json"), 11th
+# Edition. Base points only, no wargear or squad-size modifiers.
+# ---------------------------------------------------------------------------
+BLACK_TEMPLARS_UNITS = [
+    ('55-25', 70, 'character', 'Castellan'),
+    ('55-24', 100, 'infantry', 'Chaplain Grimaldus'),
+    ('55-27', 40, 'character', 'Crusade Ancient'),
+    ('55-20', 150, 'battleline', 'Crusader Squad'),
+    ('55-22', 90, 'character', "Emperor's Champion"),
+    ('55-26', 50, 'character', 'Execrator'),
+    ('48-113', 160, 'vehicle', 'Gladiator Lancer'),
+    ('48-114', 160, 'vehicle', 'Gladiator Reaper'),
+    ('48-115', 150, 'vehicle', 'Gladiator Valiant'),
+    ('55-21', 110, 'epic_hero', 'High Marshal Helbrecht'),
+    ('48-94', 75, 'transport', 'Impulsor'),
+    ('48-22', 220, 'vehicle', 'Land Raider Crusader'),
+    ('55-28', 80, 'character', 'Marshal'),
+    ('48-85', 170, 'vehicle', 'Repulsor'),
+    ('48-95', 255, 'vehicle', 'Repulsor Executioner'),
+    ('48-43', 85, 'infantry', 'Sternguard Veteran Squad'),
+    ('55-23', 105, 'infantry', 'Sword Brethren Squad'),
+    ('48-06', 160, 'infantry', 'Terminator Squad'),
+    # Productless placeholder rows (see docstring) -- kept active rather than
+    # deactivated, but their stale 0pts is corrected using the same BSData
+    # values already extracted during the Space Marines pass.
+    (None, 55, 'character', 'Judiciar'),
+    (None, 85, 'infantry', 'Suppressor Squad'),
 ]
 
 
 class Command(BaseCommand):
     """
-    Seed official 10th Edition points costs for Black Templars units.
+    Seed 11th Edition points, category, and active status for Black
+    Templars units.
 
-    Looks up each product by GW SKU, then filters for the Black Templars
-    UnitType specifically and updates only that row's points_cost. This
-    ensures Space Marines UnitType rows for the same product are untouched.
-    Idempotent — safe to re-run at any time.
+    Looks up each unit by (name, faction) and updates points_cost, category,
+    and is_active in place; creates the row if it doesn't exist yet (linking
+    the product by gw_sku when one is given). Idempotent -- safe to re-run.
     """
 
-    help = 'Seed 10th Edition points values for Black Templars units.'
+    help = 'Seed 11th Edition points and categories for Black Templars units.'
+
+    def add_arguments(self, parser):
+        """Add --dry-run option."""
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Preview changes without saving anything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        self.stdout.write('Seeding Black Templars points…\n')
+        dry_run = options['dry_run']
+        self.stdout.write(
+            'Seeding Black Templars points (11th Edition)' + (' [DRY RUN]' if dry_run else '') + '\u2026\n'
+        )
 
-        # Filter by faction so we only update Black Templars UnitType rows —
-        # not Space Marines or other cross-faction rows for the same product.
-        bt_faction = Faction.objects.filter(name='Black Templars').first()
-        if not bt_faction:
+        fac = Faction.objects.filter(name='Black Templars').first()
+        if not fac:
             self.stdout.write(self.style.ERROR(
                 'Black Templars faction not found. Run populate_products first.'
             ))
             return
 
+        for old_name, new_name in BT_RENAMES:
+            unit = UnitType.objects.filter(name=old_name, faction=fac).first()
+            if unit:
+                self.stdout.write(f'  [rename] {old_name!r} -> {new_name!r}')
+                if not dry_run:
+                    unit.name = new_name
+                    unit.save(update_fields=['name'])
+
+        for name in BT_DEACTIVATE:
+            unit = UnitType.objects.filter(name=name, faction=fac).first()
+            if unit and unit.is_active:
+                self.stdout.write(f'  [deactivate] {name!r}')
+                if not dry_run:
+                    unit.is_active = False
+                    unit.save(update_fields=['is_active'])
+
         updated_count = 0
+        created_count = 0
         skipped_count = 0
 
-        for gw_sku, points, label in BLACK_TEMPLARS_POINTS:
-            product = Product.objects.filter(gw_sku=gw_sku).first()
+        for gw_sku, points, category, label in BLACK_TEMPLARS_UNITS:
+            product = Product.objects.filter(gw_sku=gw_sku).first() if gw_sku else None
 
-            if not product:
+            if gw_sku and not product:
                 self.stdout.write(
                     self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
                 )
                 skipped_count += 1
                 continue
 
-            # Filter by BOTH product AND faction — critical for multi-faction safety
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=bt_faction,
-            ).update(points_cost=points)
+            unit = UnitType.objects.filter(name=label, faction=fac).first()
 
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
+            if unit:
+                changes = []
+                if unit.points_cost != points:
+                    changes.append(f'points {unit.points_cost}->{points}')
+                if unit.category != category:
+                    changes.append(f'category {unit.category}->{category}')
+                if not unit.is_active:
+                    changes.append('reactivating')
+                change_note = f" ({', '.join(changes)})" if changes else ' (no change)'
+
+                if not dry_run:
+                    unit.points_cost = points
+                    unit.category = category
+                    unit.is_active = True
+                    update_fields = ['points_cost', 'category', 'is_active']
+                    if product and unit.product_id != product.id:
+                        unit.product = product
+                        update_fields.append('product')
+                    unit.save(update_fields=update_fields)
+                self.stdout.write(f'  [update] {label} > {points} pts ({category}){change_note}')
                 updated_count += 1
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {label} (SKU {gw_sku}) — BT UnitType not found. '
-                        f'Run populate_units first.'
+                if not dry_run:
+                    UnitType.objects.create(
+                        name=label,
+                        faction=fac,
+                        product=product,
+                        category=category,
+                        points_cost=points,
+                        typical_quantity=1,
+                        is_active=True,
                     )
-                )
-                skipped_count += 1
-
-        # ── 48-07 SKU collision (Tactical Squad + Terminator Assault Squad) ──────
-        # Both products share gw_sku 48-07; must use name filtering to distinguish.
-        BT_SKU_COLLISIONS = [
-            ('48-07', 'Tactical',   140, 'Tactical Squad'),            # 140pts ✓
-            ('48-07', 'Terminator', 180, 'Terminator Assault Squad'),  # 180pts ✓
-        ]
-        for gw_sku, name_filter, points, label in BT_SKU_COLLISIONS:
-            product = Product.objects.filter(
-                gw_sku=gw_sku, name__icontains=name_filter
-            ).first()
-            if not product:
-                self.stdout.write(self.style.WARNING(
-                    f'  [skip]    {label} (SKU {gw_sku} not found in DB)'
-                ))
-                skipped_count += 1
-                continue
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=bt_faction,
-            ).update(points_cost=points)
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
-                updated_count += 1
-            else:
-                self.stdout.write(self.style.WARNING(
-                    f'  [no unit] {label} (SKU {gw_sku}) — BT UnitType not found. '
-                    f'Run populate_units first.'
-                ))
-                skipped_count += 1
+                self.stdout.write(f'  [create] {label} > {points} pts ({category})')
+                created_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
+            f'\nDone! Updated: {updated_count}  |  Created: {created_count}  |  Skipped: {skipped_count}'
         ))

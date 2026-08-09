@@ -167,14 +167,6 @@
         </a>
       </p>
 
-      {# Description #}
-      {% if product.description %}
-      <div class="product-description">
-        <h3>About This Kit</h3>
-        <p>{{ product.description }}</p>
-      </div>
-      {% endif %}
-
       {# Price comparison table #}
       <h3 style="font-size:1.1rem;margin-bottom:var(--sp-2);">Price Comparison</h3>
       {% if current_prices %}
@@ -249,8 +241,12 @@
         No price data yet. Check back after the next scrape.
       </p>
       {% endif %}
+      {# Description #}
       {% if product.description %}
-      <p style="font-size:0.82rem;color:var(--text-muted);margin-top:var(--sp-3);">{{ product.description }}</p>
+      <div class="product-description">
+        <h3>About This Kit</h3>
+        <p>{{ product.description }}</p>
+      </div>
       {% endif %}
 
     </div>

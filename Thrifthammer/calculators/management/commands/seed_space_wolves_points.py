@@ -1,30 +1,47 @@
 """
 Management command: seed_space_wolves_points
 
-Sets the points_cost on UnitType records for all Space Wolves units,
-using official 10th Edition points values sourced from New Recruit.
+Sets points_cost, category, and active status on UnitType records for
+Space Wolves units, using official 11th Edition data sourced from the
+BSData community BattleScribe project (github.com/BSData/wh40k-11e), the
+same data New Recruit itself is built on.
 
 Usage:
     python manage.py seed_space_wolves_points
+    python manage.py seed_space_wolves_points --dry-run
 
-The command is fully idempotent — safe to re-run. It looks up each product by
-its Games Workshop SKU (gw_sku), then filters for the Space Wolves UnitType
-specifically and updates only that row's points_cost.
+The command is fully idempotent -- safe to re-run. It looks up each unit by
+(name, faction) -- the same pair UnitType enforces uniqueness on.
 
 Notes:
-- Run AFTER populate_products and populate_units.
-- Do NOT add to the Procfile yet.
-- Line-by-line verified against New Recruit Space Wolves 10th Edition list.
-- SKUs not yet in the DB skip gracefully — add products later and re-run.
-- Currently seeded SKUs in DB:
-    53-02 (Ragnar Blackmane), 53-06 (Grey Hunters), 53-08 (Wolf Guard Terminators),
-    53-10 (Thunderwolf Cavalry)
-- 53-20 (Combat Patrol) is a bundle — no standalone UnitType entry.
-- Space Wolves share the full Space Marines product range (48-xx).
-  Those shared kits are NOT listed here — they are handled by
-  seed_ultramarines_points / the base SM seed, as SW points match SM points
-  for all shared kits. Add SW-specific cross-faction rows to populate_units
-  if SW points ever diverge from SM.
+- Same hybrid-catalogue pattern as every prior Space Marine successor
+  chapter, but with an unusually large chapter-exclusive roster (22 real
+  units, vs. 2-3 for most chapters) -- BSData's Space Wolves file defines
+  its own points/rules for units that are conceptually the Space-Wolves-
+  flavored version of what other chapters just inherit generically
+  (Blood Claws, Grey Hunters, Wolf Guard Terminators, etc.). Everything
+  else still falls back to the base Space Marines faction via the
+  calculator's parent-faction fallback. Source: "Imperium - Space
+  Wolves.json".
+- 'Wolf Guard Headtakers' appears twice in the raw BSData file as two
+  separate entries with identical name/points/category -- a source data
+  duplication, not a meaningful distinction. Treated as one unit.
+- **'Venerable Dreadnought' renamed** from 'Space Wolves Venerable
+  Dreadnought' (BSData's literal name has no chapter prefix) and
+  reactivated -- confirmed it's a real, distinct product (53-30), not
+  the same physical kit as the generic 'Dreadnought' (48-137, unlike
+  Blood Angels' cross-linked Librarian Dreadnought which does share the
+  generic kit).
+- **'Wolf Scouts'** (90pts, Infantry) links to `KT-026` ("Kill Team: Wolf
+  Scouts"), a real product tagged faction=None -- same pattern as Astra
+  Militarum's Kasrkin/Ratlings/Tempestus Aquilons cross-links to
+  standalone Kill Team boxes.
+- The 67 generic Space-Marine-squad rows this chapter had duplicated with
+  no BSData Space-Wolves-specific override are deactivated here so they
+  correctly fall back to the current base Space Marines rows for the same
+  product. Verified before writing this command: all 67 share the exact
+  same product_id as their base Space Marines counterpart -- zero shared-
+  SKU conflicts. User confirmed 2026-08-08.
 """
 
 from django.core.management.base import BaseCommand
@@ -33,99 +50,171 @@ from calculators.models import UnitType
 from products.models import Faction, Product
 
 # ---------------------------------------------------------------------------
-# Points data: (gw_sku, points_cost, display_name_for_logging)
-#
-# Sourced from New Recruit — Space Wolves 10th Edition list.
-# Only SW-exclusive kits (53-xx) are listed here.
+# Renames applied first: (old_name, new_name)
 # ---------------------------------------------------------------------------
-SPACE_WOLVES_POINTS = [
-    # ── Named characters ──────────────────────────────────────────────────────
-    ('53-30', 130, 'Logan Grimnar'),                   # 130pts ✓
-    ('53-31', 110, 'Logan Grimnar on Stormrider'),     # 110pts ✓
-    ('53-02', 100, 'Ragnar Blackmane'),                # 100pts ✓
-    ('53-32',  95, 'Njal Stormcaller'),                # 95pts  ✓
-    ('53-33',  95, 'Ulrik the Slayer'),                # 95pts  ✓
-    ('53-34',  85, 'Canis Wolfborn'),                  # 85pts  ✓
-    ('53-35',  80, 'Lukas the Trickster'),             # 80pts  ✓
-    # ── Generic characters ────────────────────────────────────────────────────
-    ('53-36',  80, 'Wolf Lord'),                       # 80pts  ✓
-    ('53-37',  85, 'Wolf Lord on Thunderwolf'),        # 85pts  ✓
-    ('53-38',  75, 'Rune Priest'),                     # 75pts  ✓
-    ('53-39',  65, 'Iron Priest'),                     # 65pts  ✓
-    ('53-40',  75, 'Wolf Guard Battle Leader'),        # 75pts  ✓
-    ('53-41',  80, 'Wolf Guard Battle Leader on Thunderwolf'), # 80pts ✓
-    ('53-42',  60, 'Wolf Guard Pack Leader'),          # 60pts  ✓
-    # ── Battleline ────────────────────────────────────────────────────────────
-    ('53-06',  95, 'Grey Hunters'),                    # 95pts  ✓
-    ('53-43',  75, 'Blood Claws'),                     # 75pts  ✓
-    ('53-44',  75, 'Sky Claws'),                       # 75pts  ✓
-    # ── Infantry ──────────────────────────────────────────────────────────────
-    ('53-08', 200, 'Wolf Guard Terminators'),          # 200pts ✓
-    ('53-45', 100, 'Wolf Guard'),                      # 100pts ✓
-    ('53-46',  80, 'Long Fangs'),                      # 80pts  ✓
-    ('53-47',  75, 'Swiftclaws'),                      # 75pts  ✓
-    ('53-48',  80, 'Wulfen'),                          # 80pts  ✓
-    # ── Mounted / Fast Attack ─────────────────────────────────────────────────
-    ('53-10', 175, 'Thunderwolf Cavalry'),             # 175pts ✓
-    ('53-49',  75, 'Fenrisian Wolf Pack'),             # 75pts  ✓
-    # ── Vehicles ──────────────────────────────────────────────────────────────
-    ('53-50', 130, 'Hrimthursar'),                     # 130pts ✓
+SPACE_WOLVES_RENAMES = [
+    ('Space Wolves Venerable Dreadnought', 'Venerable Dreadnought'),
+]
+
+# ---------------------------------------------------------------------------
+# Generic Space-Marine-squad rows -- deactivated so they fall back to base
+# Space Marines.
+# ---------------------------------------------------------------------------
+SPACE_WOLVES_DEACTIVATE = [
+    'Ancient', 'Ancient in Terminator Armor', 'Assault Intercessors with Jump Packs',
+    'Ballistus Dreadnought', 'Bladeguard Veteran Squad', 'Brutalis Dreadnought',
+    'Captain', 'Captain in Gravis Armour', 'Captain in Phobos Armour',
+    'Captain in Terminator Armour', 'Captain with Jump Pack',
+    'Centurion Assault Squad', 'Centurion Devastator Squad', 'Chaplain',
+    'Chaplain in Terminator Armour', 'Chaplain on Bike',
+    'Chaplain with Jump Pack', 'Company Heroes', 'Desolation Squad',
+    'Dreadnought', 'Drop Pod', 'Eliminator Squad', 'Firestrike Servo-Turrets',
+    'Gladiator Lancer', 'Gladiator Reaper', 'Gladiator Valiant',
+    'Hammerfall Bunker', 'Heavy Intercessor Squad', 'Hellblaster Squad',
+    'Impulsor', 'Inceptor Squad', 'Incursor Squad', 'Infernus Squad',
+    'Infiltrator Squad', 'Intercessor Squad', 'Invader ATV',
+    'Invictor Tactical Warsuit', 'Land Raider', 'Land Raider Crusader',
+    'Land Raider Redeemer', 'Librarian', 'Librarian in Phobos Armour',
+    'Librarian in Terminator Armour', 'Lieutenant', 'Lieutenant in Reiver Armour',
+    'Outrider Squad', 'Predator Annihilator', 'Predator Destructor',
+    'Razorback', 'Redemptor Dreadnought', 'Reiver Squad', 'Repulsor',
+    'Repulsor Executioner', 'Rhino', 'Scout Squad', 'Sternguard Veteran Squad',
+    'Storm Speeder Hailstrike', 'Storm Speeder Hammerstrike',
+    'Storm Speeder Thunderstrike', 'Stormhawk Interceptor',
+    'Stormraven Gunship', 'Stormtalon Gunship', 'Techmarine',
+    'Terminator Assault Squad', 'Vanguard Veteran Squad with Jump Packs',
+    'Vindicator', 'Whirlwind',
+]
+
+# ---------------------------------------------------------------------------
+# Unit data: (gw_sku, points_cost, category, name)
+# ---------------------------------------------------------------------------
+SPACE_WOLVES_UNITS = [
+    ('53-21', 95, 'epic_hero', 'Arjac Rockfist'),
+    ('53-22', 160, 'epic_hero', 'Bjorn the Fell-Handed'),
+    ('53-23', 135, 'battleline', 'Blood Claws'),
+    ('53-25', 45, 'monster', 'Fenrisian Wolves'),
+    ('53-06', 165, 'battleline', 'Grey Hunters'),
+    ('53-26', 50, 'character', 'Iron Priest'),
+    ('53-27', 100, 'epic_hero', 'Logan Grimnar'),
+    ('53-28', 150, 'epic_hero', 'Murderfang'),
+    ('53-29', 75, 'epic_hero', 'Njal Stormcaller'),
+    ('53-02', 90, 'epic_hero', 'Ragnar Blackmane'),
+    ('53-10', 100, 'mounted', 'Thunderwolf Cavalry'),
+    ('53-31', 70, 'epic_hero', 'Ulrik the Slayer'),
+    ('53-30', 125, 'vehicle', 'Venerable Dreadnought'),
+    ('53-32', 65, 'character', 'Wolf Guard Battle Leader'),
+    ('53-33', 85, 'infantry', 'Wolf Guard Headtakers'),
+    ('53-08', 150, 'infantry', 'Wolf Guard Terminators'),
+    ('53-34', 70, 'character', 'Wolf Priest'),
+    ('KT-026', 90, 'infantry', 'Wolf Scouts'),
+    ('53-35', 85, 'infantry', 'Wulfen'),
+    ('53-36', 135, 'vehicle', 'Wulfen Dreadnought'),
+    ('53-35', 100, 'infantry', 'Wulfen with Storm Shields'),
 ]
 
 
 class Command(BaseCommand):
     """
-    Seed official 10th Edition points costs for Space Wolves units.
+    Seed 11th Edition points, category, and active status for Space Wolves
+    units.
 
-    Looks up each product by GW SKU, then filters for the Space Wolves
-    UnitType specifically and updates only that row's points_cost.
-    SKUs not found in the DB are skipped with a warning — add the products
-    later and re-run. Idempotent — safe to re-run at any time.
+    Looks up each unit by (name, faction) and updates points_cost, category,
+    and is_active in place; creates the row if it doesn't exist yet (linking
+    the product by gw_sku when one is given). Idempotent -- safe to re-run.
     """
 
-    help = 'Seed 10th Edition points values for Space Wolves units.'
+    help = 'Seed 11th Edition points and categories for Space Wolves units.'
+
+    def add_arguments(self, parser):
+        """Add --dry-run option."""
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Preview changes without saving anything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        self.stdout.write('Seeding Space Wolves points…\n')
+        dry_run = options['dry_run']
+        self.stdout.write(
+            'Seeding Space Wolves points (11th Edition)' + (' [DRY RUN]' if dry_run else '') + '…\n'
+        )
 
-        sw_faction = Faction.objects.filter(name='Space Wolves').first()
-        if not sw_faction:
+        fac = Faction.objects.filter(name='Space Wolves').first()
+        if not fac:
             self.stdout.write(self.style.ERROR(
                 'Space Wolves faction not found. Run populate_products first.'
             ))
             return
 
+        for old_name, new_name in SPACE_WOLVES_RENAMES:
+            unit = UnitType.objects.filter(name=old_name, faction=fac).first()
+            if unit:
+                self.stdout.write(f'  [rename] {old_name!r} -> {new_name!r}')
+                if not dry_run:
+                    unit.name = new_name
+                    unit.save(update_fields=['name'])
+
+        for name in SPACE_WOLVES_DEACTIVATE:
+            unit = UnitType.objects.filter(name=name, faction=fac).first()
+            if unit and unit.is_active:
+                self.stdout.write(f'  [deactivate] {name!r}')
+                if not dry_run:
+                    unit.is_active = False
+                    unit.save(update_fields=['is_active'])
+
         updated_count = 0
+        created_count = 0
         skipped_count = 0
 
-        for gw_sku, points, label in SPACE_WOLVES_POINTS:
-            product = Product.objects.filter(gw_sku=gw_sku).first()
+        for gw_sku, points, category, label in SPACE_WOLVES_UNITS:
+            product = Product.objects.filter(gw_sku=gw_sku).first() if gw_sku else None
 
-            if not product:
+            if gw_sku and not product:
                 self.stdout.write(
                     self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
                 )
                 skipped_count += 1
                 continue
 
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=sw_faction,
-            ).update(points_cost=points)
+            unit = UnitType.objects.filter(name=label, faction=fac).first()
 
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
+            if unit:
+                changes = []
+                if unit.points_cost != points:
+                    changes.append(f'points {unit.points_cost}->{points}')
+                if unit.category != category:
+                    changes.append(f'category {unit.category}->{category}')
+                if not unit.is_active:
+                    changes.append('reactivating')
+                change_note = f" ({', '.join(changes)})" if changes else ' (no change)'
+
+                if not dry_run:
+                    unit.points_cost = points
+                    unit.category = category
+                    unit.is_active = True
+                    update_fields = ['points_cost', 'category', 'is_active']
+                    if product and unit.product_id != product.id:
+                        unit.product = product
+                        update_fields.append('product')
+                    unit.save(update_fields=update_fields)
+                self.stdout.write(f'  [update] {label} > {points} pts ({category}){change_note}')
                 updated_count += 1
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {label} (SKU {gw_sku}) — Space Wolves UnitType not found. '
-                        f'Run populate_units first.'
+                if not dry_run:
+                    UnitType.objects.create(
+                        name=label,
+                        faction=fac,
+                        product=product,
+                        category=category,
+                        points_cost=points,
+                        typical_quantity=1,
+                        is_active=True,
                     )
-                )
-                skipped_count += 1
+                self.stdout.write(f'  [create] {label} > {points} pts ({category})')
+                created_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
+            f'\nDone! Updated: {updated_count}  |  Created: {created_count}  |  Skipped: {skipped_count}'
         ))

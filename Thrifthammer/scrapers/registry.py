@@ -5,12 +5,14 @@ Add new scrapers here so the management command can find them.
 
 from .retailers.amazon import AmazonScraper
 from .retailers.example_retailer import ExampleRetailerScraper
+from .retailers.firestorm_games_uk import FirestormGamesUKScraper
 from .retailers.miniature_market import MiniatureMarketScraper
 from .retailers.noble_knight import NoblekKnightScraper
 
 SCRAPER_REGISTRY = {
     'amazon': AmazonScraper,
     'example-store': ExampleRetailerScraper,
+    'firestorm-games': FirestormGamesUKScraper,
     'miniature-market': MiniatureMarketScraper,
     'noble-knight-games': NoblekKnightScraper,
     # eBay uses the official Browse API via update_ebay_prices command,

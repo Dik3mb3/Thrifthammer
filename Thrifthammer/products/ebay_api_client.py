@@ -233,6 +233,7 @@ class EbayBrowseAPI:
         # with apparent $0 shipping turned out to have $9-13 real shipping,
         # making it more expensive than the Best Match #1 pick it beat.
         cheaper_threshold = Decimal('0.90')  # must be ≥10% cheaper to beat Best Match
+        verified_item_ids = set()
         if cheapest is not first_valid:
             for candidate in (first_valid, cheapest):
                 real_ship = self._fetch_item_shipping(candidate['item_id'])
@@ -245,6 +246,7 @@ class EbayBrowseAPI:
                         )
                     candidate['shipping']   = real_ship
                     candidate['total_cost'] = candidate['price'] + real_ship
+                    verified_item_ids.add(candidate['item_id'])
 
         if cheapest['total_cost'] <= first_valid['total_cost'] * cheaper_threshold:
             best = cheapest
@@ -257,25 +259,34 @@ class EbayBrowseAPI:
         else:
             best = first_valid
 
-        # Refresh shipping from item detail endpoint.
-        # Search results (item_summary/search) sometimes return $0 or missing
-        # shippingOptions even for listings with real fixed-rate shipping.
-        # The item detail endpoint is the authoritative source.
-        accurate_shipping = self._fetch_item_shipping(best['item_id'])
-        if accurate_shipping is None:
-            # CALCULATED or LOCAL_PICKUP confirmed by item detail — discard winner
-            logger.debug(
-                '[ebay] Winner discarded after item detail shipping check: "%s"',
-                best['title'][:60],
-            )
-            return None
-        if accurate_shipping != best['shipping']:
-            logger.debug(
-                '[ebay] Shipping corrected by item detail for "%s": $%.2f → $%.2f',
-                best['title'][:60], best['shipping'], accurate_shipping,
-            )
-            best['shipping']    = accurate_shipping
-            best['total_cost']  = best['price'] + accurate_shipping
+        # Refresh shipping from the item detail endpoint -- unless the
+        # pre-comparison loop above already fetched a verified value for
+        # this exact listing. Re-querying the same item_id a second time
+        # returns the same answer; the earlier code paid for that duplicate
+        # eBay call (and its 10s timeout budget) on every product where a
+        # cheaper alternative existed, a real contributor to the scraper
+        # timing out mid-run. LOCAL_PICKUP/failed-fetch listings are still
+        # discarded below -- a candidate whose loop fetch failed is never
+        # added to verified_item_ids, so it still gets a fetch (and the
+        # discard-on-None check) here.
+        if best['item_id'] in verified_item_ids:
+            accurate_shipping = best['shipping']
+        else:
+            accurate_shipping = self._fetch_item_shipping(best['item_id'])
+            if accurate_shipping is None:
+                # CALCULATED or LOCAL_PICKUP confirmed by item detail — discard winner
+                logger.debug(
+                    '[ebay] Winner discarded after item detail shipping check: "%s"',
+                    best['title'][:60],
+                )
+                return None
+            if accurate_shipping != best['shipping']:
+                logger.debug(
+                    '[ebay] Shipping corrected by item detail for "%s": $%.2f → $%.2f',
+                    best['title'][:60], best['shipping'], accurate_shipping,
+                )
+                best['shipping']    = accurate_shipping
+                best['total_cost']  = best['price'] + accurate_shipping
 
         logger.debug(
             '[ebay] Match: "%s" — $%.2f + $%.2f shipping '

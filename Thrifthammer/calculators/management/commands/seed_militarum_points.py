@@ -1,32 +1,46 @@
 """
 Management command: seed_militarum_points
 
-Sets the points_cost on UnitType records for all Astra Militarum units,
-using official 10th Edition points values sourced from New Recruit.
+Sets points_cost, category, and active status on UnitType records for all
+Astra Militarum units, using official 11th Edition data sourced from the
+BSData community BattleScribe project (github.com/BSData/wh40k-11e), the
+same data New Recruit itself is built on.
 
 Usage:
     python manage.py seed_militarum_points
 
-The command is fully idempotent — safe to re-run. It looks up each product by
-its Games Workshop SKU (gw_sku), then filters for the Astra Militarum UnitType
-specifically and updates only that row's points_cost.
+The command is fully idempotent -- safe to re-run. It looks up each unit by
+(name, faction) -- the same pair UnitType enforces uniqueness on.
 
 Notes:
-- Run AFTER populate_products and populate_units.
-- Do NOT add to the Procfile yet.
-- Line-by-line verified against the New Recruit Astra Militarum 10th Edition list.
-- SKUs not yet in the DB skip gracefully — add products later and re-run.
-- Currently seeded SKUs in DB:
-    47-05 (Chimera), 47-06 (Leman Russ), 47-08 (Commissar),
-    47-12 (Sentinel), 47-14 (Hellhound), 47-17 (Basilisk),
-    47-19 (Infantry Squad), 47-30 (Cadian Shock Troops)
-- 47-25 (Combat Patrol) is a bundle — no UnitType entry.
-- 47-31 (Veteran Guardsmen box) builds Death Korps of Krieg — seeded at 60pts.
-- 47-12 (Sentinel): one kit builds Scout Sentinels (55pts) or Armoured Sentinels
-  (65pts). Seeded at 55pts (Scout base cost).
-- Leman Russ variants: all share the 47-06 kit. Seeded at 185pts (Battle Tank
-  base). Other variants listed here with placeholder SKUs for when added as
-  separate products.
+- Source files: "Imperium - Astra Militarum.json" (a thin entryLinks
+  roster, no unit data of its own) resolved against "Imperium - Astra
+  Militarum - Library.json" (the shared catalogue with the real costs/
+  categories/profiles) -- same split-file pattern as Aeldari.
+- This faction had only 7 active UnitType rows before this command (out of
+  a 57-product catalog) -- the old 10th Edition file listed ~50 aspirational
+  SKUs (47-32 through 47-89) that were never actually onboarded as real
+  products, so most of it silently skipped every time it ran. This command
+  replaces it entirely, matched against the DB's real product list (8
+  legacy "47-xx" SKUs plus 49 "AM-xxx" SKUs).
+- Several genuine multi-build kits share one SKU across multiple UnitType
+  rows (same pattern used throughout the migration):
+    * 47-12 "Sentinel": Scout Sentinels (55pts) / Armoured Sentinels (65pts)
+    * AM-016 "Commissar Graves": mounted (125pts) / on Foot (65pts)
+    * AM-037 "Ogryns": Ogryn Squad (60pts) / Ogryn Bodyguard (40pts)
+    * AM-039 "Rogal Dorn Battle Tank": Battle Tank (260pts) / Commander
+      (290pts)
+    * 47-06 "Leman Russ Battle Tank" -- a genuine 8-way multi-build kit in
+      11e: Battle Tank, Commander, Demolisher, Eradicator, Executioner,
+      Exterminator, Punisher, Vanquisher, all sharing this one SKU.
+- 3 units (Kasrkin, Ratlings, Tempestus Aquilons) link to real products
+  that exist only as standalone "Kill Team: X" boxes tagged with no
+  faction at all (KT-012/KT-019/KT-011) -- confirmed with user 2026-08-07
+  that these are the correct, only retail source for these units.
+- Units confirmed real in 11e with NO matching product anywhere in the
+  catalog (Avenger Strike Fighter, Cadian Recon Squad, Centaur RSV, Cyclops
+  Demolition Vehicle) are tracked in
+  memory/project_11e_calculator_migration.md, not fabricated here.
 """
 
 from django.core.management.base import BaseCommand
@@ -35,145 +49,168 @@ from calculators.models import UnitType
 from products.models import Faction, Product
 
 # ---------------------------------------------------------------------------
-# Points data: (gw_sku, points_cost, display_name_for_logging)
+# Unit data: (gw_sku, points_cost, category, name)
 #
-# Sourced from New Recruit — Astra Militarum 10th Edition list.
-# Verified line-by-line against the full New Recruit army list.
+# Sourced from BSData/wh40k-11e ("Imperium - Astra Militarum.json" roster,
+# resolved against "Imperium - Astra Militarum - Library.json"), 11th
+# Edition. Base points only, no wargear or squad-size modifiers.
 # ---------------------------------------------------------------------------
-MILITARUM_POINTS = [
-    # ── Named characters ──────────────────────────────────────────────────────
-    ('47-32', 100, "Gaunt's Ghosts"),                      # 100pts ✓
-    ('47-33', 100, 'Lord Marshal Dreir'),                  # 100pts ✓
-    ('47-34', 130, 'Lord Solar Leontus'),                  # 130pts ✓
-    ('47-35',  60, 'Nork Deddog'),                         # 60pts  ✓
-    ('47-36',  55, 'Sly Marbo'),                           # 55pts  ✓
-    ('47-37',  85, 'Ursula Creed'),                        # 85pts  ✓
-    # ── Generic characters ────────────────────────────────────────────────────
-    ('47-38',  55, 'Cadian Castellan'),                    # 55pts  ✓
-    ('47-39',  65, 'Cadian Command Squad'),                # 65pts  ✓
-    ('47-40',  65, 'Catachan Command Squad'),              # 65pts  ✓
-    ('47-08',  30, 'Commissar'),                           # 30pts  ✓
-    ('47-41',  65, 'Krieg Command Squad'),                 # 65pts  ✓
-    ('47-42', 235, 'Leman Russ Commander'),                # 235pts ✓
-    ('47-43',  85, 'Militarum Tempestus Command Squad'),   # 85pts  ✓
-    ('47-44',  35, 'Ministorum Priest'),                   # 35pts  ✓
-    ('47-45',  40, 'Ogryn Bodyguard'),                     # 40pts  ✓
-    ('47-46',  60, 'Primaris Psyker'),                     # 60pts  ✓
-    ('47-47', 275, 'Rogal Dorn Commander'),                # 275pts ✓
-    ('47-03',  45, 'Tech-Priest Enginseer'),               # 45pts  ✓
-    # ── Battleline ────────────────────────────────────────────────────────────
-    ('47-30',  65, 'Cadian Shock Troops'),                 # 65pts  ✓
-    ('47-48',  65, 'Catachan Jungle Fighters'),            # 65pts  ✓
-    ('47-49',  65, 'Death Korps of Krieg'),                # 65pts  ✓
-    ('47-19',  65, 'Infantry Squad'),                      # 65pts  ✓
-    ('47-31',  60, 'Death Korps of Krieg'),                # 60pts  ✓ (box labelled Veteran Guardsmen)
-    # ── Infantry ──────────────────────────────────────────────────────────────
-    ('47-50', 100, 'Bullgryn Squad'),                      # 100pts ✓
-    ('47-51',  65, 'Cadian Heavy Weapons Squad'),          # 65pts  ✓
-    ('47-52',  65, 'Catachan Heavy Weapons Squad'),        # 65pts  ✓
-    ('47-53',  60, 'Death Riders'),                        # 60pts  ✓
-    ('47-54',  60, 'Krieg Combat Engineers'),              # 60pts  ✓
-    ('47-55',  75, 'Krieg Heavy Weapons Squad'),           # 75pts  ✓
-    ('47-56', 110, 'Kasrkin'),                             # 110pts ✓
-    ('47-57',  60, 'Ogryn Squad'),                         # 60pts  ✓
-    ('47-58',  60, 'Ratlings'),                            # 60pts  ✓
-    ('47-59', 100, 'Tempestus Aquilons'),                  # 100pts ✓
-    ('47-60',  70, 'Tempestus Scions'),                    # 70pts  ✓
-    # ── Fast Attack ───────────────────────────────────────────────────────────
-    ('47-61',  60, 'Attilan Rough Riders'),                # 60pts  ✓
-    ('47-62',  25, 'Cyclops Demolition Vehicle'),          # 25pts  ✓
-    ('47-12',  55, 'Scout Sentinels'),                     # 55pts  ✓ (same kit as Armoured @ 65pts)
-    ('47-63',  65, 'Armoured Sentinels'),                  # 65pts  ✓
-    # ── Heavy Support / Vehicles ──────────────────────────────────────────────
-    ('47-05',  85, 'Chimera'),                             # 85pts  ✓
-    ('47-17', 140, 'Basilisk'),                            # 140pts ✓
-    ('47-64',  95, 'Artillery Team'),                      # 95pts  ✓
-    ('47-65', 110, 'Field Ordnance Battery'),              # 110pts ✓
-    ('47-14', 125, 'Hellhound'),                           # 125pts ✓
-    ('47-66',  95, 'Hydra'),                               # 95pts  ✓
-    ('47-06', 185, 'Leman Russ Battle Tank'),              # 185pts ✓
-    ('47-67', 190, 'Leman Russ Demolisher'),               # 190pts ✓
-    ('47-68', 170, 'Leman Russ Eradicator'),               # 170pts ✓
-    ('47-69', 170, 'Leman Russ Executioner'),              # 170pts ✓
-    ('47-70', 180, 'Leman Russ Exterminator'),             # 180pts ✓
-    ('47-71', 150, 'Leman Russ Punisher'),                 # 150pts ✓
-    ('47-72', 145, 'Leman Russ Vanquisher'),               # 145pts ✓
-    ('47-73', 165, 'Manticore'),                           # 165pts ✓
-    ('47-74', 145, 'Deathstrike'),                         # 145pts ✓
-    ('47-75',  75, 'Taurox'),                              # 75pts  ✓
-    ('47-76',  90, 'Taurox Prime'),                        # 90pts  ✓
-    ('47-77', 250, 'Rogal Dorn Battle Tank'),              # 250pts ✓
-    # ── Super-heavy vehicles ──────────────────────────────────────────────────
-    ('47-78', 450, 'Baneblade'),                           # 450pts ✓
-    ('47-79', 420, 'Banehammer'),                          # 420pts ✓
-    ('47-80', 450, 'Banesword'),                           # 450pts ✓
-    ('47-81', 415, 'Doomhammer'),                          # 415pts ✓
-    ('47-82', 420, 'Hellhammer'),                          # 420pts ✓
-    ('47-83', 410, 'Shadowsword'),                         # 410pts ✓
-    ('47-84', 430, 'Stormlord'),                           # 430pts ✓
-    ('47-85', 465, 'Stormsword'),                          # 465pts ✓
-    # ── Aircraft ──────────────────────────────────────────────────────────────
-    ('47-86', 130, 'Avenger Strike Fighter'),              # 130pts ✓
-    ('47-87', 190, 'Valkyrie'),                            # 190pts ✓
-    # ── Fortifications ────────────────────────────────────────────────────────
-    ('47-88', 145, 'Aegis Defence Line'),                  # 145pts ✓
-    ('47-89', 110, 'Wyvern'),                              # 110pts ✓
+MILITARUM_UNITS = [
+    ('AM-001', 145, 'fortification', 'Aegis Defence Line'),
+    ('47-12', 65, 'vehicle', 'Armoured Sentinels'),
+    ('AM-003', 95, 'infantry', 'Artillery Team'),
+    ('AM-004', 60, 'mounted', 'Attilan Rough Riders'),
+    ('AM-005', 415, 'vehicle', 'Baneblade'),
+    ('AM-006', 385, 'vehicle', 'Banehammer'),
+    ('AM-007', 415, 'vehicle', 'Banesword'),
+    ('47-17', 115, 'vehicle', 'Basilisk'),
+    ('AM-008', 90, 'infantry', 'Bullgryn Squad'),
+    ('AM-009', 55, 'character', 'Cadian Castellan'),
+    ('AM-010', 60, 'character', 'Cadian Command Squad'),
+    ('AM-024', 65, 'infantry', 'Cadian Heavy Weapons Squad'),
+    ('47-30', 75, 'battleline', 'Cadian Shock Troops'),
+    ('AM-012', 60, 'character', 'Catachan Command Squad'),
+    ('AM-013', 65, 'infantry', 'Catachan Heavy Weapons Squad'),
+    ('AM-014', 75, 'battleline', 'Catachan Jungle Fighters'),
+    ('47-05', 75, 'transport', 'Chimera'),
+    ('47-08', 30, 'character', 'Commissar'),
+    ('AM-016', 125, 'epic_hero', 'Commissar Graves'),
+    ('AM-016', 65, 'epic_hero', 'Commissar Graves on Foot'),
+    ('AM-017', 120, 'epic_hero', 'Commissar Yarrick'),
+    ('AM-018', 75, 'battleline', 'Death Korps of Krieg'),
+    ('AM-019', 60, 'mounted', 'Death Riders'),
+    ('AM-020', 125, 'vehicle', 'Deathstrike'),
+    ('AM-021', 380, 'vehicle', 'Doomhammer'),
+    ('AM-022', 90, 'infantry', 'Field Ordnance Battery'),
+    ('AM-023', 95, 'epic_hero', 'Gaunt’s Ghosts'),
+    ('AM-025', 385, 'vehicle', 'Hellhammer'),
+    ('47-14', 125, 'vehicle', 'Hellhound'),
+    ('AM-026', 90, 'vehicle', 'Hydra'),
+    ('KT-012', 105, 'infantry', 'Kasrkin'),
+    ('AM-027', 65, 'infantry', 'Krieg Combat Engineers'),
+    ('AM-028', 60, 'character', 'Krieg Command Squad'),
+    ('AM-029', 60, 'infantry', 'Krieg Heavy Weapons Squad'),
+    ('47-06', 185, 'vehicle', 'Leman Russ Battle Tank'),
+    ('47-06', 215, 'character', 'Leman Russ Commander'),
+    ('47-06', 180, 'vehicle', 'Leman Russ Demolisher'),
+    ('47-06', 170, 'vehicle', 'Leman Russ Eradicator'),
+    ('47-06', 170, 'vehicle', 'Leman Russ Executioner'),
+    ('47-06', 180, 'vehicle', 'Leman Russ Exterminator'),
+    ('47-06', 150, 'vehicle', 'Leman Russ Punisher'),
+    ('47-06', 150, 'vehicle', 'Leman Russ Vanquisher'),
+    ('AM-031', 75, 'epic_hero', 'Lord Marshal Dreir'),
+    ('AM-032', 130, 'epic_hero', 'Lord Solar Leontus'),
+    ('AM-033', 150, 'vehicle', 'Manticore'),
+    ('AM-034', 85, 'character', 'Militarum Tempestus Command Squad'),
+    ('AM-035', 35, 'character', 'Ministorum Priest'),
+    ('AM-036', 60, 'epic_hero', 'Nork Deddog'),
+    ('AM-037', 40, 'character', 'Ogryn Bodyguard'),
+    ('AM-037', 60, 'infantry', 'Ogryn Squad'),
+    ('AM-038', 60, 'character', 'Primaris Psyker'),
+    ('KT-019', 60, 'infantry', 'Ratlings'),
+    ('AM-039', 260, 'vehicle', 'Rogal Dorn Battle Tank'),
+    ('AM-039', 290, 'character', 'Rogal Dorn Commander'),
+    ('47-12', 55, 'vehicle', 'Scout Sentinels'),
+    ('AM-040', 375, 'vehicle', 'Shadowsword'),
+    ('AM-041', 55, 'epic_hero', 'Sly Marbo'),
+    ('AM-042', 395, 'vehicle', 'Stormlord'),
+    ('AM-043', 430, 'vehicle', 'Stormsword'),
+    ('AM-044', 65, 'transport', 'Taurox'),
+    ('AM-045', 75, 'transport', 'Taurox Prime'),
+    ('AM-046', 45, 'character', 'Tech-Priest Enginseer'),
+    ('KT-011', 95, 'infantry', 'Tempestus Aquilons'),
+    ('AM-047', 75, 'infantry', 'Tempestus Scions'),
+    ('AM-030', 85, 'epic_hero', 'Ursula Creed'),
+    ('AM-048', 170, 'vehicle', 'Valkyrie'),
+    ('AM-049', 95, 'vehicle', 'Wyvern'),
 ]
 
 
 class Command(BaseCommand):
     """
-    Seed official 10th Edition points costs for Astra Militarum units.
+    Seed 11th Edition points, category, and active status for Astra
+    Militarum units.
 
-    Looks up each product by GW SKU, then filters for the Astra Militarum
-    UnitType specifically and updates only that row's points_cost.
-    SKUs not found in the DB are skipped with a warning — add the products
-    later and re-run. Idempotent — safe to re-run at any time.
+    Looks up each unit by (name, faction) and updates points_cost, category,
+    and is_active in place; creates the row if it doesn't exist yet (linking
+    the product by gw_sku when one is given). Idempotent -- safe to re-run.
     """
 
-    help = 'Seed 10th Edition points values for Astra Militarum units.'
+    help = 'Seed 11th Edition points and categories for Astra Militarum units.'
+
+    def add_arguments(self, parser):
+        """Add --dry-run option."""
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Preview changes without saving anything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        self.stdout.write('Seeding Astra Militarum points…\n')
+        dry_run = options['dry_run']
+        self.stdout.write(
+            'Seeding Astra Militarum points (11th Edition)' + (' [DRY RUN]' if dry_run else '') + '\u2026\n'
+        )
 
-        militarum_faction = Faction.objects.filter(name='Astra Militarum').first()
-        if not militarum_faction:
+        fac = Faction.objects.filter(name='Astra Militarum').first()
+        if not fac:
             self.stdout.write(self.style.ERROR(
                 'Astra Militarum faction not found. Run populate_products first.'
             ))
             return
 
         updated_count = 0
+        created_count = 0
         skipped_count = 0
 
-        for gw_sku, points, label in MILITARUM_POINTS:
-            product = Product.objects.filter(gw_sku=gw_sku).first()
+        for gw_sku, points, category, label in MILITARUM_UNITS:
+            product = Product.objects.filter(gw_sku=gw_sku).first() if gw_sku else None
 
-            if not product:
+            if gw_sku and not product:
                 self.stdout.write(
                     self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
                 )
                 skipped_count += 1
                 continue
 
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=militarum_faction,
-            ).update(points_cost=points)
+            unit = UnitType.objects.filter(name=label, faction=fac).first()
 
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
+            if unit:
+                changes = []
+                if unit.points_cost != points:
+                    changes.append(f'points {unit.points_cost}->{points}')
+                if unit.category != category:
+                    changes.append(f'category {unit.category}->{category}')
+                if not unit.is_active:
+                    changes.append('reactivating')
+                change_note = f" ({', '.join(changes)})" if changes else ' (no change)'
+
+                if not dry_run:
+                    unit.points_cost = points
+                    unit.category = category
+                    unit.is_active = True
+                    update_fields = ['points_cost', 'category', 'is_active']
+                    if product and unit.product_id != product.id:
+                        unit.product = product
+                        update_fields.append('product')
+                    unit.save(update_fields=update_fields)
+                self.stdout.write(f'  [update] {label} > {points} pts ({category}){change_note}')
                 updated_count += 1
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {label} (SKU {gw_sku}) — Militarum UnitType not found. '
-                        f'Run populate_units first.'
+                if not dry_run:
+                    UnitType.objects.create(
+                        name=label,
+                        faction=fac,
+                        product=product,
+                        category=category,
+                        points_cost=points,
+                        typical_quantity=1,
+                        is_active=True,
                     )
-                )
-                skipped_count += 1
+                self.stdout.write(f'  [create] {label} > {points} pts ({category})')
+                created_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
+            f'\nDone! Updated: {updated_count}  |  Created: {created_count}  |  Skipped: {skipped_count}'
         ))

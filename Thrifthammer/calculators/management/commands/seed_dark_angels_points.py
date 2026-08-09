@@ -1,26 +1,41 @@
 """
 Management command: seed_dark_angels_points
 
-Sets the points_cost on UnitType records for all Dark Angels units,
-using official 10th Edition points values sourced from New Recruit.
+Sets points_cost, category, and active status on UnitType records for
+Dark Angels units, using official 11th Edition data sourced from the
+BSData community BattleScribe project (github.com/BSData/wh40k-11e), the
+same data New Recruit itself is built on.
 
 Usage:
     python manage.py seed_dark_angels_points
 
-The command is fully idempotent — safe to re-run. It looks up each product by
-its Games Workshop SKU (gw_sku), then filters for the Dark Angels UnitType
-specifically and updates only that row's points_cost.
+The command is fully idempotent -- safe to re-run. It looks up each unit by
+(name, faction) -- the same pair UnitType enforces uniqueness on.
 
 Notes:
-- Run AFTER populate_products and populate_units.
-- Do NOT add to the Procfile yet.
-- Line-by-line verified against the New Recruit Dark Angels 10th Edition list.
-- Key difference vs Space Marines: Chaplain 60pts (SM=75pts).
-- DA-exclusive units: Lion El'Jonson, Azrael, Belial, Asmodai, Lazarus,
-  Sammael, Ezekiel, Deathwing Knights, Deathwing Terminators, Ravenwing
-  Black Knights, Ravenwing Command Squad, Inner Circle Companions,
-  Ravenwing Dark Talon, Ravenwing Darkshroud, Land Speeder Vengeance,
-  Nephilim Jetfighter.
+- Same hybrid-catalogue pattern as Black Templars/Blood Angels: BSData's
+  Dark Angels file defines only 16 DA-exclusive units directly; everything
+  else falls back to the base Space Marines faction via the calculator's
+  parent-faction fallback. Unlike those two chapters, all 16 DA-exclusive
+  units already existed as DB rows under their correct literal BSData
+  names -- no renames needed, only point/category refreshes.
+- 'Deathwing Knights' and 'Deathwing Terminator Squad' (44-10), and
+  'Ravenwing Dark Talon' and 'Ravenwing Darkshroud' (44-14), were already
+  correctly set up as shared-SKU dual-build pairs -- just needed real
+  point/category corrections (Darkshroud in particular was badly stale:
+  210pts/infantry -> 70pts/vehicle).
+- 'Judiciar' and 'Suppressor Squad' were already active productless
+  placeholder rows here (unlike Black Templars, where they needed
+  reactivating) -- just refreshed to the same values already established
+  for Space Marines/Black Templars/Blood Angels.
+- 'Dark Angels Interrogator-Chaplain' (44-22) and 'Ravenwing Bike Squadron'
+  (44-23) are real, active products with NO entry anywhere in the current
+  11e Dark Angels BSData file -- not even Legends-tagged. Left untouched
+  (already correctly inactive, 0pts) rather than fabricated.
+- The ~70 generic Space-Marine-squad rows this chapter had duplicated with
+  no BSData DA-specific override are deactivated here so they correctly
+  fall back to the current base Space Marines rows for the same product,
+  same reasoning as every other chapter. Confirmed with user 2026-08-07.
 """
 
 from django.core.management.base import BaseCommand
@@ -29,161 +44,199 @@ from calculators.models import UnitType
 from products.models import Faction, Product
 
 # ---------------------------------------------------------------------------
-# Points data: (gw_sku, points_cost, display_name_for_logging)
-#
-# Sourced from New Recruit — Dark Angels 10th Edition list.
-# Every line with pts in the list has been checked individually.
+# Generic Space-Marine-squad duplicates -- deactivated.
 # ---------------------------------------------------------------------------
-DARK_ANGELS_POINTS = [
-    # ── DA-exclusive named characters ────────────────────────────────────────
-    ('44-02',  75, 'Ezekiel'),                     # 75pts ✓
-    ('44-03',  70, 'Asmodai'),                     # 70pts ✓
-    ('44-04', 125, 'Azrael'),                      # 125pts ✓
-    ('44-05',  85, 'Belial'),                      # 85pts ✓
-    ('44-06', 315, 'Lion El\'Jonson'),             # 315pts ✓
-    ('44-07',  70, 'Lazarus'),                     # 70pts ✓
-    ('44-08', 115, 'Sammael'),                     # 115pts ✓
-    # ── DA-exclusive units ───────────────────────────────────────────────────
-    ('44-09', 120, 'Ravenwing Command Squad'),     # 120pts ✓
-    ('44-10', 250, 'Deathwing Knights'),           # 250pts ✓
-    ('44-11', 180, 'Deathwing Terminator Squad'),  # 180pts ✓
-    ('44-12',  80, 'Ravenwing Black Knights'),     # 80pts ✓
-    ('44-13',  90, 'Inner Circle Companions'),     # 90pts ✓
-    ('44-14', 210, 'Ravenwing Dark Talon'),        # 210pts ✓
-    ('44-15', 100, 'Ravenwing Darkshroud'),        # 100pts ✓
-    ('44-16', 120, 'Land Speeder Vengeance'),      # 120pts ✓
-    ('44-17', 195, 'Nephilim Jetfighter'),         # 195pts ✓
-    # ── Shared SM characters — DA-specific costs ──────────────────────────────
-    ('48-34',  50, 'Ancient'),                     # 50pts ✓ same as SM
-    ('48-33',  50, 'Apothecary'),                  # 50pts ✓ same as SM
-    ('48-32',  60, 'Chaplain'),                    # 60pts ✓ DA | SM=75pts
-    ('48-36',  70, 'Judiciar'),                    # 70pts ✓ same as SM
-    ('48-30',  65, 'Librarian'),                   # 65pts ✓ same as SM
-    ('48-61',  55, 'Lieutenant'),                  # 55pts ✓ same as SM
-    ('48-62',  80, 'Captain'),                     # 80pts ✓ same as SM
-    ('48-37', 105, 'Company Heroes'),              # 105pts ✓ same as SM
-    # ── Battleline ────────────────────────────────────────────────────────────
-    ('48-75',  80, 'Intercessor Squad'),           # 80pts ✓
-    ('48-76',  75, 'Assault Intercessor Squad'),   # 75pts ✓
-    ('48-29',  70, 'Scout Squad'),                 # 70pts ✓
-    ('48-45',  90, 'Infernus Squad'),              # 90pts ✓
-    # ── Infantry ──────────────────────────────────────────────────────────────
-    ('48-06', 170, 'Terminator Squad'),            # 170pts ✓ same as SM
-    ('48-92',  95, 'Aggressor Squad'),             # 95pts ✓
-    ('48-38',  80, 'Bladeguard Veteran Squad'),    # 80pts ✓
-    ('48-15', 120, 'Devastator Squad'),            # 120pts ✓
-    ('48-98',  85, 'Eliminator Squad'),            # 85pts ✓
-    ('48-39',  90, 'Eradicator Squad'),            # 90pts ✓
-    ('48-96',  80, 'Incursor Squad'),              # 80pts ✓
-    ('48-41', 100, 'Infiltrator Squad'),           # 100pts ✓
-    ('48-43', 100, 'Sternguard Veteran Squad'),    # 100pts ✓ same as SM
-    ('48-08', 100, 'Vanguard Veteran Squad'),      # 100pts ✓
-    # ── Mounted / Fast Attack ──────────────────────────────────────────────────
-    ('48-40',  80, 'Outrider Squad'),              # 80pts ✓
-    ('48-42',  60, 'Invader ATV'),                 # 60pts ✓
-    ('48-97', 120, 'Inceptor Squad'),              # 120pts ✓
-    ('48-99',  75, 'Suppressor Squad'),            # 75pts ✓
-    # ── Vehicles / Dreadnoughts ────────────────────────────────────────────────
-    ('48-46', 150, 'Ballistus Dreadnought'),       # 150pts ✓
-    ('48-44', 160, 'Brutalis Dreadnought'),        # 160pts ✓
-    ('48-93', 195, 'Redemptor Dreadnought'),       # 195pts ✓
-    ('48-23', 140, 'Predator Destructor'),         # 140pts ✓
-    ('48-25', 190, 'Whirlwind'),                   # 190pts ✓
-    ('48-26', 185, 'Vindicator'),                  # 185pts ✓
-    ('48-95', 220, 'Repulsor Executioner'),        # 220pts ✓ same as SM
-    # ── Transports ────────────────────────────────────────────────────────────
-    ('48-94',  80, 'Impulsor'),                    # 80pts ✓ same as SM
-    ('48-85', 180, 'Repulsor'),                    # 180pts ✓
-    ('48-21', 220, 'Land Raider'),                 # 220pts ✓
-    ('48-22', 220, 'Land Raider Crusader'),        # 220pts ✓
-    # ── Fortifications ────────────────────────────────────────────────────────
-    ('48-27', 175, 'Hammerfall Bunker'),           # 175pts ✓
-    ('48-28',  75, 'Firestrike Servo-Turrets'),    # 75pts ✓
+DARK_ANGELS_DEACTIVATE = [
+    'Ancient',
+    'Ancient in Terminator Armor',
+    'Apothecary',
+    'Assault Intercessors with Jump Packs',
+    'Ballistus Dreadnought',
+    'Bladeguard Veteran Squad',
+    'Brutalis Dreadnought',
+    'Captain',
+    'Captain in Gravis Armour',
+    'Captain in Phobos Armour',
+    'Captain in Terminator Armour',
+    'Captain with Jump Pack',
+    'Centurion Assault Squad',
+    'Centurion Devastator Squad',
+    'Chaplain',
+    'Chaplain in Terminator Armour',
+    'Chaplain on Bike',
+    'Chaplain with Jump Pack',
+    'Company Heroes',
+    'Desolation Squad',
+    'Devastator Squad',
+    'Dreadnought',
+    'Drop Pod',
+    'Eliminator Squad',
+    'Firestrike Servo-Turrets',
+    'Gladiator Lancer',
+    'Gladiator Reaper',
+    'Gladiator Valiant',
+    'Hammerfall Bunker',
+    'Heavy Intercessor Squad',
+    'Hellblaster Squad',
+    'Impulsor',
+    'Inceptor Squad',
+    'Incursor Squad',
+    'Infernus Squad',
+    'Infiltrator Squad',
+    'Intercessor Squad',
+    'Invader ATV',
+    'Invictor Tactical Warsuit',
+    'Land Raider',
+    'Land Raider Crusader',
+    'Land Raider Redeemer',
+    'Librarian',
+    'Librarian in Phobos Armour',
+    'Librarian in Terminator Armour',
+    'Lieutenant',
+    'Lieutenant in Reiver Armour',
+    'Outrider Squad',
+    'Predator Annihilator',
+    'Predator Destructor',
+    'Razorback',
+    'Redemptor Dreadnought',
+    'Reiver Squad',
+    'Repulsor',
+    'Repulsor Executioner',
+    'Rhino',
+    'Scout Squad',
+    'Sternguard Veteran Squad',
+    'Storm Speeder Hailstrike',
+    'Storm Speeder Hammerstrike',
+    'Storm Speeder Thunderstrike',
+    'Stormhawk Interceptor',
+    'Stormraven Gunship',
+    'Stormtalon Gunship',
+    'Tactical Squad',
+    'Techmarine',
+    'Terminator Assault Squad',
+    'Vanguard Veteran Squad with Jump Packs',
+    'Vindicator',
+    'Whirlwind',
+]
+
+# ---------------------------------------------------------------------------
+# Unit data: (gw_sku, points_cost, category, name)
+# ---------------------------------------------------------------------------
+DARK_ANGELS_UNITS = [
+    ('44-03', 70, 'epic_hero', 'Asmodai'),
+    ('44-04', 140, 'epic_hero', 'Azrael'),
+    ('44-05', 75, 'epic_hero', 'Belial'),
+    ('44-10', 240, 'infantry', 'Deathwing Knights'),
+    ('44-10', 165, 'infantry', 'Deathwing Terminator Squad'),
+    ('44-02', 75, 'epic_hero', 'Ezekiel'),
+    ('44-13', 80, 'infantry', 'Inner Circle Companions'),
+    (None, 55, 'character', 'Judiciar'),
+    ('44-16', 130, 'vehicle', 'Land Speeder Vengeance'),
+    ('44-07', 70, 'epic_hero', 'Lazarus'),
+    ('44-06', 265, 'epic_hero', "Lion El'Jonson"),
+    ('44-17', 180, 'vehicle', 'Nephilim Jetfighter'),
+    ('44-12', 75, 'mounted', 'Ravenwing Black Knights'),
+    ('44-09', 105, 'character', 'Ravenwing Command Squad'),
+    ('44-14', 200, 'vehicle', 'Ravenwing Dark Talon'),
+    ('44-14', 70, 'vehicle', 'Ravenwing Darkshroud'),
+    ('44-08', 95, 'epic_hero', 'Sammael'),
+    (None, 85, 'infantry', 'Suppressor Squad'),
 ]
 
 
 class Command(BaseCommand):
     """
-    Seed official 10th Edition points costs for Dark Angels units.
+    Seed 11th Edition points, category, and active status for Dark Angels
+    units.
 
-    Looks up each product by GW SKU, then filters for the Dark Angels
-    UnitType specifically. Points verified line-by-line from New Recruit.
-    Idempotent — safe to re-run at any time.
+    Looks up each unit by (name, faction) and updates points_cost, category,
+    and is_active in place; creates the row if it doesn't exist yet (linking
+    the product by gw_sku when one is given). Idempotent -- safe to re-run.
     """
 
-    help = 'Seed 10th Edition points values for Dark Angels units.'
+    help = 'Seed 11th Edition points and categories for Dark Angels units.'
+
+    def add_arguments(self, parser):
+        """Add --dry-run option."""
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Preview changes without saving anything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        self.stdout.write('Seeding Dark Angels points…\n')
+        dry_run = options['dry_run']
+        self.stdout.write(
+            'Seeding Dark Angels points (11th Edition)' + (' [DRY RUN]' if dry_run else '') + '\u2026\n'
+        )
 
-        da_faction = Faction.objects.filter(name='Dark Angels').first()
-        if not da_faction:
+        fac = Faction.objects.filter(name='Dark Angels').first()
+        if not fac:
             self.stdout.write(self.style.ERROR(
                 'Dark Angels faction not found. Run populate_products first.'
             ))
             return
 
+        for name in DARK_ANGELS_DEACTIVATE:
+            unit = UnitType.objects.filter(name=name, faction=fac).first()
+            if unit and unit.is_active:
+                self.stdout.write(f'  [deactivate] {name!r}')
+                if not dry_run:
+                    unit.is_active = False
+                    unit.save(update_fields=['is_active'])
+
         updated_count = 0
+        created_count = 0
         skipped_count = 0
 
-        for gw_sku, points, label in DARK_ANGELS_POINTS:
-            product = Product.objects.filter(gw_sku=gw_sku).first()
+        for gw_sku, points, category, label in DARK_ANGELS_UNITS:
+            product = Product.objects.filter(gw_sku=gw_sku).first() if gw_sku else None
 
-            if not product:
+            if gw_sku and not product:
                 self.stdout.write(
                     self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
                 )
                 skipped_count += 1
                 continue
 
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=da_faction,
-            ).update(points_cost=points)
+            unit = UnitType.objects.filter(name=label, faction=fac).first()
 
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
+            if unit:
+                changes = []
+                if unit.points_cost != points:
+                    changes.append(f'points {unit.points_cost}->{points}')
+                if unit.category != category:
+                    changes.append(f'category {unit.category}->{category}')
+                if not unit.is_active:
+                    changes.append('reactivating')
+                change_note = f" ({', '.join(changes)})" if changes else ' (no change)'
+
+                if not dry_run:
+                    unit.points_cost = points
+                    unit.category = category
+                    unit.is_active = True
+                    update_fields = ['points_cost', 'category', 'is_active']
+                    if product and unit.product_id != product.id:
+                        unit.product = product
+                        update_fields.append('product')
+                    unit.save(update_fields=update_fields)
+                self.stdout.write(f'  [update] {label} > {points} pts ({category}){change_note}')
                 updated_count += 1
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {label} (SKU {gw_sku}) — DA UnitType not found. '
-                        f'Run populate_units first.'
+                if not dry_run:
+                    UnitType.objects.create(
+                        name=label,
+                        faction=fac,
+                        product=product,
+                        category=category,
+                        points_cost=points,
+                        typical_quantity=1,
+                        is_active=True,
                     )
-                )
-                skipped_count += 1
-
-        # ── 48-07 SKU collision (Tactical Squad + Terminator Assault Squad) ──────
-        # Both products share gw_sku 48-07; must use name filtering to distinguish.
-        DA_SKU_COLLISIONS = [
-            ('48-07', 'Tactical',   140, 'Tactical Squad'),            # 140pts ✓
-            ('48-07', 'Terminator', 180, 'Terminator Assault Squad'),  # 180pts ✓
-        ]
-        for gw_sku, name_filter, points, label in DA_SKU_COLLISIONS:
-            product = Product.objects.filter(
-                gw_sku=gw_sku, name__icontains=name_filter
-            ).first()
-            if not product:
-                self.stdout.write(self.style.WARNING(
-                    f'  [skip]    {label} (SKU {gw_sku} not found in DB)'
-                ))
-                skipped_count += 1
-                continue
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=da_faction,
-            ).update(points_cost=points)
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
-                updated_count += 1
-            else:
-                self.stdout.write(self.style.WARNING(
-                    f'  [no unit] {label} (SKU {gw_sku}) — DA UnitType not found. '
-                    f'Run populate_units first.'
-                ))
-                skipped_count += 1
+                self.stdout.write(f'  [create] {label} > {points} pts ({category})')
+                created_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
+            f'\nDone! Updated: {updated_count}  |  Created: {created_count}  |  Skipped: {skipped_count}'
         ))

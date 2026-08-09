@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8765", "--directory", "C:\Users\khleu\AppData\Local\Temp\top10_table"],
       "port": 8765
+    },
+    {
+      "name": "django",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["manage.py", "runserver", "8000"],
+      "port": 8000
     }
   ]
 }

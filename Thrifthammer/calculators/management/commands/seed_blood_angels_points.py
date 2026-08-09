@@ -1,20 +1,67 @@
 """
 Management command: seed_blood_angels_points
 
-Sets the points_cost on UnitType records for all Blood Angels units,
-using official 10th Edition points values sourced from New Recruit.
+Sets points_cost, category, and active status on UnitType records for
+Blood Angels units, using official 11th Edition data sourced from the
+BSData community BattleScribe project (github.com/BSData/wh40k-11e), the
+same data New Recruit itself is built on.
 
 Usage:
     python manage.py seed_blood_angels_points
 
-The command is fully idempotent — safe to re-run. It looks up each product by
-its Games Workshop SKU (gw_sku), then filters for the Blood Angels UnitType
-specifically and updates only that row's points_cost.
+The command is fully idempotent -- safe to re-run. It looks up each unit by
+(name, faction) -- the same pair UnitType enforces uniqueness on.
 
 Notes:
-- Run AFTER populate_products and populate_units.
-- Do NOT add to the Procfile yet.
-- Some values differ from Space Marines (e.g. Chaplain 60pts vs 75pts SM).
+- BSData's Blood Angels catalogue ("Imperium - Blood Angels.json") only
+  defines 16 BA-exclusive units directly, same hybrid pattern as Black
+  Templars. Everything else falls back to the base Space Marines faction's
+  now-current data via the calculator's parent-faction fallback
+  (calculators/views.py). "Deactivate" below means only UnitType.is_active
+  on the calculator's own model -- it never touches Product.is_active, the
+  browse pages, or anything else about the SKU. Confirmed with user
+  2026-08-07 that deactivating a BA-specific duplicate row does NOT remove
+  that unit from the Blood Angels calculator: the page falls back to the
+  (now-current) Space Marines row for the same product instead, so
+  coverage is preserved, only the redundant duplicate is removed.
+- Renames (old DB name -> real BSData name):
+    ('Blood Angels Librarian Dreadnought', 'Librarian Dreadnought'),
+- 'Dreadnought' (48-137) is deliberately kept as an active BA-specific row
+  (not deactivated with the other generic duplicates) so it can coexist
+  with the new 'Librarian Dreadnought' row below on the same SKU --
+  deactivating it would have let the sub-faction 'Librarian Dreadnought'
+  row's product-based dedup silently hide the plain Dreadnought option
+  from Blood Angels' page entirely (a sub-faction row claiming a product
+  suppresses the parent-faction fallback for that same product).
+- 'Librarian Dreadnought' -- BSData's only 11e entry is
+  "Librarian Dreadnought [Legends]" (170pts), not standard matched play.
+  User explicitly directed linking it to the Venerable Dreadnought product
+  (48-137) anyway rather than leaving it inactive (2026-08-07) -- an
+  intentional, one-off exception to the standard Legends-exclusion rule,
+  not a general policy change.
+- 'Judiciar' and 'Suppressor Squad' were inactive under Blood Angels with
+  no product (unlike Black Templars, where they were already active).
+  Reactivated here with the same values used for Black Templars' identical
+  productless placeholder rows, per the user's own stated principle that
+  any unit legal for the faction should appear in the calculator.
+- 6 units confirmed real in 11e with no product anywhere (Death Company
+  Marines, Death Company Captain, Death Company Captain with Jump Pack,
+  Death Company Dreadnought, Death Company Intercessors, Death Company
+  Marines with Bolt Rifles, Death Company Marines with Jump Packs) are
+  tracked in memory/project_11e_calculator_migration.md, not created here
+  -- including 'Death Company Marines' itself, even though an inactive
+  productless placeholder for it already exists in the DB (left untouched
+  per user direction 2026-08-07, not reactivated).
+- '_stale_926' (product 48-120, a duplicate of the already-correctly-linked
+  'Librarian in Terminator Armour' row on 41-28) is already inactive --
+  left as-is, no action needed. Not deleted -- the underlying Product
+  record is untouched regardless, per standing policy against deleting
+  SKUs without explicit permission.
+- The ~70 generic Space-Marine-squad rows this chapter had duplicated with
+  no BSData Blood-Angels-specific override are deactivated here so they
+  correctly fall back to the now-current base Space Marines rows for the
+  same product, same reasoning as Black Templars. Confirmed with user
+  2026-08-07 after clarifying exactly what "deactivate" affects.
 """
 
 from django.core.management.base import BaseCommand
@@ -23,157 +70,210 @@ from calculators.models import UnitType
 from products.models import Faction, Product
 
 # ---------------------------------------------------------------------------
-# Points data: (gw_sku, points_cost, display_name_for_logging)
-#
-# Sourced from New Recruit — Blood Angels 10th Edition list.
-# Includes BA-exclusive units (41-xx) and shared SM kits (48-xx).
+# Renames applied first: (old_name, new_name)
 # ---------------------------------------------------------------------------
-BLOOD_ANGELS_POINTS = [
-    # ── BA-exclusive characters & units ──────────────────────────────────────
-    ('41-03',  95, 'Astorath'),
-    ('41-02', 120, 'Chief Librarian Mephiston'),
-    ('41-04', 120, 'Commander Dante'),
-    ('41-05', 100, 'Lemartes'),
-    ('41-08', 130, 'The Sanguinor'),
-    ('41-09',  75, 'Sanguinary Priest'),
-    ('41-07',  85, 'Death Company Marines'),
-    ('41-12', 120, 'Death Company Marines with Jump Packs'),
-    ('41-06', 125, 'Sanguinary Guard'),
-    ('41-10', 125, 'Baal Predator'),
-    ('41-11', 160, 'Death Company Dreadnought'),
-    ('41-15', 160, 'Librarian Dreadnought'),
-    # ── Shared SM characters — BA-specific costs ──────────────────────────────
-    ('48-34',  50, 'Ancient'),
-    ('48-33',  50, 'Apothecary'),
-    ('48-32',  60, 'Chaplain'),          # 60pts BA | 75pts Space Marines
-    ('48-36',  70, 'Judiciar'),
-    ('48-30',  65, 'Librarian'),
-    ('48-61',  55, 'Lieutenant'),
-    ('48-62',  80, 'Captain'),
-    ('48-37', 105, 'Company Heroes'),
-    # ── Battleline ────────────────────────────────────────────────────────────
-    ('48-75',  80, 'Intercessor Squad'),
-    ('48-76',  75, 'Assault Intercessor Squad'),
-    ('48-29',  70, 'Scout Squad'),
-    ('48-45',  90, 'Infernus Squad'),
-    # ── Infantry ──────────────────────────────────────────────────────────────
-    ('48-06', 170, 'Terminator Squad'),
-    ('48-92',  95, 'Aggressor Squad'),
-    ('48-38',  80, 'Bladeguard Veteran Squad'),
-    ('48-15', 120, 'Devastator Squad'),
-    ('48-98',  85, 'Eliminator Squad'),
-    ('48-39',  90, 'Eradicator Squad'),
-    ('48-96',  80, 'Incursor Squad'),
-    ('48-41', 100, 'Infiltrator Squad'),
-    ('48-43', 100, 'Sternguard Veteran Squad'),
-    ('48-08', 100, 'Vanguard Veteran Squad'),
-    # ── Mounted / Fast Attack ──────────────────────────────────────────────────
-    ('48-40',  80, 'Outrider Squad'),
-    ('48-42',  60, 'Invader ATV'),
-    ('48-97', 120, 'Inceptor Squad'),
-    ('48-99',  75, 'Suppressor Squad'),
-    # ── Vehicles / Dreadnoughts ────────────────────────────────────────────────
-    ('48-46', 150, 'Ballistus Dreadnought'),
-    ('48-44', 160, 'Brutalis Dreadnought'),
-    ('48-93', 195, 'Redemptor Dreadnought'),
-    ('48-23', 140, 'Predator Destructor'),
-    ('48-25', 190, 'Whirlwind'),
-    ('48-26', 185, 'Vindicator'),
-    ('48-95', 220, 'Repulsor Executioner'),
-    # ── Transports ────────────────────────────────────────────────────────────
-    ('48-94',  80, 'Impulsor'),
-    ('48-85', 180, 'Repulsor'),
-    ('48-21', 220, 'Land Raider'),
-    ('48-22', 220, 'Land Raider Crusader'),
-    # ── Fortifications ────────────────────────────────────────────────────────
-    ('48-27', 175, 'Hammerfall Bunker'),
-    ('48-28',  75, 'Firestrike Servo-Turrets'),
+BLOOD_ANGELS_RENAMES = [
+    ('Blood Angels Librarian Dreadnought', 'Librarian Dreadnought'),
+]
+
+# ---------------------------------------------------------------------------
+# Bundle/book rows + generic Space-Marine-squad duplicates -- deactivated.
+# ---------------------------------------------------------------------------
+BLOOD_ANGELS_DEACTIVATE = [
+    'Blood Angels Combat Patrol',
+    'Codex Supplement: Blood Angels',
+    'Ancient',
+    'Ancient in Terminator Armor',
+    'Apothecary',
+    'Assault Intercessors with Jump Packs',
+    'Ballistus Dreadnought',
+    'Bladeguard Veteran Squad',
+    'Brutalis Dreadnought',
+    'Captain',
+    'Captain in Gravis Armour',
+    'Captain in Phobos Armour',
+    'Captain in Terminator Armour',
+    'Captain with Jump Pack',
+    'Centurion Assault Squad',
+    'Centurion Devastator Squad',
+    'Chaplain',
+    'Chaplain in Terminator Armour',
+    'Chaplain on Bike',
+    'Chaplain with Jump Pack',
+    'Company Heroes',
+    'Desolation Squad',
+    'Devastator Squad',
+    'Drop Pod',
+    'Eliminator Squad',
+    'Firestrike Servo-Turrets',
+    'Gladiator Lancer',
+    'Gladiator Reaper',
+    'Gladiator Valiant',
+    'Hammerfall Bunker',
+    'Heavy Intercessor Squad',
+    'Hellblaster Squad',
+    'Impulsor',
+    'Inceptor Squad',
+    'Incursor Squad',
+    'Infernus Squad',
+    'Infiltrator Squad',
+    'Intercessor Squad',
+    'Invader ATV',
+    'Invictor Tactical Warsuit',
+    'Land Raider',
+    'Land Raider Crusader',
+    'Land Raider Redeemer',
+    'Librarian',
+    'Librarian in Phobos Armour',
+    'Librarian in Terminator Armour',
+    'Lieutenant',
+    'Lieutenant in Reiver Armour',
+    'Outrider Squad',
+    'Predator Annihilator',
+    'Predator Destructor',
+    'Razorback',
+    'Redemptor Dreadnought',
+    'Reiver Squad',
+    'Repulsor',
+    'Repulsor Executioner',
+    'Rhino',
+    'Scout Squad',
+    'Sternguard Veteran Squad',
+    'Storm Speeder Hailstrike',
+    'Storm Speeder Hammerstrike',
+    'Storm Speeder Thunderstrike',
+    'Stormhawk Interceptor',
+    'Stormraven Gunship',
+    'Stormtalon Gunship',
+    'Tactical Squad',
+    'Techmarine',
+    'Terminator Assault Squad',
+    'Vanguard Veteran Squad with Jump Packs',
+    'Vindicator',
+    'Whirlwind',
+]
+
+# ---------------------------------------------------------------------------
+# Unit data: (gw_sku, points_cost, category, name)
+# ---------------------------------------------------------------------------
+BLOOD_ANGELS_UNITS = [
+    ('41-03', 85, 'epic_hero', 'Astorath'),
+    ('41-10', 125, 'vehicle', 'Baal Predator'),
+    ('41-26', 80, 'character', 'Blood Angels Captain'),
+    ('41-02', 110, 'epic_hero', 'Chief Librarian Mephiston'),
+    ('41-04', 125, 'epic_hero', 'Commander Dante'),
+    ('48-137', 135, 'vehicle', 'Dreadnought'),
+    (None, 55, 'character', 'Judiciar'),
+    ('41-05', 100, 'epic_hero', 'Lemartes'),
+    ('48-137', 170, 'vehicle', 'Librarian Dreadnought'),
+    ('41-06', 125, 'infantry', 'Sanguinary Guard'),
+    ('41-09', 75, 'character', 'Sanguinary Priest'),
+    (None, 85, 'infantry', 'Suppressor Squad'),
+    ('41-08', 130, 'epic_hero', 'The Sanguinor'),
 ]
 
 
 class Command(BaseCommand):
     """
-    Seed official 10th Edition points costs for Blood Angels units.
+    Seed 11th Edition points, category, and active status for Blood Angels
+    units.
 
-    Looks up each product by GW SKU, then filters for the Blood Angels
-    UnitType specifically and updates only that row's points_cost. This
-    ensures Space Marines UnitType rows for the same product are untouched.
-    Idempotent — safe to re-run at any time.
+    Looks up each unit by (name, faction) and updates points_cost, category,
+    and is_active in place; creates the row if it doesn't exist yet (linking
+    the product by gw_sku when one is given). Idempotent -- safe to re-run.
     """
 
-    help = 'Seed 10th Edition points values for Blood Angels units.'
+    help = 'Seed 11th Edition points and categories for Blood Angels units.'
+
+    def add_arguments(self, parser):
+        """Add --dry-run option."""
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Preview changes without saving anything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        self.stdout.write('Seeding Blood Angels points…\n')
+        dry_run = options['dry_run']
+        self.stdout.write(
+            'Seeding Blood Angels points (11th Edition)' + (' [DRY RUN]' if dry_run else '') + '\u2026\n'
+        )
 
-        ba_faction = Faction.objects.filter(name='Blood Angels').first()
-        if not ba_faction:
+        fac = Faction.objects.filter(name='Blood Angels').first()
+        if not fac:
             self.stdout.write(self.style.ERROR(
                 'Blood Angels faction not found. Run populate_products first.'
             ))
             return
 
+        for old_name, new_name in BLOOD_ANGELS_RENAMES:
+            unit = UnitType.objects.filter(name=old_name, faction=fac).first()
+            if unit:
+                self.stdout.write(f'  [rename] {old_name!r} -> {new_name!r}')
+                if not dry_run:
+                    unit.name = new_name
+                    unit.save(update_fields=['name'])
+
+        for name in BLOOD_ANGELS_DEACTIVATE:
+            unit = UnitType.objects.filter(name=name, faction=fac).first()
+            if unit and unit.is_active:
+                self.stdout.write(f'  [deactivate] {name!r}')
+                if not dry_run:
+                    unit.is_active = False
+                    unit.save(update_fields=['is_active'])
+
         updated_count = 0
+        created_count = 0
         skipped_count = 0
 
-        for gw_sku, points, label in BLOOD_ANGELS_POINTS:
-            product = Product.objects.filter(gw_sku=gw_sku).first()
+        for gw_sku, points, category, label in BLOOD_ANGELS_UNITS:
+            product = Product.objects.filter(gw_sku=gw_sku).first() if gw_sku else None
 
-            if not product:
+            if gw_sku and not product:
                 self.stdout.write(
                     self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
                 )
                 skipped_count += 1
                 continue
 
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=ba_faction,
-            ).update(points_cost=points)
+            unit = UnitType.objects.filter(name=label, faction=fac).first()
 
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
+            if unit:
+                changes = []
+                if unit.points_cost != points:
+                    changes.append(f'points {unit.points_cost}->{points}')
+                if unit.category != category:
+                    changes.append(f'category {unit.category}->{category}')
+                if not unit.is_active:
+                    changes.append('reactivating')
+                change_note = f" ({', '.join(changes)})" if changes else ' (no change)'
+
+                if not dry_run:
+                    unit.points_cost = points
+                    unit.category = category
+                    unit.is_active = True
+                    update_fields = ['points_cost', 'category', 'is_active']
+                    if product and unit.product_id != product.id:
+                        unit.product = product
+                        update_fields.append('product')
+                    unit.save(update_fields=update_fields)
+                self.stdout.write(f'  [update] {label} > {points} pts ({category}){change_note}')
                 updated_count += 1
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {label} (SKU {gw_sku}) — BA UnitType not found. '
-                        f'Run populate_units first.'
+                if not dry_run:
+                    UnitType.objects.create(
+                        name=label,
+                        faction=fac,
+                        product=product,
+                        category=category,
+                        points_cost=points,
+                        typical_quantity=1,
+                        is_active=True,
                     )
-                )
-                skipped_count += 1
-
-        # ── 48-07 SKU collision (Tactical Squad + Terminator Assault Squad) ──────
-        # Both products share gw_sku 48-07; must use name filtering to distinguish.
-        BA_SKU_COLLISIONS = [
-            ('48-07', 'Tactical',   140, 'Tactical Squad'),            # 140pts ✓
-            ('48-07', 'Terminator', 180, 'Terminator Assault Squad'),  # 180pts ✓
-        ]
-        for gw_sku, name_filter, points, label in BA_SKU_COLLISIONS:
-            product = Product.objects.filter(
-                gw_sku=gw_sku, name__icontains=name_filter
-            ).first()
-            if not product:
-                self.stdout.write(self.style.WARNING(
-                    f'  [skip]    {label} (SKU {gw_sku} not found in DB)'
-                ))
-                skipped_count += 1
-                continue
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=ba_faction,
-            ).update(points_cost=points)
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
-                updated_count += 1
-            else:
-                self.stdout.write(self.style.WARNING(
-                    f'  [no unit] {label} (SKU {gw_sku}) — BA UnitType not found. '
-                    f'Run populate_units first.'
-                ))
-                skipped_count += 1
+                self.stdout.write(f'  [create] {label} > {points} pts ({category})')
+                created_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
+            f'\nDone! Updated: {updated_count}  |  Created: {created_count}  |  Skipped: {skipped_count}'
         ))

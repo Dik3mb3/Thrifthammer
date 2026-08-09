@@ -4547,7 +4547,9 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 2px;   /* keep scrollbar from clipping */
+  cursor: grab;
 }
+.ab-faction-bar:active { cursor: grabbing; }
 .ab-faction-bar::-webkit-scrollbar { display: none; }
 
 .ab-faction-pill {

@@ -1,34 +1,59 @@
 """
 Management command: seed_necrons_points
 
-Sets the points_cost on UnitType records for all Necrons units,
-using official 10th Edition points values sourced from New Recruit.
+Sets points_cost, category, and active status on UnitType records for
+Necrons units, using official 11th Edition data sourced from the BSData
+community BattleScribe project (github.com/BSData/wh40k-11e), the same
+data New Recruit itself is built on.
 
 Usage:
     python manage.py seed_necrons_points
+    python manage.py seed_necrons_points --dry-run
 
-The command is fully idempotent — safe to re-run. It looks up each product by
-its Games Workshop SKU (gw_sku), then filters for the Necrons UnitType
-specifically and updates only that row's points_cost.
+The command is fully idempotent -- safe to re-run. It looks up each unit by
+(name, faction) -- the same pair UnitType enforces uniqueness on.
 
 Notes:
-- Run AFTER populate_products and populate_units.
-- Do NOT add to the Procfile yet.
-- Line-by-line verified against the New Recruit Necrons 10th Edition list.
-- SKUs not yet in the DB skip gracefully — add products later and re-run.
-- Currently seeded SKUs in DB:
-    49-03 (Overlord), 49-06 (Necron Warriors), 49-08 (Monolith),
-    49-10 (Immortals), 49-11 (Lychguard), 49-12 (Doomsday Ark),
-    49-13 (Doom Scythe), 49-14 (Canoptek Spyder), 49-17 (Flayed Ones),
-    49-20 (C'tan Shard of the Void Dragon), 49-21 (Psychomancer),
-    49-22 (Royal Warden)
-- 49-11 (Lychguard): one kit builds Lychguard with Warscythes (85pts) or
-  Hyperphase Sword & Dispersion Shield (100pts). Seeded at 85pts (base).
-  Add a separate product for the shield variant later.
-- 49-13 (Night Scythe / Doom Scythe): one kit builds both Night Scythe (185pts)
-  and Doom Scythe (230pts). Seeded at 185pts (Night Scythe base).
-  Add a separate product for the Doom Scythe variant later.
-- 49-25 (Combat Patrol) is a bundle — no UnitType entry.
+- Source: "Necrons.json" -- self-contained (84 own sharedSelectionEntries,
+  only linked to "Unaligned Forces"). 52 real 11e units.
+- **PRODUCT_OVERRIDES**: 3 SKU strings are shared by TWO distinct Product
+  rows in our catalog (a pre-existing data quirk, confirmed as legitimate
+  dual-build GW kits during a full-catalog sweep 2026-08-08, not a bug --
+  same pattern as Vyper/Starfang, Maulerfiend/Forgefiend, etc.):
+    prod4390158 -> "Annihilation Barge" (id 608) / "Necron Catacomb
+      Command Barge" (id 607)
+    prod3590140 -> "Obelisk & Transcendent C'tan" (id 611, the combo box
+      that builds BOTH Obelisk and Transcendent C'tan) / "Tesseract
+      Vault" (id 612, a separate box)
+  A plain gw_sku lookup (`Product.objects.filter(gw_sku=X).first()`) is
+  non-deterministic between the two rows for these SKUs, so this command
+  resolves them by exact product PK instead, to avoid silently linking a
+  unit to the wrong Product row.
+- **'Codex: Necrons' (49-23) removed from the calculator** per explicit
+  user instruction 2026-08-08 -- deactivated, not deleted.
+- **Renames**: 'Lokhust Destroyer Squadron'->'Lokhust Destroyers',
+  'Lokhust Heavy Destroyer'->'Lokhust Heavy Destroyers' (BSData plurals).
+  'Overlord with Tachyon Arrow'->'Overlord with Translocation Shroud' --
+  BSData no longer has a "Tachyon Arrow" unit variant (now just a weapon
+  upgrade option, not a separate unit); "Translocation Shroud" is the
+  current real variant, same product SKU (prod4900150).
+- **Cryptek specialists**: BSData has 5 named specialists (Chronomancer,
+  Geomancer, Plasmancer, Psychomancer, Technomancer). Existing links for
+  Chronomancer (its own SKU), Psychomancer (its own SKU), and Plasmancer
+  (shares "Necrons Royal Court", prod4900147, with Skorpekh Lord/
+  Canoptek Reanimator/Cryptothralls) were left as-is per explicit user
+  instruction 2026-08-08 -- Geomancer and Technomancer have no product
+  anywhere in the catalog and were NOT linked to Royal Court or the
+  unused "Cryptek" product (prod4390141) -- added to the backlog instead.
+- 'Convergence of Dominion' has no points value in the current 11e
+  BSData file (`costs: null`, same class of gap as Kapricus Defenders) --
+  user confirmed keeping the existing stale 60pts rather than guessing.
+  Not included in this command's unit list -- its current DB value is
+  left untouched entirely.
+- 8 units confirmed real in 11e with no product anywhere in the catalog
+  (Canoptek Macrocytes, Canoptek Scarab Swarms, Canoptek Tomb Crawlers,
+  Geomancer, Lokhust Lord, Seraptek Heavy Construct, Technomancer, Tomb
+  Citadel Walls) -- added to the project backlog, not created here.
 """
 
 from django.core.management.base import BaseCommand
@@ -37,126 +62,198 @@ from calculators.models import UnitType
 from products.models import Faction, Product
 
 # ---------------------------------------------------------------------------
-# Points data: (gw_sku, points_cost, display_name_for_logging)
-#
-# Sourced from New Recruit — Necrons 10th Edition list.
-# Verified line-by-line against the full New Recruit army list.
+# Renames applied first: (old_name, new_name)
 # ---------------------------------------------------------------------------
-NECRONS_POINTS = [
-    # ── Named characters ──────────────────────────────────────────────────────
-    ('49-40', 400, 'The Silent King'),                 # 400pts ✓
-    ('49-41', 100, 'Imotekh the Stormlord'),           # 100pts ✓
-    ('49-42', 165, 'Illuminor Szeras'),                # 165pts ✓
-    ('49-43', 165, 'Nemesor Zahndrekh'),               # 165pts ✓
-    ('49-44',  75, 'Trazyn the Infinite'),             # 75pts  ✓
-    ('49-45',  80, 'Orikan the Diviner'),              # 80pts  ✓
-    ('49-46',  80, 'Anrakyr the Traveller'),           # 80pts  ✓
-    ('49-47',  75, 'Szarekhan Dynasty Overlord'),      # 75pts  ✓ (placeholder SKU)
-    # ── Generic characters ────────────────────────────────────────────────────
-    ('49-03',  80, 'Overlord'),                        # 80pts  ✓
-    ('49-48',  60, 'Lord'),                            # 60pts  ✓
-    ('49-49',  60, 'Lord with Warsythe'),              # 60pts  ✓
-    ('49-21',  55, 'Psychomancer'),                    # 55pts  ✓
-    ('49-22',  45, 'Royal Warden'),                    # 45pts  ✓
-    ('49-50',  65, 'Chronomancer'),                    # 65pts  ✓
-    ('49-51',  70, 'Lokhust Lord'),                    # 70pts  ✓
-    ('49-52',  55, 'Plasmancer'),                      # 55pts  ✓
-    ('49-53',  60, 'Skorpekh Lord'),                   # 60pts  ✓
-    ('49-54',  70, 'Technomancer'),                    # 70pts  ✓
-    # ── Battleline ────────────────────────────────────────────────────────────
-    ('49-06',  90, 'Necron Warriors'),                 # 90pts  ✓
-    ('49-10',  70, 'Immortals'),                       # 70pts  ✓
-    # ── Infantry ──────────────────────────────────────────────────────────────
-    ('49-17',  65, 'Flayed Ones'),                     # 65pts  ✓
-    ('49-11',  85, 'Lychguard'),                       # 85pts  ✓ (shield variant=100pts, same kit)
-    ('49-55',  75, 'Deathmarks'),                      # 75pts  ✓
-    ('49-56',  65, 'Necron Tomb Blades'),              # 65pts  ✓
-    ('49-57',  70, 'Triarch Praetorians'),             # 70pts  ✓
-    # ── Fast Attack ───────────────────────────────────────────────────────────
-    ('49-58', 110, 'Canoptek Wraiths'),                # 110pts ✓
-    ('49-59',  80, 'Canoptek Scarabs'),                # 80pts  ✓
-    ('49-14',  55, 'Canoptek Spyder'),                 # 55pts  ✓
-    # ── Elites / Heavy ────────────────────────────────────────────────────────
-    ('49-60',  90, 'Skorpekh Destroyers'),             # 90pts  ✓
-    ('49-61',  95, 'Lokhust Destroyers'),              # 95pts  ✓
-    ('49-62', 130, 'Lokhust Heavy Destroyer'),         # 130pts ✓
-    ('49-63', 150, 'Ophydian Destroyers'),             # 150pts ✓
-    ('49-64', 140, 'Triarch Stalker'),                 # 140pts ✓
-    # ── C'tan Shards ──────────────────────────────────────────────────────────
-    ('49-65', 285, "C'tan Shard of the Deceiver"),     # 285pts ✓
-    ('49-66', 315, "C'tan Shard of the Nightbringer"), # 315pts ✓
-    ('49-20', 310, "C'tan Shard of the Void Dragon"),  # 310pts ✓
-    ('49-67', 305, "Transcendent C'tan"),              # 305pts ✓
-    # ── Vehicles ──────────────────────────────────────────────────────────────
-    ('49-12', 200, 'Doomsday Ark'),                    # 200pts ✓
-    ('49-68', 150, 'Ghost Ark'),                       # 150pts ✓
-    ('49-69', 125, 'Annihilation Barge'),              # 125pts ✓
-    ('49-70', 145, 'Catacomb Command Barge'),          # 145pts ✓
-    ('49-71', 120, 'Canoptek Doomstalker'),            # 120pts ✓
-    ('49-72', 130, 'Canoptek Reanimator'),             # 130pts ✓
-    # ── Aircraft ──────────────────────────────────────────────────────────────
-    ('49-13', 185, 'Night Scythe'),                    # 185pts ✓ (Doom Scythe=230pts, same kit)
-    # ── Fortifications / Super-heavies ────────────────────────────────────────
-    ('49-08', 400, 'Monolith'),                        # 400pts ✓
-    ('49-73', 425, 'Tesseract Vault'),                 # 425pts ✓
-    ('49-74', 300, 'Obelisk'),                         # 300pts ✓
-    ('49-75', 540, 'Seraptek Heavy Construct'),        # 540pts ✓
+NECRONS_RENAMES = [
+    ('Lokhust Destroyer Squadron', 'Lokhust Destroyers'),
+    ('Lokhust Heavy Destroyer', 'Lokhust Heavy Destroyers'),
+    ('Overlord with Tachyon Arrow', 'Overlord with Translocation Shroud'),
+]
+
+# ---------------------------------------------------------------------------
+# Rows removed from the calculator -- deactivated, not deleted.
+# ---------------------------------------------------------------------------
+NECRONS_DEACTIVATE = [
+    'Codex: Necrons',
+    # Stale generic unit -- superseded by the 5 named Cryptek specialists
+    # (Chronomancer, Geomancer, Plasmancer, Psychomancer, Technomancer) in
+    # 11e. Doesn't match any current BSData unit. Caught via direct DB
+    # inspection after the first real run (same standing check as CSM's
+    # Predator/Daemon Prince split). User confirmed 2026-08-08.
+    'Cryptek',
+]
+
+# ---------------------------------------------------------------------------
+# Explicit product PK overrides for units whose gw_sku is shared by two
+# distinct Product rows (see docstring). Checked before the normal
+# gw_sku-based lookup.
+# ---------------------------------------------------------------------------
+PRODUCT_PK_OVERRIDES = {
+    'Annihilation Barge': 608,
+    'Catacomb Command Barge': 607,
+    'Obelisk': 611,
+    'Transcendent C\'tan': 611,
+    'Tesseract Vault': 612,
+}
+
+# ---------------------------------------------------------------------------
+# Unit data: (gw_sku, points_cost, category, name)
+# ---------------------------------------------------------------------------
+NECRONS_UNITS = [
+    ('prod4390158', 95, 'vehicle', 'Annihilation Barge'),
+    ('prod2901178', 330, 'epic_hero', "C'tan Shard of the Deceiver"),
+    ('P-241016', 360, 'epic_hero', "C'tan Shard of the Nightbringer"),
+    ('49-20', 345, 'epic_hero', "C'tan Shard of the Void Dragon"),
+    ('prod4390146', 140, 'vehicle', 'Canoptek Doomstalker'),
+    ('prod4900147', 75, 'vehicle', 'Canoptek Reanimator'),
+    ('49-14', 65, 'vehicle', 'Canoptek Spyders'),
+    ('prod4390999', 95, 'monster', 'Canoptek Wraiths'),
+    ('prod4390158', 120, 'character', 'Catacomb Command Barge'),
+    ('prod4900148', 70, 'character', 'Chronomancer'),
+    ('prod4900147', 60, 'infantry', 'Cryptothralls'),
+    ('prod4390142', 60, 'infantry', 'Deathmarks'),
+    ('49-13', 200, 'vehicle', 'Doom Scythe'),
+    ('49-12', 210, 'vehicle', 'Doomsday Ark'),
+    ('49-17', 55, 'infantry', 'Flayed Ones'),
+    ('prod4390998', 100, 'transport', 'Ghost Ark'),
+    ('prod4390148', 75, 'character', 'Hexmark Destroyer'),
+    ('prod4390160', 175, 'epic_hero', 'Illuminor Szeras'),
+    ('49-10', 70, 'battleline', 'Immortals'),
+    ('prod4900149', 100, 'epic_hero', 'Imotekh the Stormlord'),
+    ('prod4390155', 40, 'mounted', 'Lokhust Destroyers'),
+    ('prod4390145', 50, 'mounted', 'Lokhust Heavy Destroyers'),
+    ('49-11', 80, 'infantry', 'Lychguard'),
+    ('49-08', 420, 'vehicle', 'Monolith'),
+    ('49-06', 80, 'battleline', 'Necron Warriors'),
+    ('P-241017', 185, 'epic_hero', 'Nekrosor Ammentar'),
+    ('prod4390159', 125, 'vehicle', 'Night Scythe'),
+    ('prod3590140', 280, 'vehicle', 'Obelisk'),
+    ('prod4390154', 80, 'infantry', 'Ophydian Destroyers'),
+    ('prod4900151', 90, 'epic_hero', 'Orikan the Diviner'),
+    ('49-03', 90, 'character', 'Overlord'),
+    ('prod4900150', 90, 'character', 'Overlord with Translocation Shroud'),
+    ('prod4900147', 55, 'character', 'Plasmancer'),
+    ('49-21', 55, 'character', 'Psychomancer'),
+    ('49-22', 50, 'character', 'Royal Warden'),
+    ('prod4390150', 85, 'infantry', 'Skorpekh Destroyers'),
+    ('prod4900147', 90, 'character', 'Skorpekh Lord'),
+    ('prod3590140', 465, 'vehicle', 'Tesseract Vault'),
+    ('prod4390152', 420, 'epic_hero', 'Szarekh, The Silent King'),
+    ('prod3940162', 70, 'mounted', 'Tomb Blades'),
+    ('prod3590140', 340, 'character', "Transcendent C'tan"),
+    ('prod2791068', 65, 'epic_hero', 'Trazyn the Infinite'),
+    ('prod4390144', 80, 'infantry', 'Triarch Praetorians'),
+    ('prod4390143', 110, 'vehicle', 'Triarch Stalker'),
 ]
 
 
 class Command(BaseCommand):
     """
-    Seed official 10th Edition points costs for Necrons units.
+    Seed 11th Edition points, category, and active status for Necrons
+    units.
 
-    Looks up each product by GW SKU, then filters for the Necrons
-    UnitType specifically and updates only that row's points_cost.
-    SKUs not found in the DB are skipped with a warning — add the products
-    later and re-run. Idempotent — safe to re-run at any time.
+    Looks up each unit by (name, faction) and updates points_cost, category,
+    and is_active in place; creates the row if it doesn't exist yet (linking
+    the product by gw_sku, or an explicit PRODUCT_PK_OVERRIDES entry when
+    the gw_sku is ambiguous). Idempotent -- safe to re-run.
     """
 
-    help = 'Seed 10th Edition points values for Necrons units.'
+    help = 'Seed 11th Edition points and categories for Necrons units.'
+
+    def add_arguments(self, parser):
+        """Add --dry-run option."""
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Preview changes without saving anything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        self.stdout.write('Seeding Necrons points…\n')
+        dry_run = options['dry_run']
+        self.stdout.write(
+            'Seeding Necrons points (11th Edition)' + (' [DRY RUN]' if dry_run else '') + '…\n'
+        )
 
-        necrons_faction = Faction.objects.filter(name='Necrons').first()
-        if not necrons_faction:
+        fac = Faction.objects.filter(name='Necrons').first()
+        if not fac:
             self.stdout.write(self.style.ERROR(
                 'Necrons faction not found. Run populate_products first.'
             ))
             return
 
+        for old_name, new_name in NECRONS_RENAMES:
+            unit = UnitType.objects.filter(name=old_name, faction=fac).first()
+            if unit:
+                self.stdout.write(f'  [rename] {old_name!r} -> {new_name!r}')
+                if not dry_run:
+                    unit.name = new_name
+                    unit.save(update_fields=['name'])
+
+        for name in NECRONS_DEACTIVATE:
+            unit = UnitType.objects.filter(name=name, faction=fac).first()
+            if unit and unit.is_active:
+                self.stdout.write(f'  [deactivate] {name!r}')
+                if not dry_run:
+                    unit.is_active = False
+                    unit.save(update_fields=['is_active'])
+
         updated_count = 0
+        created_count = 0
         skipped_count = 0
 
-        for gw_sku, points, label in NECRONS_POINTS:
-            product = Product.objects.filter(gw_sku=gw_sku).first()
+        for gw_sku, points, category, label in NECRONS_UNITS:
+            if label in PRODUCT_PK_OVERRIDES:
+                product = Product.objects.filter(id=PRODUCT_PK_OVERRIDES[label]).first()
+            else:
+                product = Product.objects.filter(gw_sku=gw_sku).first() if gw_sku else None
 
-            if not product:
+            if gw_sku and not product:
                 self.stdout.write(
                     self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
                 )
                 skipped_count += 1
                 continue
 
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=necrons_faction,
-            ).update(points_cost=points)
+            unit = UnitType.objects.filter(name=label, faction=fac).first()
 
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
+            if unit:
+                changes = []
+                if unit.points_cost != points:
+                    changes.append(f'points {unit.points_cost}->{points}')
+                if unit.category != category:
+                    changes.append(f'category {unit.category}->{category}')
+                if not unit.is_active:
+                    changes.append('reactivating')
+                if product and unit.product_id != product.id:
+                    changes.append(f'product {unit.product_id}->{product.id}')
+                change_note = f" ({', '.join(changes)})" if changes else ' (no change)'
+
+                if not dry_run:
+                    unit.points_cost = points
+                    unit.category = category
+                    unit.is_active = True
+                    update_fields = ['points_cost', 'category', 'is_active']
+                    if product and unit.product_id != product.id:
+                        unit.product = product
+                        update_fields.append('product')
+                    unit.save(update_fields=update_fields)
+                self.stdout.write(f'  [update] {label} > {points} pts ({category}){change_note}')
                 updated_count += 1
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {label} (SKU {gw_sku}) — Necrons UnitType not found. '
-                        f'Run populate_units first.'
+                if not dry_run:
+                    UnitType.objects.create(
+                        name=label,
+                        faction=fac,
+                        product=product,
+                        category=category,
+                        points_cost=points,
+                        typical_quantity=1,
+                        is_active=True,
                     )
-                )
-                skipped_count += 1
+                self.stdout.write(f'  [create] {label} > {points} pts ({category})')
+                created_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
+            f'\nDone! Updated: {updated_count}  |  Created: {created_count}  |  Skipped: {skipped_count}'
         ))

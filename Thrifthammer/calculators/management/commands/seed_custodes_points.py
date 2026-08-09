@@ -1,24 +1,49 @@
 """
 Management command: seed_custodes_points
 
-Sets the points_cost on UnitType records for all Adeptus Custodes units,
-using official 10th Edition points values sourced from New Recruit.
+Sets points_cost, category, and active status on UnitType records for
+Adeptus Custodes units, using official 11th Edition data sourced from the
+BSData community BattleScribe project (github.com/BSData/wh40k-11e), the
+same data New Recruit itself is built on.
 
 Usage:
     python manage.py seed_custodes_points
 
-The command is fully idempotent — safe to re-run. It looks up each product by
-its Games Workshop SKU (gw_sku), then filters for the Adeptus Custodes UnitType
-specifically and updates only that row's points_cost.
+The command is fully idempotent -- safe to re-run. It looks up each unit by
+(name, faction) -- the same pair UnitType enforces uniqueness on.
 
 Notes:
-- Run AFTER populate_products and populate_units.
-- Do NOT add to the Procfile yet.
-- Line-by-line verified against the New Recruit Adeptus Custodes 10th Edition list.
-- SKUs not yet in the DB are included so they seed automatically when products are added.
-- Currently seeded SKUs in DB: 01-02, 01-07, 01-08, 01-10, 01-11
-- 01-20 (Combat Patrol) is a bundle — no UnitType entry.
-- All other units will skip gracefully until products are added.
+- Custodes has no parent faction and its BSData file is self-contained (45
+  entries), same shape as Space Marines/Chaos Space Marines, not a
+  chapter-style thin overlay.
+- Two multi-build splits:
+    * 'Contemptor Dreadnought' (AC-006) -> 3 units share this one SKU:
+      Contemptor-Achillus Dreadnought (155pts), Contemptor-Galatus
+      Dreadnought (165pts), Venerable Contemptor Dreadnought (170pts).
+    * 'Telemon Heavy Dreadnought' -> linked to AC-026 ("...Body") only.
+      Three more Telemon-related products (AC-013/024/025) are weapon-
+      loadout accessory SKUs, not separate purchasable units -- not
+      modeled as their own calculator rows. User confirmed 2026-08-07.
+- 'Shield-Captain (Legio Custodes)' is a second, distinctly-named row on
+  AC-023 -- a newer release of the same 110pt BSData unit as the existing
+  'Shield-Captain' row (01-07). Kept as two separate rows rather than one,
+  per user direction 2026-08-07.
+- 'Aquilon Custodians' links to AC-017 only; AC-018 ("...with Infernus
+  Firepikes") is not modeled as a second build variant, per user
+  direction.
+- 'Talons of the Emperor' (AC-012) is a genuine dual-character box --
+  Valerian (110pts, Epic Hero) and Aleya (55pts, Epic Hero) both share
+  this one SKU, same "dual-unit box" pattern as Agents of the Imperium's
+  Rogue Trader Entourage/Voidsmen-at-Arms.
+- Two cross-faction shared-SKU links to existing Space Marines products
+  (same physical kit): 'Venerable Land Raider' -> 48-119 (Land Raider
+  Redeemer), 'Anathema Psykana Rhino' -> 48-128 (plain Rhino). User
+  confirmed 2026-08-07.
+- Units confirmed real in 11e with no matching product anywhere in the
+  catalog (Agamatus Custodians, Sagittarum Custodians, Knight-Centura,
+  Shield-Captain in Allarus Terminator Armour, Shield-Captain on Dawneagle
+  Jetbike) are tracked in memory/project_11e_calculator_migration.md, not
+  fabricated here.
 """
 
 from django.core.management.base import BaseCommand
@@ -27,110 +52,124 @@ from calculators.models import UnitType
 from products.models import Faction, Product
 
 # ---------------------------------------------------------------------------
-# Points data: (gw_sku, points_cost, display_name_for_logging)
-#
-# Sourced from New Recruit — Adeptus Custodes 10th Edition list.
-# Verified line-by-line against the full New Recruit army list.
+# Unit data: (gw_sku, points_cost, category, name)
 # ---------------------------------------------------------------------------
-CUSTODES_POINTS = [
-    # ── Named characters ─────────────────────────────────────────────────────
-    ('01-01',  65, 'Aleya'),                                   # 65pts  ✓
-    ('01-02', 140, 'Trajann Valoris'),                         # 140pts ✓
-    ('01-03', 110, 'Valerian'),                                # 110pts ✓
-    # ── Generic characters ────────────────────────────────────────────────────
-    ('01-04', 120, 'Blade Champion'),                          # 120pts ✓
-    ('01-05',  55, 'Knight-Centura'),                          # 55pts  ✓
-    ('01-07', 120, 'Shield-Captain'),                          # 120pts ✓
-    ('01-12', 130, 'Shield-Captain in Allarus Terminator Armour'),  # 130pts ✓
-    ('01-13', 150, 'Shield-Captain on Dawneagle Jetbike'),     # 150pts ✓
-    # ── Battleline ────────────────────────────────────────────────────────────
-    ('01-08', 150, 'Custodian Guard'),                         # 150pts ✓
-    ('01-14', 250, 'Custodian Guard with Adrasite and Pyrithite Spears'),  # 250pts ✓
-    # ── Infantry ──────────────────────────────────────────────────────────────
-    ('01-15', 110, 'Allarus Custodians'),                      # 110pts ✓
-    ('01-16', 195, 'Aquilon Custodians'),                      # 195pts ✓
-    ('01-10', 210, 'Custodian Wardens'),                       # 210pts ✓
-    ('01-17',  40, 'Prosecutors'),                             # 40pts  ✓
-    ('01-18', 225, 'Sagittarum Custodians'),                   # 225pts ✓
-    ('01-19',  45, 'Vigilators'),                              # 45pts  ✓
-    ('01-21',  45, 'Witchseekers'),                            # 45pts  ✓
-    # ── Fast Attack / Mounted ─────────────────────────────────────────────────
-    ('01-11', 150, 'Vertus Praetors'),                         # 150pts ✓
-    ('01-22', 225, 'Agamatus Custodians'),                     # 225pts ✓
-    ('01-23', 165, 'Venatari Custodians'),                     # 165pts ✓
-    ('01-24', 105, 'Pallas Grav-attack'),                      # 105pts ✓
-    # ── Walkers / Dreadnoughts ────────────────────────────────────────────────
-    ('01-25', 155, 'Contemptor-Achillus Dreadnought'),         # 155pts ✓
-    ('01-26', 165, 'Contemptor-Galatus Dreadnought'),          # 165pts ✓
-    ('01-27', 225, 'Telemon Heavy Dreadnought'),               # 225pts ✓
-    ('01-28', 170, 'Venerable Contemptor Dreadnought'),        # 170pts ✓
-    # ── Transports ────────────────────────────────────────────────────────────
-    ('01-06',  75, 'Anathema Psykana Rhino'),                  # 75pts  ✓
-    ('01-29', 200, 'Coronus Grav-carrier'),                    # 200pts ✓
-    # ── Heavy Vehicles ────────────────────────────────────────────────────────
-    ('01-30', 215, 'Caladius Grav-tank'),                      # 215pts ✓
-    ('01-31', 220, 'Venerable Land Raider'),                   # 220pts ✓
-    # ── Aircraft ──────────────────────────────────────────────────────────────
-    ('01-32', 580, 'Ares Gunship'),                            # 580pts ✓
-    ('01-33', 690, 'Orion Assault Dropship'),                  # 690pts ✓
+CUSTODES_UNITS = [
+    ('AC-012', 55, 'epic_hero', 'Aleya'),
+    ('AC-002', 110, 'infantry', 'Allarus Custodians'),
+    ('48-128', 65, 'transport', 'Anathema Psykana Rhino'),
+    ('AC-017', 195, 'infantry', 'Aquilon Custodians'),
+    ('AC-019', 580, 'vehicle', 'Ares Gunship'),
+    ('AC-003', 110, 'character', 'Blade Champion'),
+    ('AC-005', 210, 'vehicle', 'Caladius Grav-tank'),
+    ('AC-006', 155, 'vehicle', 'Contemptor-Achillus Dreadnought'),
+    ('AC-006', 165, 'vehicle', 'Contemptor-Galatus Dreadnought'),
+    ('AC-007', 180, 'vehicle', 'Coronus Grav-carrier'),
+    ('01-08', 170, 'battleline', 'Custodian Guard'),
+    ('01-08', 250, 'infantry', 'Custodian Guard with Adrasite and Pyrithite spears'),
+    ('01-10', 200, 'infantry', 'Custodian Wardens'),
+    ('AC-021', 690, 'vehicle', 'Orion Assault Dropship'),
+    ('AC-022', 100, 'vehicle', 'Pallas Grav-attack'),
+    ('AC-010', 45, 'infantry', 'Prosecutors'),
+    ('01-07', 110, 'character', 'Shield-Captain'),
+    ('AC-023', 110, 'character', 'Shield-Captain (Legio Custodes)'),
+    ('AC-026', 225, 'vehicle', 'Telemon Heavy Dreadnought'),
+    ('01-02', 135, 'epic_hero', 'Trajann Valoris'),
+    ('AC-012', 110, 'epic_hero', 'Valerian'),
+    ('AC-014', 150, 'infantry', 'Venatari Custodians'),
+    ('AC-006', 170, 'vehicle', 'Venerable Contemptor Dreadnought'),
+    ('48-119', 220, 'vehicle', 'Venerable Land Raider'),
+    ('01-11', 145, 'mounted', 'Vertus Praetors'),
+    ('AC-015', 50, 'infantry', 'Vigilators'),
+    ('AC-016', 50, 'infantry', 'Witchseekers'),
 ]
 
 
 class Command(BaseCommand):
     """
-    Seed official 10th Edition points costs for Adeptus Custodes units.
+    Seed 11th Edition points, category, and active status for Adeptus
+    Custodes units.
 
-    Looks up each product by GW SKU, then filters for the Adeptus Custodes
-    UnitType specifically and updates only that row's points_cost.
-    SKUs not found in the DB are skipped with a warning — add the products
-    later and re-run. Idempotent — safe to re-run at any time.
+    Looks up each unit by (name, faction) and updates points_cost, category,
+    and is_active in place; creates the row if it doesn't exist yet (linking
+    the product by gw_sku when one is given). Idempotent -- safe to re-run.
     """
 
-    help = 'Seed 10th Edition points values for Adeptus Custodes units.'
+    help = 'Seed 11th Edition points and categories for Adeptus Custodes units.'
+
+    def add_arguments(self, parser):
+        """Add --dry-run option."""
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Preview changes without saving anything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        self.stdout.write('Seeding Adeptus Custodes points…\n')
+        dry_run = options['dry_run']
+        self.stdout.write(
+            'Seeding Custodes points (11th Edition)' + (' [DRY RUN]' if dry_run else '') + '\u2026\n'
+        )
 
-        # Products are stored under 'Custodes' in populate_products.py.
-        # 'Adeptus Custodes' also exists as a faction row but has no products assigned.
-        custodes_faction = Faction.objects.filter(name='Custodes').first()
-        if not custodes_faction:
+        fac = Faction.objects.filter(name='Custodes').first()
+        if not fac:
             self.stdout.write(self.style.ERROR(
                 'Custodes faction not found. Run populate_products first.'
             ))
             return
 
         updated_count = 0
+        created_count = 0
         skipped_count = 0
 
-        for gw_sku, points, label in CUSTODES_POINTS:
-            product = Product.objects.filter(gw_sku=gw_sku).first()
+        for gw_sku, points, category, label in CUSTODES_UNITS:
+            product = Product.objects.filter(gw_sku=gw_sku).first() if gw_sku else None
 
-            if not product:
+            if gw_sku and not product:
                 self.stdout.write(
                     self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
                 )
                 skipped_count += 1
                 continue
 
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=custodes_faction,
-            ).update(points_cost=points)
+            unit = UnitType.objects.filter(name=label, faction=fac).first()
 
-            if updated:
-                self.stdout.write(f'  [updated] {label} > {points} pts')
+            if unit:
+                changes = []
+                if unit.points_cost != points:
+                    changes.append(f'points {unit.points_cost}->{points}')
+                if unit.category != category:
+                    changes.append(f'category {unit.category}->{category}')
+                if not unit.is_active:
+                    changes.append('reactivating')
+                change_note = f" ({', '.join(changes)})" if changes else ' (no change)'
+
+                if not dry_run:
+                    unit.points_cost = points
+                    unit.category = category
+                    unit.is_active = True
+                    update_fields = ['points_cost', 'category', 'is_active']
+                    if product and unit.product_id != product.id:
+                        unit.product = product
+                        update_fields.append('product')
+                    unit.save(update_fields=update_fields)
+                self.stdout.write(f'  [update] {label} > {points} pts ({category}){change_note}')
                 updated_count += 1
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {label} (SKU {gw_sku}) — Custodes UnitType not found. '
-                        f'Run populate_units first.'
+                if not dry_run:
+                    UnitType.objects.create(
+                        name=label,
+                        faction=fac,
+                        product=product,
+                        category=category,
+                        points_cost=points,
+                        typical_quantity=1,
+                        is_active=True,
                     )
-                )
-                skipped_count += 1
+                self.stdout.write(f'  [create] {label} > {points} pts ({category})')
+                created_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
+            f'\nDone! Updated: {updated_count}  |  Created: {created_count}  |  Skipped: {skipped_count}'
         ))

@@ -137,7 +137,16 @@ def product_list_uk(request):
     if category_slug:
         products = products.filter(category__slug=category_slug)
     if faction_slug:
-        products = products.filter(faction__slug=faction_slug)
+        # Include products whose secondary_factions include this faction too
+        # (cross-faction units like Chaos Daemons dual-tagged onto a mono-god
+        # faction page). Resolved via a separate pk__in subquery rather than
+        # a direct Q(secondary_factions__slug=...) OR-filter, because joining
+        # the M2M directly into this queryset would duplicate rows against
+        # the current_prices join already used by the min_price annotation
+        # above and corrupt Min() -- same pattern already used for this
+        # exact reason in factions/views.py's Top Deals query.
+        secondary_pks = Product.objects.filter(secondary_factions__slug=faction_slug).values('pk')
+        products = products.filter(Q(faction__slug=faction_slug) | Q(pk__in=secondary_pks))
 
     if sort == 'discount':
         products = products.order_by(F('min_discount_pct').desc(nulls_last=True))
