@@ -9,9 +9,17 @@ Emperor's Children appears in the Army Cost Calculator.
 Product names match Games Workshop's official website titles exactly.
 GW URLs come from the en-US storefront (no queryID tracking params).
 
-Also sets parent_faction on EC, Death Guard, World Eaters, and Thousand Sons
-to Chaos Space Marines so those factions inherit CSM shared kits on their
-faction pages and the Army Calculator.
+Does NOT set parent_faction on EC, Death Guard, World Eaters, or Thousand
+Sons -- each Chaos legion has its own separate codex and does not share a
+generic "Chaos Space Marines" army list (unlike loyalist Space Marine
+chapters, which do inherit generic SM datasheets via parent_faction).
+Setting parent_faction=Chaos Space Marines here previously caused
+CSM-exclusive characters like Cypher and Fabius Bile to leak onto these
+legions' Army Calculator pages every time this command ran -- see
+set_parent_factions.py for the full explanation. A legion CAN legitimately
+use a specific CSM unit sometimes; that is handled via individually
+confirmed cross-faction shared-SKU links instead (see UnitType rows for
+e.g. Khorne Berzerkers/Rubric Marines/Plague Marines/Noise Marines).
 
 Safe to run repeatedly (idempotent via update_or_create keyed on slug).
 
@@ -279,9 +287,6 @@ PRODUCTS = [
     ),
 ]
 
-# Sub-factions that should inherit CSM products
-_CSM_CHILDREN = ["Emperor's Children", 'Death Guard', 'World Eaters', 'Thousand Sons']
-
 
 class Command(BaseCommand):
     """Create Emperor's Children faction, products, GW prices, and UnitType entries."""
@@ -334,33 +339,12 @@ class Command(BaseCommand):
                 'painting_complexity': 'Medium-Hard',
                 'playstyle': 'Aggressive Elite',
                 'price_range_display': '$$$',
-                'parent_faction': csm_faction,
             },
         )
         if ec_created:
             self.stdout.write(self.style.SUCCESS("Created faction: Emperor's Children"))
         else:
-            if ec_faction.parent_faction != csm_faction:
-                ec_faction.parent_faction = csm_faction
-                ec_faction.save()
             self.stdout.write(f"Found faction: Emperor's Children (pk={ec_faction.pk})")
-
-        # ── Set parent_faction on other chaos sub-factions ────────────────────
-        for child_name in _CSM_CHILDREN:
-            child = Faction.objects.filter(name=child_name).first()
-            if not child:
-                self.stdout.write(self.style.WARNING(
-                    f'  Faction not found, skipping parent link: {child_name}'
-                ))
-                continue
-            if child.parent_faction != csm_faction:
-                child.parent_faction = csm_faction
-                child.save()
-                self.stdout.write(
-                    self.style.SUCCESS(f'  Set parent_faction → CSM for: {child_name}')
-                )
-            else:
-                self.stdout.write(f'  Parent already set for: {child_name}')
 
         # ── Resolve GW retailer ───────────────────────────────────────────────
         gw_retailer = Retailer.objects.filter(name='Games Workshop').first()
@@ -420,15 +404,29 @@ class Command(BaseCommand):
                     price_updated += 1
 
             # ── Seed UnitType so this faction appears in the Army Calculator ──
-            if _should_skip(name):
+            # "Codex: ..." is a book, not a unit -- _should_skip() doesn't catch
+            # it (SKIP_KEYWORDS is shared with populate_units.py and doesn't
+            # include "codex"). "Daemon Prince" is this file's own pre-11e-split
+            # name -- the current 11e migration (seed_chaos_space_marines_points)
+            # replaced it with "Heretic Astartes Daemon Prince" (+ "with wings")
+            # and deliberately deactivated this exact row. Both were getting
+            # silently reactivated on every deploy once this command actually
+            # reached them (2026-08-09).
+            if _should_skip(name) or name.lower().startswith('codex') or name == 'Daemon Prince':
                 continue
 
             role = 'combo_box' if _is_combo_box(name) else _assign_role(name)
+            # Lookup key is (name, faction) -- UnitType's own uniqueness
+            # constraint -- not (product, faction). A product can now
+            # legitimately back more than one UnitType row (multi-build
+            # splits, e.g. Tormentors/Infractors sharing gw_sku
+            # 99120102203), so (product, faction) is no longer guaranteed
+            # to resolve to a single row and raises MultipleObjectsReturned.
             unit, u_created = UnitType.objects.update_or_create(
-                product=product,
+                name=name,
                 faction=faction,
                 defaults={
-                    'name': name,
+                    'product': product,
                     'category': role,
                     # points_cost intentionally excluded — preserved on update so that
                     # import_faction_stats (GitHub Actions) values are not wiped on

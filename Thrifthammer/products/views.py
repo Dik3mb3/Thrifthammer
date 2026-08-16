@@ -305,7 +305,20 @@ def product_list(request):
             | Q(gw_sku__icontains=query)
         )
     if category_slug:
-        products = products.filter(category__slug=category_slug)
+        if category_slug == 'warcry':
+            # Warcry is its own top-level category, but most Warcry warbands
+            # are the same physical kit as an existing Age of Sigmar faction
+            # product (dual-tagged via secondary_factions rather than given
+            # their own category) -- include those here too, same OR-pattern
+            # as the secondary_factions faction-level inclusion below.
+            warcry_secondary_pks = Product.objects.filter(
+                secondary_factions__slug='warcry'
+            ).values('pk')
+            products = products.filter(
+                Q(category__slug=category_slug) | Q(pk__in=warcry_secondary_pks)
+            )
+        else:
+            products = products.filter(category__slug=category_slug)
     if faction_slug:
         # Include products whose secondary_factions include this faction too
         # (cross-faction units like Chaos Daemons dual-tagged onto a mono-god

@@ -9,6 +9,9 @@ Covers models, views, and URL routing. Focuses on:
 """
 
 import decimal
+import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 
 from django.contrib.auth.models import User
 from django.core.cache import cache
@@ -26,6 +29,7 @@ _TEST_STORAGES = {
 }
 
 from prices.models import CurrentPrice
+from products.ebay_api_client import EbayBrowseAPI
 from products.models import Category, Faction, Product, Retailer
 
 
@@ -512,3 +516,178 @@ class ProductListQueryCountTest(TestCase):
             f'Product list used {query_count} queries — expected ≤20. '
             'Check for N+1 issues in the view or template.',
         )
+
+
+class EbayCalculatedFallbackTest(unittest.TestCase):
+    """
+    Tests for the CALCULATED-shipping last-resort fallback:
+    EbayBrowseAPI._find_calculated_fallback(), invoked from
+    find_best_match_for_product() only when the normal FIXED-shipping
+    search finds no valid match at all.
+
+    search_items() and _fetch_item_shipping() are mocked throughout so
+    these tests make no real eBay API calls — they verify the fallback's
+    own orchestration (when it runs, what it accepts/rejects), not the
+    HTTP/parsing layer underneath it.
+
+    Plain unittest.TestCase, not Django's DB-backed TestCase: everything
+    _find_calculated_fallback/_is_valid_result touch on `product` is read
+    via getattr(), so a lightweight stand-in object is enough — no real
+    Product row or test database needed.
+    """
+
+    def setUp(self):
+        """A product with a known MSRP, so ceiling math ($20 -> $25 at 125%) is exact."""
+        self.product = SimpleNamespace(
+            name='Test Kit',
+            msrp=decimal.Decimal('20.00'),
+            ebay_search_name='',
+            ebay_negative_keywords='',
+            ebay_allowed_title_words='',
+            ebay_allow_3d=False,
+            ebay_allow_no_box=False,
+            category=None,
+        )
+        # Explicit dummy credentials — avoids depending on real settings/env vars.
+        self.api = EbayBrowseAPI(app_id='test-app-id', cert_id='test-cert-id')
+
+    @staticmethod
+    def _fixed_item(**overrides):
+        """A valid FIXED-shipping item dict matching the test product's title."""
+        item = {
+            'title': 'Test Kit', 'url': 'https://ebay.com/itm/1', 'item_id': 'v1|1|0',
+            'price': decimal.Decimal('18.00'), 'shipping': decimal.Decimal('5.00'),
+            'total_cost': decimal.Decimal('23.00'), 'short_description': '',
+            'seller_username': 'seller1',
+        }
+        item.update(overrides)
+        return item
+
+    @staticmethod
+    def _calculated_item(price, **overrides):
+        """An unresolved CALCULATED-shipping item dict (shipping=None), as
+        _parse_item(allow_calculated=True) would return one."""
+        item = {
+            'title': 'Test Kit', 'url': 'https://ebay.com/itm/2', 'item_id': 'v1|2|0',
+            'price': price, 'shipping': None, 'total_cost': price,
+            'short_description': '', 'seller_username': 'seller2',
+        }
+        item.update(overrides)
+        return item
+
+    @patch.object(EbayBrowseAPI, '_fetch_item_shipping')
+    @patch.object(EbayBrowseAPI, '_find_calculated_fallback')
+    @patch.object(EbayBrowseAPI, 'search_items')
+    def test_fallback_not_invoked_when_fixed_match_found(
+        self, mock_search, mock_fallback, mock_shipping,
+    ):
+        """A valid FIXED-shipping match on the first pass skips the fallback entirely."""
+        mock_search.return_value = [self._fixed_item()]
+        # Unrelated to the fallback: the normal path always refines the
+        # winner's shipping via a real detail-fetch call -- mock it so this
+        # test doesn't hit the network with dummy credentials.
+        mock_shipping.return_value = decimal.Decimal('5.00')
+
+        result = self.api.find_best_match_for_product(self.product)
+        self.assertIsNotNone(result)
+        mock_fallback.assert_not_called()
+
+    @patch.object(EbayBrowseAPI, '_fetch_item_shipping')
+    @patch.object(EbayBrowseAPI, 'search_items')
+    def test_fallback_accepts_within_ceiling(self, mock_search, mock_shipping):
+        """
+        No FIXED match at all; a CALCULATED candidate resolves to a total
+        within 125% of MSRP ($20 MSRP -> $25 ceiling) and is accepted.
+        Mirrors the real BB-037/MAL-009/KT-014 accepted cases validated
+        2026-08-14 against live eBay data.
+        """
+        mock_search.side_effect = [
+            [],  # pass 1: no FIXED results
+            [self._calculated_item(decimal.Decimal('18.00'))],  # pass 2
+        ]
+        mock_shipping.return_value = decimal.Decimal('5.00')  # total = 23.00 <= 25.00
+
+        result = self.api.find_best_match_for_product(self.product)
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result['price'], decimal.Decimal('18.00'))
+        self.assertEqual(result['shipping'], decimal.Decimal('5.00'))
+        self.assertEqual(result['total_cost'], decimal.Decimal('23.00'))
+        self.assertEqual(mock_search.call_count, 2)
+        self.assertTrue(mock_search.call_args_list[1].kwargs.get('allow_calculated'))
+
+    @patch.object(EbayBrowseAPI, '_fetch_item_shipping')
+    @patch.object(EbayBrowseAPI, 'search_items')
+    def test_fallback_rejects_over_ceiling(self, mock_search, mock_shipping):
+        """
+        A CALCULATED candidate whose real total exceeds 125% of MSRP is
+        rejected. Mirrors the real SR-019/BB-062/MAL-025/MAL-051 rejected
+        cases -- all confirmed correct products, held back purely on price.
+        """
+        mock_search.side_effect = [[], [self._calculated_item(decimal.Decimal('18.00'))]]
+        mock_shipping.return_value = decimal.Decimal('10.00')  # total = 28.00 > 25.00 ceiling
+
+        result = self.api.find_best_match_for_product(self.product)
+        self.assertIsNone(result)
+
+    @patch.object(EbayBrowseAPI, '_fetch_item_shipping')
+    @patch.object(EbayBrowseAPI, 'search_items')
+    def test_fallback_skipped_without_msrp(self, mock_search, mock_shipping):
+        """
+        A product with no MSRP can't be validated against the ceiling, so
+        the fallback declines to run at all rather than accept an
+        unvalidated match -- it must not even issue the second search.
+        """
+        self.product.msrp = None
+        mock_search.return_value = []  # pass 1 empty
+
+        result = self.api.find_best_match_for_product(self.product)
+
+        self.assertIsNone(result)
+        self.assertEqual(mock_search.call_count, 1)
+        mock_shipping.assert_not_called()
+
+    @patch.object(EbayBrowseAPI, '_fetch_item_shipping')
+    @patch.object(EbayBrowseAPI, 'search_items')
+    def test_fallback_discards_when_shipping_unresolvable(self, mock_search, mock_shipping):
+        """If the item-detail fetch can't resolve shipping (LOCAL_PICKUP at that
+        stage, or a network/API error), the fallback discards the candidate."""
+        mock_search.side_effect = [[], [self._calculated_item(decimal.Decimal('18.00'))]]
+        mock_shipping.return_value = None
+
+        result = self.api.find_best_match_for_product(self.product)
+        self.assertIsNone(result)
+
+    @patch.object(EbayBrowseAPI, '_fetch_item_shipping')
+    @patch.object(EbayBrowseAPI, 'search_items')
+    def test_fallback_still_applies_content_validation(self, mock_search, mock_shipping):
+        """
+        A CALCULATED candidate that fails the normal title/bits checks is
+        rejected before ever reaching the shipping fetch -- the ceiling is
+        an additional guard on top of existing validation, not a
+        replacement for it.
+        """
+        bad_item = self._calculated_item(
+            decimal.Decimal('18.00'), title='Test Kit Sprue Bits Only',
+        )
+        mock_search.side_effect = [[], [bad_item]]
+
+        result = self.api.find_best_match_for_product(self.product)
+
+        self.assertIsNone(result)
+        mock_shipping.assert_not_called()
+
+    @patch.object(EbayBrowseAPI, '_fetch_item_shipping')
+    @patch.object(EbayBrowseAPI, 'search_items')
+    def test_fallback_invoked_when_fixed_results_all_invalid(self, mock_search, mock_shipping):
+        """Pass 1 returning results that all fail validation (not just an
+        empty list) also triggers the fallback."""
+        wrong_item = self._fixed_item(title='Completely Different Product Sprue')
+        mock_search.side_effect = [
+            [wrong_item],  # pass 1: has results, but none valid
+            [self._calculated_item(decimal.Decimal('18.00'))],  # pass 2
+        ]
+        mock_shipping.return_value = decimal.Decimal('5.00')
+
+        result = self.api.find_best_match_for_product(self.product)
+        self.assertIsNotNone(result)

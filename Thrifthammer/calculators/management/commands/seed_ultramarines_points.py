@@ -1,25 +1,52 @@
 """
 Management command: seed_ultramarines_points
 
-Sets the points_cost on UnitType records for all Space Marines / Ultramarines
-products, using official 10th Edition points values sourced from New Recruit.
+Sets points_cost, category, and active status on UnitType records for
+Ultramarines units, using official 11th Edition data sourced from the
+BSData community BattleScribe project (github.com/BSData/wh40k-11e), the
+same data New Recruit itself is built on.
 
 Usage:
     python manage.py seed_ultramarines_points
+    python manage.py seed_ultramarines_points --dry-run
 
-The command is fully idempotent — safe to re-run. It looks up each product by
-its Games Workshop SKU (gw_sku) and updates the linked UnitType's points_cost.
-Products not found in the database are skipped with a warning.
+The command is fully idempotent -- safe to re-run. It looks up each unit by
+(name, faction) -- the same pair UnitType enforces uniqueness on.
 
 Notes:
-- This command should be run manually after the initial deploy (or after running
-  populate_products / populate_units for the first time).
-- Do NOT add to the Procfile unless all army points seeds are complete, because
-  populate_units resets points_cost to 0 on a fresh seed (without --skip-if-current).
-- Points values are for standard unit sizes as listed in New Recruit.
-- SKUs not yet in the DB are skipped gracefully — add products later, re-run.
-- 48-07 collision: Tactical Squad (140pts) and Terminator Assault Squad (180pts)
-  share the same GW SKU. Handled via SM_SKU_COLLISIONS below with name filtering.
+- Source: "Imperium - Adeptus Astartes - Ultramarines.json" -- hybrid
+  chapter-catalogue pattern, same shape as every other SM successor
+  chapter (18 own entries, all 16 root entryLinks resolve locally).
+  Supersedes the old `seed_ultramarines_points` command (10th Edition,
+  never added to the Procfile).
+- **New gotcha**: two entries carry a `"HIDDEN UNTIL LEGENDS"` comment
+  even though their name isn't yet suffixed `[Legends]` -- "Captain
+  Sicarius" (85pts) and plain "Marneus Calgar" (200pts). Both are being
+  phased out of standard play; excluded same as any other Legends unit.
+  Their current replacements are "Cato Sicarius" (105pts) and "Marneus
+  Calgar in Armour of Antilochus" (155pts).
+- **Captain Titus 3-way multi-build split** (`55-31`, "Captain Titus and
+  The Wardens of Ultramar" -- the existing combined-name row is
+  deactivated and replaced with three sibling rows on the same SKU):
+  "Captain Titus" (100pts), "Wardens of Ultramar" (120pts), and
+  "Lieutenant Titus" (70pts, an earlier-rank build of the same
+  character) -- confirmed with user 2026-08-09 that the box includes all
+  three build options.
+- **Roboute Guilliman / Marneus Calgar -- productless placeholder rows**,
+  same precedent as Judiciar/Suppressor Squad elsewhere: no product
+  exists anywhere in the catalog for either character. Two pre-existing
+  duplicate rows for Guilliman ("Roboute Guilliman" 0pts, "Space Marine
+  Roboute Guilliman" 340pts) are consolidated -- keep "Roboute Guilliman"
+  refreshed to 355pts, deactivate the duplicate. The pre-existing stale
+  "Marneus Calgar" row (140pts, corresponding to the now Legends-bound
+  plain entry) is deactivated the same way in favor of "Marneus Calgar
+  in Armour of Antilochus" (155pts) -- same reasoning as the Guilliman
+  cleanup the user approved, applied consistently.
+- **Uriel Ventris** (105pts, Epic Hero) confirmed real, no product
+  anywhere -- backlogged.
+- "Ultramarines Upgrades and Transfers" (`55-34`) is a transfer-sheet
+  accessory product, not a deployable unit -- left untouched, same
+  precedent as Tzaangor Upgrade Pack.
 """
 
 from django.core.management.base import BaseCommand
@@ -27,220 +54,123 @@ from django.core.management.base import BaseCommand
 from calculators.models import UnitType
 from products.models import Faction, Product
 
-# ---------------------------------------------------------------------------
-# Points data: (gw_sku, points_cost, display_name_for_logging)
-#
-# Sourced from New Recruit — Space Marines / Ultramarines 10th Edition list.
-# Verified line-by-line against the full New Recruit army list.
-# SKUs not yet in the DB are included here so they are seeded automatically
-# when the corresponding products are added later.
-# Note: 48-07 is EXCLUDED from this list — handled via SM_SKU_COLLISIONS below.
-# ---------------------------------------------------------------------------
-SPACE_MARINES_POINTS = [
-    # ── Characters ──────────────────────────────────────────────────────────
-    ('48-34',  50, 'Ancient'),                            # 50pts ✓
-    ('48-09',  75, 'Ancient in Terminator Armour'),       # 75pts ✓
-    ('48-10',  45, 'Bladeguard Ancient'),                 # 45pts ✓
-    ('48-33',  50, 'Apothecary'),                         # 50pts ✓
-    ('48-11',  70, 'Apothecary Biologis'),                # 70pts ✓
-    ('48-62',  80, 'Captain'),                            # 80pts ✓
-    ('48-12',  80, 'Captain in Gravis Armour'),           # 80pts ✓
-    ('48-13',  70, 'Captain in Phobos Armour'),           # 70pts ✓
-    ('48-14',  95, 'Captain in Terminator Armour'),       # 95pts ✓
-    ('48-16',  75, 'Captain with Jump Pack'),             # 75pts ✓
-    ('48-32',  60, 'Chaplain'),                           # 60pts ✓ (NOT 75 — that is Chap in TDA)
-    ('48-17',  75, 'Chaplain in Terminator Armour'),      # 75pts ✓
-    ('48-18',  75, 'Chaplain on Bike'),                   # 75pts ✓
-    ('48-19',  75, 'Chaplain with Jump Pack'),            # 75pts ✓
-    ('48-36',  70, 'Judiciar'),                           # 70pts ✓
-    ('48-30',  65, 'Librarian'),                          # 65pts ✓
-    ('48-20',  70, 'Librarian in Phobos Armour'),         # 70pts ✓
-    ('48-24',  75, 'Librarian in Terminator Armour'),     # 75pts ✓
-    ('48-61',  55, 'Lieutenant'),                         # 55pts ✓
-    ('48-31',  55, 'Lieutenant in Phobos Armour'),        # 55pts ✓
-    ('48-35',  55, 'Lieutenant in Reiver Armour'),        # 55pts ✓
-    ('48-47',  70, 'Lieutenant with Combi-weapon'),       # 70pts ✓
-    ('48-48',  55, 'Techmarine'),                         # 55pts ✓
-    ('48-37', 105, 'Company Heroes'),                     # 105pts ✓
-    # ── Ultramarines named characters ───────────────────────────────────────
-    ('55-12', 140, 'Marneus Calgar'),                     # 140pts ✓
-    ('55-02', 340, 'Roboute Guilliman'),                  # 340pts ✓
-    ('55-16', 110, 'Victrix Honour Guard'),               # 110pts ✓
-    # ── Battleline ───────────────────────────────────────────────────────────
-    ('48-76',  75, 'Assault Intercessor Squad'),          # 75pts ✓
-    ('48-49', 100, 'Heavy Intercessor Squad'),            # 100pts ✓
-    ('48-75',  80, 'Intercessor Squad'),                  # 80pts ✓
-    ('48-29',  70, 'Scout Squad'),                        # 70pts ✓
-    ('48-45',  90, 'Infernus Squad'),                     # 90pts ✓
-    # ── Infantry ─────────────────────────────────────────────────────────────
-    ('48-06', 170, 'Terminator Squad'),                   # 170pts ✓
-    ('48-92',  95, 'Aggressor Squad'),                    # 95pts ✓
-    ('48-50',  90, 'Assault Intercessors with Jump Packs'), # 90pts ✓
-    ('48-51', 115, 'Assault Squad with Jump Packs'),      # 115pts ✓ (Legends)
-    ('48-38',  80, 'Bladeguard Veteran Squad'),           # 80pts ✓
-    ('48-55', 150, 'Centurion Assault Squad'),            # 150pts ✓
-    ('48-56', 175, 'Centurion Devastator Squad'),         # 175pts ✓
-    ('48-54', 200, 'Desolation Squad'),                   # 200pts ✓
-    ('48-15', 120, 'Devastator Squad'),                   # 120pts ✓
-    ('48-98',  85, 'Eliminator Squad'),                   # 85pts ✓
-    ('48-39',  90, 'Eradicator Squad'),                   # 90pts ✓
-    ('48-52', 110, 'Hellblaster Squad'),                  # 110pts ✓
-    ('48-96',  80, 'Incursor Squad'),                     # 80pts ✓
-    ('48-41', 100, 'Infiltrator Squad'),                  # 100pts ✓
-    ('48-53',  80, 'Reiver Squad'),                       # 80pts ✓
-    ('48-43', 100, 'Sternguard Veteran Squad'),           # 100pts ✓
-    ('48-08', 100, 'Vanguard Veteran Squad'),             # 100pts ✓
-    # ── Fast Attack / Mounted ────────────────────────────────────────────────
-    ('48-97', 120, 'Inceptor Squad'),                     # 120pts ✓
-    ('48-40',  80, 'Outrider Squad'),                     # 80pts ✓
-    ('48-42',  60, 'Invader ATV'),                        # 60pts ✓
-    ('48-99',  75, 'Suppressor Squad'),                   # 75pts ✓
-    # ── Walkers / Dreadnoughts ───────────────────────────────────────────────
-    ('48-46', 150, 'Ballistus Dreadnought'),              # 150pts ✓
-    ('48-44', 160, 'Brutalis Dreadnought'),               # 160pts ✓
-    ('48-60', 135, 'Dreadnought'),                        # 135pts ✓
-    ('48-93', 195, 'Redemptor Dreadnought'),              # 195pts ✓
-    ('48-57', 125, 'Invictor Tactical Warsuit'),          # 125pts ✓
-    # ── Transports ───────────────────────────────────────────────────────────
-    ('48-63',  70, 'Drop Pod'),                           # 70pts ✓
-    ('48-94',  80, 'Impulsor'),                           # 80pts ✓
-    ('48-58',  95, 'Razorback'),                          # 95pts ✓
-    ('48-85', 180, 'Repulsor'),                           # 180pts ✓
-    ('48-95', 220, 'Repulsor Executioner'),               # 220pts ✓
-    ('48-59',  75, 'Rhino'),                              # 75pts ✓
-    # ── Heavy Vehicles ────────────────────────────────────────────────────────
-    ('48-65', 160, 'Gladiator Lancer'),                   # 160pts ✓
-    ('48-66', 160, 'Gladiator Reaper'),                   # 160pts ✓
-    ('48-67', 150, 'Gladiator Valiant'),                  # 150pts ✓
-    ('48-21', 220, 'Land Raider'),                        # 220pts ✓
-    ('48-22', 220, 'Land Raider Crusader'),               # 220pts ✓
-    ('48-68', 270, 'Land Raider Redeemer'),               # 270pts ✓
-    ('48-64', 135, 'Predator Annihilator'),               # 135pts ✓
-    ('48-23', 140, 'Predator Destructor'),                # 140pts ✓
-    ('48-25', 190, 'Whirlwind'),                          # 190pts ✓
-    ('48-26', 185, 'Vindicator'),                         # 185pts ✓
-    # ── Aircraft ─────────────────────────────────────────────────────────────
-    ('48-69', 115, 'Storm Speeder Hailstrike'),           # 115pts ✓
-    ('48-70', 125, 'Storm Speeder Hammerstrike'),         # 125pts ✓
-    ('48-71', 135, 'Storm Speeder Thunderstrike'),        # 135pts ✓
-    ('48-73', 155, 'Stormhawk Interceptor'),              # 155pts ✓
-    ('48-74', 280, 'Stormraven Gunship'),                 # 280pts ✓
-    ('48-72', 165, 'Stormtalon Gunship'),                 # 165pts ✓
-    ('48-77', 525, 'Astraeus'),                           # 525pts ✓
-    ('48-78', 840, 'Thunderhawk Gunship'),                # 840pts ✓
-    # ── Fortifications ────────────────────────────────────────────────────────
-    ('48-27', 175, 'Hammerfall Bunker'),                  # 175pts ✓
-    ('48-28',  75, 'Firestrike Servo-Turrets'),           # 75pts ✓
+# Names to deactivate -- superseded by a multi-build split or a
+# stale/Legends-bound duplicate.
+ULTRAMARINES_DEACTIVATE = [
+    'Captain Titus and The Wardens of Ultramar',
+    'Marneus Calgar',
+    'Space Marine Roboute Guilliman',
 ]
 
 # ---------------------------------------------------------------------------
-# SKU collision handling — 48-07 is shared by TWO different products:
-#   • Space Marine Tactical Squad        → 140 pts
-#   • Space Marine Terminator Assault Squad → 180 pts
-# The main loop uses .first() which only finds one; these are handled below
-# using name-filtered queries identical to the cross-faction collision pattern.
-# (gw_sku, name_fragment, points_cost, display_name)
+# Unit data: (gw_sku, points_cost, category, name)
+# gw_sku=None means no product exists -- productless placeholder row.
 # ---------------------------------------------------------------------------
-SM_SKU_COLLISIONS = [
-    ('48-07', 'Tactical',   140, 'Tactical Squad'),           # 140pts ✓
-    ('48-07', 'Terminator', 180, 'Terminator Assault Squad'), # 180pts ✓
+ULTRAMARINES_UNITS = [
+    ('55-32', 105, 'epic_hero', 'Cato Sicarius'),
+    ('55-33', 85, 'character', 'Chief Librarian Tigurius'),
+    (None, 155, 'epic_hero', 'Marneus Calgar in Armour of Antilochus'),
+    (None, 355, 'epic_hero', 'Roboute Guilliman'),
+    ('55-31', 100, 'epic_hero', 'Captain Titus'),
+    ('55-31', 120, 'epic_hero', 'Wardens of Ultramar'),
+    ('55-31', 70, 'epic_hero', 'Lieutenant Titus'),
+    ('55-35', 110, 'infantry', 'Victrix Honour Guard'),
 ]
 
 
 class Command(BaseCommand):
     """
-    Seed official 10th Edition points costs for Space Marines / Ultramarines units.
+    Seed 11th Edition points, category, and active status for Ultramarines
+    units.
 
-    Looks up each product by GW SKU and updates the linked UnitType's points_cost.
-    SKUs not found in the DB are skipped with a warning — add the products later
-    and re-run. Idempotent — safe to re-run at any time.
+    Looks up each unit by (name, faction) and updates points_cost, category,
+    and is_active in place; creates the row if it doesn't exist yet (linking
+    the product by gw_sku when one is given). Idempotent -- safe to re-run.
     """
 
-    help = 'Seed 10th Edition points values for Space Marines / Ultramarines units.'
+    help = 'Seed 11th Edition points and categories for Ultramarines units.'
+
+    def add_arguments(self, parser):
+        """Add --dry-run option."""
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help='Preview changes without saving anything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point."""
-        self.stdout.write('Seeding Space Marines / Ultramarines points…\n')
+        dry_run = options['dry_run']
+        self.stdout.write(
+            'Seeding Ultramarines points (11th Edition)' + (' [DRY RUN]' if dry_run else '') + '…\n'
+        )
 
-        # Filter by faction so we only update the Space Marines UnitType row —
-        # not any Black Templars or other cross-faction rows for the same product.
-        sm_faction = Faction.objects.filter(name='Space Marines').first()
-        if not sm_faction:
+        fac = Faction.objects.filter(name='Ultramarines').first()
+        if not fac:
             self.stdout.write(self.style.ERROR(
-                'Space Marines faction not found. Run populate_products first.'
+                'Ultramarines faction not found. Run populate_products first.'
             ))
             return
 
-        # Also fetch Ultramarines faction for UM-exclusive products (55-xx SKUs)
-        um_faction = Faction.objects.filter(name='Ultramarines').first()
+        for name in ULTRAMARINES_DEACTIVATE:
+            unit = UnitType.objects.filter(name=name, faction=fac, is_active=True).first()
+            if unit:
+                self.stdout.write(f'  [deactivate] {name!r}')
+                if not dry_run:
+                    unit.is_active = False
+                    unit.save(update_fields=['is_active'])
 
         updated_count = 0
+        created_count = 0
         skipped_count = 0
 
-        for gw_sku, points, label in SPACE_MARINES_POINTS:
-            product = Product.objects.filter(gw_sku=gw_sku).first()
+        for gw_sku, points, category, label in ULTRAMARINES_UNITS:
+            product = Product.objects.filter(gw_sku=gw_sku).first() if gw_sku else None
 
-            if not product:
+            if gw_sku and not product:
                 self.stdout.write(
                     self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
                 )
                 skipped_count += 1
                 continue
 
-            # Ultramarines-exclusive products (Calgar, Guilliman, Honour Guard) sit
-            # under the Ultramarines faction; all generic SM kits use Space Marines.
-            faction = um_faction if product.faction == um_faction else sm_faction
+            unit = UnitType.objects.filter(name=label, faction=fac).first()
 
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=faction,
-            ).update(points_cost=points)
+            if unit:
+                changes = []
+                if unit.points_cost != points:
+                    changes.append(f'points {unit.points_cost}->{points}')
+                if unit.category != category:
+                    changes.append(f'category {unit.category}->{category}')
+                if not unit.is_active:
+                    changes.append('reactivating')
+                change_note = f" ({', '.join(changes)})" if changes else ' (no change)'
 
-            if updated:
-                self.stdout.write(
-                    f'  [updated] {product.name} > {points} pts'
-                )
+                if not dry_run:
+                    unit.points_cost = points
+                    unit.category = category
+                    unit.is_active = True
+                    update_fields = ['points_cost', 'category', 'is_active']
+                    if product and unit.product_id != product.id:
+                        unit.product = product
+                        update_fields.append('product')
+                    unit.save(update_fields=update_fields)
+                self.stdout.write(f'  [update] {label} > {points} pts ({category}){change_note}')
                 updated_count += 1
             else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {product.name} (SKU {gw_sku}) — product exists '
-                        f'but no UnitType found. Run populate_units first.'
+                if not dry_run:
+                    UnitType.objects.create(
+                        name=label,
+                        faction=fac,
+                        product=product,
+                        category=category,
+                        points_cost=points,
+                        typical_quantity=1,
+                        is_active=True,
                     )
-                )
-                skipped_count += 1
-
-        # Handle the 48-07 SKU collision (Tactical Squad + Terminator Assault Squad)
-        # Must use name-filtered queries since .first() returns only one of the two.
-        for gw_sku, name_filter, points, label in SM_SKU_COLLISIONS:
-            product = Product.objects.filter(
-                gw_sku=gw_sku, name__icontains=name_filter
-            ).first()
-            if not product:
-                self.stdout.write(
-                    self.style.WARNING(f'  [skip]    {label} (SKU {gw_sku} not found in DB)')
-                )
-                skipped_count += 1
-                continue
-
-            faction = um_faction if product.faction == um_faction else sm_faction
-            updated = UnitType.objects.filter(
-                product=product,
-                faction=faction,
-            ).update(points_cost=points)
-
-            if updated:
-                self.stdout.write(f'  [updated] {product.name} > {points} pts')
-                updated_count += 1
-            else:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f'  [no unit] {product.name} (SKU {gw_sku}) — product exists '
-                        f'but no UnitType found. Run populate_units first.'
-                    )
-                )
-                skipped_count += 1
+                self.stdout.write(f'  [create] {label} > {points} pts ({category})')
+                created_count += 1
 
         self.stdout.write(self.style.SUCCESS(
-            f'\nDone! Updated: {updated_count}  |  Skipped: {skipped_count}'
+            f'\nDone! Updated: {updated_count}  |  Created: {created_count}  |  Skipped: {skipped_count}'
         ))

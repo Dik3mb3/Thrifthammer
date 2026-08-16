@@ -101,7 +101,8 @@ def _debug_search(ebay_api, product, stdout, style):
     search_name = product.ebay_search_name or product.name
     raw_negatives = getattr(product, 'ebay_negative_keywords', '') or ''
     extra_negatives = shlex.split(raw_negatives) if raw_negatives else None
-    query = EbayBrowseAPI._build_search_query(search_name, extra_negatives)
+    allow_3d = getattr(product, 'ebay_allow_3d', False)
+    query = EbayBrowseAPI._build_search_query(search_name, extra_negatives, allow_3d)
     stdout.write(f'    DEBUG query: "{query}"')
 
     try:

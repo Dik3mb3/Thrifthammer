@@ -189,18 +189,19 @@ class EbayBrowseAPI:
         raw_negatives = getattr(product, 'ebay_negative_keywords', '') or ''
         extra_negatives = shlex.split(raw_negatives) if raw_negatives else None
 
-        query = self._build_search_query(search_name, extra_negatives)
+        allow_3d = getattr(product, 'ebay_allow_3d', False)
+        query = self._build_search_query(search_name, extra_negatives, allow_3d)
         items = self.search_items(query, max_results=10)
 
         if not items:
             logger.debug('[ebay] No results for "%s"', query)
-            return None
+            return self._find_calculated_fallback(product, query)
 
         valid_items = [item for item in items if self._is_valid_result(item, product)]
 
         if not valid_items:
             logger.debug('[ebay] No valid match for "%s"', product.name)
-            return None
+            return self._find_calculated_fallback(product, query)
 
         # Validate all results, then pick the best one.
         # Strategy: trust Best Match's #1 result for product identity, but
@@ -295,6 +296,87 @@ class EbayBrowseAPI:
             len(valid_items), len(items),
         )
         return best
+
+    # Last-resort fallback ceiling: total delivered cost (price + real
+    # shipping) may not exceed this fraction of MSRP. Guards against both
+    # genuinely overpriced/collector-markup listings and inflated declared
+    # package weight on CALCULATED shipping. See _find_calculated_fallback.
+    _CALCULATED_FALLBACK_CEILING = Decimal('1.25')
+
+    def _find_calculated_fallback(self, product, query):
+        """
+        Last-resort match when no FIXED-shipping listing validates.
+
+        Some sellers only offer CALCULATED (buyer-location-dependent)
+        shipping, which _parse_item() normally excludes outright since no
+        upfront total is known at the search-results stage. This retries
+        the same query allowing those listings through, validates the
+        winner the same way as any other candidate (title/bits/price/bundle
+        checks in _is_valid_result), then resolves its real shipping via
+        the existing buyer-context item-detail fetch before trusting it.
+
+        Deliberately simpler than the main FIXED-shipping path above: takes
+        Best Match's #1 valid result only, no cheapest-alternative
+        comparison, one shipping fetch. This only runs when the primary
+        search already found nothing, so it should not multiply API calls
+        across the whole catalog -- only on products that would otherwise
+        stay not_available.
+
+        Ceiling rationale: total_cost must not exceed 125% of MSRP.
+        Validated 2026-08-14 against ~380 real not_available SKUs spread
+        across every category: of the candidates that reached this check,
+        3 were accepted (all confirmed correct products by name) and 4 were
+        rejected (also all correct products -- either genuinely overpriced/
+        collector-markup listings, or fairly-priced items where real
+        shipping alone pushed the total over) -- zero wrong-product
+        mismatches observed either side of the line.
+
+        Args:
+            product: Product model instance (msrp is required; a product
+                     with no MSRP is skipped entirely -- there is nothing
+                     to validate the ceiling against).
+            query:   Already-built search query string, reused from the
+                     primary FIXED-shipping search.
+
+        Returns:
+            Same dict shape as find_best_match_for_product(), or None.
+        """
+        if not product.msrp or product.msrp <= 0:
+            return None
+
+        items = self.search_items(query, max_results=10, allow_calculated=True)
+        calculated_items = [item for item in items if item['shipping'] is None]
+        valid_items = [item for item in calculated_items if self._is_valid_result(item, product)]
+
+        if not valid_items:
+            return None
+
+        winner = valid_items[0]
+        real_shipping = self._fetch_item_shipping(winner['item_id'])
+        if real_shipping is None:
+            logger.debug(
+                '[ebay] CALCULATED fallback winner discarded (LOCAL_PICKUP or '
+                'fetch failure at detail stage): "%s"', winner['title'][:60],
+            )
+            return None
+
+        total_cost = winner['price'] + real_shipping
+        ceiling = product.msrp * self._CALCULATED_FALLBACK_CEILING
+        if total_cost > ceiling:
+            logger.debug(
+                '[ebay] CALCULATED fallback rejected (total $%.2f > 125%% of '
+                'MSRP $%.2f = $%.2f): "%s"',
+                total_cost, product.msrp, ceiling, winner['title'][:60],
+            )
+            return None
+
+        winner['shipping']   = real_shipping
+        winner['total_cost'] = total_cost
+        logger.debug(
+            '[ebay] CALCULATED fallback match: "%s" — $%.2f + $%.2f shipping',
+            winner['title'][:60], winner['price'], real_shipping,
+        )
+        return winner
 
     # A generic US buyer location passed to the item detail endpoint so eBay
     # calculates and returns shipping costs.  Without this header, eBay omits
@@ -395,7 +477,7 @@ class EbayBrowseAPI:
         except InvalidOperation:
             return Decimal('0')
 
-    def search_items(self, keywords, max_results=10):
+    def search_items(self, keywords, max_results=10, allow_calculated=False):
         """
         Search eBay US for items matching keywords using the Browse API.
 
@@ -408,8 +490,9 @@ class EbayBrowseAPI:
               reputable sellers rank above cheap bits/spare parts)
 
         Args:
-            keywords:    Search query string.
-            max_results: Number of results to request (max 200).
+            keywords:         Search query string.
+            max_results:      Number of results to request (max 200).
+            allow_calculated: Passed through to _parse_item() -- see there.
 
         Returns:
             List of parsed item dicts, or empty list on no results.
@@ -483,7 +566,9 @@ class EbayBrowseAPI:
 
         items_raw = data.get('itemSummaries', [])
         return [
-            parsed for parsed in (self._parse_item(item) for item in items_raw)
+            parsed for parsed in (
+                self._parse_item(item, allow_calculated=allow_calculated) for item in items_raw
+            )
             if parsed is not None
         ]
 
@@ -553,7 +638,7 @@ class EbayBrowseAPI:
     # -------------------------------------------------------------------------
 
     @staticmethod
-    def _build_search_query(product_name, extra_negatives=None):
+    def _build_search_query(product_name, extra_negatives=None, allow_3d=False):
         """
         Build an optimised eBay search query from a product name.
 
@@ -577,6 +662,10 @@ class EbayBrowseAPI:
             extra_negatives: Optional list of words to exclude via eBay -word syntax.
                              These are appended after the standard -bits -bitz -sprue
                              exclusions. Sourced from Product.ebay_negative_keywords.
+            allow_3d:        Sourced from Product.ebay_allow_3d — an explicit per-SKU
+                             flag (set manually, never auto-detected) that skips the
+                             default -"3D" exclusion for products whose own official
+                             name contains "3D", making that exclusion self-defeating.
 
         Returns:
             Clean search query string with negative keyword suffixes.
@@ -629,7 +718,9 @@ class EbayBrowseAPI:
         # eBay query level prevents card sets from winning the best-price match over
         # the actual miniature box.
         if not is_citadel:
-            query = f'{query.strip()} -bits -bitz -sprue -parts -decor -cards -datacards -"ny rangers" -"D&D" -5e -"3D" -printing'
+            query = f'{query.strip()} -bits -bitz -sprue -parts -decor -cards -datacards -"ny rangers" -"D&D" -5e -printing'
+            if not allow_3d:
+                query += ' -"3D"'
 
         # Product-specific negative keywords: exclude similarly-named products
         # that our keyword validator cannot distinguish (e.g. Plastic Glue vs
@@ -649,12 +740,20 @@ class EbayBrowseAPI:
         return query.strip()
 
     @staticmethod
-    def _parse_item(item):
+    def _parse_item(item, allow_calculated=False):
         """
         Parse a raw Browse API item dict into a clean result dict.
 
         Browse API price fields use {'value': '34.99', 'currency': 'USD'}
         format, unlike the old Finding API's {'__value__': '34.99'} format.
+
+        Args:
+            allow_calculated: When True, a CALCULATED-shipping listing is
+                kept instead of dropped -- returned with shipping=None
+                (unresolved) and total_cost=price, for the last-resort
+                fallback path in _find_calculated_fallback(). LOCAL_PICKUP
+                is always dropped regardless -- no fixed cost is ever
+                resolvable for in-person pickup.
 
         Only USD listings are returned. Non-USD items (GBP, EUR, etc.) are
         skipped because:
@@ -706,27 +805,30 @@ class EbayBrowseAPI:
                 # type (older field, same values).
                 ship_cost_type = first_option.get('shippingCostType', '')
                 ship_type_field = first_option.get('type', '')
-                if ship_cost_type == 'CALCULATED' or ship_type_field == 'LOCAL_PICKUP':
+                if ship_type_field == 'LOCAL_PICKUP':
                     logger.debug(
-                        '[ebay] Skipping %s listing (shippingCostType=%s type=%s): "%s"',
-                        'CALCULATED' if ship_cost_type == 'CALCULATED' else 'LOCAL_PICKUP',
-                        ship_cost_type or '—',
-                        ship_type_field or '—',
-                        title[:60],
+                        '[ebay] Skipping LOCAL_PICKUP listing: "%s"', title[:60],
                     )
                     return None
+                if ship_cost_type == 'CALCULATED':
+                    if not allow_calculated:
+                        logger.debug(
+                            '[ebay] Skipping CALCULATED listing: "%s"', title[:60],
+                        )
+                        return None
+                    shipping = None  # unresolved -- caller must resolve via _fetch_item_shipping
+                else:
+                    ship_cost     = first_option.get('shippingCost', {})
+                    ship_currency = ship_cost.get('currency', 'USD')
+                    ship_value    = ship_cost.get('value', '0')
+                    # Only use shipping cost if it is also in USD
+                    if ship_currency == 'USD':
+                        try:
+                            shipping = Decimal(str(ship_value))
+                        except InvalidOperation:
+                            shipping = Decimal('0')
 
-                ship_cost     = first_option.get('shippingCost', {})
-                ship_currency = ship_cost.get('currency', 'USD')
-                ship_value    = ship_cost.get('value', '0')
-                # Only use shipping cost if it is also in USD
-                if ship_currency == 'USD':
-                    try:
-                        shipping = Decimal(str(ship_value))
-                    except InvalidOperation:
-                        shipping = Decimal('0')
-
-            total_cost = price + shipping
+            total_cost = price if shipping is None else price + shipping
 
             # shortDescription is populated when fieldgroups=EXTENDED is set.
             # It is a plain-text excerpt from the seller's full description.
@@ -1174,7 +1276,8 @@ class EbayBrowseAPI:
             )
             return False
 
-        if re.search(r'\b\d+\s+(?:miniatures?|minis?|figures?)\b', title_lower):
+        _count_desc_match = re.search(r'\b(\d+)\s+(?:miniatures?|minis?|figures?)\b', title_lower)
+        if _count_desc_match and _count_desc_match.group(1) not in _allowed_words:
             logger.debug(
                 '[ebay] Rejected (count + generic descriptor): "%s"',
                 result['title'][:60],
@@ -1311,8 +1414,11 @@ class EbayBrowseAPI:
             return False
 
         # ── Shipping ──────────────────────────────────────────────────────────
+        # shipping is None for an unresolved CALCULATED-shipping candidate in
+        # the _find_calculated_fallback() path -- that check is deferred until
+        # the real cost is resolved, so skip it here rather than crash/reject.
         shipping = result.get('shipping', Decimal('0'))
-        if shipping > Decimal('30.00'):
+        if shipping is not None and shipping > Decimal('30.00'):
             logger.debug(
                 '[ebay] Rejected (shipping too high): $%.2f for "%s"',
                 shipping, product.name,
@@ -1516,8 +1622,9 @@ class EbayBrowseAPI:
         if _blocked_digits:
             reasons.append(f'standalone count digit in title: {_blocked_digits}')
 
-        # Count + generic descriptor
-        if re.search(r'\b\d+\s+(?:miniatures?|minis?|figures?)\b', title_lower):
+        # Count + generic descriptor (mirrors _is_valid_result: respect _allowed_words)
+        _count_desc_match = re.search(r'\b(\d+)\s+(?:miniatures?|minis?|figures?)\b', title_lower)
+        if _count_desc_match and _count_desc_match.group(1) not in _allowed_words:
             reasons.append('count+descriptor in title')
 
         # Slash — price-aware: only reject if cost is below 75% of MSRP
@@ -1571,9 +1678,9 @@ class EbayBrowseAPI:
                 f'(min ${min_price:.2f}, max $1000.00)'
             )
 
-        # Shipping
+        # Shipping (None = unresolved CALCULATED candidate, checked later)
         shipping = result.get('shipping', Decimal('0'))
-        if shipping > Decimal('30.00'):
+        if shipping is not None and shipping > Decimal('30.00'):
             reasons.append(f'shipping too high: ${shipping:.2f}')
 
         # Description bits

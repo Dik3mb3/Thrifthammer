@@ -26,12 +26,16 @@ on:
         description: 'Comma-separated GW SKUs to update (e.g. "55-23,TY-011,53-21"). Leave blank for all.'
         type: string
         default: ''
+      category:
+        description: 'Category alias: Warhammer-40K, AoS, Old-World, Paint-Supplies, Kill-Team, or Horus-Heresy. (Other categories already have a clean 1:1 batch_tag above -- use that instead.) Leave blank for all.'
+        type: string
+        default: ''
 
 jobs:
   update-prices:
     name: eBay Price Update
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 135
     defaults:
       run:
         working-directory: ./Thrifthammer
@@ -61,20 +65,40 @@ jobs:
           EBAY_CERT_ID_PRODUCTION: ${{ secrets.EBAY_CERT_ID_PRODUCTION }}
           EBAY_AFFILIATE_CAMPAIGN_ID: ${{ secrets.EBAY_AFFILIATE_CAMPAIGN_ID }}
         run: |
-          FLAGS=""
+          # Array (not a plain string) so values with spaces/commas -- e.g.
+          # category names like "Warhammer 40,000" or "Paint & Supplies" --
+          # survive as a single argument instead of being word-split.
+          FLAGS=()
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
-            FLAGS="$FLAGS --dry-run"
+            FLAGS+=(--dry-run)
           fi
           if [ -n "${{ github.event.inputs.limit }}" ]; then
-            FLAGS="$FLAGS --limit ${{ github.event.inputs.limit }}"
+            FLAGS+=(--limit "${{ github.event.inputs.limit }}")
           fi
           if [ -n "${{ github.event.inputs.batch_tag }}" ]; then
-            FLAGS="$FLAGS --batch-tag ${{ github.event.inputs.batch_tag }}"
+            FLAGS+=(--batch-tag "${{ github.event.inputs.batch_tag }}")
           fi
           if [ -n "${{ github.event.inputs.skus }}" ]; then
-            FLAGS="$FLAGS --skus ${{ github.event.inputs.skus }}"
+            FLAGS+=(--skus "${{ github.event.inputs.skus }}")
           fi
-          python manage.py update_ebay_prices $FLAGS
+          if [ -n "${{ github.event.inputs.category }}" ]; then
+            # Short aliases for the categories with no single clean batch_tag
+            # (everything else already has one -- use batch_tag for those).
+            case "${{ github.event.inputs.category }}" in
+              Warhammer-40K)   CATEGORY_NAME="Warhammer 40,000" ;;
+              AoS)             CATEGORY_NAME="Age of Sigmar" ;;
+              Old-World)       CATEGORY_NAME="The Old World" ;;
+              Paint-Supplies)  CATEGORY_NAME="Paint & Supplies" ;;
+              Kill-Team)       CATEGORY_NAME="Kill Team" ;;
+              Horus-Heresy)    CATEGORY_NAME="Horus Heresy" ;;
+              *)
+                echo "Unknown category alias: '${{ github.event.inputs.category }}'. Valid aliases: Warhammer-40K, AoS, Old-World, Paint-Supplies, Kill-Team, Horus-Heresy."
+                exit 1
+                ;;
+            esac
+            FLAGS+=(--category "$CATEGORY_NAME")
+          fi
+          python manage.py update_ebay_prices "${FLAGS[@]}"
 
       - name: Clear cache after price update
         if: ${{ github.event.inputs.dry_run != 'true' }}

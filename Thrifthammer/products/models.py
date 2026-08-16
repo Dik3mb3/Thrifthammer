@@ -282,6 +282,17 @@ class Product(models.Model):
             'different, untracked resin product sharing the same unit name.'
         ),
     )
+    ebay_allow_3d = models.BooleanField(
+        default=False,
+        help_text=(
+            'When True, the default -"3D" search exclusion (meant to block 3D-printed '
+            'proxy/knockoff listings) is skipped for this product. Use ONLY when the '
+            'official product name itself contains "3D" (e.g. "Deluxe Buildable 3D '
+            'Terrain Set"), making that exclusion self-defeating since genuine listings '
+            'also say "3D". Set explicitly per SKU — never auto-detected from the name, '
+            'to avoid accidentally exposing other products to real 3D-printed knockoffs.'
+        ),
+    )
     ebay_negative_keywords = models.CharField(
         max_length=200, blank=True, default='',
         help_text=(
