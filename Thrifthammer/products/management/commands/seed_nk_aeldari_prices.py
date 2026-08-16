@@ -22,7 +22,7 @@ Match notes / questionable matches:
                              "Hemlock Wraithfighter/Crimson Hunter" at $86.95.
                              Both slugs point to the same URL (same physical box).
   ⚠  Guardian Defenders   — NK "Guardians (2022 Edition)" is the same dual-build
-                             kit as Storm Guardians (craftworlds-guardians).
+                             kit as Storm Guardians (aeldari-guardians).
                              Both our slugs point to the same NK URL.
   ⚠  Wraithblades         — NK only lists "Wraithguard" (same dual-build box).
                              Using same URL for both Wraithguard and Wraithblades.
@@ -30,8 +30,8 @@ Match notes / questionable matches:
 
 Products not on NK (marked not_available=True):
   codex-aeldari             — only Collector's Edition on NK (skipped)
-  craftworlds-farseer       — no current NK listing found
-  craftworlds-fire-dragons  — no current NK listing found
+  aeldari-farseer           — no current NK listing found
+  aeldari-fire-dragons      — no current NK listing found
   aeldari-autarch-wayleaper — no NK listing found
   aeldari-warlock-skyrunner — no NK listing found
   aeldari-fuegan            — 2025 release, not yet on NK
@@ -80,45 +80,45 @@ NK_PRICES = [
 
     # ── Existing phase-1 Aeldari slugs ───────────────────────────────────────
     (
-        'craftworlds-combat-patrol',
+        'aeldari-combat-patrol',
         'Combat Patrol - Aeldari',
         153.95,
         'https://www.nobleknight.com/P/2148381030/Combat-Patrol---Aeldari?awid=1576',
         True, False,
     ),
     (
-        'craftworlds-dire-avengers',
+        'aeldari-dire-avengers',
         'Dire Avengers',
         43.95,
         'https://www.nobleknight.com/P/2147974202/Dire-Avengers?awid=1576',
         True, False,
     ),
     (
-        'craftworlds-farseer',
+        'aeldari-farseer',
         '',
         None, '', False, True,
     ),
     (
-        'craftworlds-fire-dragons',
+        'aeldari-fire-dragons',
         '',
         None, '', False, True,
     ),
     (
-        'craftworlds-guardians',
+        'aeldari-guardians',
         'Guardians (2022 Edition)',
         54.95,
         'https://www.nobleknight.com/P/2147962130/Guardians-2022-Edition?awid=1576',
         True, False,
     ),
     (
-        'craftworlds-wave-serpent',
+        'aeldari-wave-serpent',
         'Wave Serpent',
         54.95,
         'https://www.nobleknight.com/P/2148255136/Wave-Serpent?awid=1576',
         True, False,
     ),
     (
-        'craftworlds-wraithguard',
+        'aeldari-wraithguard',
         'Wraithguard',
         55.95,
         'https://www.nobleknight.com/P/2148009784/Wraithguard?awid=1576',
@@ -186,7 +186,7 @@ NK_PRICES = [
         'aeldari-guardian-defenders',
         'Guardians (2022 Edition)',
         54.95,
-        # Same dual-build kit as craftworlds-guardians (Storm Guardians)
+        # Same dual-build kit as aeldari-guardians (Storm Guardians)
         'https://www.nobleknight.com/P/2147962130/Guardians-2022-Edition?awid=1576',
         True, False,
     ),

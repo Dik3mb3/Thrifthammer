@@ -13,10 +13,18 @@ DUPLICATE HANDLING (most recent/current edition used):
   - Rubric Marines: 2021 preferred
   - Scarab Occult Terminators: 2021 preferred
   - Spiritseer: standard (no year) preferred
-  - Wave Serpent: 2022 Edition preferred
   - Death Jester: standard (no year) preferred
   - Nauseous Rotbone (Plague Surgeon): standard preferred
   - Icon Bearer: standard preferred
+
+NOTE (2026-08-16): Combat Patrol, Dire Avengers, Guardians, Wave Serpent, and
+Wraithguard were removed from this file. They were seeded here under stale
+'craftworlds-*' slugs that no longer match any product (the Aeldari faction
+consolidation renamed these to 'aeldari-*'), so these entries were silently
+skipped on every run. All five are now correctly seeded in
+seed_nk_aeldari_prices.py instead -- including Wave Serpent, whose "2022
+Edition preferred" listing here was actually a discontinued/out-of-print
+NK listing; the current in-stock listing is used in the Aeldari file.
 
 GAPS - not in NK spreadsheet (NK does not currently stock these):
   Necrons: Trazyn, Illuminor Szeras, Lychguard, Deathmarks, Flayed Ones,
@@ -135,16 +143,10 @@ NK_PRICES = [
     # ── AELDARI (Craftworlds + Harlequins) ───────────────────────────────────
     ('aeldari-autarch', 'Autarch (2022 Edition)', 39.95,
      'https://www.nobleknight.com/P/2147968542/Autarch-2022-Edition?awid=1576', False, False),
-    ('craftworlds-combat-patrol', 'Combat Patrol - Aeldari', 153.95,
-     'https://www.nobleknight.com/P/2148381030/Combat-Patrol---Aeldari?awid=1576', False, False),
-    ('craftworlds-dire-avengers', 'Dire Avengers', 43.95,
-     'https://www.nobleknight.com/P/2147974202/Dire-Avengers?awid=1576', False, False),
     ('aeldari-eldrad-ulthran', 'Eldrad Ulthran', 35.95,
      'https://www.nobleknight.com/P/2147993158/Eldrad-Ulthran?awid=1576', False, False),
     ('aeldari-farseer-skyrunner', 'Farseer Skyrunner', 39.95,
      'https://www.nobleknight.com/P/2147966428/Farseer-Skyrunner?awid=1576', False, False),
-    ('craftworlds-guardians', 'Guardians (2022 Edition)', 54.95,
-     'https://www.nobleknight.com/P/2147962130/Guardians-2022-Edition?awid=1576', False, False),
     # Hemlock/Crimson Hunter share the same NK combo-kit listing
     ('aeldari-hemlock-wraithfighter', 'Hemlock Wraithfighter/Crimson Hunter', 86.95,
      'https://www.nobleknight.com/P/2148174004/Hemlock-Wraithfighter-Crimson-Hunter?awid=1576', False, False),
@@ -164,11 +166,6 @@ NK_PRICES = [
      'https://www.nobleknight.com/P/2148255223/War-Walkers?awid=1576', False, False),
     ('aeldari-warlocks', 'Warlocks', 54.95,
      'https://www.nobleknight.com/P/2147962132/Aeldari-Warlocks?awid=1576', False, False),
-    # Wave Serpent: 2022 edition preferred
-    ('craftworlds-wave-serpent', 'Wave Serpent (2022 Edition)', 99.95,
-     'https://www.nobleknight.com/P/2148056011/Wave-Serpent-2022-Edition?awid=1576', False, False),
-    ('craftworlds-wraithguard', 'Wraithguard', 55.95,
-     'https://www.nobleknight.com/P/2148009784/Wraithguard?awid=1576', False, False),
     ('aeldari-wraithknight', 'Wraithknight', 153.95,
      'https://www.nobleknight.com/P/2147966367/Wraithknight?awid=1576', False, False),
     # Harlequins
