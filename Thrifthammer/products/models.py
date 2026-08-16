@@ -294,7 +294,7 @@ class Product(models.Model):
         ),
     )
     ebay_negative_keywords = models.CharField(
-        max_length=200, blank=True, default='',
+        max_length=400, blank=True, default='',
         help_text=(
             'Space-separated words to exclude from eBay searches (eBay -word syntax). '
             'Use when eBay returns a similar but wrong product. '
