@@ -43,7 +43,7 @@ _IMAGES = {
     'BB-009': '99120999017_BBGnomeTeam02.jpg',
     'BB-010': '99120999018_OldWorldAlliance2.jpg',
     'BB-011': '99120902002_BBImperialNobilityTeamLead.jpg',
-    'BB-012': '99120907004_BBDrakfangThirsters02.jpg',
+    'BB-012': '99120902001_ReiklandReaversTeam01.jpg',
     'BB-013': '99120913001_FireMountainGutbusters01.jpg',
     'BB-014': '99120912001_NaggarothNightwings01.jpg',
     'BB-015': '99120907001_ChampionsofDeathTeam01.jpg',
@@ -53,7 +53,7 @@ _IMAGES = {
     'BB-019': '99120904001_BBAtherlornAvengersTeam01.jpg',
     'BB-020': '99120999004_GreenfieldGrasshuggersTeam01.jpg',
     'BB-021': '99120999003_ElfheimEaglesTeam01.jpg',
-    'BB-022': '99120911001_BBChaosDwarfTeam01.jpg',
+    'BB-022': '99120905001_DwarfGiants01.jpg',
     'BB-023': '99120910001_HighElvesTeam1.jpg',
     'BB-024': '99120917001_ENGBloodBowlSeason3CoreGame3.jpg',
     'BB-025': '99120903001_ENGBloodBowlSeason3CoreGame2.jpg',
@@ -65,7 +65,7 @@ _IMAGES = {
     'BB-031': '99850999038_BBKroxigorLead.jpg',
     'BB-032': '99850999033_BBKhorneBloodspawnLead.jpg',
     'BB-033': '99120999011_BBOgreLead.jpg',
-    'BB-034': '99120999021_BloodBowlSeason3Tokens1.jpg',
+    'BB-034': '99120999007_TreemanLead.jpg',
     'BB-035': '99550999013_ChaosMinotaur01.jpg',
     'BB-036': '99550999007_BBGoblinSecretWeapons01.jpg',
     'BB-037': '99560905001_Deathroller01.jpg',
@@ -124,7 +124,7 @@ _IMAGES = {
     'BB-090': '99850999059_CptKarinaVonRieszFW1.jpg',
     'BB-091': '99120999019_UnderworldDenizens2.jpg',
     'BB-092': '99120909005_BlackOrcTeamLead.jpg',
-    'BB-093': '99120909004_CrudCreekNosepickersLead.jpg',
+    'BB-093': '99120909002_ScarcragSnivelersTeam01.jpg',
     'BB-094': '99120909006_BBOrcTeamLead.jpg',
     'BB-095': '99550999030_ZolcathZoatLead.jpg',
     'BB-096': '99850999054_WithergraspDoubledrool1.jpg',
@@ -898,6 +898,14 @@ class Command(BaseCommand):
                     'faction': None,
                     'is_active': True,
                     'batch_tag': 'blood-bowl',
+                },
+                # ebay_negative_keywords is a create-time default only -- it
+                # gets manually curated per-product afterward (extra keywords
+                # appended as mismatches are found), so this command must
+                # never overwrite it on an update or that curation is lost
+                # on every deploy. 'Dice' is just the sensible starting
+                # value for a brand-new Blood Bowl product.
+                create_defaults={
                     'ebay_negative_keywords': 'Dice',
                 },
             )
