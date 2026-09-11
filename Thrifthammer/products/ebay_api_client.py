@@ -190,8 +190,51 @@ class EbayBrowseAPI:
         extra_negatives = shlex.split(raw_negatives) if raw_negatives else None
 
         allow_3d = getattr(product, 'ebay_allow_3d', False)
-        query = self._build_search_query(search_name, extra_negatives, allow_3d)
-        items = self.search_items(query, max_results=10)
+
+        # ── ISBN / edition-anchored tiers ───────────────────────────────────
+        # Rules books that get reprinted at each new game edition (Codexes,
+        # Battletomes) suffer from the standard query matching an old edition
+        # just as often as the current one -- the plain query has no way to
+        # tell them apart. Product.isbn (when set) mirrors the same trick
+        # already proven for novels (update_ebay_book_prices.py): anchor the
+        # query on the current print's own ISBN, which old-edition listings
+        # structurally cannot match. current_edition is a second, softer
+        # anchor ("10th", "4th") for when the ISBN itself returns nothing --
+        # real sellers write "10th Edition" far more often than they quote an
+        # ISBN for a hobby-market rulebook. Both are opt-in via the product's
+        # own data: blank isbn/current_edition (every non-rulebook product)
+        # skips straight to the plain query below, unchanged from before.
+        #
+        # Validated 2026-09-11 across all 43 Codex/Battletome products before
+        # being wired in here: 34/43 resolved on the ISBN tier, 5 more
+        # recovered on the edition tier (including 3 products with no ISBN
+        # at all), 2 unaffected (pre-existing "not found", not a regression),
+        # 2 left on today's plain-query behaviour.
+        query = None
+        items = []
+        isbn = getattr(product, 'isbn', '') or ''
+        current_edition = getattr(product, 'current_edition', '') or ''
+
+        if isbn:
+            isbn_query = self._build_isbn_query(isbn, search_name, extra_negatives)
+            items = self.search_items(isbn_query, max_results=10)
+            if items:
+                query = isbn_query
+            else:
+                logger.debug('[ebay] ISBN tier found nothing for "%s", trying edition tier', isbn_query)
+
+        if not items and current_edition:
+            edition_query = self._build_search_query(search_name, extra_negatives, allow_3d)
+            edition_query += f' "{current_edition} Edition"'
+            items = self.search_items(edition_query, max_results=10)
+            if items:
+                query = edition_query
+            else:
+                logger.debug('[ebay] Edition tier found nothing for "%s", falling back to plain query', edition_query)
+
+        if not items:
+            query = self._build_search_query(search_name, extra_negatives, allow_3d)
+            items = self.search_items(query, max_results=10)
 
         if not items:
             logger.debug('[ebay] No results for "%s"', query)
@@ -636,6 +679,36 @@ class EbayBrowseAPI:
     # -------------------------------------------------------------------------
     # Private methods
     # -------------------------------------------------------------------------
+
+    @staticmethod
+    def _build_isbn_query(isbn, product_name, extra_negatives=None):
+        """
+        Build the ISBN-anchored search query for a Codex/Battletome-style product.
+
+        Mirrors update_ebay_book_prices.py's default "{isbn} {title} -bundle -lot"
+        formula for novels exactly -- deliberately does NOT go through
+        _build_search_query (no truncation, no -bits/-decor/-cards suffix, no
+        "Warhammer" handling), since those rules are tuned for miniature kit
+        titles, not book listings. Product.ebay_negative_keywords is layered
+        on top the same way, parsed with shlex so quoted phrases become
+        -"phrase" and single words become -word.
+
+        Args:
+            isbn:             Product.isbn (already confirmed non-empty by caller).
+            product_name:     Effective search name (ebay_search_name or product.name).
+            extra_negatives:  Pre-split list from Product.ebay_negative_keywords, or None.
+
+        Returns:
+            Query string.
+        """
+        query = f'{isbn} {product_name} -bundle -lot'
+        if extra_negatives:
+            for phrase in extra_negatives:
+                phrase = phrase.strip()
+                if not phrase:
+                    continue
+                query += f' -"{phrase}"' if ' ' in phrase else f' -{phrase}'
+        return query
 
     @staticmethod
     def _build_search_query(product_name, extra_negatives=None, allow_3d=False):

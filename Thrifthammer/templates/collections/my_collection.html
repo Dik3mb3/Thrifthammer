@@ -66,20 +66,20 @@
         <td class="col-qty">{{ item.quantity }}</td>
         <td class="col-paid">
           {% if item.price_paid %}<span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>
-          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
+          {% else %}<span style="color:var(--text-muted);">-</span>{% endif %}
         </td>
         <td class="col-msrp">
           {% if item.msrp_ref %}<span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
-          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
+          {% else %}<span style="color:var(--text-muted);">-</span>{% endif %}
         </td>
         <td class="col-disc">
           {% if item.price_paid and item.msrp_ref %}
             {% with disc=item.price_paid|discount_vs:item.msrp_ref %}
               {% if disc and disc > 0 %}<span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
               {% elif disc and disc < 0 %}<span class="badge" style="background:#5a1a1a;color:#d44040;">+{{ disc|floatformat:"0"|slice:"1:" }}% over</span>
-              {% else %}—{% endif %}
+              {% else %}-{% endif %}
             {% endwith %}
-          {% else %}—{% endif %}
+          {% else %}-{% endif %}
         </td>
         <td class="col-notes">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
@@ -117,20 +117,20 @@
         <td class="col-qty">{{ item.quantity }}</td>
         <td class="col-paid">
           {% if item.price_paid %}<span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>
-          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
+          {% else %}<span style="color:var(--text-muted);">-</span>{% endif %}
         </td>
         <td class="col-msrp">
           {% if item.msrp_ref %}<span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
-          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
+          {% else %}<span style="color:var(--text-muted);">-</span>{% endif %}
         </td>
         <td class="col-disc">
           {% if item.price_paid and item.msrp_ref %}
             {% with disc=item.price_paid|discount_vs:item.msrp_ref %}
               {% if disc and disc > 0 %}<span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
               {% elif disc and disc < 0 %}<span class="badge" style="background:#5a1a1a;color:#d44040;">+{{ disc|floatformat:"0"|slice:"1:" }}% over</span>
-              {% else %}—{% endif %}
+              {% else %}-{% endif %}
             {% endwith %}
-          {% else %}—{% endif %}
+          {% else %}-{% endif %}
         </td>
         <td class="col-notes">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
@@ -168,20 +168,20 @@
         <td class="col-qty">{{ item.quantity }}</td>
         <td class="col-paid">
           {% if item.price_paid %}<span style="color:var(--accent-green-lt);">${{ item.price_paid }}</span>
-          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
+          {% else %}<span style="color:var(--text-muted);">-</span>{% endif %}
         </td>
         <td class="col-msrp">
           {% if item.msrp_ref %}<span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
-          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
+          {% else %}<span style="color:var(--text-muted);">-</span>{% endif %}
         </td>
         <td class="col-disc">
           {% if item.price_paid and item.msrp_ref %}
             {% with disc=item.price_paid|discount_vs:item.msrp_ref %}
               {% if disc and disc > 0 %}<span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
               {% elif disc and disc < 0 %}<span class="badge" style="background:#5a1a1a;color:#d44040;">+{{ disc|floatformat:"0"|slice:"1:" }}% over</span>
-              {% else %}—{% endif %}
+              {% else %}-{% endif %}
             {% endwith %}
-          {% else %}—{% endif %}
+          {% else %}-{% endif %}
         </td>
         <td class="col-notes">{{ item.notes|default:"" }}</td>
         <td class="col-actions">
@@ -217,7 +217,7 @@
         <td class="col-qty">{{ item.quantity }}</td>
         <td class="col-msrp">
           {% if item.msrp_ref %}<span style="color:var(--text-secondary);">${{ item.msrp_ref|floatformat:2 }}</span>
-          {% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
+          {% else %}<span style="color:var(--text-muted);">-</span>{% endif %}
         </td>
         <td class="col-notes">{{ item.notes|default:"" }}</td>
         <td class="col-actions">

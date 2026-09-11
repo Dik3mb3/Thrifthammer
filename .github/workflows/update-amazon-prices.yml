@@ -25,6 +25,22 @@ on:
         description: 'Only process products with this batch_tag (e.g. skaven, stormcast)'
         type: string
         default: ''
+      book_dry_run:
+        description: '[Books step] Dry run (no DB changes)'
+        type: boolean
+        default: false
+      book_faction:
+        description: '[Books step] Only update this faction (e.g. horus-heresy-series), leave blank for all'
+        type: string
+        default: ''
+      book_format:
+        description: '[Books step] Only update one format: paperback, hardback, ebook, audiobook. Leave blank for all.'
+        type: string
+        default: ''
+      book_limit:
+        description: '[Books step] Max ASINs to process per format group (leave blank for all)'
+        type: string
+        default: ''
 
 jobs:
   update-prices:
@@ -72,6 +88,31 @@ jobs:
             FLAGS="$FLAGS --limit ${{ github.event.inputs.limit }}"
           fi
           python manage.py update_amazon_creators_prices $FLAGS
+
+      - name: Run Amazon book price update
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_ALLOWED_HOSTS: thrifthammer.com,www.thrifthammer.com,web-production-b6056.up.railway.app
+          DJANGO_DEBUG: 'False'
+          AMAZON_CREATORS_CLIENT_ID: ${{ secrets.AMAZON_CREATORS_CLIENT_ID }}
+          AMAZON_CREATORS_CLIENT_SECRET: ${{ secrets.AMAZON_CREATORS_CLIENT_SECRET }}
+          AMAZON_ASSOCIATE_TAG: thrifthammer7-20
+        run: |
+          FLAGS=""
+          if [ "${{ github.event.inputs.book_dry_run }}" = "true" ]; then
+            FLAGS="$FLAGS --dry-run"
+          fi
+          if [ -n "${{ github.event.inputs.book_faction }}" ]; then
+            FLAGS="$FLAGS --faction ${{ github.event.inputs.book_faction }}"
+          fi
+          if [ -n "${{ github.event.inputs.book_format }}" ]; then
+            FLAGS="$FLAGS --format ${{ github.event.inputs.book_format }}"
+          fi
+          if [ -n "${{ github.event.inputs.book_limit }}" ]; then
+            FLAGS="$FLAGS --limit ${{ github.event.inputs.book_limit }}"
+          fi
+          python manage.py update_amazon_book_prices $FLAGS
 
       - name: Clear cache after price update
         if: ${{ github.event.inputs.dry_run != 'true' }}

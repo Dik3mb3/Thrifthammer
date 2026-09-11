@@ -22,7 +22,11 @@ def _static(path):
 
 
 BODY = """\
-<style>.wbg-strike{{text-decoration:line-through;}}</style>
+<style>
+.wbg-strike{{text-decoration:line-through;}}
+.prose img.wbg-boxart{{max-width:340px !important;width:100%;height:auto;display:block;margin:0 auto;}}
+.wbg-table, .wbg-table th, .wbg-table td{{border:none !important;}}
+</style>
 <p><a href="https://thrifthammer.com/products/?category=warhammer-40000&amp;faction=custodes&amp;sort=discount">Warhammer 40K</a> and <a href="https://thrifthammer.com/products/?category=age-of-sigmar&amp;sort=discount">Age of Sigmar</a> are the titans of the miniature market, yet the Warhammer universe has been spun off across different media types. Warhammer video games are just as popular (if not more) than the miniatures game and Warhammer novels have their own cult following. Heck even the most popular TCG Magic: The Gathering has done a Warhammer set. The one area Warhammer has had a checkered past is board games. The Warhammer IP has produced some really great board games, but in total honesty a majority of them are just mediocre and raided for bits and models for the miniatures game.</p>
 
 <p>In a previous post I talked about some of the <a href="https://thrifthammer.com/blog/cheap-warhammer-miniatures-target/">exclusive board games sold at Target</a> that are a treasure trove for cheap miniatures to add to your established 40K armies.</p>
@@ -43,9 +47,9 @@ BODY = """\
 
 <h2>1. <a href="https://boardgamegeek.com/boardgame/457587/blood-bowl-third-season-edition" target="_blank" rel="noopener noreferrer">Blood Bowl</a></h2>
 
-<img src="{blood_bowl_img}" alt="Warhammer Blood Bowl Third Season Edition box art" width="831" height="600" loading="lazy">
+<img class="wbg-boxart" src="{blood_bowl_img}" alt="Warhammer Blood Bowl Third Season Edition box art" width="831" height="600" loading="lazy">
 
-<table>
+<table class="wbg-table">
   <tbody>
     <tr><th>Players</th><td>2</td></tr>
     <tr><th>Play Time</th><td>60-180 minutes</td></tr>
@@ -82,9 +86,9 @@ BODY = """\
 
 <h2>2. <a href="https://boardgamegeek.com/boardgame/90137/blood-bowl-team-manager-the-card-game" target="_blank" rel="noopener noreferrer">Blood Bowl: Team Manager</a></h2>
 
-<img src="{team_manager_img}" alt="Blood Bowl Team Manager: The Card Game box art" width="605" height="600" loading="lazy">
+<img class="wbg-boxart" src="{team_manager_img}" alt="Blood Bowl Team Manager: The Card Game box art" width="605" height="600" loading="lazy">
 
-<table>
+<table class="wbg-table">
   <tbody>
     <tr><th>Players</th><td>2-4 (best at 4)</td></tr>
     <tr><th>Play Time</th><td>60-120 minutes</td></tr>
@@ -116,9 +120,9 @@ BODY = """\
 
 <h2>3. <a href="https://boardgamegeek.com/boardgame/43111/chaos-in-the-old-world" target="_blank" rel="noopener noreferrer">Chaos in the Old World</a></h2>
 
-<img src="{chaos_old_world_img}" alt="Chaos in the Old World board game box art" width="692" height="600" loading="lazy">
+<img class="wbg-boxart" src="{chaos_old_world_img}" alt="Chaos in the Old World board game box art" width="692" height="600" loading="lazy">
 
-<table>
+<table class="wbg-table">
   <tbody>
     <tr><th>Players</th><td>3-4 (best at 4)</td></tr>
     <tr><th>Play Time</th><td>60-120 minutes</td></tr>
@@ -152,9 +156,9 @@ BODY = """\
 
 <h2>4. <a href="https://boardgamegeek.com/boardgame/175155/forbidden-stars" target="_blank" rel="noopener noreferrer">Forbidden Stars</a></h2>
 
-<img src="{forbidden_stars_img}" alt="Forbidden Stars board game box art" width="246" height="246" loading="lazy">
+<img class="wbg-boxart" src="{forbidden_stars_img}" alt="Forbidden Stars board game box art" width="246" height="246" loading="lazy">
 
-<table>
+<table class="wbg-table">
   <tbody>
     <tr><th>Players</th><td>2-4 (best at 3)</td></tr>
     <tr><th>Play Time</th><td>120-240 minutes</td></tr>
@@ -194,9 +198,9 @@ BODY = """\
 
 <h2>5. <a href="https://boardgamegeek.com/boardgame/337397/warhammer-underworlds-two-player-starter-set" target="_blank" rel="noopener noreferrer">Warhammer Underworlds</a></h2>
 
-<img src="{underworlds_img}" alt="Warhammer Underworlds Two-Player Starter Set box art" width="444" height="600" loading="lazy">
+<img class="wbg-boxart" src="{underworlds_img}" alt="Warhammer Underworlds Two-Player Starter Set box art" width="444" height="600" loading="lazy">
 
-<table>
+<table class="wbg-table">
   <tbody>
     <tr><th>Players</th><td>2</td></tr>
     <tr><th>Play Time</th><td>30 minutes</td></tr>

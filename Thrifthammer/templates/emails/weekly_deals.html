@@ -22,7 +22,7 @@
 
   <!-- Preheader text (hidden, shows in inbox preview) -->
   <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
-    Save up to {{ top_pct }}% this week — {{ deals|length }} Warhammer 40K deals hand-picked from across the internet. Don't miss out. &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    Save up to {{ top_pct }}% this week. {{ deals|length }} Warhammer 40K deals hand-picked from across the internet. Don't miss out. &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
   </div>
 
   <!-- Outer wrapper -->
@@ -202,7 +202,7 @@
               <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;color:#5c5648;line-height:1.8;">
                 You're receiving this because you signed up at thrifthammer.com.<br>
                 Prices are updated daily. ThriftHammer is not affiliated with Games Workshop.<br>
-                &copy; {{ today|date:"Y" }} ThriftHammer &mdash;
+                &copy; {{ today|date:"Y" }} ThriftHammer
                 {% if unsubscribe_url %}
                 <a href="{{ unsubscribe_url }}" style="color:#5c5648;text-decoration:underline;">Unsubscribe</a>
                 {% endif %}

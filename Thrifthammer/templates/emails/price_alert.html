@@ -22,7 +22,7 @@
 
   <!-- Preheader (hidden — shows in inbox preview) -->
   <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
-    {{ product_name }} just hit your target — grab it now before it goes back up. &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    {{ product_name }} just hit your target. Grab it now before it goes back up. &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
   </div>
 
   <!-- Outer wrapper -->
@@ -194,7 +194,7 @@
               <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;color:#5c5648;line-height:1.8;">
                 You're receiving this because you set a price alert at thrifthammer.com.<br>
                 Prices are updated daily. ThriftHammer is not affiliated with Games Workshop.<br>
-                &copy; {{ now|date:"Y" }} ThriftHammer &mdash;
+                &copy; {{ now|date:"Y" }} ThriftHammer
                 {% if unsubscribe_url %}
                 <a href="{{ unsubscribe_url }}" style="color:#5c5648;text-decoration:underline;">Unsubscribe</a>
                 {% endif %}

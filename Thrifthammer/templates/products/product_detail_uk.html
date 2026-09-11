@@ -190,7 +190,7 @@
             <td style="font-weight:600;color:var(--text-primary);">{{ cp.retailer.name }}</td>
             <td class="price">
               {% if cp.not_available %}
-              <span style="color:var(--text-muted);">—</span>
+              <span style="color:var(--text-muted);">-</span>
               {% else %}
               £{{ cp.price|floatformat:"2" }}
               {% if forloop.first and cp.in_stock %}
@@ -200,17 +200,17 @@
             </td>
             <td>
               {% if cp.not_available %}
-              <span style="color:var(--text-muted);">—</span>
+              <span style="color:var(--text-muted);">-</span>
               {% elif gw_ref_price and cp.price %}
               {% with disc=cp.price|discount_vs:gw_ref_price %}
               {% if disc > 0.5 %}
               <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
               {% else %}
-              <span style="color:var(--text-muted);">—</span>
+              <span style="color:var(--text-muted);">-</span>
               {% endif %}
               {% endwith %}
               {% else %}
-              <span style="color:var(--text-muted);">—</span>
+              <span style="color:var(--text-muted);">-</span>
               {% endif %}
             </td>
             <td>
@@ -228,7 +228,7 @@
               {% elif cp.not_available %}
               <span style="color:var(--text-muted);font-size:0.85rem;">Not Available</span>
               {% else %}
-              <span style="color:var(--text-muted);font-size:0.85rem;">—</span>
+              <span style="color:var(--text-muted);font-size:0.85rem;">-</span>
               {% endif %}
             </td>
           </tr>
@@ -305,7 +305,7 @@
                 <td class="ab-wep-name">{{ w.name }}</td>
                 <td>{{ w.range }}</td><td>{{ w.attacks }}</td><td>{{ w.skill }}</td>
                 <td>{{ w.strength }}</td><td>{{ w.ap }}</td><td>{{ w.damage }}</td>
-                <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}—{% endif %}</td>
+                <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}-{% endif %}</td>
               </tr>
               {% endif %}{% endfor %}
               </tbody>
@@ -324,7 +324,7 @@
                 <td class="ab-wep-name">{{ w.name }}</td>
                 <td>Melee</td><td>{{ w.attacks }}</td><td>{{ w.skill }}</td>
                 <td>{{ w.strength }}</td><td>{{ w.ap }}</td><td>{{ w.damage }}</td>
-                <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}—{% endif %}</td>
+                <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}-{% endif %}</td>
               </tr>
               {% endif %}{% endfor %}
               </tbody>

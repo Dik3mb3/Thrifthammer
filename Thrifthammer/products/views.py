@@ -35,7 +35,7 @@ from django.views.decorators.http import require_GET, require_http_methods, requ
 
 from accounts.models import WatchlistItem
 from calculators.models import UnitType
-from prices.models import CurrentPrice
+from prices.models import BookFormatPrice, CurrentPrice
 
 from .forms import IssueReportForm
 from .models import Category, Faction, IssueReport, NewsletterSignup, Product
@@ -148,6 +148,52 @@ SORT_OPTIONS = {
     'discount':   '-min_discount_pct',  # requires min_discount_pct annotation; NULLs sort last
 }
 
+# Display order for book format tabs on the product detail page. Formats
+# with no BookFormatPrice rows for a given book are simply omitted rather
+# than shown empty -- E-Book/Audio Book will start appearing automatically
+# once that sourcing work begins, with no template changes needed.
+# Labels are pulled from BookFormatPrice.FORMAT_CHOICES (single source of
+# truth) rather than duplicated here.
+BOOK_FORMAT_VALUE_ORDER = [
+    BookFormatPrice.FORMAT_EBOOK,
+    BookFormatPrice.FORMAT_AUDIOBOOK,
+    BookFormatPrice.FORMAT_SOFTBACK,
+    BookFormatPrice.FORMAT_HARDBACK,
+]
+BOOK_FORMAT_LABELS = dict(BookFormatPrice.FORMAT_CHOICES)
+
+
+def _category_descendant_ids(categories, root_slug):
+    """
+    Resolve a category slug to its own pk plus every subcategory pk,
+    recursively (e.g. "books-and-novels" -> {books-and-novels, warhammer}).
+
+    Products are tagged to their most specific category (e.g. Horus Heresy
+    books are tagged "Warhammer", not "Books and Novels"), so browsing a
+    parent category needs this closure or it returns zero results.
+
+    Takes the already-fetched `categories` list rather than querying, since
+    callers already load the full table for the sidebar.
+    """
+    children_of = {}
+    for c in categories:
+        if c.parent_category_id:
+            children_of.setdefault(c.parent_category_id, []).append(c.pk)
+
+    root = next((c for c in categories if c.slug == root_slug), None)
+    if root is None:
+        return set()
+
+    ids = {root.pk}
+    stack = [root.pk]
+    while stack:
+        pk = stack.pop()
+        for child_pk in children_of.get(pk, []):
+            if child_pk not in ids:
+                ids.add(child_pk)
+                stack.append(child_pk)
+    return ids
+
 
 def privacy_policy(request):
     """Static privacy policy page — required for affiliate program applications."""
@@ -205,6 +251,47 @@ def product_list(request):
     if sort not in SORT_OPTIONS:
         sort = 'discount'
 
+    # Fetched once, up front -- needed both for the category-descendant
+    # closure below (parent categories like "Books and Novels" have no
+    # products of their own; their products live on subcategories like
+    # "Warhammer") and to resolve is_books_category before the queryset is
+    # built, since it decides which price/sort annotations get used.
+    categories = list(Category.objects.all())
+    selected_category_obj = next((c for c in categories if c.slug == category_slug), None)
+
+    # True when browsing "Books and Novels" or any of its subcategories —
+    # drives the sidebar's Format filter, the "Book Series"/"All Series"
+    # label swap, and which price/sort annotation (book_min_price vs
+    # min_price) is used below. Covers future subcategories automatically
+    # (e.g. a Battletech books subcategory) since it's not slug-hardcoded.
+    books_category_ids = _category_descendant_ids(categories, 'books-and-novels')
+    is_books_category = bool(selected_category_obj and selected_category_obj.pk in books_category_ids)
+
+    # Which format's price ranks/displays books by (Books and Novels category
+    # only -- harmless no-op elsewhere). Defaults to E-Book to match the
+    # product detail page's default. Whitelisted against BOOK_FORMAT_LABELS'
+    # keys (the same internal BookFormatPrice.FORMAT_* values used there).
+    book_format = request.GET.get('book_format', '').strip()
+    if book_format not in BOOK_FORMAT_LABELS:
+        book_format = BookFormatPrice.FORMAT_EBOOK
+
+    # A book batch often launches physical-only (GW added first; Amazon
+    # E-Book/Audio Book sourcing comes later, same rollout order used for
+    # Horus Heresy Series and Warhammer 40,000 Books) -- if the current
+    # format has zero price data anywhere in the selected category/faction
+    # scope, every card would show "No price yet" until the user manually
+    # switches the Format dropdown. Fall back to the first format in display
+    # order that actually has data for this scope instead.
+    if is_books_category:
+        _scope_q = Q(product__category_id__in=books_category_ids)
+        if faction_slug:
+            _scope_q &= Q(product__faction__slug=faction_slug)
+        if not BookFormatPrice.objects.filter(_scope_q, format=book_format, price__isnull=False).exists():
+            for fmt in BOOK_FORMAT_VALUE_ORDER:
+                if BookFormatPrice.objects.filter(_scope_q, format=fmt, price__isnull=False).exists():
+                    book_format = fmt
+                    break
+
     region_param = request.GET.get('region', '').strip()
     if region_param in ('us', 'uk'):
         request.session['region'] = region_param
@@ -217,8 +304,8 @@ def product_list(request):
     # every CurrentPrice save, invalidating all list page variants at once.
     list_gen = cache.get('product_list_generation', 0)
     cache_key = (
-        f'product_list_v4|gen={list_gen}|region={region}|q={query}|cat={category_slug}'
-        f'|fac={faction_slug}|sort={sort}|page={page_number}'
+        f'product_list_v5|gen={list_gen}|region={region}|q={query}|cat={category_slug}'
+        f'|fac={faction_slug}|sort={sort}|page={page_number}|bfmt={book_format}'
     )
     cached = cache.get(cache_key)
     if cached:
@@ -248,6 +335,46 @@ def product_list(request):
         .values('price')[:1]
     )
 
+    # book_min_price: cheapest in-stock price for the selected book_format
+    # (E-Book/Audio Book/Paperback/Hardback -- picked via the Format sidebar
+    # filter, Books and Novels category only) for book products, sourced
+    # from BookFormatPrice instead of CurrentPrice. A Subquery (not a joined
+    # Min()) so it can't fan-out against the current_prices join used by
+    # min_price above — same reason gw_ref_price_sq above is a Subquery
+    # rather than a second annotated Min(). US only for now, matching
+    # product_detail's book pricing scope.
+    #
+    # book_msrp_price: that same format's MSRP-source row (GW for Paperback/
+    # Hardback, Amazon for E-Book/Audio Book -- see BookFormatPrice.is_msrp_source),
+    # used as the discount reference so "Best Discount" sort/display for books
+    # means the same thing it does for miniatures (ref_price vs min_price).
+    if region != 'uk':
+        book_min_price_sq = Subquery(
+            BookFormatPrice.objects
+            .filter(
+                product=OuterRef('pk'),
+                format=book_format,
+                not_available=False,
+                in_stock=True,
+                price__isnull=False,
+            )
+            .order_by('price')
+            .values('price')[:1]
+        )
+        book_msrp_sq = Subquery(
+            BookFormatPrice.objects
+            .filter(
+                product=OuterRef('pk'),
+                format=book_format,
+                is_msrp_source=True,
+                price__isnull=False,
+            )
+            .values('price')[:1]
+        )
+    else:
+        book_min_price_sq = Value(None, output_field=DecimalField())
+        book_msrp_sq = Value(None, output_field=DecimalField())
+
     # min_price annotation: for UK show only UK retailer prices (GBP),
     # for US exclude UK retailers so GBP prices don't appear as cheap USD deals.
     if region == 'uk':
@@ -273,6 +400,22 @@ def product_list(request):
             )
         )
         .annotate(gw_ref_price=gw_ref_price_sq)
+        .annotate(book_min_price=book_min_price_sq)
+        .annotate(book_msrp_price=book_msrp_sq)
+        .annotate(
+            book_min_discount_pct=Case(
+                When(
+                    book_msrp_price__gt=0,
+                    book_min_price__isnull=False,
+                    then=ExpressionWrapper(
+                        (F('book_msrp_price') - F('book_min_price')) / F('book_msrp_price') * Value(100),
+                        output_field=FloatField(),
+                    ),
+                ),
+                default=None,
+                output_field=FloatField(),
+            )
+        )
         .annotate(
             # ref_price: GW live price when available, else stored msrp —
             # same logic as `gw_ref_price` in product_detail view.
@@ -304,7 +447,9 @@ def product_list(request):
             | Q(description__icontains=query)
             | Q(gw_sku__icontains=query)
         )
+
     if category_slug:
+        category_ids = _category_descendant_ids(categories, category_slug)
         if category_slug == 'warcry':
             # Warcry is its own top-level category, but most Warcry warbands
             # are the same physical kit as an existing Age of Sigmar faction
@@ -315,10 +460,10 @@ def product_list(request):
                 secondary_factions__slug='warcry'
             ).values('pk')
             products = products.filter(
-                Q(category__slug=category_slug) | Q(pk__in=warcry_secondary_pks)
+                Q(category_id__in=category_ids) | Q(pk__in=warcry_secondary_pks)
             )
         else:
-            products = products.filter(category__slug=category_slug)
+            products = products.filter(category_id__in=category_ids)
     if faction_slug:
         # Include products whose secondary_factions include this faction too
         # (cross-faction units like Chaos Daemons dual-tagged onto a mono-god
@@ -333,17 +478,29 @@ def product_list(request):
 
     # Discount sort: NULLs (no live price) must go last, not first.
     # F().desc(nulls_last=True) produces "ORDER BY col DESC NULLS LAST" in PostgreSQL.
-    if sort == 'discount':
+    # Books rank by the selected format's price/discount (book_min_price /
+    # book_min_discount_pct) instead of the CurrentPrice-based min_price /
+    # min_discount_pct used everywhere else -- name/newest sorts are
+    # unaffected since they don't reference either.
+    if is_books_category and sort == 'discount':
+        products = products.order_by(F('book_min_discount_pct').desc(nulls_last=True))
+    elif is_books_category and sort == 'price_asc':
+        products = products.order_by(F('book_min_price').asc(nulls_last=True))
+    elif is_books_category and sort == 'price_desc':
+        products = products.order_by(F('book_min_price').desc(nulls_last=True))
+    elif sort == 'discount':
         products = products.order_by(F('min_discount_pct').desc(nulls_last=True))
     else:
         products = products.order_by(SORT_OPTIONS[sort])
 
-    # Sidebar dropdowns — small tables, fetched once.
-    categories = list(Category.objects.all())
+    # Faction sidebar dropdown — only shown once a category is chosen.
+    # Uses the same category-descendant closure as the product filter above,
+    # so choosing "Books and Novels" surfaces factions like "Horus Heresy
+    # Series" that actually live on its "Warhammer" subcategory.
     if category_slug:
         factions = list(
             Faction.objects
-            .filter(category__slug=category_slug)
+            .filter(category_id__in=_category_descendant_ids(categories, category_slug))
             .select_related('category')
             .order_by('name')
         )
@@ -361,10 +518,10 @@ def product_list(request):
     # would re-execute on cache retrieval and lose the annotation.
     product_list_evaluated = list(page_obj.object_list)
 
-    # Resolve selected category/faction to objects for template title/description use.
-    # Uses already-fetched lists — no extra DB queries.
-    selected_category_obj = next((c for c in categories if c.slug == category_slug), None)
-    selected_faction_obj  = next((f for f in factions  if f.slug == faction_slug),  None)
+    # Resolve selected faction to an object for template title/description use.
+    # selected_category_obj / is_books_category were already resolved above,
+    # before the queryset was built.
+    selected_faction_obj = next((f for f in factions if f.slug == faction_slug), None)
 
     ctx = {
         'page_obj':               page_obj,
@@ -375,8 +532,12 @@ def product_list(request):
         'query':                  query,
         'selected_category':      category_slug,
         'selected_faction':       faction_slug,
+        'is_books_category':      is_books_category,
         'selected_category_obj':  selected_category_obj,
         'selected_faction_obj':   selected_faction_obj,
+        'selected_book_format':   book_format,
+        'selected_book_format_label': BOOK_FORMAT_LABELS[book_format],
+        'book_format_options':    [(v, BOOK_FORMAT_LABELS[v]) for v in BOOK_FORMAT_VALUE_ORDER],
         'sort':              sort,
         'sort_options': [
             ('discount',   'Best Discount'),
@@ -436,12 +597,61 @@ def product_detail(request, slug):
                 # then cheapest first.
                 .order_by('not_available', '-in_stock', 'price')
             )
+
+        # Books: price varies by format (E-Book/Audio Book/Paperback/Hardback)
+        # rather than one price per retailer, so they're grouped separately
+        # from current_prices. US only for now -- no UK book pricing sourced.
+        # All 4 tabs always render (E-Book/Audio Book included even with no
+        # BookFormatPrice rows yet) so the tab bar's shape doesn't change once
+        # that sourcing work begins -- their panel just shows "not tracked
+        # yet" until then. default_book_format (the first format that HAS
+        # data, not necessarily the first in display order) is what's
+        # initially active and seeds the "Best Price Available" card; JS
+        # keeps that card in sync with whichever tab is actually clicked.
+        book_formats = []
+        default_book_format = None
+        all_book_prices = []
+        if product.author and region != 'uk':
+            all_book_prices = list(
+                BookFormatPrice.objects
+                .filter(product=product)
+                .select_related('retailer')
+                .order_by('not_available', '-in_stock', 'price')
+            )
+            for fmt_value in BOOK_FORMAT_VALUE_ORDER:
+                fmt_prices = [bfp for bfp in all_book_prices if bfp.format == fmt_value]
+                # MSRP reference for this format's Discount column -- the
+                # is_msrp_source row's price (GW for Paperback/Hardback),
+                # found explicitly rather than assumed to be prices[0] since
+                # a cheaper non-MSRP retailer (e.g. Amazon) can sort first.
+                fmt_msrp = next(
+                    (bfp.price for bfp in fmt_prices if bfp.is_msrp_source and bfp.price),
+                    None,
+                )
+                book_formats.append({
+                    'value': fmt_value,
+                    'label': BOOK_FORMAT_LABELS[fmt_value],
+                    'prices': fmt_prices,
+                    'msrp': fmt_msrp,
+                })
+            default_book_format = next((f for f in book_formats if f['prices']), book_formats[0])
+
         # Related products: prefer same faction+category, then same faction,
         # then same category — avoids the alphabetical Adepta Sororitas problem.
-        _rp_price_filter = Q(
-            current_prices__not_available=False,
-            current_prices__in_stock=True,
-        )
+        # Region-aware exclusion matches product_list's _min_price_filter —
+        # without it, a UK-only price (e.g. eBay UK) can leak into a US-region
+        # visitor's "Best Price" card on a related-product tile.
+        if region == 'uk':
+            _rp_price_filter = Q(
+                current_prices__not_available=False,
+                current_prices__in_stock=True,
+                current_prices__retailer__is_uk=True,
+            )
+        else:
+            _rp_price_filter = Q(
+                current_prices__not_available=False,
+                current_prices__in_stock=True,
+            ) & ~Q(current_prices__retailer__is_uk=True)
         exclude_pk = product.pk
         related_products = list(
             Product.objects
@@ -497,9 +707,13 @@ def product_detail(request, slug):
         # Pre-filter for JSON-LD schema — only offers with a real price and
         # not marked unavailable.  Using a separate list means forloop.last
         # in the template is always accurate (no skipped-entry comma bugs).
+        # Books draw from BookFormatPrice instead of CurrentPrice.
         schema_prices = [
             cp for cp in current_prices
             if cp.price and not cp.not_available
+        ] + [
+            bfp for bfp in all_book_prices
+            if bfp.price and not bfp.not_available
         ]
 
         # Build JSON-LD using json.dumps() so the output is always valid JSON.
@@ -621,6 +835,8 @@ def product_detail(request, slug):
         cached_ctx = {
             'product':          product,
             'current_prices':   current_prices,
+            'book_formats':         book_formats,
+            'default_book_format':  default_book_format,
             'schema_prices':    schema_prices,
             'related_products': related_products,
             'savings':          savings,

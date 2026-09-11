@@ -22,7 +22,7 @@
 
   <!-- Preheader text (hidden, shows in inbox preview) -->
   <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
-    Save up to {{ top_pct }}% this week — {{ deals|length }} AoS &amp; More deals hand-picked from across the internet. Don't miss out. &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    Save up to {{ top_pct }}% this week. {{ deals|length }} AoS &amp; More deals hand-picked from across the internet. Don't miss out. &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
   </div>
 
   <!-- Outer wrapper -->
@@ -61,7 +61,7 @@
           <tr>
             <td style="background:linear-gradient(135deg,#1c2230 0%,#0d0f14 100%);padding:22px 32px;text-align:center;border-bottom:1px solid #2a2f3a;">
               <div style="font-family:'Cinzel',Georgia,'Times New Roman',serif;font-size:20px;font-weight:700;color:#f0c060;letter-spacing:0.05em;">
-                This Week's Top {{ deals|length }} Warhammer Deals &mdash; AoS &amp; More
+                This Week's Top {{ deals|length }} AoS &amp; More Warhammer Deals
               </div>
             </td>
           </tr>
@@ -221,7 +221,7 @@
               <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;color:#5c5648;line-height:1.8;">
                 You're receiving this because you signed up at thrifthammer.com.<br>
                 Prices are updated daily. ThriftHammer is not affiliated with Games Workshop.<br>
-                &copy; {{ today|date:"Y" }} ThriftHammer &mdash;
+                &copy; {{ today|date:"Y" }} ThriftHammer
                 {% if unsubscribe_url %}
                 <a href="{{ unsubscribe_url }}" style="color:#5c5648;text-decoration:underline;">Unsubscribe</a>
                 {% endif %}

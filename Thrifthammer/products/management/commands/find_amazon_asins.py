@@ -47,6 +47,10 @@ ASIN_OVERRIDES = {
     'FOE-015': 'B0CYCQGBJY',  # Malcador Heavy Tank — search returned Malcador Infernus
     'FOE-018': 'B0CYCSZ4QV',  # Solar Auxilia Tactical Command Section — search returned Lasrifle Section
     'FOE-020': 'B0CYCPJR16',  # Solar Auxilia Leman Russ Strike/Command Tank — search returned Assault Tank
+    # Warmachine — Orgoth Sea Raiders
+    'WMH-101': 'B0GH7VG25D',  # The Graveborn Command Cadre (HIPS) — search returned The Final Hunt Command Cadre; user-supplied correct link
+    # Warmachine — Southern Kriels
+    'WMH-042': 'B0GX9P98QP',  # Southern Kriels Kithguard Battlegroup Box — search returned Brineblood Battlegroup Box
 }
 
 # SKUs to explicitly exclude from Amazon URL discovery.
@@ -106,6 +110,39 @@ SKIP_SKUS = {
     'AL-061',                       # Leviathan Siege Dreadnought Close Combat Weapons — matched Ranged Frame
     'CM-003',                       # Vultarax Stratos-Automata — matched Skitarii Corpus
     'CM-016',                       # Age of Darkness Knight Questoris — matched Cerastus Knight Castigator
+    # Warmachine — Southern Kriels; API returned the nearest listing in the same
+    # product line instead of nothing, since these small accessory/sub-unit SKUs
+    # aren't sold standalone on Amazon
+    'WMH-098',                      # Kithguard Defenses — matched Kithguard Command Starter
+    'WMH-322',                      # Southern Kriels Brinebloods Command Starter (HIPS) — matched Kithguard Command Starter
+    'WMH-092',                      # Southern Kriels General Gunnbjorn — matched Abyssal King
+    'WMH-141',                      # Southern Kriels Kithguard Guard Post — matched Kithguard Command Starter
+    'WMH-140',                      # Southern Kriels Kithguard Hailer — matched Kithguard Auxiliary Expansion
+    'WMH-044',                      # Southern Kriels Kithguard Infantry — matched Kithguard Command Starter
+    'WMH-021',                      # Southern Kriels Kithguard Journeyman & Ramhead — matched Kithguard Core Expansion
+    'WMH-122',                      # Southern Kriels Kithguard Medics — matched Kithguard Command Starter
+    'WMH-347',                      # Southern Kriels Kithguard Mistborn Dire Troll — matched Deepborn Dire Troll (different creature)
+    'WMH-121',                      # Southern Kriels Kithguard Mortar Team — matched Kithguard Core Expansion
+    'WMH-045',                      # Southern Kriels Kithguard Sergeant — matched Kithguard Command Starter
+    'WMH-047',                      # Southern Kriels Kithguard Sidewinder — matched Kithguard Auxiliary Expansion
+    'WMH-046',                      # Southern Kriels Kithguard Steelbacks — matched Kithguard Auxiliary Expansion
+    'WMH-123',                      # Southern Kriels Kithguard Tunnel Rats — matched Kithguard Core Expansion
+    'WMH-278',                      # Fire Guardians — matched Fire Tongue Warriors Command Cadre
+    'WMH-078',                      # Shadows & Scum — matched Eiryss, Shadow of Retribution
+    'WMH-077',                      # Vorogger Variant — matched Winter Korps Infantry Standard Bearer Variant (wrong faction)
+    # Warmachine — Khymaera
+    'WMH-228',                      # Khymaera Shadowflame Shard Battlegroup Box — matched Auxiliary Expansion (same duplicate-ASIN pattern)
+    'WMH-028',                      # Shadow Seraph — matched Eiryss, Shadow of Retribution (same bad ASIN as WMH-078 above)
+    # Warmachine — Orgoth Sea Raiders
+    'WMH-161',                      # Jackal Light Warjack — matched Cryx Raptor Light Warjack (wrong faction, wrong unit)
+    'WMH-272',                      # Orgoth Reaver Commander — matched Orgoth Cursebound Command Cadre Set (wrong product)
+    'WMH-290',                      # Orgoth Sea Raiders Command Starter — matched Battlegroup Box (duplicate-ASIN pattern)
+    'WMH-170',                      # Reaver Commander Variant — matched Lord Commander Stryker Action Figure (unrelated Cygnar character)
+    'WMH-171',                      # Reaver Standard Variant — matched Reaver Skirmishers (duplicate-ASIN pattern)
+    'WMH-169',                      # Siege Tarask — matched a Horus Heresy novel (different game, coincidental "Siege" keyword)
+    # Warmachine — Mercenaries
+    'WMH-367',                      # Captain Barl "Demolisher" Dunax — matched Captain Raef Huxley (different character; brand-new SKU, no real listing yet)
+    'WMH-031',                      # Mind Thief — matched "Thief!" (unrelated product, not even Warmachine)
 }
 # ─────────────────────────────────────────────────────────────────────────────
 

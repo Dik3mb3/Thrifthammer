@@ -31,6 +31,16 @@ class Category(models.Model):
         default=50,
         help_text='Lower numbers sort first. Use to pin categories above alphabetical order.',
     )
+    parent_category = models.ForeignKey(
+        'self',
+        null=True, blank=True,
+        on_delete=models.SET_NULL,
+        related_name='subcategories',
+        help_text=(
+            'Parent category for nested groupings (e.g. "Warhammer" under '
+            '"Books and Novels"). Blank for top-level categories.'
+        ),
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -199,6 +209,10 @@ class Product(models.Model):
     """
 
     name = models.CharField(max_length=300)
+    author = models.CharField(
+        max_length=200, blank=True, default='',
+        help_text='Book author, displayed under the title as "by: Author Name". Blank for non-book products.',
+    )
     slug = models.SlugField(max_length=300, unique=True, db_index=True)
     gw_sku = models.CharField(
         max_length=50, blank=True, db_index=True,
@@ -302,6 +316,19 @@ class Product(models.Model):
             '"mk2" for Painting Handle XL excludes standard Mk2 handle listings.'
         ),
     )
+    ebay_trust_best_match = models.BooleanField(
+        default=False,
+        help_text=(
+            'Books only (update_ebay_book_prices). When True, skips the cheaper-'
+            'alternative comparison and always uses eBay Best Match #1, exactly '
+            'like every book was matched before that comparison existed. Use '
+            'for a title whose search query is too short/generic (a single bare '
+            'word, no ISBN anchor) to safely rank by price -- confirmed on '
+            '"Fulgrim", where the query kept surfacing new unrelated cheap '
+            'items (bits, a t-shirt, a paint pot) no matter what negative '
+            'keywords were added, while Best Match #1 was reliably correct.'
+        ),
+    )
     ebay_allowed_title_words = models.CharField(
         max_length=200, blank=True, default='',
         help_text=(
@@ -309,6 +336,25 @@ class Product(models.Model):
             'but should be allowed for this product. '
             'e.g. "nos 6" for Bloodcrushers allows "NOS" (New Old Stock) listings '
             'and titles that include the model count "6".'
+        ),
+    )
+    isbn = models.CharField(
+        max_length=20, blank=True, default='',
+        help_text=(
+            'ISBN-10 of the current print edition, used as a precise eBay search '
+            'anchor for rules books that get reprinted at each new game edition '
+            '(Codexes, Battletomes) -- same principle as BookFormatPrice.isbn for '
+            'novels. Leave blank for non-rulebook products.'
+        ),
+    )
+    current_edition = models.CharField(
+        max_length=20, blank=True, default='',
+        help_text=(
+            'Current edition ordinal (e.g. "10th", "4th", "11th"), used as a '
+            'required eBay search keyword when the ISBN search returns no '
+            'results, so the match still prefers a listing that states the '
+            'current edition over an unlabelled or old one. Leave blank for '
+            'non-rulebook products.'
         ),
     )
     batch_tag = models.CharField(

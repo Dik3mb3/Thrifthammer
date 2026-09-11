@@ -439,10 +439,27 @@ class Command(BaseCommand):
                 )
                 return
 
+        # Books are never handled by this command -- they have their own
+        # matcher (update_ebay_book_prices) with book-appropriate validation
+        # (this command's _is_valid_result blocklists "paperback"/"hardback"/
+        # "novel"/"library" as bits/parts signals, which would reject nearly
+        # every genuine book listing). Without this exclusion, the scheduled
+        # cron run (no scope args) matches book products against unrelated
+        # listings and corrupts their price display -- confirmed twice in
+        # production. product.author is blank for every non-book product.
+        products = products.exclude(author__gt='')
+
         if limit:
             products = products[:limit]
 
         total = products.count()
+        if total == 0:
+            self.stdout.write(self.style.WARNING(
+                'No products to process (0 after filters). Note: this command '
+                'excludes book products (products with an author) -- use '
+                'update_ebay_book_prices for those.'
+            ))
+            return
         self.stdout.write(f'Processing {total} products...\n')
 
         # ── Counters ─────────────────────────────────────────────────────────

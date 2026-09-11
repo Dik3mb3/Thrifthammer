@@ -1773,6 +1773,26 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   margin-bottom: var(--sp-4);
 }
 .product-actions { display: flex; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-6); }
+
+/* Book format tabs — segmented control switching E-Book/Audio Book/Paperback/Hardback. */
+.book-format-tabs { display: flex; gap: var(--sp-2); margin-bottom: var(--sp-4); }
+.book-format-tab {
+  flex: 1;
+  padding: 0.6rem 0.4rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  min-height: 42px;
+  white-space: normal;
+  text-align: center;
+}
+.product-author {
+  font-family: 'Cinzel', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: -4px;
+  margin-bottom: var(--sp-4);
+}
 .product-actions .btn { flex: 1; min-width: 130px; }
 
 .product-description {

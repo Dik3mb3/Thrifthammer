@@ -75,6 +75,9 @@
             aria-label="Share this product"
           ><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Share</button>
         </div>
+        {% if product.author %}
+        <p class="product-author">By: {{ product.author }}</p>
+        {% endif %}
         <h2 class="sr-only">{{ product.name }} Pricing</h2>
         <div class="product-meta">
           {% if product.category %}
@@ -90,11 +93,16 @@
           {% if product.gw_sku %}
           <span class="badge badge-muted">SKU: {{ product.gw_sku }}</span>
           {% endif %}
+          {% if book_formats %}
+          {% with top_isbn=default_book_format.prices.0.isbn %}
+          <span class="badge badge-muted" id="book-isbn-badge"{% if not top_isbn %} hidden{% endif %}>ISBN: {{ top_isbn }}</span>
+          {% endwith %}
+          {% endif %}
         </div>
       </div>
 
       {# Best price card #}
-      {% if current_prices and current_prices.0.price %}
+      {% if current_prices and current_prices.0.price and not product.author %}
       {% with best=current_prices.0 %}
       <div class="best-price-card">
         <div class="best-price-label">Best Price Available</div>
@@ -122,6 +130,23 @@
         {% if gw_ref_price %}
         <p style="font-size:0.8rem;color:var(--text-muted);">{% if product.category.slug == 'paint-supplies' %}MSRP{% else %}GW MSRP{% endif %}: {% if region == 'uk' %}£{% else %}${% endif %}{{ gw_ref_price }}</p>
         {% endif %}
+      </div>
+      {% endwith %}
+      {% elif book_formats %}
+      {% with top=default_book_format.prices.0 %}
+      <div class="best-price-card" id="book-best-price-card">
+        <div class="best-price-label">Best Price Available</div>
+        <div class="best-price-amount" id="book-best-amount">
+          {% if top.price and not top.not_available %}${{ top.price|floatformat:"2" }}{% else %}Not Available{% endif %}
+        </div>
+        <div class="best-price-retailer" id="book-best-retailer">
+          {% if top.price and not top.not_available %}at {{ top.retailer.name }} ({{ default_book_format.label }}){% else %}({{ default_book_format.label }}){% endif %}
+          <span
+            id="book-best-stock"
+            class="badge {% if top.not_available %}badge-red{% elif top.in_stock %}badge-green{% else %}badge-red{% endif %}"
+            style="margin-left:var(--sp-2);"
+          >{% if top.not_available %}Not Available{% elif top.in_stock %}In Stock{% else %}Out of Stock{% endif %}</span>
+        </div>
       </div>
       {% endwith %}
       {% elif product.msrp %}
@@ -169,7 +194,110 @@
 
       {# Price comparison table #}
       <h3 style="font-size:1.1rem;margin-bottom:var(--sp-2);">Price Comparison</h3>
-      {% if current_prices %}
+      {% if book_formats %}
+      <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:var(--sp-2);">
+        Affiliate links: ThriftHammer earns a small commission on Amazon, eBay, and Noble Knight purchases at no extra cost to you.
+      </p>
+      <div class="book-format-tabs" role="tablist" aria-label="Book format" style="margin-top:var(--sp-3);">
+        {% for fmt in book_formats %}
+        {% with top=fmt.prices.0 %}
+        <button
+          type="button"
+          role="tab"
+          class="btn book-format-tab{% if fmt.value == default_book_format.value %} btn-primary{% else %} btn-secondary{% endif %}"
+          data-book-tab="{{ fmt.value }}"
+          data-label="{{ fmt.label }}"
+          data-isbn="{% if top %}{{ top.isbn }}{% endif %}"
+          {% if top and top.price and not top.not_available %}
+          data-price="{{ top.price|floatformat:'2' }}"
+          data-retailer="{{ top.retailer.name }}"
+          data-instock="{{ top.in_stock|yesno:'true,false' }}"
+          data-available="true"
+          {% else %}
+          data-price=""
+          data-retailer=""
+          data-instock="false"
+          data-available="false"
+          {% endif %}
+          aria-selected="{% if fmt.value == default_book_format.value %}true{% else %}false{% endif %}"
+        >{{ fmt.label }}</button>
+        {% endwith %}
+        {% endfor %}
+      </div>
+      {% for fmt in book_formats %}
+      <div class="book-tab-panel" id="book-tab-{{ fmt.value }}"{% if fmt.value != default_book_format.value %} hidden{% endif %}>
+        {% if fmt.prices %}
+        <div class="price-table-wrap">
+        <table class="price-table">
+          <thead>
+            <tr>
+              <th>Retailer</th>
+              <th>Price</th>
+              <th>Discount</th>
+              <th>Stock</th>
+              <th>Buy</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for bfp in fmt.prices %}
+            <tr{% if forloop.first and bfp.in_stock and not bfp.not_available %} class="cheapest"{% endif %}>
+              <td style="font-weight:600;color:var(--text-primary);">{{ bfp.retailer.name }}</td>
+              <td class="price">
+                {% if bfp.not_available or not bfp.price %}
+                <span style="color:var(--text-muted);">-</span>
+                {% else %}
+                ${{ bfp.price|floatformat:"2" }}
+                {% if forloop.first and bfp.in_stock %}
+                <span class="badge badge-green" style="margin-left:4px;">Best</span>
+                {% endif %}
+                {% endif %}
+              </td>
+              <td>
+                {% if bfp.not_available %}
+                <span style="color:var(--text-muted);">-</span>
+                {% elif fmt.msrp and bfp.price %}
+                {% with disc=bfp.price|discount_vs:fmt.msrp %}
+                {% if disc > 0.5 %}
+                <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
+                {% else %}
+                <span style="color:var(--text-muted);">-</span>
+                {% endif %}
+                {% endwith %}
+                {% else %}
+                <span style="color:var(--text-muted);">-</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if bfp.not_available %}
+                <span class="badge badge-red">Not Available</span>
+                {% elif bfp.in_stock %}
+                <span class="badge badge-green">In Stock</span>
+                {% else %}
+                <span class="badge badge-red">Out of Stock</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if bfp.url %}
+                <a href="{{ bfp.url }}" target="_blank" rel="noopener noreferrer sponsored" class="btn btn-primary btn-sm btn-ext">Buy</a>
+                {% elif bfp.not_available %}
+                <span style="color:var(--text-muted);font-size:0.85rem;">Not Available</span>
+                {% else %}
+                <span style="color:var(--text-muted);font-size:0.85rem;">-</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>{# /price-table-wrap #}
+        {% else %}
+        <p style="color:var(--text-muted);font-size:0.9rem;">
+          {{ fmt.label }} isn't tracked yet for this book. Check back soon.
+        </p>
+        {% endif %}
+      </div>
+      {% endfor %}
+      {% elif current_prices %}
       <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:var(--sp-2);">
         Affiliate links: ThriftHammer earns a small commission on Amazon, eBay, and Noble Knight purchases at no extra cost to you.
       </p>
@@ -190,7 +318,7 @@
             <td style="font-weight:600;color:var(--text-primary);">{{ cp.retailer.name }}</td>
             <td class="price">
               {% if cp.not_available %}
-              <span style="color:var(--text-muted);">—</span>
+              <span style="color:var(--text-muted);">-</span>
               {% else %}
               {% if region == 'uk' %}£{% else %}${% endif %}{{ cp.price|floatformat:"2" }}
               {% if forloop.first and cp.in_stock %}
@@ -200,17 +328,17 @@
             </td>
             <td>
               {% if cp.not_available %}
-              <span style="color:var(--text-muted);">—</span>
+              <span style="color:var(--text-muted);">-</span>
               {% elif gw_ref_price and cp.price %}
               {% with disc=cp.price|discount_vs:gw_ref_price %}
               {% if disc > 0.5 %}
               <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
               {% else %}
-              <span style="color:var(--text-muted);">—</span>
+              <span style="color:var(--text-muted);">-</span>
               {% endif %}
               {% endwith %}
               {% else %}
-              <span style="color:var(--text-muted);">—</span>
+              <span style="color:var(--text-muted);">-</span>
               {% endif %}
             </td>
             <td>
@@ -228,7 +356,7 @@
               {% elif cp.not_available %}
               <span style="color:var(--text-muted);font-size:0.85rem;">Not Available</span>
               {% else %}
-              <span style="color:var(--text-muted);font-size:0.85rem;">—</span>
+              <span style="color:var(--text-muted);font-size:0.85rem;">-</span>
               {% endif %}
             </td>
           </tr>
@@ -298,7 +426,7 @@
                 <td class="ab-wep-name">{{ w.name }}</td>
                 <td>{{ w.range }}</td><td>{{ w.attacks }}</td><td>{{ w.skill }}</td>
                 <td>{{ w.strength }}</td><td>{{ w.ap }}</td><td>{{ w.damage }}</td>
-                <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}—{% endif %}</td>
+                <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}-{% endif %}</td>
               </tr>
               {% endif %}{% endfor %}
               </tbody>
@@ -317,7 +445,7 @@
                 <td class="ab-wep-name">{{ w.name }}</td>
                 <td>Melee</td><td>{{ w.attacks }}</td><td>{{ w.skill }}</td>
                 <td>{{ w.strength }}</td><td>{{ w.ap }}</td><td>{{ w.damage }}</td>
-                <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}—{% endif %}</td>
+                <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}-{% endif %}</td>
               </tr>
               {% endif %}{% endfor %}
               </tbody>
@@ -371,7 +499,7 @@
         <div class="product-card-body">
           <div class="product-card-name">{{ rp.name }}</div>
           <div class="product-card-pricing">
-            {% if rp.min_price %}
+            {% if rp.min_price and not rp.author %}
             <div class="product-card-price-label">Best Price</div>
             <div class="product-card-price">{% if region == 'uk' %}£{% else %}${% endif %}{{ rp.min_price|floatformat:"2" }}</div>
             {% if rp.msrp %}
@@ -473,4 +601,65 @@ function shareThisPage() {
   }
 }
 </script>
+{% if book_formats %}
+<script>
+(function () {
+  'use strict';
+  var tabButtons  = document.querySelectorAll('[data-book-tab]');
+  var amountEl    = document.getElementById('book-best-amount');
+  var retailerEl  = document.getElementById('book-best-retailer');
+  var stockEl     = document.getElementById('book-best-stock');
+  var isbnEl      = document.getElementById('book-isbn-badge');
+
+  tabButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var target = btn.dataset.bookTab;
+      tabButtons.forEach(function (b) {
+        var active = b === btn;
+        b.classList.toggle('btn-primary', active);
+        b.classList.toggle('btn-secondary', !active);
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      document.querySelectorAll('.book-tab-panel').forEach(function (panel) {
+        panel.hidden = panel.id !== 'book-tab-' + target;
+      });
+
+      // Sync the "Best Price Available" card to the newly selected format.
+      if (amountEl && retailerEl && stockEl) {
+        var price     = btn.dataset.price;
+        var retailer  = btn.dataset.retailer;
+        var label     = btn.dataset.label;
+        var inStock   = btn.dataset.instock === 'true';
+        var available = btn.dataset.available === 'true';
+
+        if (available && price) {
+          amountEl.textContent = '$' + price;
+          retailerEl.childNodes[0].textContent = 'at ' + retailer + ' (' + label + ') ';
+          stockEl.textContent = inStock ? 'In Stock' : 'Out of Stock';
+          stockEl.classList.toggle('badge-green', inStock);
+          stockEl.classList.toggle('badge-red', !inStock);
+        } else {
+          amountEl.textContent = 'Not Available';
+          retailerEl.childNodes[0].textContent = '(' + label + ') ';
+          stockEl.textContent = 'Not Available';
+          stockEl.classList.remove('badge-green');
+          stockEl.classList.add('badge-red');
+        }
+      }
+
+      // Sync the ISBN badge to the newly selected format.
+      if (isbnEl) {
+        var isbn = btn.dataset.isbn;
+        if (isbn) {
+          isbnEl.textContent = 'ISBN: ' + isbn;
+          isbnEl.hidden = false;
+        } else {
+          isbnEl.hidden = true;
+        }
+      }
+    });
+  });
+})();
+</script>
+{% endif %}
 {% endblock %}

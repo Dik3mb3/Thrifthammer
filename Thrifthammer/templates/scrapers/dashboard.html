@@ -28,8 +28,8 @@
             </td>
             <td>{{ job.products_found }}</td>
             <td>{{ job.prices_updated }}</td>
-            <td>{{ job.started_at|default:"—" }}</td>
-            <td>{{ job.finished_at|default:"—" }}</td>
+            <td>{{ job.started_at|default:"-" }}</td>
+            <td>{{ job.finished_at|default:"-" }}</td>
         </tr>
         {% empty %}
         <tr><td colspan="6">No scrape jobs yet. Run <code>python manage.py run_scrapers</code>.</td></tr>

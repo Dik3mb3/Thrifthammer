@@ -145,13 +145,13 @@
       <td style="font-weight:600;">{{ unit.name }}</td>
       <td>{{ unit.quantity }}</td>
       <td class="pts-col">
-        {% if unit.points %}{{ unit.points }}{% else %}—{% endif %}
+        {% if unit.points %}{{ unit.points }}{% else %}-{% endif %}
       </td>
       <td class="price-col">
-        {% if unit.price_total %}${{ unit.price_total }}{% else %}—{% endif %}
+        {% if unit.price_total %}${{ unit.price_total }}{% else %}-{% endif %}
       </td>
       <td>
-        {% if unit.msrp_total %}${{ unit.msrp_total }}{% else %}—{% endif %}
+        {% if unit.msrp_total %}${{ unit.msrp_total }}{% else %}-{% endif %}
       </td>
       <td>
         {# Only show expand button if there are live prices or action buttons #}
@@ -191,9 +191,9 @@
                 {% with disc=cp.price|discount_vs:unit.gw_msrp %}
                 {% if disc > 0.5 %}
                 <span class="badge badge-green">−{{ disc|floatformat:"0" }}%</span>
-                {% else %}—{% endif %}
+                {% else %}-{% endif %}
                 {% endwith %}
-                {% else %}—{% endif %}
+                {% else %}-{% endif %}
               </td>
               <td>
                 <a href="{{ cp.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm btn-ext">Buy</a>

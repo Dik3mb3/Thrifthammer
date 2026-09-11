@@ -99,7 +99,7 @@
       </form>
       {% else %}
       <p class="profile-section-hint">
-        Subscribed &mdash; emails go to {{ user.email }}.
+        Subscribed. Emails go to {{ user.email }}.
         Customise which newsletters you receive below.
       </p>
 
@@ -112,7 +112,7 @@
         <label style="display:flex;align-items:flex-start;gap:var(--sp-2);margin-bottom:var(--sp-2);cursor:pointer;">
           <input type="checkbox" name="monday_40k" {% if newsletter_obj.monday_40k %}checked{% endif %} style="margin-top:3px;flex-shrink:0;">
           <span>
-            <strong>Monday — Warhammer 40K deals</strong><br>
+            <strong>Monday: Warhammer 40K deals</strong><br>
             <span style="font-size:0.82rem;color:var(--text-muted);">Top 10 biggest discounts on 40K kits, sent Monday morning.</span>
           </span>
         </label>
@@ -120,7 +120,7 @@
         <label style="display:flex;align-items:flex-start;gap:var(--sp-2);margin-bottom:var(--sp-2);cursor:pointer;">
           <input type="checkbox" name="friday_other" {% if newsletter_obj.friday_other %}checked{% endif %} style="margin-top:3px;flex-shrink:0;">
           <span>
-            <strong>Friday — AoS &amp; More deals</strong><br>
+            <strong>Friday: AoS &amp; More deals</strong><br>
             <span style="font-size:0.82rem;color:var(--text-muted);">Top 10 discounts on Age of Sigmar, Horus Heresy, Kill Team &amp; more, sent Friday morning.</span>
           </span>
         </label>
@@ -128,7 +128,7 @@
         <label style="display:flex;align-items:flex-start;gap:var(--sp-2);margin-bottom:var(--sp-2);cursor:pointer;">
           <input type="checkbox" name="sunday_faction" id="sunday_faction_cb" {% if newsletter_obj.sunday_faction %}checked{% endif %} style="margin-top:3px;flex-shrink:0;">
           <span>
-            <strong>Sunday — Personalised faction deals</strong><br>
+            <strong>Sunday: Personalised faction deals</strong><br>
             <span style="font-size:0.82rem;color:var(--text-muted);">Deals for your specific faction(s) only, sent Sunday morning. Select your factions below.</span>
           </span>
         </label>

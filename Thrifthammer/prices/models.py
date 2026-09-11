@@ -81,6 +81,91 @@ class CurrentPrice(models.Model):
         return None
 
 
+class BookFormatPrice(models.Model):
+    """
+    Format-specific price for a book product at a specific retailer.
+
+    Unlike CurrentPrice (one row per product+retailer), books need a price
+    per format (E-Book, Audio Book, Softback, Hardback) per retailer. This
+    is a separate model rather than a field added to CurrentPrice so the
+    shared, heavily-used CurrentPrice table used by every other product on
+    the site is completely untouched by this feature.
+
+    There is no single Product.msrp for books -- MSRP varies by format and
+    even by which retailer sets the reference price for that format (GW for
+    Softback/Hardback; Audible/Amazon for Audio Book and E-Book, since GW
+    does not sell those). is_msrp_source marks which row is that reference;
+    compute "% off MSRP" against it instead of Product.msrp.
+    """
+    FORMAT_EBOOK = 'ebook'
+    FORMAT_AUDIOBOOK = 'audiobook'
+    FORMAT_SOFTBACK = 'softback'
+    FORMAT_HARDBACK = 'hardback'
+    FORMAT_CHOICES = [
+        (FORMAT_EBOOK, 'E-Book'),
+        (FORMAT_AUDIOBOOK, 'Audio Book'),
+        (FORMAT_SOFTBACK, 'Paperback'),
+        (FORMAT_HARDBACK, 'Hardback'),
+    ]
+
+    product = models.ForeignKey(
+        'products.Product', on_delete=models.CASCADE, related_name='book_format_prices',
+    )
+    retailer = models.ForeignKey(
+        'products.Retailer', on_delete=models.CASCADE, related_name='book_format_prices',
+    )
+    format = models.CharField(max_length=20, choices=FORMAT_CHOICES, db_index=True)
+    isbn = models.CharField(
+        max_length=20, blank=True, default='',
+        help_text=(
+            'ISBN-13 (or ISBN-10 for older editions) for this specific format/edition. '
+            'Used as the precise search key for retailer lookups (e.g. Amazon) instead '
+            'of ambiguous title matching, and displayed on the product page.'
+        ),
+    )
+    price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    currency = models.CharField(
+        max_length=3, default='USD',
+        help_text='ISO 4217 currency code. USD for US prices, GBP for UK prices.',
+    )
+    url = models.URLField(max_length=2000, blank=True, default='')
+    listing_title = models.CharField(max_length=300, blank=True, default='')
+    in_stock = models.BooleanField(default=True)
+    not_available = models.BooleanField(
+        default=False,
+        help_text='True if this retailer does not carry this format.',
+    )
+    manual_url_override = models.BooleanField(default=False)
+    is_msrp_source = models.BooleanField(
+        default=False,
+        help_text=(
+            'True if this row is the MSRP reference for this product+format '
+            '(Games Workshop for Softback/Hardback; Audible/Amazon for Audio '
+            'Book/E-Book). At most one True row per product+format, enforced '
+            'at the database level.'
+        ),
+    )
+    last_seen = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('product', 'retailer', 'format')
+        ordering = ['format', 'price']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['product', 'format'],
+                condition=models.Q(is_msrp_source=True),
+                name='unique_msrp_source_per_product_format',
+            ),
+        ]
+
+    def __str__(self):
+        if self.not_available:
+            return f"{self.product.name} ({self.get_format_display()}) @ {self.retailer.name}: NOT AVAILABLE"
+        if self.price is None:
+            return f"{self.product.name} ({self.get_format_display()}) @ {self.retailer.name}: no price"
+        return f"{self.product.name} ({self.get_format_display()}) @ {self.retailer.name}: ${self.price:.2f}"
+
+
 class PriceHistory(models.Model):
     """Historical price record for charting trends."""
     product = models.ForeignKey(

@@ -178,7 +178,7 @@
                     <td class="ab-wep-name">{{ w.name }}</td>
                     <td>{{ w.range }}</td><td>{{ w.attacks }}</td><td>{{ w.skill }}</td>
                     <td>{{ w.strength }}</td><td>{{ w.ap }}</td><td>{{ w.damage }}</td>
-                    <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}—{% endif %}</td>
+                    <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}-{% endif %}</td>
                   </tr>
                   {% endif %}{% endfor %}
                   </tbody>
@@ -198,7 +198,7 @@
                     <td class="ab-wep-name">{{ w.name }}</td>
                     <td>Melee</td><td>{{ w.attacks }}</td><td>{{ w.skill }}</td>
                     <td>{{ w.strength }}</td><td>{{ w.ap }}</td><td>{{ w.damage }}</td>
-                    <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}—{% endif %}</td>
+                    <td class="ab-wep-kw">{% if w.keywords %}{{ w.keywords }}{% else %}-{% endif %}</td>
                   </tr>
                   {% endif %}{% endfor %}
                   </tbody>
