@@ -86,7 +86,12 @@ class Command(BaseCommand):
             )
 
             if not dry_run:
-                Product.objects.filter(pk=product.pk).update(msrp=cp.price)
+                # .save() (not QuerySet.update()) so the post_save signal
+                # fires and busts the cached product detail page / browse
+                # list generation counter -- update() bypasses signals and
+                # would leave stale prices cached for up to 30 minutes.
+                product.msrp = cp.price
+                product.save(update_fields=['msrp'])
             updated += 1
 
         self.stdout.write('\n' + '=' * 60)

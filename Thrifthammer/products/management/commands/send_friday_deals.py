@@ -19,7 +19,8 @@ from decimal import Decimal
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.core.management.base import BaseCommand
-from django.db.models import F, Min, Q
+from django.db.models import DecimalField, F, Min, OuterRef, Q, Subquery
+from django.db.models.functions import Coalesce
 from django.template.loader import render_to_string
 from django.utils import timezone
 
@@ -159,12 +160,40 @@ class Command(BaseCommand):
 
         Excludes Warhammer 40,000 products. Covers Age of Sigmar, Horus Heresy,
         Kill Team, Paint & Supplies, and everything else.
+
+        MSRP reference price is Games Workshop's live tracked price
+        (gw_ref_price), falling back to the static product.msrp snapshot
+        only when no live GW price is tracked at all -- same live-price
+        pattern used for the "More Products" widget on product_detail, so
+        this digest can't drift stale again after a GW price change.
         """
         # Exclude UK retailers so GBP prices never appear as cheap USD deals.
-        _uk_slugs = frozenset({'ebay-uk', 'amazon-uk'})
+        # Must use the retailer.is_uk flag, not a hardcoded slug list -- a
+        # stale slug list here previously let firestorm-games (a UK retailer
+        # whose slug has no "-uk" suffix) and games-workshop-uk GBP prices
+        # get picked as the "cheapest USD price" and displayed with a $
+        # sign, producing nonsense prices in the sent newsletter.
+        gw_ref_price_sq = Subquery(
+            CurrentPrice.objects
+            .filter(
+                product=OuterRef('pk'),
+                retailer__slug='games-workshop',
+                not_available=False,
+                price__isnull=False,
+            )
+            .order_by('price')
+            .values('price')[:1]
+        )
         candidates = (
             Product.objects
-            .filter(is_active=True, msrp__isnull=False)
+            .filter(is_active=True)
+            .annotate(
+                gw_ref_price=Coalesce(
+                    gw_ref_price_sq, F('msrp'),
+                    output_field=DecimalField(max_digits=10, decimal_places=2),
+                )
+            )
+            .filter(gw_ref_price__isnull=False)
             .exclude(category__name='Warhammer 40,000')
             # Temporary: hold Battletech and Paint & Supplies out of newsletters
             # while these newer catalog lines are being monitored.
@@ -176,17 +205,17 @@ class Command(BaseCommand):
                     filter=Q(
                         current_prices__in_stock=True,
                         current_prices__not_available=False,
-                    ) & ~Q(current_prices__retailer__slug__in=_uk_slugs),
+                    ) & Q(current_prices__retailer__is_uk=False),
                 )
             )
             .filter(min_price__isnull=False, min_price__gt=0)
-            .filter(min_price__lt=F('msrp') * Decimal('0.95'))
+            .filter(min_price__lt=F('gw_ref_price') * Decimal('0.95'))
             .select_related('category', 'faction')
         )
 
         def _pct(p):
-            """Calculate % discount vs MSRP."""
-            return float(p.msrp - p.min_price) / float(p.msrp) * 100
+            """Calculate % discount vs the live GW reference price."""
+            return float(p.gw_ref_price - p.min_price) / float(p.gw_ref_price) * 100
 
         sorted_candidates = sorted(candidates, key=_pct, reverse=True)[:limit]
 
@@ -201,7 +230,7 @@ class Command(BaseCommand):
                     not_available=False,
                     price=product.min_price,
                 )
-                .exclude(retailer__slug__in=_uk_slugs)
+                .exclude(retailer__is_uk=True)
                 .select_related('retailer')
                 .first()
             )
@@ -212,9 +241,9 @@ class Command(BaseCommand):
                 'slug': product.slug,
                 'url': f'https://thrifthammer.com/products/{product.slug}/',
                 'price': float(product.min_price),
-                'msrp': float(product.msrp),
+                'msrp': float(product.gw_ref_price),
                 'pct_off': pct_off,
-                'savings': float(product.msrp - product.min_price),
+                'savings': float(product.gw_ref_price - product.min_price),
                 'retailer': retailer_name,
                 'image_url': product.image_url or '',
                 'category': product.category.name if product.category else '',

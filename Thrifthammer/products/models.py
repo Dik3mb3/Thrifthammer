@@ -516,7 +516,7 @@ class NewsletterSignup(models.Model):
     # ── Newsletter preferences ────────────────────────────────────────────────
     monday_40k = models.BooleanField(
         default=True,
-        help_text='Receive the Monday Warhammer 40K deal digest.',
+        help_text='Receive the Wednesday Warhammer 40K deal digest.',
     )
     friday_other = models.BooleanField(
         default=True,

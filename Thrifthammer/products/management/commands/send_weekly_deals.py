@@ -2,7 +2,7 @@
 Management command: send_weekly_deals
 
 Finds the top 10 active Warhammer 40K products with the biggest discount vs
-MSRP and sends a Monday deal digest to confirmed subscribers with monday_40k=True.
+MSRP and sends a Wednesday deal digest to confirmed subscribers with monday_40k=True.
 
 Usage:
     python manage.py send_weekly_deals            # production run
@@ -16,7 +16,8 @@ from decimal import Decimal
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.core.management.base import BaseCommand
-from django.db.models import F, Min, Q
+from django.db.models import DecimalField, F, Min, OuterRef, Q, Subquery
+from django.db.models.functions import Coalesce
 from django.template.loader import render_to_string
 from django.utils import timezone
 
@@ -86,9 +87,9 @@ class Command(BaseCommand):
                 NewsletterSignup.objects.filter(is_confirmed=True, monday_40k=True)
             )
             if not subscribers:
-                self.stdout.write(self.style.WARNING('No confirmed Monday 40K subscribers — nothing to send.'))
+                self.stdout.write(self.style.WARNING('No confirmed Wednesday 40K subscribers — nothing to send.'))
                 return
-            self.stdout.write(f'\n{len(subscribers)} confirmed Monday 40K subscriber(s).')
+            self.stdout.write(f'\n{len(subscribers)} confirmed Wednesday 40K subscriber(s).')
 
         # ── 3. Fetch latest published blog post ──────────────────────────────
         latest_post = (
@@ -167,13 +168,42 @@ class Command(BaseCommand):
         CurrentPrice gives the largest percentage saving vs MSRP.
 
         Pass category_name to restrict to a single category (e.g. 'Warhammer 40,000').
+
+        MSRP reference price is Games Workshop's live tracked price
+        (gw_ref_price), falling back to the static product.msrp snapshot
+        only when no live GW price is tracked at all. product.msrp only
+        updates when someone manually runs sync_msrp_from_gw or re-imports
+        a GW price list, so relying on it alone drifts stale after every
+        GW price change -- that's what caused last week's newsletter to
+        show duplicate/wrong prices. Same live-price pattern used for the
+        "More Products" widget on product_detail.
         """
         # Annotate each active product with its cheapest in-stock price.
         # We calculate pct_saving in Python to avoid ORM type-inference
         # issues with mixed Decimal/Float arithmetic across DB backends.
         # Exclude UK retailers so GBP prices never appear as cheap USD deals.
-        _uk_slugs = frozenset({'ebay-uk', 'amazon-uk'})
-        qs = Product.objects.filter(is_active=True, msrp__isnull=False)
+        # Must use the retailer.is_uk flag, not a hardcoded slug list -- a
+        # stale slug list here previously let firestorm-games (a UK retailer
+        # whose slug has no "-uk" suffix) and games-workshop-uk GBP prices
+        # get picked as the "cheapest USD price" and displayed with a $
+        # sign, producing nonsense prices in the sent newsletter.
+        gw_ref_price_sq = Subquery(
+            CurrentPrice.objects
+            .filter(
+                product=OuterRef('pk'),
+                retailer__slug='games-workshop',
+                not_available=False,
+                price__isnull=False,
+            )
+            .order_by('price')
+            .values('price')[:1]
+        )
+        qs = Product.objects.filter(is_active=True).annotate(
+            gw_ref_price=Coalesce(
+                gw_ref_price_sq, F('msrp'),
+                output_field=DecimalField(max_digits=10, decimal_places=2),
+            )
+        ).filter(gw_ref_price__isnull=False)
         if category_name:
             qs = qs.filter(category__name=category_name)
         # Temporary: hold Battletech and Paint & Supplies out of newsletters
@@ -187,19 +217,19 @@ class Command(BaseCommand):
                     filter=Q(
                         current_prices__in_stock=True,
                         current_prices__not_available=False,
-                    ) & ~Q(current_prices__retailer__slug__in=_uk_slugs),
+                    ) & Q(current_prices__retailer__is_uk=False),
                 )
             )
             .filter(min_price__isnull=False, min_price__gt=0)
             # Only show products cheaper than MSRP by at least 5%
-            .filter(min_price__lt=F('msrp') * Decimal('0.95'))
+            .filter(min_price__lt=F('gw_ref_price') * Decimal('0.95'))
             .select_related('category', 'faction')
         )
 
         # Sort by % discount descending in Python, then take top N
         def _pct(p):
-            """Calculate % discount vs MSRP."""
-            return float(p.msrp - p.min_price) / float(p.msrp) * 100
+            """Calculate % discount vs the live GW reference price."""
+            return float(p.gw_ref_price - p.min_price) / float(p.gw_ref_price) * 100
 
         sorted_candidates = sorted(candidates, key=_pct, reverse=True)[:limit]
 
@@ -215,7 +245,7 @@ class Command(BaseCommand):
                     not_available=False,
                     price=product.min_price,
                 )
-                .exclude(retailer__slug__in=_uk_slugs)
+                .exclude(retailer__is_uk=True)
                 .select_related('retailer')
                 .first()
             )
@@ -226,9 +256,9 @@ class Command(BaseCommand):
                 'slug': product.slug,
                 'url': f'https://thrifthammer.com/products/{product.slug}/',
                 'price': float(product.min_price),
-                'msrp': float(product.msrp),
+                'msrp': float(product.gw_ref_price),
                 'pct_off': pct_off,
-                'savings': float(product.msrp - product.min_price),
+                'savings': float(product.gw_ref_price - product.min_price),
                 'retailer': retailer_name,
                 'image_url': product.image_url or '',
             })
@@ -238,7 +268,7 @@ class Command(BaseCommand):
     def _build_text_body(self, deals, today, unsubscribe_url, latest_post=None):
         """Build a clean plain-text fallback email body."""
         lines = [
-            'THRIFTHAMMER -- MONDAY 40K DEAL DIGEST',
+            'THRIFTHAMMER -- WEDNESDAY 40K DEAL DIGEST',
             f'{today.strftime("%B")} {today.day}, {today.year}',
             'https://thrifthammer.com',
             '',

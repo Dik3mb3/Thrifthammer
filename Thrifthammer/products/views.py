@@ -652,6 +652,24 @@ def product_detail(request, slug):
                 current_prices__not_available=False,
                 current_prices__in_stock=True,
             ) & ~Q(current_prices__retailer__is_uk=True)
+        # Related-products MSRP must never trust the static product.msrp
+        # snapshot on its own -- that field only updates when someone runs
+        # sync_msrp_from_gw or re-imports a GW price list, so it drifts
+        # stale after every GW price change. Annotate the same live-GW
+        # Subquery pattern product_list already uses (gw_ref_price_sq) so
+        # this widget always shows today's real GW price, falling back to
+        # product.msrp only when no live GW CurrentPrice is tracked at all.
+        related_gw_ref_price_sq = Subquery(
+            CurrentPrice.objects
+            .filter(
+                product=OuterRef('pk'),
+                retailer__slug='games-workshop',
+                not_available=False,
+                price__isnull=False,
+            )
+            .order_by('price')
+            .values('price')[:1]
+        )
         exclude_pk = product.pk
         related_products = list(
             Product.objects
@@ -659,6 +677,7 @@ def product_detail(request, slug):
             .exclude(pk=exclude_pk)
             .select_related('category', 'faction')
             .annotate(min_price=Min('current_prices__price', filter=_rp_price_filter))
+            .annotate(gw_ref_price=related_gw_ref_price_sq)
             .order_by('name')[:4]
         )
         if len(related_products) < 4 and product.faction_id:
@@ -669,6 +688,7 @@ def product_detail(request, slug):
                 .exclude(pk__in=existing_pks)
                 .select_related('category', 'faction')
                 .annotate(min_price=Min('current_prices__price', filter=_rp_price_filter))
+                .annotate(gw_ref_price=related_gw_ref_price_sq)
                 .order_by('name')[:4 - len(related_products)]
             )
             related_products.extend(more)
@@ -680,6 +700,7 @@ def product_detail(request, slug):
                 .exclude(pk__in=existing_pks)
                 .select_related('category', 'faction')
                 .annotate(min_price=Min('current_prices__price', filter=_rp_price_filter))
+                .annotate(gw_ref_price=related_gw_ref_price_sq)
                 .order_by('name')[:4 - len(related_products)]
             )
             related_products.extend(more)
