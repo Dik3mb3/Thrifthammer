@@ -97,10 +97,13 @@
       {# ── Inline newsletter signup ── #}
       <div class="blog-inline-newsletter">
         <h3 class="blog-inline-newsletter-title">Get Weekly Warhammer Deal Alerts</h3>
-        <p class="blog-inline-newsletter-text">We will email you the biggest price drops across US retailers every week. No spam. Unsubscribe any time.</p>
+        <p class="blog-inline-newsletter-text">We will email you the biggest price drops across U.S &amp; U.K retailers every week. No spam. Unsubscribe any time.</p>
         <form class="blog-inline-newsletter-form" method="post" action="{% url 'newsletter_signup' %}">
           {% csrf_token %}
-          <input type="hidden" name="region" value="{{ request.session.region|default:'us' }}">
+          <select name="region" class="newsletter-region-select" aria-label="Newsletter region">
+              <option value="us" {% if request.session.region != 'uk' %}selected{% endif %}>U.S</option>
+              <option value="uk" {% if request.session.region == 'uk' %}selected{% endif %}>U.K</option>
+          </select>
           <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address for weekly deal alerts">
           <button type="submit" class="btn btn-primary">Get Deal Alerts</button>
         </form>

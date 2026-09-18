@@ -20,6 +20,7 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.postgres.search import TrigramWordSimilarity
 from django.core.cache import cache
 from django.core.mail import EmailMultiAlternatives, send_mail
 from django.template.loader import render_to_string
@@ -140,6 +141,9 @@ PRODUCTS_PER_PAGE = 30
 # Allowed sort keys → ORM order_by expressions.
 # All values are validated against this whitelist before use to prevent
 # any possibility of ORM injection via the sort= query parameter.
+# 'relevance' has no direct field mapping (it orders by the annotated
+# name_similarity score instead) — it's listed here only so it passes the
+# whitelist check; the actual ordering happens in its own branch below.
 SORT_OPTIONS = {
     'name':       'name',
     'name_desc':  '-name',
@@ -147,7 +151,43 @@ SORT_OPTIONS = {
     'price_desc': '-min_price',         # requires Min annotation (added below)
     'newest':     '-created_at',
     'discount':   '-min_discount_pct',  # requires min_discount_pct annotation; NULLs sort last
+    'relevance':  '-name_similarity',   # requires query; requires name_similarity annotation
 }
+
+# Trigram word-similarity cutoff for fuzzy/typo-tolerant search matches.
+# Tuned empirically against the live catalog: 0.3 (Postgres's own pg_trgm
+# default) let unrelated products leak in on multi-word queries — e.g.
+# "leman russ" matched random BattleTech products at ~0.36 similarity.
+# 0.4 cleanly separates real typo/partial matches (>=0.58 in testing) from
+# that noise while still catching one or two letter typos on a real word.
+SEARCH_SIMILARITY_THRESHOLD = 0.4
+
+
+def _search_filter(query, *, include_description=True):
+    """
+    Build a loose, typo-tolerant product search filter.
+
+    Splits the query into words and requires every word to appear
+    (substring match) somewhere across name/SKU/faction/category — this
+    alone drops the old "must match one literal contiguous phrase" behavior,
+    so word order and which field a term lives in no longer matter.
+
+    Combined (OR) with a Postgres trigram word-similarity match against the
+    product name, so a misspelled model name ("intercesor") still finds the
+    real product ("Intercessor Squad") instead of returning nothing.
+
+    Callers must annotate the queryset with name_similarity via
+    TrigramWordSimilarity(query, 'name') before applying this filter.
+    """
+    words = query.split()
+    word_match_q = Q()
+    for word in words:
+        field_q = Q(name__icontains=word) | Q(gw_sku__icontains=word) \
+            | Q(faction__name__icontains=word) | Q(category__name__icontains=word)
+        if include_description:
+            field_q |= Q(description__icontains=word)
+        word_match_q &= field_q
+    return word_match_q | Q(name_similarity__gt=SEARCH_SIMILARITY_THRESHOLD)
 
 # Display order for book format tabs on the product detail page. Formats
 # with no BookFormatPrice rows for a given book are simply omitted rather
@@ -245,12 +285,18 @@ def product_list(request):
     query        = request.GET.get('q', '').strip()
     category_slug = request.GET.get('category', '').strip()
     faction_slug  = request.GET.get('faction', '').strip()
-    sort          = request.GET.get('sort', 'discount').strip()
+    # A text search defaults to relevance ordering rather than discount —
+    # "Best Discount" first is a strange default when the user just typed
+    # a specific model name. Explicitly choosing a different sort still wins.
+    default_sort  = 'relevance' if query else 'discount'
+    sort          = request.GET.get('sort', default_sort).strip()
     page_number   = request.GET.get('page', '1').strip()
 
-    # Whitelist sort to prevent ORM injection
-    if sort not in SORT_OPTIONS:
-        sort = 'discount'
+    # Whitelist sort to prevent ORM injection. 'relevance' only makes sense
+    # alongside a query (it orders by similarity to it), so fall back
+    # otherwise rather than hitting the missing-annotation error path.
+    if sort not in SORT_OPTIONS or (sort == 'relevance' and not query):
+        sort = default_sort
 
     # Fetched once, up front -- needed both for the category-descendant
     # closure below (parent categories like "Books and Novels" have no
@@ -443,10 +489,10 @@ def product_list(request):
     )
 
     if query:
-        products = products.filter(
-            Q(name__icontains=query)
-            | Q(description__icontains=query)
-            | Q(gw_sku__icontains=query)
+        products = (
+            products
+            .annotate(name_similarity=TrigramWordSimilarity(query, 'name'))
+            .filter(_search_filter(query))
         )
 
     if category_slug:
@@ -502,6 +548,8 @@ def product_list(request):
         )
     elif sort == 'discount':
         products = products.order_by(F('min_discount_pct').desc(nulls_last=True))
+    elif sort == 'relevance':
+        products = products.order_by(F('name_similarity').desc(nulls_last=True))
     else:
         products = products.order_by(SORT_OPTIONS[sort])
 
@@ -551,7 +599,9 @@ def product_list(request):
         'selected_book_format_label': BOOK_FORMAT_LABELS[book_format],
         'book_format_options':    [(v, BOOK_FORMAT_LABELS[v]) for v in BOOK_FORMAT_VALUE_ORDER],
         'sort':              sort,
-        'sort_options': [
+        'sort_options': (
+            [('relevance', 'Best Match')] if query else []
+        ) + [
             ('discount',   'Best Discount'),
             ('price_asc',  'Price: Low to High'),
             ('price_desc', 'Price: High to Low'),
@@ -941,8 +991,9 @@ def search_autocomplete(request):
     if len(query) < 2:
         return JsonResponse({'results': []})
 
-    # v2 — bumped to bust old cached entries that stored msrp instead of min_price
-    cache_key = f'autocomplete_v2|{query.lower()}'
+    # v3 — bumped for the switch to loose/typo-tolerant matching (word-based
+    # + trigram similarity) instead of a single literal substring match.
+    cache_key = f'autocomplete_v3|{query.lower()}'
     cached    = cache.get(cache_key)
     if cached is not None:
         return JsonResponse({'results': cached})
@@ -950,7 +1001,8 @@ def search_autocomplete(request):
     matches = (
         Product.objects
         .filter(is_active=True)
-        .filter(Q(name__icontains=query) | Q(gw_sku__icontains=query))
+        .annotate(name_similarity=TrigramWordSimilarity(query, 'name'))
+        .filter(_search_filter(query, include_description=False))
         .annotate(
             min_price=Min(
                 'current_prices__price',
@@ -960,8 +1012,8 @@ def search_autocomplete(request):
                 ) & ~Q(current_prices__retailer__is_uk=True),
             )
         )
-        .values('name', 'slug', 'min_price')
-        .order_by('name')[:10]
+        .order_by(F('name_similarity').desc(nulls_last=True), 'name')
+        .values('name', 'slug', 'min_price')[:10]
     )
 
     results = [

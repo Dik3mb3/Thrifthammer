@@ -42,13 +42,14 @@
     }
     </script>
     {# Preload style.css early so it's fetched before font requests are discovered #}
-    <link rel="preload" href="{% static 'css/style.css' %}" as="style">
+    {# In DEBUG, the static manifest doesn't exist locally so {% static %} can't cache-bust via a hashed filename -- append a per-request timestamp so the browser never serves a stale disk-cached copy while developing. Production (DEBUG off) is untouched and keeps the hashed, immutably-cacheable URL. #}
+    <link rel="preload" href="{% static 'css/style.css' %}{% if debug %}?v={% now 'U' %}{% endif %}" as="style">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     {# Non-blocking font load: preload triggers fetch early; onload swaps rel to stylesheet #}
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"></noscript>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}{% if debug %}?v={% now 'U' %}{% endif %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -204,7 +205,7 @@
             {# ── Legal strip ── #}
             <div class="footer-legal-strip">
                 <span>
-                    Affiliate links: ThriftHammer earns a small commission on Amazon, eBay, and Noble Knight purchases at no extra cost to you. Rankings by price, lowest first, always.
+                    Affiliate links: ThriftHammer earns a small commission on Amazon, eBay, Noble Knight, and Firestorm Games purchases at no extra cost to you. Rankings by price, lowest first, always.
                     {% if last_price_update %}· Prices last updated {{ last_price_update|date:"j M Y" }}.{% endif %}
                 </span>
                 <span>&copy; {% now "Y" %} ThriftHammer. Not affiliated with Games Workshop Ltd.</span>

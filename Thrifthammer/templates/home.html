@@ -256,7 +256,6 @@
       gap: var(--sp-3);
     }
     .email-topbar-copy { flex: none; }
-    .email-topbar-copy p { display: none; } /* hide tagline, keep heading + form tight */
     .email-topbar-form {
       flex: none;
       width: 100%;
@@ -356,16 +355,18 @@
         <div class="email-topbar-inner">
             <div class="email-topbar-copy">
                 <p class="email-topbar-title">Get Weekly Warhammer Deal Alerts</p>
-                <p>We'll email you the biggest price drops across US retailers every week. No spam. Unsubscribe any time.</p>
+                <p>We'll email you the biggest price drops across U.S &amp; U.K retailers every week. No spam. Unsubscribe any time.</p>
             </div>
             <form class="email-topbar-form" method="post" action="{% url 'newsletter_signup' %}">
                 {% csrf_token %}
                 {% comment %}
-                Captures the visitor's current browsing region as their newsletter
-                region default -- not shown, since this form is deliberately minimal;
-                account holders can review/correct it on their profile page.
+                Small region selector -- autofilled to the visitor's current
+                browsing region, changeable if they want a different digest.
                 {% endcomment %}
-                <input type="hidden" name="region" value="{{ request.session.region|default:'us' }}">
+                <select name="region" class="newsletter-region-select" aria-label="Newsletter region">
+                    <option value="us" {% if request.session.region != 'uk' %}selected{% endif %}>U.S</option>
+                    <option value="uk" {% if request.session.region == 'uk' %}selected{% endif %}>U.K</option>
+                </select>
                 <input type="email" name="email" placeholder="your@email.com" required
                        aria-label="Email address for weekly deal alerts">
                 <button type="submit" class="btn btn-primary">Get Deal Alerts</button>

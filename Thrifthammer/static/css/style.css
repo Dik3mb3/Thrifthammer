@@ -613,6 +613,40 @@ h3, h4, h5 {
   background: rgba(200,146,42,0.06);
 }
 
+/* ── Newsletter region select (homepage / blog signup forms) ───────────────── */
+.newsletter-region-select {
+  flex-shrink: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 0.6rem 1.7rem 0.6rem 0.7rem;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--text-secondary);
+  background-color: var(--bg-input);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23c8922a'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.65rem center;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.newsletter-region-select:hover {
+  border-color: var(--border-mid);
+  color: var(--text-primary);
+}
+.newsletter-region-select:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 1px;
+}
+.newsletter-region-select option {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
 /* ── Nav dropdown (Factions) ──────────────────────────────────────────────── */
 .nav-dropdown {
   position: relative;
