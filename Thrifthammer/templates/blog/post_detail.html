@@ -100,6 +100,7 @@
         <p class="blog-inline-newsletter-text">We will email you the biggest price drops across US retailers every week. No spam. Unsubscribe any time.</p>
         <form class="blog-inline-newsletter-form" method="post" action="{% url 'newsletter_signup' %}">
           {% csrf_token %}
+          <input type="hidden" name="region" value="{{ request.session.region|default:'us' }}">
           <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address for weekly deal alerts">
           <button type="submit" class="btn btn-primary">Get Deal Alerts</button>
         </form>

@@ -484,6 +484,24 @@ class Product(models.Model):
         }
 
 
+# Category slugs considered part of the "Warhammer" universe. Shared constant
+# used by: send_friday_deals ("Rest of Warhammer" digest scope), accounts.views
+# (default de-selection for the Monday Customized Game System digest). Defined
+# once here so the two never drift apart as new categories are added.
+WARHAMMER_CATEGORY_SLUGS = frozenset({
+    'warhammer-40000', 'age-of-sigmar', 'horus-heresy', 'the-old-world',
+    'kill-team', 'necromunda', 'warcry', 'blood-bowl', 'books-and-novels',
+})
+
+# Category slugs that aren't really a "game system" (pricing mechanics /
+# hobby supplies / mixed-line bundles, not a line someone collects). Also
+# excluded from the Monday Customized Game System digest's default
+# selection -- still manually selectable, just not pre-checked.
+NON_GAME_SYSTEM_CATEGORY_SLUGS = frozenset({
+    'discount-box-splits', 'paint-supplies', 'boxed-games',
+})
+
+
 class NewsletterSignup(models.Model):
     """
     Email address submitted via the homepage deal-alert opt-in or profile page.
@@ -514,6 +532,25 @@ class NewsletterSignup(models.Model):
     )
 
     # ── Newsletter preferences ────────────────────────────────────────────────
+    REGION_US = 'us'
+    REGION_UK = 'uk'
+    REGION_CHOICES = [
+        (REGION_US, 'US'),
+        (REGION_UK, 'UK'),
+    ]
+    region = models.CharField(
+        max_length=2,
+        choices=REGION_CHOICES,
+        default=REGION_US,
+        help_text=(
+            'Which region this subscriber gets ALL of their digests in -- '
+            'one field controls currency/retailer scope for every digest '
+            'below (Wednesday/Friday/Sunday/Monday), not a per-digest choice. '
+            'US sends use USD prices from US retailers; UK sends use GBP '
+            'prices from UK retailers (games-workshop-uk, ebay-uk, etc). '
+            'Set explicitly at signup, not inferred silently from browsing.'
+        ),
+    )
     monday_40k = models.BooleanField(
         default=True,
         help_text='Receive the Wednesday Warhammer 40K deal digest.',
@@ -534,6 +571,20 @@ class NewsletterSignup(models.Model):
         blank=True,
         related_name='newsletter_subscribers',
         help_text='Factions to include in the Sunday personalised email.',
+    )
+    monday_custom = models.BooleanField(
+        default=False,
+        help_text=(
+            'Receive the Monday Customized Game System deal digest. '
+            'Off by default -- subscriber must opt in manually and select '
+            'at least one category below.'
+        ),
+    )
+    custom_categories = models.ManyToManyField(
+        'Category',
+        blank=True,
+        related_name='newsletter_subscribers',
+        help_text='Categories to include in the Monday Customized Game System email.',
     )
     user = models.OneToOneField(
         'auth.User',

@@ -95,8 +95,8 @@
                   </td>
                   <!-- Pricing -->
                   <td style="padding:10px 12px;text-align:right;vertical-align:middle;white-space:nowrap;">
-                    <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:18px;font-weight:700;color:#4aab72;line-height:1;">${{ deal.price|floatformat:2 }}</div>
-                    <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;color:#5c5648;text-decoration:line-through;margin-top:2px;">${{ deal.msrp|floatformat:2 }} MSRP</div>
+                    <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:18px;font-weight:700;color:#4aab72;line-height:1;">{{ currency_symbol|default:"$" }}{{ deal.price|floatformat:2 }}</div>
+                    <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;color:#5c5648;text-decoration:line-through;margin-top:2px;">{{ currency_symbol|default:"$" }}{{ deal.msrp|floatformat:2 }} MSRP</div>
                     <div style="display:inline-block;background-color:#2d7a4f;color:#e8e0d0;font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:700;padding:2px 7px;border-radius:3px;margin-top:4px;">
                       SAVE {{ deal.pct_off|floatformat:0 }}%
                     </div>

@@ -1,11 +1,17 @@
 """
 Management command: send_friday_deals
 
-Finds the top 10 active non-40K products with the biggest discount vs MSRP and
-sends a Friday deal digest to confirmed subscribers with friday_other=True.
+Finds the top 10 active "Rest of Warhammer" products (everything in the
+Warhammer universe except 40K and Books and Novels) with the biggest
+discount vs MSRP, and sends a Friday deal digest to confirmed subscribers
+with friday_other=True.
 
-Covers Age of Sigmar, Horus Heresy, Kill Team, Paint & Supplies, and everything
-else that is not Warhammer 40K.
+Covers Age of Sigmar, Horus Heresy, The Old World, Kill Team, Necromunda,
+Warcry, and Blood Bowl. Non-Warhammer lines (Star Wars, Marvel, Malifaux,
+Warmachine, Battletech, Halo, Middle Earth, Trench Crusade, etc.) and
+Books and Novels are NOT included here -- those live in the Monday
+Customized Game System digest instead, which subscribers opt into and
+pick categories for individually.
 
 Usage:
     python manage.py send_friday_deals            # production run
@@ -26,7 +32,7 @@ from django.utils import timezone
 
 from blog.models import Post
 from prices.models import CurrentPrice
-from products.models import NewsletterSignup, Product
+from products.models import NewsletterSignup, Product, WARHAMMER_CATEGORY_SLUGS
 
 
 class Command(BaseCommand):
@@ -86,7 +92,11 @@ class Command(BaseCommand):
             self.stdout.write(f'\nTEST MODE — sending only to: {recipient_override}')
         else:
             subscribers = list(
-                NewsletterSignup.objects.filter(is_confirmed=True, friday_other=True)
+                NewsletterSignup.objects.filter(
+                    is_confirmed=True,
+                    friday_other=True,
+                    region=NewsletterSignup.REGION_US,
+                )
             )
             if not subscribers:
                 self.stdout.write(self.style.WARNING('No confirmed Friday subscribers — nothing to send.'))
@@ -109,7 +119,7 @@ class Command(BaseCommand):
 
         top_saving = int(deals[0]['pct_off']) if deals else 0
         subject = (
-            f"This Week's Top 10 AoS & More Deals -- Save Up to {top_saving}% Off"
+            f"This Week's Top 10 Rest of Warhammer Deals -- Save Up to {top_saving}% Off"
             f" ({today.strftime('%b')} {today.day})"
         )
 
@@ -156,10 +166,13 @@ class Command(BaseCommand):
 
     def _get_top_deals(self, limit):
         """
-        Return up to `limit` dicts for the best non-40K current deals.
+        Return up to `limit` dicts for the best "Rest of Warhammer" deals.
 
-        Excludes Warhammer 40,000 products. Covers Age of Sigmar, Horus Heresy,
-        Kill Team, Paint & Supplies, and everything else.
+        Scoped to WARHAMMER_CATEGORY_SLUGS minus 40K (Wednesday's territory)
+        and minus Books and Novels (not miniature/kit deals) -- an INCLUDE
+        list, not an exclude list, so a newly added non-Warhammer category
+        never silently lands here; it only shows up once a subscriber opts
+        it into the Monday Customized Game System digest.
 
         MSRP reference price is Games Workshop's live tracked price
         (gw_ref_price), falling back to the static product.msrp snapshot
@@ -194,11 +207,7 @@ class Command(BaseCommand):
                 )
             )
             .filter(gw_ref_price__isnull=False)
-            .exclude(category__name='Warhammer 40,000')
-            # Temporary: hold Battletech and Paint & Supplies out of newsletters
-            # while these newer catalog lines are being monitored.
-            # Discount Box Splits is excluded from this digest as well.
-            .exclude(category__slug__in=('battletech', 'paint-supplies', 'discount-box-splits'))
+            .filter(category__slug__in=WARHAMMER_CATEGORY_SLUGS - {'warhammer-40000', 'books-and-novels'})
             .annotate(
                 min_price=Min(
                     'current_prices__price',

@@ -5,7 +5,13 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
-from products.models import Faction, NewsletterSignup
+from products.models import (
+    Category,
+    Faction,
+    NewsletterSignup,
+    NON_GAME_SYSTEM_CATEGORY_SLUGS,
+    WARHAMMER_CATEGORY_SLUGS,
+)
 
 from .forms import (
     ChangeEmailForm,
@@ -31,6 +37,15 @@ def register(request):
             user = form.save()
             email = form.cleaned_data['email'].strip().lower()
             if email:
+                # Region default comes from the current browsing-session value,
+                # same as the homepage/blog signup forms. Only used on the
+                # CREATE path below -- if this email already has a signup
+                # (e.g. from a homepage signup), their region choice from
+                # that earlier signup is left as-is, not silently overridden.
+                session_region = request.session.get('region', NewsletterSignup.REGION_US)
+                if session_region not in dict(NewsletterSignup.REGION_CHOICES):
+                    session_region = NewsletterSignup.REGION_US
+
                 signup, created = NewsletterSignup.objects.get_or_create(
                     email=email,
                     defaults={
@@ -39,6 +54,7 @@ def register(request):
                         'monday_40k': True,
                         'friday_other': True,
                         'sunday_faction': False,
+                        'region': session_region,
                     },
                 )
                 if not created:
@@ -78,6 +94,7 @@ def profile(request):
         newsletter_subscribed = newsletter_obj is not None
 
     all_factions = Faction.objects.select_related('category').order_by('category__name', 'name')
+    all_categories = Category.objects.order_by('name')
 
     return render(request, 'accounts/profile.html', {
         'email_form': email_form,
@@ -85,6 +102,7 @@ def profile(request):
         'newsletter_subscribed': newsletter_subscribed,
         'newsletter_obj': newsletter_obj,
         'all_factions': all_factions,
+        'all_categories': all_categories,
     })
 
 
@@ -220,13 +238,20 @@ def toggle_newsletter(request):
         messages.success(request, 'You have been unsubscribed from weekly deal alerts.')
     else:
         # Profile subscribers are already authenticated — confirm immediately,
-        # no confirmation email needed.
+        # no confirmation email needed. Region defaults from the current
+        # browsing session, same as every other signup entry point; they
+        # can correct it with the region control further down this page.
+        session_region = request.session.get('region', NewsletterSignup.REGION_US)
+        if session_region not in dict(NewsletterSignup.REGION_CHOICES):
+            session_region = NewsletterSignup.REGION_US
+
         NewsletterSignup.objects.create(
             email=email,
             user=request.user,
             is_confirmed=True,
+            region=session_region,
         )
-        messages.success(request, "You're subscribed! We'll send you the best weekly deals every Monday.")
+        messages.success(request, "You're subscribed! We'll send you the best weekly deals every Wednesday.")
 
     return redirect('accounts:profile')
 
@@ -237,8 +262,9 @@ def update_newsletter_prefs(request):
     """
     POST-only: update newsletter preferences for the logged-in subscriber.
 
-    Handles monday_40k, friday_other, sunday_faction toggles and faction
-    multi-select. Silently redirects if the user is not subscribed.
+    Handles region, monday_40k, friday_other, sunday_faction, monday_custom
+    toggles and the faction / category multi-selects. Silently redirects if
+    the user is not subscribed.
     """
     email = request.user.email.strip().lower() if request.user.email else ''
     signup = NewsletterSignup.objects.filter(email__iexact=email).first() if email else None
@@ -247,9 +273,18 @@ def update_newsletter_prefs(request):
         messages.error(request, 'You are not currently subscribed to deal alerts.')
         return redirect('accounts:profile')
 
+    was_monday_custom = signup.monday_custom
+
+    # One region controls currency/retailers for every digest below --
+    # validated against the model's own choices, not trusted as raw POST input.
+    region = request.POST.get('region', '').strip().lower()
+    if region in dict(NewsletterSignup.REGION_CHOICES):
+        signup.region = region
+
     signup.monday_40k = 'monday_40k' in request.POST
     signup.friday_other = 'friday_other' in request.POST
     signup.sunday_faction = 'sunday_faction' in request.POST
+    signup.monday_custom = 'monday_custom' in request.POST
 
     # Faction multi-select — only integers, ignore bad input
     faction_ids = []
@@ -259,8 +294,34 @@ def update_newsletter_prefs(request):
         except (ValueError, TypeError):
             pass
 
-    signup.save(update_fields=['monday_40k', 'friday_other', 'sunday_faction'])
+    # Category multi-select for the Monday Customized Game System digest —
+    # only integers, ignore bad input.
+    category_ids = []
+    for cid in request.POST.getlist('custom_categories'):
+        try:
+            category_ids.append(int(cid))
+        except (ValueError, TypeError):
+            pass
+
+    signup.save(update_fields=['region', 'monday_40k', 'friday_other', 'sunday_faction', 'monday_custom'])
     signup.factions.set(faction_ids)
+
+    # First time turning Monday Custom on with nothing manually picked yet —
+    # default to every non-Warhammer, actual-game-system category rather
+    # than saving an empty selection (which would just make the digest skip
+    # them every week). Only applies on the off->on transition; an explicit
+    # later save with zero categories (turning everything off) is respected
+    # as-is. Discount Box Splits / Paint & Supplies / Boxed Games are left
+    # out of the default too -- not really "game systems" -- but remain
+    # manually selectable.
+    if signup.monday_custom and not was_monday_custom and not category_ids:
+        category_ids = list(
+            Category.objects
+            .exclude(slug__in=WARHAMMER_CATEGORY_SLUGS | NON_GAME_SYSTEM_CATEGORY_SLUGS)
+            .values_list('pk', flat=True)
+        )
+
+    signup.custom_categories.set(category_ids)
 
     messages.success(request, 'Newsletter preferences updated.')
     return redirect('accounts:profile')

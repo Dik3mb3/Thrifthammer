@@ -1,13 +1,24 @@
 """
-Management command: send_weekly_deals
+Management command: send_friday_deals_uk
 
-Finds the top 10 active Warhammer 40K products with the biggest discount vs
-MSRP and sends a Wednesday deal digest to confirmed subscribers with monday_40k=True.
+UK mirror of send_friday_deals. Finds the top 10 active "Rest of Warhammer"
+products (everything in the Warhammer universe except 40K and Books and
+Novels) with the biggest discount vs GBP MSRP, and sends a Friday deal
+digest to confirmed UK subscribers with friday_other=True.
+
+Covers Age of Sigmar, Horus Heresy, The Old World, Kill Team, Necromunda,
+Warcry, and Blood Bowl -- same scope as the US command (WARHAMMER_CATEGORY_SLUGS
+is a category concept, not a currency one, so it's reused unchanged).
+
+This is a SEPARATE file from send_friday_deals.py on purpose, not a region
+branch inside it -- see send_weekly_deals_uk.py's docstring for why. Every
+retailer/price lookup below uses games-workshop-uk / is_uk=True; this
+command never touches games-workshop / is_uk=False.
 
 Usage:
-    python manage.py send_weekly_deals            # production run
-    python manage.py send_weekly_deals --dry-run  # log recipients, send nothing
-    python manage.py send_weekly_deals --limit 5  # send top N deals instead of 10
+    python manage.py send_friday_deals_uk            # production run
+    python manage.py send_friday_deals_uk --dry-run  # log recipients, send nothing
+    python manage.py send_friday_deals_uk --limit 5  # send top N deals instead of 10
 """
 
 import datetime
@@ -23,13 +34,15 @@ from django.utils import timezone
 
 from blog.models import Post
 from prices.models import CurrentPrice
-from products.models import NewsletterSignup, Product
+from products.models import NewsletterSignup, Product, WARHAMMER_CATEGORY_SLUGS
+
+CURRENCY_SYMBOL = '£'
 
 
 class Command(BaseCommand):
-    """Send a weekly deal digest to all newsletter subscribers."""
+    """Send a Friday UK Rest-of-Warhammer deal digest to opted-in UK subscribers."""
 
-    help = 'Email the top N discounted products to every newsletter subscriber.'
+    help = 'Email the top N GBP-discounted non-40K products to UK friday_other subscribers.'
 
     def add_arguments(self, parser):
         """Add --dry-run, --limit, and --recipient flags."""
@@ -52,30 +65,29 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        """Main entry point — find deals, build email, send to all subscribers."""
+        """Main entry point — find deals, build email, send to UK friday_other subscribers."""
         dry_run = options['dry_run']
         limit = options['limit']
         recipient_override = options['recipient']
         today = datetime.date.today()
 
-        # ── 1. Find top 40K deals ────────────────────────────────────────────
-        deals = self._get_top_deals(limit, category_name='Warhammer 40,000')
+        # ── 1. Find top non-40K UK deals ──────────────────────────────────────
+        deals = self._get_top_deals(limit)
 
         if not deals:
-            self.stdout.write(self.style.WARNING('No deals found — nothing to send.'))
+            self.stdout.write(self.style.WARNING('No UK deals found — nothing to send.'))
             return
 
-        self.stdout.write(f'Found {len(deals)} deals for {today}:')
+        self.stdout.write(f'Found {len(deals)} UK deals for {today}:')
         for i, d in enumerate(deals, 1):
             self.stdout.write(
                 f'  {i:>2}. {d["name"]:50s}  '
-                f'${d["price"]:.2f}  '
-                f'(save {d["pct_off"]:.0f}% off ${d["msrp"]:.2f})'
+                f'{CURRENCY_SYMBOL}{d["price"]:.2f}  '
+                f'(save {d["pct_off"]:.0f}% off {CURRENCY_SYMBOL}{d["msrp"]:.2f})'
             )
 
-        # ── 2. Gather subscribers (or use override for testing) ──────────────
+        # ── 2. Gather subscribers ─────────────────────────────────────────────
         if recipient_override:
-            # Create a minimal stub — just needs .email and .get_unsubscribe_url()
             class _Stub:
                 email = recipient_override
                 def get_unsubscribe_url(self):
@@ -86,26 +98,22 @@ class Command(BaseCommand):
             subscribers = list(
                 NewsletterSignup.objects.filter(
                     is_confirmed=True,
-                    monday_40k=True,
-                    region=NewsletterSignup.REGION_US,
+                    friday_other=True,
+                    region=NewsletterSignup.REGION_UK,
                 )
             )
             if not subscribers:
-                self.stdout.write(self.style.WARNING('No confirmed Wednesday 40K subscribers — nothing to send.'))
+                self.stdout.write(self.style.WARNING('No confirmed UK Friday subscribers — nothing to send.'))
                 return
-            self.stdout.write(f'\n{len(subscribers)} confirmed Wednesday 40K subscriber(s).')
+            self.stdout.write(f'\n{len(subscribers)} confirmed UK Friday subscriber(s).')
 
-        # ── 3. Fetch latest published blog post ──────────────────────────────
+        # ── 3. Fetch latest published blog post ───────────────────────────────
         latest_post = (
             Post.objects
             .filter(status=Post.STATUS_PUBLISHED, published_at__lte=timezone.now())
             .order_by('-published_at')
             .first()
         )
-        if latest_post:
-            self.stdout.write(f'Latest blog post: "{latest_post.title}"')
-        else:
-            self.stdout.write('No published blog post found — blog section will be hidden.')
 
         if dry_run:
             for sub in subscribers:
@@ -113,14 +121,13 @@ class Command(BaseCommand):
             self.stdout.write('\nDry run complete — no emails sent.')
             return
 
-        # Dynamic subject — mentions the top saving to hook the reader
         top_saving = int(deals[0]['pct_off']) if deals else 0
         subject = (
-            f"This Week's Top 10 Warhammer 40K Deals -- Save Up to {top_saving}% Off"
+            f"This Week's Top 10 UK Rest of Warhammer Deals -- Save Up to {top_saving}% Off"
             f" ({today.strftime('%b')} {today.day})"
         )
 
-        # ── 4. Send (per-subscriber so each gets their own unsubscribe link) ─
+        # ── 4. Send ───────────────────────────────────────────────────────────
         sent = errors = 0
         for sub in subscribers:
             try:
@@ -128,13 +135,14 @@ class Command(BaseCommand):
                     'deals': deals,
                     'today': today,
                     'site_url': 'https://thrifthammer.com',
-                    'browse_url': 'https://thrifthammer.com/products/',
+                    'browse_url': 'https://thrifthammer.com/products/?region=uk',
                     'register_url': 'https://thrifthammer.com/accounts/register/',
                     'top_pct': top_saving,
                     'latest_post': latest_post,
                     'unsubscribe_url': sub.get_unsubscribe_url(),
+                    'currency_symbol': CURRENCY_SYMBOL,
                 }
-                html_body = render_to_string('emails/weekly_deals.html', context)
+                html_body = render_to_string('emails/friday_deals.html', context)
                 text_body = self._build_text_body(deals, today, sub.get_unsubscribe_url(), latest_post)
 
                 msg = EmailMultiAlternatives(
@@ -151,12 +159,9 @@ class Command(BaseCommand):
                 errors += 1
                 self.stderr.write(f'  [error] {sub.email} — {exc}')
 
-        self.stdout.write(
-            f'\nDone -- sent: {sent} | errors: {errors}'
-        )
+        self.stdout.write(f'\nDone -- sent: {sent} | errors: {errors}')
 
         if errors and not sent:
-            # Every send failed — raise so GitHub Actions marks the run red
             raise Exception(
                 f'All {errors} email(s) failed to send. '
                 'Check EMAIL_HOST_USER / EMAIL_HOST_PASSWORD secrets.'
@@ -164,75 +169,59 @@ class Command(BaseCommand):
 
     # ── Helpers ──────────────────────────────────────────────────────────────
 
-    def _get_top_deals(self, limit, category_name=None):
+    def _get_top_deals(self, limit):
         """
-        Return up to `limit` dicts representing the best current deals.
+        Return up to `limit` dicts for the best UK "Rest of Warhammer" deals.
 
-        A deal is an active product with an MSRP where the cheapest in-stock
-        CurrentPrice gives the largest percentage saving vs MSRP.
+        Scoped to WARHAMMER_CATEGORY_SLUGS minus 40K (Wednesday's territory)
+        and minus Books and Novels (no UK book pricing exists yet) -- the
+        same INCLUDE list the US command uses, reused unchanged since this
+        is a category question, not a currency one.
 
-        Pass category_name to restrict to a single category (e.g. 'Warhammer 40,000').
-
-        MSRP reference price is Games Workshop's live tracked price
-        (gw_ref_price), falling back to the static product.msrp snapshot
-        only when no live GW price is tracked at all. product.msrp only
-        updates when someone manually runs sync_msrp_from_gw or re-imports
-        a GW price list, so relying on it alone drifts stale after every
-        GW price change -- that's what caused last week's newsletter to
-        show duplicate/wrong prices. Same live-price pattern used for the
-        "More Products" widget on product_detail.
+        MSRP reference price is Games Workshop UK's live tracked price
+        (gw_ref_price, sourced from the games-workshop-uk retailer), falling
+        back to the static product.msrp_gbp snapshot only when no live GW UK
+        price is tracked at all.
         """
-        # Annotate each active product with its cheapest in-stock price.
-        # We calculate pct_saving in Python to avoid ORM type-inference
-        # issues with mixed Decimal/Float arithmetic across DB backends.
-        # Exclude UK retailers so GBP prices never appear as cheap USD deals.
-        # Must use the retailer.is_uk flag, not a hardcoded slug list -- a
-        # stale slug list here previously let firestorm-games (a UK retailer
-        # whose slug has no "-uk" suffix) and games-workshop-uk GBP prices
-        # get picked as the "cheapest USD price" and displayed with a $
-        # sign, producing nonsense prices in the sent newsletter.
         gw_ref_price_sq = Subquery(
             CurrentPrice.objects
             .filter(
                 product=OuterRef('pk'),
-                retailer__slug='games-workshop',
+                retailer__slug='games-workshop-uk',
                 not_available=False,
                 price__isnull=False,
             )
             .order_by('price')
             .values('price')[:1]
         )
-        qs = Product.objects.filter(is_active=True).annotate(
-            gw_ref_price=Coalesce(
-                gw_ref_price_sq, F('msrp'),
-                output_field=DecimalField(max_digits=10, decimal_places=2),
-            )
-        ).filter(gw_ref_price__isnull=False)
-        if category_name:
-            qs = qs.filter(category__name=category_name)
-        # Temporary: hold Battletech and Paint & Supplies out of newsletters
-        # while these newer catalog lines are being monitored.
-        qs = qs.exclude(category__slug__in=('battletech', 'paint-supplies'))
         candidates = (
-            qs
+            Product.objects
+            .filter(is_active=True)
+            .annotate(
+                gw_ref_price=Coalesce(
+                    gw_ref_price_sq, F('msrp_gbp'),
+                    output_field=DecimalField(max_digits=10, decimal_places=2),
+                )
+            )
+            .filter(gw_ref_price__isnull=False)
+            .filter(category__slug__in=WARHAMMER_CATEGORY_SLUGS - {'warhammer-40000', 'books-and-novels'})
             .annotate(
                 min_price=Min(
                     'current_prices__price',
                     filter=Q(
                         current_prices__in_stock=True,
                         current_prices__not_available=False,
-                    ) & Q(current_prices__retailer__is_uk=False),
+                        current_prices__retailer__is_uk=True,
+                    ),
                 )
             )
             .filter(min_price__isnull=False, min_price__gt=0)
-            # Only show products cheaper than MSRP by at least 5%
             .filter(min_price__lt=F('gw_ref_price') * Decimal('0.95'))
             .select_related('category', 'faction')
         )
 
-        # Sort by % discount descending in Python, then take top N
         def _pct(p):
-            """Calculate % discount vs the live GW reference price."""
+            """Calculate % discount vs the live GW UK reference price."""
             return float(p.gw_ref_price - p.min_price) / float(p.gw_ref_price) * 100
 
         sorted_candidates = sorted(candidates, key=_pct, reverse=True)[:limit]
@@ -240,7 +229,6 @@ class Command(BaseCommand):
         deals = []
         for product in sorted_candidates:
             pct_off = _pct(product)
-            # Fetch the cheapest retailer name for this product
             best_cp = (
                 CurrentPrice.objects
                 .filter(
@@ -248,8 +236,8 @@ class Command(BaseCommand):
                     in_stock=True,
                     not_available=False,
                     price=product.min_price,
+                    retailer__is_uk=True,
                 )
-                .exclude(retailer__is_uk=True)
                 .select_related('retailer')
                 .first()
             )
@@ -258,13 +246,14 @@ class Command(BaseCommand):
             deals.append({
                 'name': product.name,
                 'slug': product.slug,
-                'url': f'https://thrifthammer.com/products/{product.slug}/',
+                'url': f'https://thrifthammer.com/products/{product.slug}/?region=uk',
                 'price': float(product.min_price),
                 'msrp': float(product.gw_ref_price),
                 'pct_off': pct_off,
                 'savings': float(product.gw_ref_price - product.min_price),
                 'retailer': retailer_name,
                 'image_url': product.image_url or '',
+                'category': product.category.name if product.category else '',
             })
 
         return deals
@@ -272,17 +261,18 @@ class Command(BaseCommand):
     def _build_text_body(self, deals, today, unsubscribe_url, latest_post=None):
         """Build a clean plain-text fallback email body."""
         lines = [
-            'THRIFTHAMMER -- WEDNESDAY 40K DEAL DIGEST',
+            'THRIFTHAMMER -- FRIDAY UK REST OF WARHAMMER DEAL DIGEST',
             f'{today.strftime("%B")} {today.day}, {today.year}',
             'https://thrifthammer.com',
             '',
-            "This week's top Warhammer 40K discounts:",
+            "This week's top UK Age of Sigmar, Horus Heresy & more discounts:",
             '',
         ]
         for i, d in enumerate(deals, 1):
             lines.append(f'{i:>2}. {d["name"]}')
             lines.append(
-                f'    ${d["price"]:.2f}  (save {d["pct_off"]:.0f}% off ${d["msrp"]:.2f} MSRP at {d["retailer"]})'
+                f'    {CURRENCY_SYMBOL}{d["price"]:.2f}  '
+                f'(save {d["pct_off"]:.0f}% off {CURRENCY_SYMBOL}{d["msrp"]:.2f} MSRP at {d["retailer"]})'
             )
             lines.append(f'    {d["url"]}')
             lines.append('')

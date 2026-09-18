@@ -1,16 +1,25 @@
 """
-Management command: send_sunday_faction_deals
+Management command: send_sunday_faction_deals_uk
 
-Sends a personalised Sunday deal digest to confirmed subscribers who have
-opted in (sunday_faction=True) and selected at least one faction.
+UK mirror of send_sunday_faction_deals. Sends a personalised Sunday deal
+digest to confirmed UK subscribers who have opted in (sunday_faction=True)
+and selected at least one faction.
 
-Each subscriber receives a tailored email showing deals only from their
-chosen faction(s), ranked by % discount vs MSRP.
+Each subscriber receives a tailored email showing GBP deals only from
+their chosen faction(s), ranked by % discount vs GBP MSRP.
+
+This is a SEPARATE file from send_sunday_faction_deals.py on purpose, not
+a region branch inside it -- see send_weekly_deals_uk.py's docstring for
+why. Every retailer/price lookup below uses games-workshop-uk / is_uk=True;
+this command never touches games-workshop / is_uk=False. Faction selection
+itself (the `factions` M2M) is shared/region-agnostic -- a faction like
+"Space Wolves" means the same thing in both regions, only its price data
+differs, so no change is needed there.
 
 Usage:
-    python manage.py send_sunday_faction_deals            # production run
-    python manage.py send_sunday_faction_deals --dry-run
-    python manage.py send_sunday_faction_deals --limit 10
+    python manage.py send_sunday_faction_deals_uk            # production run
+    python manage.py send_sunday_faction_deals_uk --dry-run
+    python manage.py send_sunday_faction_deals_uk --limit 10
 """
 
 import datetime
@@ -27,11 +36,13 @@ from django.utils import timezone
 from prices.models import CurrentPrice
 from products.models import NewsletterSignup, Product
 
+CURRENCY_SYMBOL = '£'
+
 
 class Command(BaseCommand):
-    """Send a personalised Sunday faction deal digest to opted-in subscribers."""
+    """Send a personalised Sunday UK faction deal digest to opted-in UK subscribers."""
 
-    help = 'Email personalised faction deals to sunday_faction subscribers.'
+    help = 'Email personalised GBP faction deals to UK sunday_faction subscribers.'
 
     def add_arguments(self, parser):
         """Add --dry-run, --limit, and --recipient flags."""
@@ -54,7 +65,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        """Main entry point — find subscribers, build personalised emails, send."""
+        """Main entry point — find UK subscribers, build personalised emails, send."""
         dry_run = options['dry_run']
         limit = options['limit']
         recipient_override = options['recipient']
@@ -83,14 +94,14 @@ class Command(BaseCommand):
                 .filter(
                     is_confirmed=True,
                     sunday_faction=True,
-                    region=NewsletterSignup.REGION_US,
+                    region=NewsletterSignup.REGION_UK,
                 )
                 .prefetch_related('factions')
             )
             if not subscribers:
-                self.stdout.write(self.style.WARNING('No confirmed Sunday faction subscribers — nothing to send.'))
+                self.stdout.write(self.style.WARNING('No confirmed UK Sunday subscribers — nothing to send.'))
                 return
-            self.stdout.write(f'\n{len(subscribers)} confirmed Sunday subscriber(s).')
+            self.stdout.write(f'\n{len(subscribers)} confirmed UK Sunday subscriber(s).')
 
         if dry_run:
             for sub in subscribers:
@@ -112,14 +123,14 @@ class Command(BaseCommand):
 
                 deals = self._get_faction_deals(faction_list, limit)
                 if not deals:
-                    self.stdout.write(self.style.WARNING(f'  [skip] {sub.email} — no deals found for their factions'))
+                    self.stdout.write(self.style.WARNING(f'  [skip] {sub.email} — no UK deals found for their factions'))
                     skipped += 1
                     continue
 
                 faction_names = ', '.join(f.name for f in faction_list)
                 top_saving = int(deals[0]['pct_off']) if deals else 0
                 subject = (
-                    f"Your {faction_names} Deals — Save Up to {top_saving}% Off"
+                    f"Your UK {faction_names} Deals — Save Up to {top_saving}% Off"
                     f" ({today.strftime('%b')} {today.day})"
                 )
 
@@ -128,10 +139,11 @@ class Command(BaseCommand):
                     'today': today,
                     'faction_names': faction_names,
                     'site_url': 'https://thrifthammer.com',
-                    'browse_url': 'https://thrifthammer.com/products/',
+                    'browse_url': 'https://thrifthammer.com/products/?region=uk',
                     'register_url': 'https://thrifthammer.com/accounts/register/',
                     'top_pct': top_saving,
                     'unsubscribe_url': sub.get_unsubscribe_url(),
+                    'currency_symbol': CURRENCY_SYMBOL,
                 }
                 html_body = render_to_string('emails/sunday_faction_deals.html', context)
                 text_body = self._build_text_body(deals, today, faction_names, sub.get_unsubscribe_url())
@@ -162,28 +174,21 @@ class Command(BaseCommand):
 
     def _get_faction_deals(self, factions, limit):
         """
-        Return up to `limit` deal dicts for products belonging to the given factions.
+        Return up to `limit` UK deal dicts for products belonging to the given factions.
 
-        Ranked by % discount vs MSRP descending.
+        Ranked by % discount vs GBP MSRP descending.
 
-        MSRP reference price is Games Workshop's live tracked price
-        (gw_ref_price), falling back to the static product.msrp snapshot
-        only when no live GW price is tracked at all -- same live-price
-        pattern used for the "More Products" widget on product_detail, so
-        this digest can't drift stale again after a GW price change.
+        MSRP reference price is Games Workshop UK's live tracked price
+        (gw_ref_price, sourced from the games-workshop-uk retailer), falling
+        back to the static product.msrp_gbp snapshot only when no live GW UK
+        price is tracked at all.
         """
-        # Exclude UK retailers so GBP prices never appear as cheap USD deals.
-        # Must use the retailer.is_uk flag, not a hardcoded slug list -- a
-        # stale slug list here previously let firestorm-games (a UK retailer
-        # whose slug has no "-uk" suffix) and games-workshop-uk GBP prices
-        # get picked as the "cheapest USD price" and displayed with a $
-        # sign, producing nonsense prices in the sent newsletter.
         faction_ids = [f.pk for f in factions]
         gw_ref_price_sq = Subquery(
             CurrentPrice.objects
             .filter(
                 product=OuterRef('pk'),
-                retailer__slug='games-workshop',
+                retailer__slug='games-workshop-uk',
                 not_available=False,
                 price__isnull=False,
             )
@@ -195,7 +200,7 @@ class Command(BaseCommand):
             .filter(is_active=True, faction_id__in=faction_ids)
             .annotate(
                 gw_ref_price=Coalesce(
-                    gw_ref_price_sq, F('msrp'),
+                    gw_ref_price_sq, F('msrp_gbp'),
                     output_field=DecimalField(max_digits=10, decimal_places=2),
                 )
             )
@@ -209,7 +214,8 @@ class Command(BaseCommand):
                     filter=Q(
                         current_prices__in_stock=True,
                         current_prices__not_available=False,
-                    ) & Q(current_prices__retailer__is_uk=False),
+                        current_prices__retailer__is_uk=True,
+                    ),
                 )
             )
             .filter(min_price__isnull=False, min_price__gt=0)
@@ -218,7 +224,7 @@ class Command(BaseCommand):
         )
 
         def _pct(p):
-            """Calculate % discount vs the live GW reference price."""
+            """Calculate % discount vs the live GW UK reference price."""
             return float(p.gw_ref_price - p.min_price) / float(p.gw_ref_price) * 100
 
         sorted_candidates = sorted(candidates, key=_pct, reverse=True)[:limit]
@@ -233,8 +239,8 @@ class Command(BaseCommand):
                     in_stock=True,
                     not_available=False,
                     price=product.min_price,
+                    retailer__is_uk=True,
                 )
-                .exclude(retailer__is_uk=True)
                 .select_related('retailer')
                 .first()
             )
@@ -243,7 +249,7 @@ class Command(BaseCommand):
             deals.append({
                 'name': product.name,
                 'slug': product.slug,
-                'url': f'https://thrifthammer.com/products/{product.slug}/',
+                'url': f'https://thrifthammer.com/products/{product.slug}/?region=uk',
                 'price': float(product.min_price),
                 'msrp': float(product.gw_ref_price),
                 'pct_off': pct_off,
@@ -258,17 +264,18 @@ class Command(BaseCommand):
     def _build_text_body(self, deals, today, faction_names, unsubscribe_url):
         """Build a clean plain-text fallback email body."""
         lines = [
-            f'THRIFTHAMMER -- YOUR {faction_names.upper()} DEALS',
+            f'THRIFTHAMMER -- YOUR UK {faction_names.upper()} DEALS',
             f'{today.strftime("%B")} {today.day}, {today.year}',
             'https://thrifthammer.com',
             '',
-            f"This week's best deals for your faction(s): {faction_names}",
+            f"This week's best UK deals for your faction(s): {faction_names}",
             '',
         ]
         for i, d in enumerate(deals, 1):
             lines.append(f'{i:>2}. {d["name"]}')
             lines.append(
-                f'    ${d["price"]:.2f}  (save {d["pct_off"]:.0f}% off ${d["msrp"]:.2f} MSRP at {d["retailer"]})'
+                f'    {CURRENCY_SYMBOL}{d["price"]:.2f}  '
+                f'(save {d["pct_off"]:.0f}% off {CURRENCY_SYMBOL}{d["msrp"]:.2f} MSRP at {d["retailer"]})'
             )
             lines.append(f'    {d["url"]}')
             lines.append('')
@@ -281,7 +288,7 @@ class Command(BaseCommand):
             'https://thrifthammer.com/accounts/register/',
             '',
             '-' * 60,
-            "You're receiving this because you opted in to faction deal alerts.",
+            "You're receiving this because you opted in to UK faction deal alerts.",
             'Stop overpaying for plastic.',
             '-- ThriftHammer',
             '',

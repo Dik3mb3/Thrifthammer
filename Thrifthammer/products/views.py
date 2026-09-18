@@ -27,6 +27,7 @@ from django.template.loader import render_to_string
 logger = logging.getLogger(__name__)
 from django.core.paginator import InvalidPage, Paginator
 from django.db.models import Case, Count, DecimalField, ExpressionWrapper, F, FloatField, Min, OuterRef, Q, Subquery, Value, When
+from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.core.exceptions import ValidationError
@@ -481,13 +482,24 @@ def product_list(request):
     # Books rank by the selected format's price/discount (book_min_price /
     # book_min_discount_pct) instead of the CurrentPrice-based min_price /
     # min_discount_pct used everywhere else -- name/newest sorts are
-    # unaffected since they don't reference either.
+    # unaffected since they don't reference either. Coalesce falls back to
+    # the regular CurrentPrice-based field for Books-and-Novels products
+    # that aren't multi-format novels (Codexes, Battletomes, Arcane
+    # Journals) -- they only ever populate min_price/min_discount_pct, never
+    # book_min_price, so without the fallback they'd always sort dead last
+    # regardless of their real discount.
     if is_books_category and sort == 'discount':
-        products = products.order_by(F('book_min_discount_pct').desc(nulls_last=True))
+        products = products.order_by(
+            Coalesce(F('book_min_discount_pct'), F('min_discount_pct')).desc(nulls_last=True)
+        )
     elif is_books_category and sort == 'price_asc':
-        products = products.order_by(F('book_min_price').asc(nulls_last=True))
+        products = products.order_by(
+            Coalesce(F('book_min_price'), F('min_price')).asc(nulls_last=True)
+        )
     elif is_books_category and sort == 'price_desc':
-        products = products.order_by(F('book_min_price').desc(nulls_last=True))
+        products = products.order_by(
+            Coalesce(F('book_min_price'), F('min_price')).desc(nulls_last=True)
+        )
     elif sort == 'discount':
         products = products.order_by(F('min_discount_pct').desc(nulls_last=True))
     else:
@@ -652,18 +664,31 @@ def product_detail(request, slug):
                 current_prices__not_available=False,
                 current_prices__in_stock=True,
             ) & ~Q(current_prices__retailer__is_uk=True)
-        # Related-products MSRP must never trust the static product.msrp
-        # snapshot on its own -- that field only updates when someone runs
-        # sync_msrp_from_gw or re-imports a GW price list, so it drifts
-        # stale after every GW price change. Annotate the same live-GW
-        # Subquery pattern product_list already uses (gw_ref_price_sq) so
+        # Related-products MSRP must never trust the static product.msrp /
+        # msrp_gbp snapshot on its own -- those fields only update when
+        # someone manually re-syncs, so they drift stale after every GW
+        # price change. Annotate the same live-GW Subquery pattern
+        # product_list already uses (gw_ref_price_sq) for both regions, so
         # this widget always shows today's real GW price, falling back to
-        # product.msrp only when no live GW CurrentPrice is tracked at all.
+        # the stored msrp/msrp_gbp only when no live GW CurrentPrice is
+        # tracked at all. Both are annotated unconditionally (cheap extra
+        # joins) so the same query works for either region's template branch.
         related_gw_ref_price_sq = Subquery(
             CurrentPrice.objects
             .filter(
                 product=OuterRef('pk'),
                 retailer__slug='games-workshop',
+                not_available=False,
+                price__isnull=False,
+            )
+            .order_by('price')
+            .values('price')[:1]
+        )
+        related_gw_ref_price_gbp_sq = Subquery(
+            CurrentPrice.objects
+            .filter(
+                product=OuterRef('pk'),
+                retailer__slug='games-workshop-uk',
                 not_available=False,
                 price__isnull=False,
             )
@@ -678,6 +703,7 @@ def product_detail(request, slug):
             .select_related('category', 'faction')
             .annotate(min_price=Min('current_prices__price', filter=_rp_price_filter))
             .annotate(gw_ref_price=related_gw_ref_price_sq)
+            .annotate(gw_ref_price_gbp=related_gw_ref_price_gbp_sq)
             .order_by('name')[:4]
         )
         if len(related_products) < 4 and product.faction_id:
@@ -689,6 +715,7 @@ def product_detail(request, slug):
                 .select_related('category', 'faction')
                 .annotate(min_price=Min('current_prices__price', filter=_rp_price_filter))
                 .annotate(gw_ref_price=related_gw_ref_price_sq)
+                .annotate(gw_ref_price_gbp=related_gw_ref_price_gbp_sq)
                 .order_by('name')[:4 - len(related_products)]
             )
             related_products.extend(more)
@@ -701,16 +728,27 @@ def product_detail(request, slug):
                 .select_related('category', 'faction')
                 .annotate(min_price=Min('current_prices__price', filter=_rp_price_filter))
                 .annotate(gw_ref_price=related_gw_ref_price_sq)
+                .annotate(gw_ref_price_gbp=related_gw_ref_price_gbp_sq)
                 .order_by('name')[:4 - len(related_products)]
             )
             related_products.extend(more)
 
         # Discount reference price and savings — region-specific.
-        # UK: use product.msrp_gbp as the GBP reference (no GW UK price tracked yet).
+        # UK: use games-workshop-uk's live GBP CurrentPrice if tracked, else
+        #     stored msrp_gbp -- same live-first pattern as US below.
         #     savings is skipped because get_savings_vs_retail() is USD-only.
         # US: use GW's live USD CurrentPrice if tracked, else stored msrp.
         if region == 'uk':
-            gw_ref_price = product.msrp_gbp  # None if not populated yet
+            gw_cp_uk = next(
+                (
+                    cp for cp in current_prices
+                    if cp.retailer.slug == 'games-workshop-uk'
+                    and not cp.not_available
+                    and cp.price
+                ),
+                None,
+            )
+            gw_ref_price = gw_cp_uk.price if gw_cp_uk else product.msrp_gbp
             savings = None
         else:
             gw_cp = next(
@@ -1061,9 +1099,16 @@ def newsletter_signup(request):
         messages.error(request, 'Please enter a valid email address.')
         return redirect('home')
 
+    # Region comes from a hidden field the form pre-fills with the visitor's
+    # current browsing-region session value. Validated against the model's
+    # own choices rather than trusted as-is -- a POST body is client input.
+    region = request.POST.get('region', '').strip().lower()
+    if region not in dict(NewsletterSignup.REGION_CHOICES):
+        region = NewsletterSignup.REGION_US
+
     signup, created = NewsletterSignup.objects.get_or_create(
         email=email,
-        defaults={'is_confirmed': False},
+        defaults={'is_confirmed': False, 'region': region},
     )
     if created:
         # Send confirmation email — new subscribers must click to confirm.
@@ -1093,15 +1138,31 @@ def _send_newsletter_confirmation(signup):
     }
     html_body = render_to_string('emails/newsletter_confirmation.html', context)
     text_body = (
-        'Confirm your ThriftHammer deal alerts subscription\n\n'
-        'Click the link below to confirm your email address:\n\n'
+        'THANK YOU FOR SUBSCRIBING TO THRIFTHAMMER!\n\n'
+        'One quick click to activate your account and start receiving weekly deals.\n\n'
         f'{confirmation_url}\n\n'
+        "WHAT YOU'LL RECEIVE (by default):\n"
+        '- Wednesday: Warhammer 40K deals\n'
+        '- Friday: Warhammer Universe deals (Age of Sigmar, The Old World, Horus Heresy,\n'
+        '  Kill Team, Necromunda, Warcry & Blood Bowl)\n\n'
+        'PERSONALIZE YOUR NEWSLETTERS:\n'
+        'Create a free account with this same email address for more control. It links to\n'
+        'this subscription automatically. Then visit Account Settings to choose exactly\n'
+        'which newsletters you receive:\n'
+        '- A Sunday digest for your specific faction(s)\n'
+        '- A Monday digest customized to other miniature gaming systems you are interested in\n'
+        'https://thrifthammer.com/accounts/register/\n\n'
+        'STAY CONNECTED:\n'
+        'Join r/DealHammer on Reddit for another way to catch the best deals as they drop.\n'
+        'https://reddit.com/r/DealHammer\n\n'
+        'Run into an issue or have feedback? Reply to this email or write to '
+        'Thrifthammer.com@gmail.com.\n\n'
         'If you did not sign up for ThriftHammer deal alerts, you can ignore this email.\n'
         '-- ThriftHammer\n'
         'https://thrifthammer.com'
     )
     msg = EmailMultiAlternatives(
-        subject='Confirm your ThriftHammer deal alerts',
+        subject='Thank You for Subscribing to ThriftHammer!',
         body=text_body,
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[signup.email],

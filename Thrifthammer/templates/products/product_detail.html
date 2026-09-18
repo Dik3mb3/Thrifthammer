@@ -502,14 +502,14 @@
             {% if rp.min_price and not rp.author %}
             <div class="product-card-price-label">Best Price</div>
             <div class="product-card-price">{% if region == 'uk' %}£{% else %}${% endif %}{{ rp.min_price|floatformat:"2" }}</div>
-            {% if rp.gw_ref_price or rp.msrp_gbp %}
+            {% if rp.gw_ref_price or rp.gw_ref_price_gbp or rp.msrp_gbp %}
             <div class="product-card-savings-row">
-              <span class="product-card-msrp">MSRP {% if region == 'uk' and rp.msrp_gbp %}£{{ rp.msrp_gbp }}{% else %}${{ rp.gw_ref_price|default:rp.msrp }}{% endif %}</span>
+              <span class="product-card-msrp">MSRP {% if region == 'uk' %}£{{ rp.gw_ref_price_gbp|default:rp.msrp_gbp }}{% else %}${{ rp.gw_ref_price|default:rp.msrp }}{% endif %}</span>
             </div>
             {% endif %}
-            {% elif rp.gw_ref_price or rp.msrp_gbp %}
+            {% elif rp.gw_ref_price or rp.gw_ref_price_gbp or rp.msrp_gbp %}
             <div class="product-card-price-label">MSRP</div>
-            <div style="font-size:1rem;font-weight:600;color:var(--text-secondary);">{% if region == 'uk' and rp.msrp_gbp %}£{{ rp.msrp_gbp }}{% else %}${{ rp.gw_ref_price|default:rp.msrp }}{% endif %}</div>
+            <div style="font-size:1rem;font-weight:600;color:var(--text-secondary);">{% if region == 'uk' %}£{{ rp.gw_ref_price_gbp|default:rp.msrp_gbp }}{% else %}${{ rp.gw_ref_price|default:rp.msrp }}{% endif %}</div>
             {% endif %}
           </div>
         </div>

@@ -100,12 +100,25 @@
       {% else %}
       <p class="profile-section-hint">
         Subscribed. Emails go to {{ user.email }}.
-        Customise which newsletters you receive below.
+        Customize which newsletters you receive below.
       </p>
 
       {# ── Preferences form ── #}
       <form method="post" action="{% url 'accounts:newsletter_prefs' %}" class="profile-form" style="margin-bottom:var(--sp-3);">
         {% csrf_token %}
+
+        <p style="font-size:0.8rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--sp-2);">Newsletter region</p>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:var(--sp-2);">Controls the currency and retailers for ALL your digests below (US = USD from US retailers, UK = GBP from UK retailers).</p>
+        <div style="display:flex;gap:var(--sp-3);margin-bottom:var(--sp-3);">
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer;">
+            <input type="radio" name="region" value="us" {% if newsletter_obj.region == 'us' %}checked{% endif %}>
+            US ($)
+          </label>
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer;">
+            <input type="radio" name="region" value="uk" {% if newsletter_obj.region == 'uk' %}checked{% endif %}>
+            UK (£)
+          </label>
+        </div>
 
         <p style="font-size:0.8rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--sp-2);">Which newsletters do you want?</p>
 
@@ -120,8 +133,8 @@
         <label style="display:flex;align-items:flex-start;gap:var(--sp-2);margin-bottom:var(--sp-2);cursor:pointer;">
           <input type="checkbox" name="friday_other" {% if newsletter_obj.friday_other %}checked{% endif %} style="margin-top:3px;flex-shrink:0;">
           <span>
-            <strong>Friday: AoS &amp; More deals</strong><br>
-            <span style="font-size:0.82rem;color:var(--text-muted);">Top 10 discounts on Age of Sigmar, Horus Heresy, Kill Team &amp; more, sent Friday morning.</span>
+            <strong>Friday: Rest of Warhammer deals</strong><br>
+            <span style="font-size:0.82rem;color:var(--text-muted);">Top 10 discounts on Age of Sigmar, Horus Heresy, The Old World, Kill Team, Necromunda, Warcry &amp; Blood Bowl, sent Friday morning.</span>
           </span>
         </label>
 
@@ -151,6 +164,28 @@
           {% endfor %}
         </div>
 
+        <label style="display:flex;align-items:flex-start;gap:var(--sp-2);margin-bottom:var(--sp-2);cursor:pointer;">
+          <input type="checkbox" name="monday_custom" id="monday_custom_cb" {% if newsletter_obj.monday_custom %}checked{% endif %} style="margin-top:3px;flex-shrink:0;">
+          <span>
+            <strong>Monday: Customized Game System deals</strong><br>
+            <span style="font-size:0.82rem;color:var(--text-muted);">Deals for game systems/categories you pick, sent Monday morning. Off by default -- select your categories below. First time you turn this on, we'll pre-select everything outside Warhammer for you.</span>
+          </span>
+        </label>
+
+        {# ── Category multi-select (always visible if Monday Custom opt-in ticked) ── #}
+        <div id="category-selector" style="{% if not newsletter_obj.monday_custom %}display:none;{% endif %}margin-left:var(--sp-4);margin-bottom:var(--sp-3);padding:var(--sp-3);background:var(--bg-card);border:1px solid var(--border);border-radius:4px;">
+          <p style="font-size:0.8rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--sp-2);">Your categories / game systems</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:2px;">
+            {% for category in all_categories %}
+            <label style="display:flex;align-items:center;gap:5px;font-size:0.82rem;cursor:pointer;padding:4px 8px;border:1px solid var(--border);border-radius:3px;background:var(--bg-base);">
+              <input type="checkbox" name="custom_categories" value="{{ category.pk }}"
+                     {% if category in newsletter_obj.custom_categories.all %}checked{% endif %}>
+              {{ category.name }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+
         <button type="submit" class="btn btn-primary btn-sm">Save preferences</button>
       </form>
 
@@ -167,6 +202,13 @@
           if (cb && sel) {
             cb.addEventListener('change', function () {
               sel.style.display = this.checked ? '' : 'none';
+            });
+          }
+          var cb2 = document.getElementById('monday_custom_cb');
+          var sel2 = document.getElementById('category-selector');
+          if (cb2 && sel2) {
+            cb2.addEventListener('change', function () {
+              sel2.style.display = this.checked ? '' : 'none';
             });
           }
         })();
