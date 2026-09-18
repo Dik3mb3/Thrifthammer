@@ -940,6 +940,15 @@ class EbayBrowseAPI:
         'star-wars-legion': {'fantasyfigurines'},
     }
 
+    # Sellers blocked from matching ANY product in ANY category (unlike
+    # _CATEGORY_BLOCKED_SELLERS above). Checked in addition to the
+    # category-scoped list.
+    _GLOBAL_BLOCKED_SELLERS = {
+        # ads4370: confirmed 2026-09-16 as the source of a bad UK Tyranid
+        # Barbgaunts listing (item 407207243012).
+        'ads4370',
+    }
+
     # Keywords that indicate a listing is a spare part/bit, not a full kit.
     # eBay is flooded with individual components — we must exclude them.
     #
@@ -1289,13 +1298,20 @@ class EbayBrowseAPI:
                     )
                     return False
 
-        # ── Category-scoped seller blocklist ──────────────────────────────────
+        # ── Global + category-scoped seller blocklist ───────────────────────────
+        _seller = result.get('seller_username', '').lower()
+        if _seller in EbayBrowseAPI._GLOBAL_BLOCKED_SELLERS:
+            logger.debug(
+                '[ebay] Rejected (globally blocked seller "%s"): "%s"',
+                _seller, result['title'][:60],
+            )
+            return False
         _category_slug = getattr(getattr(product, 'category', None), 'slug', None)
         _blocked_sellers = EbayBrowseAPI._CATEGORY_BLOCKED_SELLERS.get(_category_slug, ())
-        if _blocked_sellers and result.get('seller_username', '').lower() in _blocked_sellers:
+        if _blocked_sellers and _seller in _blocked_sellers:
             logger.debug(
                 '[ebay] Rejected (blocked seller "%s" for category "%s"): "%s"',
-                result.get('seller_username', ''), _category_slug, result['title'][:60],
+                _seller, _category_slug, result['title'][:60],
             )
             return False
 
@@ -1678,11 +1694,14 @@ class EbayBrowseAPI:
                     reasons.append(f'negative keyword "{_neg_kw}" in title')
                     break
 
-        # Category-scoped seller blocklist
+        # Global + category-scoped seller blocklist
+        _seller = result.get('seller_username', '').lower()
+        if _seller in EbayBrowseAPI._GLOBAL_BLOCKED_SELLERS:
+            reasons.append(f'globally blocked seller "{_seller}"')
         _category_slug = getattr(getattr(product, 'category', None), 'slug', None)
         _blocked_sellers = EbayBrowseAPI._CATEGORY_BLOCKED_SELLERS.get(_category_slug, ())
-        if _blocked_sellers and result.get('seller_username', '').lower() in _blocked_sellers:
-            reasons.append(f'blocked seller "{result.get("seller_username", "")}"')
+        if _blocked_sellers and _seller in _blocked_sellers:
+            reasons.append(f'blocked seller "{_seller}"')
 
         # Title bits filter
         title_words  = set(re.sub(r"[^\w\s]", ' ', title_lower).split())
