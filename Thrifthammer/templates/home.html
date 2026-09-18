@@ -360,9 +360,11 @@
             </div>
             <form class="email-topbar-form" method="post" action="{% url 'newsletter_signup' %}">
                 {% csrf_token %}
-                {# Captures the visitor's current browsing region as their newsletter
-                   region default -- not shown, since this form is deliberately minimal;
-                   account holders can review/correct it on their profile page. #}
+                {% comment %}
+                Captures the visitor's current browsing region as their newsletter
+                region default -- not shown, since this form is deliberately minimal;
+                account holders can review/correct it on their profile page.
+                {% endcomment %}
                 <input type="hidden" name="region" value="{{ request.session.region|default:'us' }}">
                 <input type="email" name="email" placeholder="your@email.com" required
                        aria-label="Email address for weekly deal alerts">
