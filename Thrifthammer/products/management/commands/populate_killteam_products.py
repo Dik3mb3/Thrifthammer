@@ -291,18 +291,32 @@ class Command(BaseCommand):
         updated_count = 0
 
         for gw_sku, name, slug, msrp, gw_url, amazon_asin, mm_url, nk_base_url in PRODUCTS:
+            # msrp must be create-time only. This command runs on every
+            # deploy (Procfile) -- if msrp stayed in the update-path
+            # `defaults`, update_gw_prices's live GW price would get
+            # silently reset to this file's static seed value on the next
+            # deploy, unlike Warhammer 40,000/Age of Sigmar/The Old World,
+            # which have no populate command touching msrp at all. Note:
+            # Django's create_defaults REPLACES defaults for the create()
+            # call, it does not merge with it -- so create_defaults must
+            # repeat every field a brand-new row needs, not just the ones
+            # that differ.
+            product_update_defaults = {
+                'name': name,
+                'slug': slug,
+                'gw_url': gw_url,
+                'image_url': _GW_CDN.format(_IMAGES.get(gw_sku, '')),
+                'category': kt_category,
+                'faction': None,
+                'is_active': True,
+                'batch_tag': 'kill-team',
+            }
             product, created = Product.objects.update_or_create(
                 gw_sku=gw_sku,
-                defaults={
-                    'name': name,
-                    'slug': slug,
+                defaults=product_update_defaults,
+                create_defaults={
+                    **product_update_defaults,
                     'msrp': msrp,
-                    'gw_url': gw_url,
-                    'image_url': _GW_CDN.format(_IMAGES.get(gw_sku, '')),
-                    'category': kt_category,
-                    'faction': None,
-                    'is_active': True,
-                    'batch_tag': 'kill-team',
                 },
             )
             if created:
@@ -310,15 +324,19 @@ class Command(BaseCommand):
             else:
                 updated_count += 1
 
-            # GW — seed at MSRP
+            # GW — seed at MSRP on create only; see comment above.
+            gw_price_update_defaults = {
+                'url': gw_url,
+                'in_stock': True,
+                'not_available': False,
+            }
             CurrentPrice.objects.update_or_create(
                 product=product,
                 retailer=retailers['games-workshop'],
-                defaults={
+                defaults=gw_price_update_defaults,
+                create_defaults={
+                    **gw_price_update_defaults,
                     'price': msrp,
-                    'url': gw_url,
-                    'in_stock': True,
-                    'not_available': False,
                 },
             )
 

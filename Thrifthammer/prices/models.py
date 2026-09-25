@@ -139,10 +139,22 @@ class BookFormatPrice(models.Model):
     is_msrp_source = models.BooleanField(
         default=False,
         help_text=(
-            'True if this row is the MSRP reference for this product+format '
-            '(Games Workshop for Softback/Hardback; Audible/Amazon for Audio '
-            'Book/E-Book). At most one True row per product+format, enforced '
-            'at the database level.'
+            'True if this row is the US (USD) MSRP reference for this '
+            'product+format (Games Workshop for Softback/Hardback; Audible/'
+            'Amazon for Audio Book/E-Book). At most one True row per '
+            'product+format, enforced at the database level. Separate from '
+            'is_msrp_source_uk -- the two regions never share or contend '
+            'over the same flag.'
+        ),
+    )
+    is_msrp_source_uk = models.BooleanField(
+        default=False,
+        help_text=(
+            'True if this row is the UK (GBP) MSRP reference for this '
+            'product+format (Games Workshop UK for Softback/Hardback; '
+            'Amazon UK/Audible UK for Audio Book/E-Book, once sourced). '
+            'At most one True row per product+format, enforced at the '
+            'database level, independently of is_msrp_source.'
         ),
     )
     last_seen = models.DateTimeField(auto_now=True)
@@ -155,6 +167,11 @@ class BookFormatPrice(models.Model):
                 fields=['product', 'format'],
                 condition=models.Q(is_msrp_source=True),
                 name='unique_msrp_source_per_product_format',
+            ),
+            models.UniqueConstraint(
+                fields=['product', 'format'],
+                condition=models.Q(is_msrp_source_uk=True),
+                name='unique_msrp_source_uk_per_product_format',
             ),
         ]
 

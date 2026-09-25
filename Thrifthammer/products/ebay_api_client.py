@@ -615,6 +615,94 @@ class EbayBrowseAPI:
             if parsed is not None
         ]
 
+    def search_by_gtin(self, gtin, max_results=5, allow_calculated=False):
+        """
+        Search eBay US for items by GTIN (EAN/UPC/ISBN) using the Browse API's
+        dedicated `gtin` search parameter -- a precise identifier match, not a
+        keyword/text search. Added for the Gundam vertical's barcode-anchored
+        matching (see gundam/management/commands/find_gundam_ebay_prices.py),
+        which needs exact-product matching the same way find_gundam_amazon_asins
+        uses Amazon's UPC/EAN search -- Gunpla kits have far more same-named
+        color/grade/release variants than Warhammer's keyword matching was
+        built to disambiguate.
+
+        Same filters as search_items() (FIXED_PRICE, NEW, US) and same
+        _parse_item() parsing -- this only changes the `gtin` vs `q` request
+        parameter.
+
+        Args:
+            gtin:             Barcode string (EAN/UPC/JAN).
+            max_results:      Number of results to request (max 200).
+            allow_calculated: Passed through to _parse_item() -- see there.
+
+        Returns:
+            List of parsed item dicts, or empty list on no results.
+
+        Raises:
+            EbayAPIError: If eBay returns an API-level error.
+            RuntimeError: On network errors or daily limit approaching.
+        """
+        if self.api_calls_made >= DAILY_CALL_SAFETY_LIMIT:
+            raise RuntimeError(
+                f'Approaching eBay daily call limit '
+                f'({self.api_calls_made}/{DAILY_CALL_LIMIT}). Stopping.'
+            )
+
+        token = self._get_access_token()
+
+        params = {
+            'gtin':   gtin,
+            'filter': (
+                'buyingOptions:{FIXED_PRICE},'
+                'conditions:{NEW},'
+                'itemLocationCountry:US'
+            ),
+            'limit':       str(min(max_results, 200)),
+            'fieldgroups': 'EXTENDED',
+        }
+
+        headers = {
+            'Authorization':            f'Bearer {token}',
+            'X-EBAY-C-MARKETPLACE-ID':  MARKETPLACE_ID,
+            'Content-Type':             'application/json',
+        }
+
+        try:
+            response = self.session.get(
+                self.browse_endpoint,
+                params=params,
+                headers=headers,
+                timeout=10,
+            )
+        except requests.Timeout:
+            raise RuntimeError(f'eBay API timeout for GTIN: "{gtin}"')
+        except requests.RequestException as exc:
+            raise RuntimeError(f'eBay API network error: {exc}') from exc
+        finally:
+            self.api_calls_made += 1
+
+        try:
+            data = response.json()
+        except ValueError as exc:
+            raise RuntimeError(
+                f'eBay API HTTP {response.status_code} — invalid JSON body'
+            ) from exc
+
+        if not response.ok:
+            error_msg = self._extract_browse_error(data)
+            raise EbayAPIError(
+                f'eBay API error for GTIN "{gtin}": {error_msg} '
+                f'(HTTP {response.status_code})'
+            )
+
+        items_raw = data.get('itemSummaries', [])
+        return [
+            parsed for parsed in (
+                self._parse_item(item, allow_calculated=allow_calculated) for item in items_raw
+            )
+            if parsed is not None
+        ]
+
     # -------------------------------------------------------------------------
     # Token management
     # -------------------------------------------------------------------------

@@ -131,7 +131,7 @@ class Command(BaseCommand):
                     'today': today,
                     'category_names': category_names,
                     'site_url': 'https://thrifthammer.com',
-                    'browse_url': 'https://thrifthammer.com/products/',
+                    'browse_url': 'https://thrifthammer.com/products/?region=us',
                     'register_url': 'https://thrifthammer.com/accounts/register/',
                     'top_pct': top_saving,
                     'unsubscribe_url': sub.get_unsubscribe_url(),
@@ -149,9 +149,13 @@ class Command(BaseCommand):
                 msg.send(fail_silently=False)
                 sent += 1
                 self.stdout.write(self.style.SUCCESS(f'  [sent] {sub.email} ({category_names})'))
+                if hasattr(sub, 'record_send_success'):
+                    sub.record_send_success()
             except Exception as exc:
                 errors += 1
                 self.stderr.write(f'  [error] {sub.email} — {exc}')
+                if hasattr(sub, 'record_send_failure'):
+                    sub.record_send_failure(exc)
 
         self.stdout.write(f'\nDone -- sent: {sent} | skipped: {skipped} | errors: {errors}')
 
@@ -244,7 +248,7 @@ class Command(BaseCommand):
             deals.append({
                 'name': product.name,
                 'slug': product.slug,
-                'url': f'https://thrifthammer.com/products/{product.slug}/',
+                'url': f'https://thrifthammer.com/products/{product.slug}/?region=us',
                 'price': float(product.min_price),
                 'msrp': float(product.gw_ref_price),
                 'pct_off': pct_off,

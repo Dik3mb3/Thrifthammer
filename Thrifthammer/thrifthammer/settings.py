@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'calculators',
     'blog',
     'factions',
+    'gundam',
     'axes',
 ]
 
@@ -95,6 +96,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'products.context_processors.site_stats',
+                'products.context_processors.amazon_onelink',
             ],
         },
     },
@@ -269,6 +271,20 @@ EBAY_UK_AFFILIATE_CAMPAIGN_ID = os.environ.get('EBAY_UK_AFFILIATE_CAMPAIGN_ID', 
 AMAZON_CREATORS_CLIENT_ID     = os.environ.get('AMAZON_CREATORS_CLIENT_ID', '')
 AMAZON_CREATORS_CLIENT_SECRET = os.environ.get('AMAZON_CREATORS_CLIENT_SECRET', '')
 AMAZON_ASSOCIATE_TAG          = os.environ.get('AMAZON_ASSOCIATE_TAG', 'thrifthammer7-20')
+
+# UK Associates tag (separate Amazon Associates UK registration, same
+# Creators API OAuth2 credentials -- the API's marketplace/partnerTag are
+# per-request parameters, not tied to one specific tag).
+AMAZON_UK_ASSOCIATE_TAG = os.environ.get('AMAZON_UK_ASSOCIATE_TAG', '')
+
+# Amazon OneLink -- the raw <script> snippet from Associates Central
+# (Tools -> OneLink), rendered site-wide via products.context_processors
+# .amazon_onelink and templates/base.html. Redirects international
+# visitors to their local Amazon marketplace and credits the matching
+# regional Associates tag on click -- does NOT provide price data.
+# Empty/unset = feature fully off, nothing rendered anywhere. This is the
+# single safest way to disable it if it misbehaves -- no code change needed.
+AMAZON_ONELINK_SCRIPT = os.environ.get('AMAZON_ONELINK_SCRIPT', '')
 
 # Password reset link expiry — 24 hours (Django default is 3 days, too long)
 PASSWORD_RESET_TIMEOUT = 86400

@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} — Best Price | ThriftHammer{% endblock %}
+
+{% block meta_description %}<meta name="description" content="{% if product.description %}{{ product.description|striptags|truncatechars:155 }}{% else %}Compare prices on {{ product.name }}{% if product.series %} ({{ product.series.name }}){% endif %}{% if product.get_grade_display %} — {{ product.get_grade_display }} Gunpla{% endif %}.{% if product.msrp %} MSRP ${{ product.msrp }}.{% endif %}{% endif %}">{% endblock %}
+
+{% block extra_head %}
+<meta property="og:title" content="{{ product.name }} — Best Price | ThriftHammer">
+<meta property="og:description" content="Find the best price on {{ product.name }}, compared across retailers.">
+<meta property="og:type" content="product">
+<meta property="og:url" content="https://thrifthammer.com/gundam/{{ product.slug }}/">
+{% if product.image_url %}<meta property="og:image" content="{{ product.image_url }}">{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="product-detail">
+
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="{% url 'home' %}">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="{% url 'gundam:list' %}">Gundam</a>
+    {% if product.series %}
+    <span aria-hidden="true">›</span>
+    <a href="{% url 'gundam:list' %}?series={{ product.series.slug }}">{{ product.series.name }}</a>
+    {% endif %}
+    <span aria-hidden="true">›</span>
+    <span style="color:var(--text-secondary);">{{ product.name|truncatechars:40 }}</span>
+  </nav>
+
+  <div class="product-layout">
+
+    <div class="product-image-col">
+      <div class="product-image-wrap">
+        {% if product.image_url %}
+        <img
+          src="{{ product.image_url }}"
+          alt="{{ product.name }}"
+          width="400" height="400"
+          loading="eager"
+          fetchpriority="high"
+        >
+        {% else %}
+        <div class="product-image-placeholder" aria-hidden="true"></div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div>
+
+      <div class="product-info-header">
+        <div class="product-title-row">
+          <h1>{{ product.name }}</h1>
+        </div>
+        <h2 class="sr-only">{{ product.name }} Pricing</h2>
+        <div class="product-meta">
+          {% if product.series %}
+          <span class="badge badge-default">{{ product.series.name }}</span>
+          {% endif %}
+          {% for s in product.secondary_series.all %}
+          <span class="badge badge-default">{{ s.name }}</span>
+          {% endfor %}
+          {% if product.get_grade_display %}
+          <span class="badge badge-purple">{{ product.get_grade_display }}</span>
+          {% endif %}
+          {% if product.scale %}
+          <span class="badge badge-muted">{{ product.scale }} Scale</span>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if current_prices and current_prices.0.price %}
+      {% with best=current_prices.0 %}
+      <div class="best-price-card">
+        <div class="best-price-label">Best Price Available</div>
+        <div style="display:flex;align-items:baseline;gap:var(--sp-3);flex-wrap:wrap;">
+          <div class="best-price-amount">${{ best.price|floatformat:"2" }}</div>
+        </div>
+        <div class="best-price-retailer">at {{ best.retailer.name }}
+          {% if best.in_stock %}
+          <span class="badge badge-green" style="margin-left:var(--sp-2);">In Stock</span>
+          {% else %}
+          <span class="badge badge-red" style="margin-left:var(--sp-2);">Out of Stock</span>
+          {% endif %}
+        </div>
+      </div>
+      {% endwith %}
+      {% elif product.msrp %}
+      <div class="best-price-card">
+        <div class="best-price-label">MSRP</div>
+        <div class="best-price-amount">${{ product.msrp }}</div>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-top:var(--sp-2);">No retailer prices tracked yet.</p>
+      </div>
+      {% endif %}
+
+      <h3 style="font-size:1.1rem;margin-bottom:var(--sp-2);">Price Comparison</h3>
+      {% if current_prices %}
+      <div class="price-table-wrap">
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Retailer</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Buy</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cp in current_prices %}
+          <tr{% if forloop.first and cp.in_stock and not cp.not_available %} class="cheapest"{% endif %}>
+            <td style="font-weight:600;color:var(--text-primary);">{{ cp.retailer.name }}</td>
+            <td class="price">
+              {% if cp.not_available or not cp.price %}
+              <span style="color:var(--text-muted);">-</span>
+              {% else %}
+              ${{ cp.price|floatformat:"2" }}
+              {% endif %}
+            </td>
+            <td>
+              {% if cp.not_available %}
+              <span class="badge badge-red">Not Available</span>
+              {% elif cp.in_stock %}
+              <span class="badge badge-green">In Stock</span>
+              {% else %}
+              <span class="badge badge-red">Out of Stock</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if cp.url %}
+              <a href="{{ cp.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm btn-ext">Buy</a>
+              {% else %}
+              <span style="color:var(--text-muted);font-size:0.85rem;">-</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+      {% else %}
+      <p style="color:var(--text-muted);font-size:0.9rem;">No retailer prices tracked yet for this kit.</p>
+      {% endif %}
+
+    </div>
+  </div>
+
+  {% if related_products %}
+  <h3 style="font-size:1.1rem;margin:var(--sp-8) 0 var(--sp-4);">More from {{ product.series.name }}</h3>
+  <div class="card-grid">
+    {% for rp in related_products %}
+    <a href="{% url 'gundam:detail' rp.slug %}" class="product-card">
+      {% if rp.image_url %}
+      <img src="{{ rp.image_url }}" alt="{{ rp.name }}" class="product-card-img" width="300" height="300" loading="lazy">
+      {% else %}
+      <div class="product-card-img-placeholder" aria-hidden="true"></div>
+      {% endif %}
+      <div class="product-card-body">
+        <div class="product-card-name">{{ rp.name }}</div>
+        <div class="product-card-badges">
+          {% if rp.get_grade_display %}<span class="badge badge-purple">{{ rp.get_grade_display }}</span>{% endif %}
+        </div>
+        <div class="product-card-pricing">
+          {% if rp.min_price %}
+          <div class="product-card-price-label">Best Price</div>
+          <div class="product-card-price">${{ rp.min_price|floatformat:"2" }}</div>
+          {% elif rp.msrp %}
+          <div class="product-card-price-label">MSRP</div>
+          <div style="font-size:1rem;font-weight:600;color:var(--text-secondary);">${{ rp.msrp }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -103,9 +103,13 @@ class Command(BaseCommand):
                 msg.send(fail_silently=False)
                 sent += 1
                 self.stdout.write(self.style.SUCCESS(f'  [sent] {sub.email}'))
+                if hasattr(sub, 'record_send_success'):
+                    sub.record_send_success()
             except Exception as exc:
                 errors += 1
                 self.stderr.write(f'  [error] {sub.email} — {exc}')
+                if hasattr(sub, 'record_send_failure'):
+                    sub.record_send_failure(exc)
 
         self.stdout.write(f'\nDone -- sent: {sent} | errors: {errors}')
 

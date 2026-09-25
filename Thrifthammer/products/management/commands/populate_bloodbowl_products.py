@@ -886,26 +886,35 @@ class Command(BaseCommand):
         for (name, gw_sku, msrp, gw_url, amazon_asin, mm_url, nk_url) in PRODUCTS:
             slug = slugify(name)
 
+            # msrp and ebay_negative_keywords must be create-time only. This
+            # command runs on every deploy (Procfile) -- if msrp stayed in
+            # the update-path `defaults`, update_gw_prices's live GW price
+            # would get silently reset to this file's static seed value on
+            # the next deploy, unlike Warhammer 40,000/Age of Sigmar/The Old
+            # World, which have no populate command touching msrp at all.
+            # ebay_negative_keywords is manually curated per-product
+            # afterward and must never be reset either. Note: Django's
+            # create_defaults REPLACES defaults for the create() call, it
+            # does not merge with it -- so create_defaults must repeat every
+            # field a brand-new row needs, not just the ones that differ.
+            product_update_defaults = {
+                'name': name,
+                'slug': slug,
+                'gw_url': gw_url,
+                'image_url': _GW_CDN.format(_IMAGES.get(gw_sku, '')),
+                'category': bb_category,
+                'faction': None,
+                'is_active': True,
+                'batch_tag': 'blood-bowl',
+            }
             product, created = Product.objects.update_or_create(
                 gw_sku=gw_sku,
-                defaults={
-                    'name': name,
-                    'slug': slug,
-                    'msrp': msrp,
-                    'gw_url': gw_url,
-                    'image_url': _GW_CDN.format(_IMAGES.get(gw_sku, '')),
-                    'category': bb_category,
-                    'faction': None,
-                    'is_active': True,
-                    'batch_tag': 'blood-bowl',
-                },
-                # ebay_negative_keywords is a create-time default only -- it
-                # gets manually curated per-product afterward (extra keywords
-                # appended as mismatches are found), so this command must
-                # never overwrite it on an update or that curation is lost
-                # on every deploy. 'Dice' is just the sensible starting
-                # value for a brand-new Blood Bowl product.
+                defaults=product_update_defaults,
                 create_defaults={
+                    **product_update_defaults,
+                    'msrp': msrp,
+                    # 'Dice' is just the sensible starting value for a
+                    # brand-new Blood Bowl product.
                     'ebay_negative_keywords': 'Dice',
                 },
             )
@@ -916,15 +925,20 @@ class Command(BaseCommand):
 
             # ── GW price ──────────────────────────────────────────────────────
             if gw_retailer:
+                gw_price_update_defaults = {
+                    'url': gw_url,
+                    'in_stock': True,
+                    'not_available': False,
+                    'listing_title': name,
+                }
                 _, p_created = CurrentPrice.objects.update_or_create(
                     product=product,
                     retailer=gw_retailer,
-                    defaults={
+                    defaults=gw_price_update_defaults,
+                    # price is create-time only -- see comment above.
+                    create_defaults={
+                        **gw_price_update_defaults,
                         'price': msrp,
-                        'url': gw_url,
-                        'in_stock': True,
-                        'not_available': False,
-                        'listing_title': name,
                     },
                 )
                 if p_created:

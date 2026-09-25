@@ -322,15 +322,33 @@ def product_list(request):
     if book_format not in BOOK_FORMAT_LABELS:
         book_format = BookFormatPrice.FORMAT_EBOOK
 
+    # Resolved here (before the book-format fallback below, which needs to
+    # know which currency to check for) -- moved up from its original spot
+    # further down in this function.
+    #
+    # /uk/products/ (see products/urls_uk.py) routes here too, with region
+    # forced to 'uk' regardless of session state -- same rationale as
+    # product_detail() above.
+    if request.path.startswith('/uk/'):
+        region = 'uk'
+    else:
+        region_param = request.GET.get('region', '').strip()
+        if region_param in ('us', 'uk'):
+            request.session['region'] = region_param
+        region = request.session.get('region', 'us')
+
     # A book batch often launches physical-only (GW added first; Amazon
     # E-Book/Audio Book sourcing comes later, same rollout order used for
     # Horus Heresy Series and Warhammer 40,000 Books) -- if the current
     # format has zero price data anywhere in the selected category/faction
     # scope, every card would show "No price yet" until the user manually
     # switches the Format dropdown. Fall back to the first format in display
-    # order that actually has data for this scope instead.
+    # order that actually has data for this scope instead. Scoped by
+    # currency (USD/GBP) so a UK visitor never falls back to a format that
+    # only has US data, and vice versa.
     if is_books_category:
-        _scope_q = Q(product__category_id__in=books_category_ids)
+        _book_currency = 'GBP' if region == 'uk' else 'USD'
+        _scope_q = Q(product__category_id__in=books_category_ids, currency=_book_currency)
         if faction_slug:
             _scope_q &= Q(product__faction__slug=faction_slug)
         if not BookFormatPrice.objects.filter(_scope_q, format=book_format, price__isnull=False).exists():
@@ -338,11 +356,6 @@ def product_list(request):
                 if BookFormatPrice.objects.filter(_scope_q, format=fmt, price__isnull=False).exists():
                     book_format = fmt
                     break
-
-    region_param = request.GET.get('region', '').strip()
-    if region_param in ('us', 'uk'):
-        request.session['region'] = region_param
-    region = request.session.get('region', 'us')
 
     # Stable cache key covers every filter dimension including region.
     # Bump the version suffix (v2, v3…) whenever sort_options or the card
@@ -388,14 +401,18 @@ def product_list(request):
     # from BookFormatPrice instead of CurrentPrice. A Subquery (not a joined
     # Min()) so it can't fan-out against the current_prices join used by
     # min_price above — same reason gw_ref_price_sq above is a Subquery
-    # rather than a second annotated Min(). US only for now, matching
-    # product_detail's book pricing scope.
+    # rather than a second annotated Min(). Region-scoped by currency (USD
+    # for US, GBP for UK) so a GBP price can never surface as a USD "deal"
+    # or vice versa.
     #
-    # book_msrp_price: that same format's MSRP-source row (GW for Paperback/
-    # Hardback, Amazon for E-Book/Audio Book -- see BookFormatPrice.is_msrp_source),
-    # used as the discount reference so "Best Discount" sort/display for books
-    # means the same thing it does for miniatures (ref_price vs min_price).
-    if region != 'uk':
+    # book_msrp_price: that same format's MSRP-source row -- is_msrp_source
+    # for US (GW for Paperback/Hardback, Amazon for E-Book/Audio Book),
+    # is_msrp_source_uk for UK (a separate flag with its own database
+    # constraint, so the two regions never contend over which row is "the"
+    # MSRP reference for a given product+format). Used as the discount
+    # reference so "Best Discount" sort/display for books means the same
+    # thing it does for miniatures (ref_price vs min_price).
+    if region == 'uk':
         book_min_price_sq = Subquery(
             BookFormatPrice.objects
             .filter(
@@ -404,6 +421,32 @@ def product_list(request):
                 not_available=False,
                 in_stock=True,
                 price__isnull=False,
+                currency='GBP',
+            )
+            .order_by('price')
+            .values('price')[:1]
+        )
+        book_msrp_sq = Subquery(
+            BookFormatPrice.objects
+            .filter(
+                product=OuterRef('pk'),
+                format=book_format,
+                is_msrp_source_uk=True,
+                price__isnull=False,
+                currency='GBP',
+            )
+            .values('price')[:1]
+        )
+    else:
+        book_min_price_sq = Subquery(
+            BookFormatPrice.objects
+            .filter(
+                product=OuterRef('pk'),
+                format=book_format,
+                not_available=False,
+                in_stock=True,
+                price__isnull=False,
+                currency='USD',
             )
             .order_by('price')
             .values('price')[:1]
@@ -415,12 +458,10 @@ def product_list(request):
                 format=book_format,
                 is_msrp_source=True,
                 price__isnull=False,
+                currency='USD',
             )
             .values('price')[:1]
         )
-    else:
-        book_min_price_sq = Value(None, output_field=DecimalField())
-        book_msrp_sq = Value(None, output_field=DecimalField())
 
     # min_price annotation: for UK show only UK retailer prices (GBP),
     # for US exclude UK retailers so GBP prices don't appear as cheap USD deals.
@@ -623,11 +664,19 @@ def product_detail(request, slug):
 
     The bulk of the context is cached for 30 minutes per region (US/UK).
     Watchlist status is per-user and always fetched fresh outside the cache.
+
+    /uk/products/<slug>/ (see products/urls_uk.py) routes here too, with
+    region forced to 'uk' regardless of session state -- a URL under the
+    dedicated UK path must always show UK content. ?region=uk on a plain
+    /products/<slug>/ URL still works as before via the session.
     """
-    region_param = request.GET.get('region', '').strip()
-    if region_param in ('us', 'uk'):
-        request.session['region'] = region_param
-    region     = request.session.get('region', 'us')
+    if request.path.startswith('/uk/'):
+        region = 'uk'
+    else:
+        region_param = request.GET.get('region', '').strip()
+        if region_param in ('us', 'uk'):
+            request.session['region'] = region_param
+        region = request.session.get('region', 'us')
     cache_key  = f'product_detail|{slug}|{region}'
     cached_ctx = cache.get(cache_key)
 
@@ -662,7 +711,11 @@ def product_detail(request, slug):
 
         # Books: price varies by format (E-Book/Audio Book/Paperback/Hardback)
         # rather than one price per retailer, so they're grouped separately
-        # from current_prices. US only for now -- no UK book pricing sourced.
+        # from current_prices. Region-scoped by currency (USD rows for US,
+        # GBP rows for UK) via the explicit currency= filter below -- without
+        # it, once both regions have data, a GBP row would leak into a US
+        # visitor's price table (and vice versa) since BookFormatPrice has no
+        # other region marker on its own.
         # All 4 tabs always render (E-Book/Audio Book included even with no
         # BookFormatPrice rows yet) so the tab bar's shape doesn't change once
         # that sourcing work begins -- their panel just shows "not tracked
@@ -673,21 +726,23 @@ def product_detail(request, slug):
         book_formats = []
         default_book_format = None
         all_book_prices = []
-        if product.author and region != 'uk':
+        if product.author:
+            _book_currency = 'GBP' if region == 'uk' else 'USD'
+            _is_msrp_field = 'is_msrp_source_uk' if region == 'uk' else 'is_msrp_source'
             all_book_prices = list(
                 BookFormatPrice.objects
-                .filter(product=product)
+                .filter(product=product, currency=_book_currency)
                 .select_related('retailer')
                 .order_by('not_available', '-in_stock', 'price')
             )
             for fmt_value in BOOK_FORMAT_VALUE_ORDER:
                 fmt_prices = [bfp for bfp in all_book_prices if bfp.format == fmt_value]
                 # MSRP reference for this format's Discount column -- the
-                # is_msrp_source row's price (GW for Paperback/Hardback),
+                # is_msrp_source (US) / is_msrp_source_uk (UK) row's price,
                 # found explicitly rather than assumed to be prices[0] since
                 # a cheaper non-MSRP retailer (e.g. Amazon) can sort first.
                 fmt_msrp = next(
-                    (bfp.price for bfp in fmt_prices if bfp.is_msrp_source and bfp.price),
+                    (bfp.price for bfp in fmt_prices if getattr(bfp, _is_msrp_field) and bfp.price),
                     None,
                 )
                 book_formats.append({
@@ -697,6 +752,25 @@ def product_detail(request, slug):
                     'msrp': fmt_msrp,
                 })
             default_book_format = next((f for f in book_formats if f['prices']), book_formats[0])
+
+            # UK-only, link-no-price Amazon row (see AMAZON_ONELINK_SCRIPT):
+            # reuses the existing US-currency Amazon URL per format rather
+            # than a separate UK price/retailer row, since we have no way to
+            # source a real GBP price for Amazon yet. Deliberately kept out
+            # of the strict currency-filtered `prices` list above (which
+            # exists specifically to stop a USD row leaking into a UK
+            # visitor's price table) -- this is a separate, clearly-labelled
+            # template element instead. To revert: delete this block and the
+            # matching template block in product_detail.html.
+            if region == 'uk':
+                amazon_us_links = {
+                    bfp.format: bfp.url
+                    for bfp in BookFormatPrice.objects.filter(
+                        product=product, retailer__slug='amazon', currency='USD',
+                    ).exclude(url='')
+                }
+                for fmt in book_formats:
+                    fmt['amazon_link'] = amazon_us_links.get(fmt['value'])
 
         # Related products: prefer same faction+category, then same faction,
         # then same category — avoids the alphabetical Adepta Sororitas problem.
@@ -982,22 +1056,28 @@ def search_autocomplete(request):
 
     The price shown in the dropdown is the lowest live CurrentPrice
     (same source as the browse page card) so the two always agree.
+    /uk/products/search/autocomplete/ (see products/urls_uk.py) routes here
+    too -- region is resolved from the path the same way as product_detail()
+    / product_list(), and the price annotation's is_uk filter direction
+    flips accordingly so UK callers get GBP UK-retailer prices, not USD.
 
     Security: query is stripped and capped at 100 characters; only
     name, slug, and min_price are returned — no sensitive fields.
     """
-    query = request.GET.get('q', '').strip()[:100]
+    query  = request.GET.get('q', '').strip()[:100]
+    region = 'uk' if request.path.startswith('/uk/') else 'us'
 
     if len(query) < 2:
         return JsonResponse({'results': []})
 
     # v3 — bumped for the switch to loose/typo-tolerant matching (word-based
     # + trigram similarity) instead of a single literal substring match.
-    cache_key = f'autocomplete_v3|{query.lower()}'
+    cache_key = f'autocomplete_v3|{region}|{query.lower()}'
     cached    = cache.get(cache_key)
     if cached is not None:
         return JsonResponse({'results': cached})
 
+    _is_uk_price = Q(current_prices__retailer__is_uk=True) if region == 'uk' else ~Q(current_prices__retailer__is_uk=True)
     matches = (
         Product.objects
         .filter(is_active=True)
@@ -1009,7 +1089,7 @@ def search_autocomplete(request):
                 filter=Q(
                     current_prices__not_available=False,
                     current_prices__in_stock=True,
-                ) & ~Q(current_prices__retailer__is_uk=True),
+                ) & _is_uk_price,
             )
         )
         .order_by(F('name_similarity').desc(nulls_last=True), 'name')

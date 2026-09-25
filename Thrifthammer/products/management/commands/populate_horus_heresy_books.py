@@ -307,10 +307,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """Run the command."""
         try:
-            category = Category.objects.get(slug='warhammer', parent_category__slug='books-and-novels')
+            category = Category.objects.get(slug='books-and-novels')
         except Category.DoesNotExist:
             raise CommandError(
-                "Category 'Warhammer' (under 'Books and Novels') not found. "
+                "Category 'Books and Novels' not found. "
                 "It must already exist -- this command does not create categories."
             )
 

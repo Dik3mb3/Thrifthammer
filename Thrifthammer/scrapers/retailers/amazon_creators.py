@@ -220,7 +220,7 @@ class AmazonCreatorsClient:
         return results
 
     def search_items(self, keywords, marketplace='www.amazon.com', brand='Games Workshop',
-                     item_count=3, resources=None):
+                     item_count=3, resources=None, partner_tag=None):
         """
         Search Amazon for items by keyword using the Creators API SearchItems operation.
 
@@ -238,6 +238,12 @@ class AmazonCreatorsClient:
                          is a poor match.
             resources:   List of resource strings to request. Defaults to
                          title, price, and condition.
+            partner_tag: Associates tag to attribute this search to. Defaults
+                         to settings.AMAZON_ASSOCIATE_TAG (US) when not given —
+                         pass settings.AMAZON_UK_ASSOCIATE_TAG for a UK-
+                         marketplace search. The tag is a per-request payload
+                         field, not tied to the OAuth2 credentials, so the
+                         same client searches any marketplace under either tag.
 
         Returns:
             list of item dicts from searchResult.items, each containing
@@ -259,7 +265,7 @@ class AmazonCreatorsClient:
         # Minimal payload matching the SearchItems docs exactly —
         # no partnerType (not in SearchItems spec, only GetItems)
         payload = {
-            'partnerTag': settings.AMAZON_ASSOCIATE_TAG,
+            'partnerTag': partner_tag or settings.AMAZON_ASSOCIATE_TAG,
             'keywords':   keywords,
             'itemCount':  item_count,
             'condition':  'New',

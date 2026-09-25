@@ -3,7 +3,7 @@
 
 {% block title %}{{ page_title }}{% endblock %}
 
-{% block meta_description %}<meta name="description" content="{% if product.description %}{{ product.description|striptags|truncatechars:155 }}{% else %}Compare prices on {{ product.name }}{% if product.faction %} ({{ product.faction.name }}){% elif product.category %} — {{ product.category.name }}{% endif %}. Find the cheapest deal from US Warhammer retailers.{% if product.msrp %} MSRP ${{ product.msrp }}.{% endif %} Prices updated daily.{% endif %}">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if product.description %}{{ product.description|striptags|truncatechars:155 }}{% else %}Compare {% if region == 'uk' %}UK {% endif %}prices on {{ product.name }}{% if product.faction %} ({{ product.faction.name }}){% elif product.category %} — {{ product.category.name }}{% endif %}. Find the cheapest deal from {% if region == 'uk' %}UK{% else %}US{% endif %} Warhammer retailers.{% if region == 'uk' and product.msrp_gbp %} MSRP £{{ product.msrp_gbp }}.{% elif region != 'uk' and product.msrp %} MSRP ${{ product.msrp }}.{% endif %} Prices updated daily.{% endif %}">{% endblock %}
 
 {% block extra_head %}
 {# ── Open Graph ── #}
@@ -32,10 +32,10 @@
   <nav class="breadcrumbs" aria-label="Breadcrumb">
     <a href="{% url 'home' %}">Home</a>
     <span aria-hidden="true">›</span>
-    <a href="{% url 'products:list' %}">Products</a>
+    <a href="{% url products_list_url_name %}">Products</a>
     {% if product.category %}
     <span aria-hidden="true">›</span>
-    <a href="{% url 'products:list' %}?category={{ product.category.slug }}">{{ product.category.name }}</a>
+    <a href="{% url products_list_url_name %}?category={{ product.category.slug }}">{{ product.category.name }}</a>
     {% endif %}
     <span aria-hidden="true">›</span>
     <span style="color:var(--text-secondary);">{{ product.name|truncatechars:40 }}</span>
@@ -128,7 +128,7 @@
           {% endif %}
         </div>
         {% if gw_ref_price %}
-        <p style="font-size:0.8rem;color:var(--text-muted);">{% if product.category.slug == 'paint-supplies' %}MSRP{% else %}GW MSRP{% endif %}: {% if region == 'uk' %}£{% else %}${% endif %}{{ gw_ref_price }}</p>
+        <p style="font-size:0.8rem;color:var(--text-muted);">MSRP: {% if region == 'uk' %}£{% else %}${% endif %}{{ gw_ref_price }}</p>
         {% endif %}
       </div>
       {% endwith %}
@@ -137,7 +137,7 @@
       <div class="best-price-card" id="book-best-price-card">
         <div class="best-price-label">Best Price Available</div>
         <div class="best-price-amount" id="book-best-amount">
-          {% if top.price and not top.not_available %}${{ top.price|floatformat:"2" }}{% else %}Not Available{% endif %}
+          {% if top.price and not top.not_available %}{% if region == 'uk' %}£{% else %}${% endif %}{{ top.price|floatformat:"2" }}{% else %}Not Available{% endif %}
         </div>
         <div class="best-price-retailer" id="book-best-retailer">
           {% if top.price and not top.not_available %}at {{ top.retailer.name }} ({{ default_book_format.label }}){% else %}({{ default_book_format.label }}){% endif %}
@@ -151,7 +151,7 @@
       {% endwith %}
       {% elif product.msrp %}
       <div class="best-price-card">
-        <div class="best-price-label">{% if product.category.slug == 'paint-supplies' %}MSRP{% else %}GW MSRP{% endif %}</div>
+        <div class="best-price-label">MSRP</div>
         <div class="best-price-amount">{% if region == 'uk' and product.msrp_gbp %}£{{ product.msrp_gbp }}{% else %}${{ product.msrp }}{% endif %}</div>
         <p style="font-size:0.82rem;color:var(--text-muted);margin-top:var(--sp-2);">No retailer prices tracked yet.</p>
       </div>
@@ -177,7 +177,7 @@
         {% endif %}
         {% if product.gw_url %}
         <a href="{{ product.gw_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-ext">
-          {% if product.category.slug == 'marvel-crisis-protocol' %}View on Asmodee{% elif product.category.slug == 'trench-crusade' %}View on Trench Crusade{% elif product.category.slug == 'malifaux' %}View on Wyrd Games{% else %}View on GW{% endif %}
+          View Official Listing
         </a>
         {% endif %}
       </div>
@@ -226,7 +226,7 @@
       </div>
       {% for fmt in book_formats %}
       <div class="book-tab-panel" id="book-tab-{{ fmt.value }}"{% if fmt.value != default_book_format.value %} hidden{% endif %}>
-        {% if fmt.prices %}
+        {% if fmt.prices or region == 'uk' and fmt.amazon_link %}
         <div class="price-table-wrap">
         <table class="price-table">
           <thead>
@@ -246,7 +246,7 @@
                 {% if bfp.not_available or not bfp.price %}
                 <span style="color:var(--text-muted);">-</span>
                 {% else %}
-                ${{ bfp.price|floatformat:"2" }}
+                {% if region == 'uk' %}£{% else %}${% endif %}{{ bfp.price|floatformat:"2" }}
                 {% if forloop.first and bfp.in_stock %}
                 <span class="badge badge-green" style="margin-left:4px;">Best</span>
                 {% endif %}
@@ -287,6 +287,18 @@
               </td>
             </tr>
             {% endfor %}
+            {% if region == 'uk' and fmt.amazon_link %}
+            {# UK link-only Amazon row (no GBP price available yet) -- see AMAZON_ONELINK_SCRIPT / views.py. Delete this block to revert. #}
+            <tr>
+              <td style="font-weight:600;color:var(--text-primary);">Amazon</td>
+              <td class="price"><span style="color:var(--text-muted);">-</span></td>
+              <td><span style="color:var(--text-muted);">-</span></td>
+              <td><span class="badge badge-green">In Stock</span></td>
+              <td>
+                <a href="{{ fmt.amazon_link }}" target="_blank" rel="noopener noreferrer sponsored" class="btn btn-primary btn-sm btn-ext">Buy</a>
+              </td>
+            </tr>
+            {% endif %}
           </tbody>
         </table>
         </div>{# /price-table-wrap #}
@@ -490,7 +502,7 @@
     <div class="gold-rule"></div>
     <div class="card-grid" style="align-items:flex-start;">
       {% for rp in related_products %}
-      <a href="{% url 'products:detail' rp.slug %}" class="product-card">
+      <a href="{% url products_detail_url_name rp.slug %}" class="product-card">
         {% if rp.image_url %}
         <img src="{{ rp.image_url }}" alt="{{ rp.name }}" class="product-card-img" loading="lazy" width="300" height="300">
         {% else %}
@@ -610,6 +622,7 @@ function shareThisPage() {
   var retailerEl  = document.getElementById('book-best-retailer');
   var stockEl     = document.getElementById('book-best-stock');
   var isbnEl      = document.getElementById('book-isbn-badge');
+  var currencySymbol = '{% if region == "uk" %}£{% else %}${% endif %}';
 
   tabButtons.forEach(function (btn) {
     btn.addEventListener('click', function () {
@@ -633,7 +646,7 @@ function shareThisPage() {
         var available = btn.dataset.available === 'true';
 
         if (available && price) {
-          amountEl.textContent = '$' + price;
+          amountEl.textContent = currencySymbol + price;
           retailerEl.childNodes[0].textContent = 'at ' + retailer + ' (' + label + ') ';
           stockEl.textContent = inStock ? 'In Stock' : 'Out of Stock';
           stockEl.classList.toggle('badge-green', inStock);

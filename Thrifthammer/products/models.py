@@ -9,6 +9,7 @@ import uuid
 
 from django.core.cache import cache
 from django.db import models
+from django.utils import timezone
 from django.utils.text import slugify
 
 # Sentinel object used by get_cheapest_price() to distinguish a cached None
@@ -597,6 +598,27 @@ class NewsletterSignup(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    # ── Send-failure tracking ───────────────────────────────────────────────
+    # Populated by the send_* newsletter commands so a bad address is
+    # diagnosable after the fact -- the console output from a real send run
+    # isn't reliably kept around. consecutive_send_failures resets to 0 on
+    # the next successful send, so a one-off transient SMTP hiccup never
+    # looks the same as an address that fails every single time. This is
+    # tracking only -- nothing here deactivates or removes a subscriber
+    # automatically; that stays a manual, explicitly-approved decision.
+    last_send_error = models.TextField(
+        blank=True, default='',
+        help_text='Error message from the most recent failed send attempt.',
+    )
+    last_send_failed_at = models.DateTimeField(
+        null=True, blank=True,
+        help_text='When the most recent failed send attempt happened.',
+    )
+    consecutive_send_failures = models.PositiveIntegerField(
+        default=0,
+        help_text='Consecutive failed sends since the last successful one. Reset to 0 on success.',
+    )
+
     class Meta:
         ordering = ['-created_at']
         verbose_name = 'Newsletter Signup'
@@ -612,6 +634,21 @@ class NewsletterSignup(models.Model):
     def get_confirmation_url(self):
         """Return the absolute confirmation URL for new (unconfirmed) subscribers."""
         return f'https://thrifthammer.com/products/newsletter/confirm/{self.token}/'
+
+    def record_send_success(self):
+        """Clear any failure streak after a successful send. No-op if already clean."""
+        if self.consecutive_send_failures or self.last_send_error:
+            self.consecutive_send_failures = 0
+            self.last_send_error = ''
+            self.last_send_failed_at = None
+            self.save(update_fields=['consecutive_send_failures', 'last_send_error', 'last_send_failed_at'])
+
+    def record_send_failure(self, error):
+        """Log a failed send attempt and bump the consecutive-failure streak."""
+        self.consecutive_send_failures += 1
+        self.last_send_error = str(error)[:2000]
+        self.last_send_failed_at = timezone.now()
+        self.save(update_fields=['consecutive_send_failures', 'last_send_error', 'last_send_failed_at'])
 
 
 class IssueReport(models.Model):

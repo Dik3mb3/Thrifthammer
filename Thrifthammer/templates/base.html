@@ -93,7 +93,7 @@
             {# Right-side links #}
             <div class="navbar-links" id="navbar-links">
                 <a href="{% url 'home' %}">Home</a>
-                <a href="{% url 'products:list' %}">Browse</a>
+                <a href="{% url products_list_url_name %}">Browse</a>
                 <a href="{% url 'blog:post_list' %}">Blog</a>
                 <a href="{% url 'about' %}">About</a>
                 <div class="nav-dropdown" id="nav-factions-dropdown">
@@ -138,7 +138,7 @@
                         <svg class="nav-region-chevron" xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
                     <div class="nav-region-menu" id="nav-region-menu" role="menu" hidden>
-                        <a href="/products/"
+                        <a href="/products/?region=us"
                            id="nav-region-us"
                            class="nav-region-option{% if region == 'us' %} nav-region-option--active{% endif %}"
                            role="menuitem">🇺🇸 US / English</a>
@@ -176,7 +176,7 @@
                     <img src="{% static 'images/logo.svg' %}" alt="ThriftHammer" class="footer-logo" width="140" height="48">
                 </a>
                 <nav class="footer-slim-links" aria-label="Footer navigation">
-                    <a href="{% url 'products:list' %}">Browse</a>
+                    <a href="{% url products_list_url_name %}">Browse</a>
                     <a href="{% url 'calculators:space_marines' %}">Army Calculator</a>
                     <a href="{% url 'blog:post_list' %}">Blog</a>
                     <a href="{% url 'about' %}">About</a>
@@ -353,7 +353,7 @@
             var q = input.value.trim();
             if (q.length < 2) { dropdown.style.display = "none"; return; }
             timer = setTimeout(function () {
-                fetch("{% url 'products:search_autocomplete' %}?q=" + encodeURIComponent(q))
+                fetch("{% url products_autocomplete_url_name %}?q=" + encodeURIComponent(q))
                     .then(function (r) { return r.json(); })
                     .then(function (data) {
                         dropdown.innerHTML = "";
@@ -363,14 +363,14 @@
                         }
                         data.results.forEach(function (r) {
                             var a = document.createElement("a");
-                            a.href = "{% url 'products:list' %}" + r.slug + "/";
+                            a.href = "{% url products_list_url_name %}" + r.slug + "/";
                             var name = document.createElement("span");
                             name.textContent = r.name;
                             a.appendChild(name);
                             if (r.min_price) {
                                 var price = document.createElement("span");
                                 price.className = "ac-price";
-                                price.textContent = "$" + parseFloat(r.min_price).toFixed(2);
+                                price.textContent = "{% if region == 'uk' %}£{% else %}${% endif %}" + parseFloat(r.min_price).toFixed(2);
                                 a.appendChild(price);
                             }
                             dropdown.appendChild(a);
@@ -395,11 +395,18 @@
             }
             if (e.key === "Enter") {
                 e.preventDefault();
-                window.location.href = "{% url 'products:list' %}?q=" + encodeURIComponent(input.value.trim());
+                window.location.href = "{% url products_list_url_name %}?q=" + encodeURIComponent(input.value.trim());
             }
         });
     })();
     </script>
+
+    {% if amazon_onelink_script %}
+    {# Amazon OneLink -- redirects international visitors to their local Amazon marketplace
+       and credits the matching regional Associates tag on click. Controlled entirely by
+       AMAZON_ONELINK_SCRIPT (empty = off). Delete this block to revert. #}
+    {{ amazon_onelink_script|safe }}
+    {% endif %}
 
 </body>
 </html>

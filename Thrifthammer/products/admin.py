@@ -155,9 +155,10 @@ class ProductAdmin(admin.ModelAdmin):
 class NewsletterSignupAdmin(admin.ModelAdmin):
     """Admin for homepage deal-alert email signups."""
 
-    list_display = ('email', 'created_at')
+    list_display = ('email', 'created_at', 'consecutive_send_failures', 'last_send_failed_at')
+    list_filter = ('region',)
     search_fields = ('email',)
-    readonly_fields = ('created_at',)
+    readonly_fields = ('created_at', 'last_send_error', 'last_send_failed_at', 'consecutive_send_failures')
     ordering = ('-created_at',)
 
 

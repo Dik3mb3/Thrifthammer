@@ -278,7 +278,7 @@ class Command(BaseCommand):
             f'  Best Price : ${price}' + (f' at {retailer.name}' if retailer else ''),
         ]
         if msrp:
-            lines.append(f'  GW MSRP   : ${msrp}')
+            lines.append(f'  MSRP      : ${msrp}')
         if pct_off:
             lines.append(f'  Savings   : {pct_off}% off MSRP')
         if item.alert_type == WatchlistItem.ALERT_PRICE and item.target_price:

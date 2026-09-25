@@ -86,17 +86,16 @@ class Command(BaseCommand):
                 skipped += 1
                 continue
             for product in products:
-                product.msrp_gbp = gbp_price
-                product.save(update_fields=['msrp_gbp'])
+                # Create-only: never let this reset a live update_gw_uk_prices price on deploy.
+                if product.msrp_gbp is None:
+                    product.msrp_gbp = gbp_price
+                    product.save(update_fields=['msrp_gbp'])
+                cp_defaults = {'url': url, 'in_stock': in_stock, 'not_available': False}
                 CurrentPrice.objects.update_or_create(
                     product=product,
                     retailer=retailer,
-                    defaults={
-                        'price': gbp_price,
-                        'url': url,
-                        'in_stock': in_stock,
-                        'not_available': False,
-                    },
+                    defaults=cp_defaults,
+                    create_defaults={**cp_defaults, 'price': gbp_price},
                 )
                 seeded += 1
 
