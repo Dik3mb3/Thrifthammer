@@ -274,7 +274,12 @@
               {% if product.min_price and not product.author %}
               <div class="product-card-price-label">Best Price</div>
               <div class="product-card-price">{{ sym }}{{ product.min_price|floatformat:"2" }}</div>
-              {% if product.msrp_gbp %}
+              {% if product.min_discount_pct and product.min_discount_pct > 0 %}
+              <div class="product-card-savings-row">
+                <span class="product-card-msrp">MSRP {{ sym }}{{ product.ref_price|default:product.msrp_gbp }}</span>
+                <span class="product-card-discount-pct">▼ {{ product.min_discount_pct|floatformat:"0" }}% off</span>
+              </div>
+              {% elif product.msrp_gbp %}
               <div class="product-card-savings-row">
                 <span class="product-card-msrp">MSRP {{ sym }}{{ product.msrp_gbp }}</span>
               </div>

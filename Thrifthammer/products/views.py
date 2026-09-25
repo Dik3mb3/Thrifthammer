@@ -381,13 +381,20 @@ def product_list(request):
     # template will fall through to "No price yet".
     #
     # gw_ref_price_sq: live GW price (if tracked), used as the discount reference
-    # exactly like gw_ref_price in product_detail — falls back to product.msrp.
-    # This ensures browse-page and detail-page discount percentages match.
+    # exactly like gw_ref_price in product_detail — falls back to product.msrp
+    # (product.msrp_gbp for UK). This ensures browse-page and detail-page
+    # discount percentages match. Region-scoped retailer slug -- games-workshop
+    # for US, games-workshop-uk for UK -- so a UK card's discount ribbon is
+    # never computed by comparing a USD reference price against a GBP min_price
+    # (confirmed live 2026-09-25: World Eaters Berzerkers showed "62% OFF" on
+    # the UK browse page, which was (msrp $72 - price £27.56) / $72 -- the
+    # correct GBP figure is 37% off msrp_gbp £44).
+    _gw_ref_slug = 'games-workshop-uk' if region == 'uk' else 'games-workshop'
     gw_ref_price_sq = Subquery(
         CurrentPrice.objects
         .filter(
             product=OuterRef('pk'),
-            retailer__slug='games-workshop',
+            retailer__slug=_gw_ref_slug,
             not_available=False,
             price__isnull=False,
         )
@@ -505,11 +512,13 @@ def product_list(request):
             )
         )
         .annotate(
-            # ref_price: GW live price when available, else stored msrp —
-            # same logic as `gw_ref_price` in product_detail view.
+            # ref_price: GW live price when available, else stored msrp
+            # (msrp_gbp for UK) — same logic as `gw_ref_price` in
+            # product_detail view. Region-scoped fallback field so this
+            # never falls back to the USD msrp on a UK card.
             ref_price=Case(
                 When(gw_ref_price__isnull=False, then=F('gw_ref_price')),
-                default=F('msrp'),
+                default=F('msrp_gbp') if region == 'uk' else F('msrp'),
                 output_field=DecimalField(),
             )
         )
