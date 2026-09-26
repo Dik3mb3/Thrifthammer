@@ -16,9 +16,15 @@ publisher-official price, so (create-only, same guard as GW UK) this
 command sets msrp_gbp from the Mantic price the first time it seeds a
 product. It never overwrites an already-set msrp_gbp.
 
-8 catalog SKUs (all "New Player Bundle" / "Faction Bundle" products)
-have no matching row in the Mantic export and are intentionally
-omitted -- Mantic doesn't sell them as standalone bundles.
+8 catalog SKUs (all "New Player Bundle" / "Faction Bundle" products) had
+no matching row in the original Mantic export -- these are Webstore
+Exclusive bundle SKUs Mantic sells on their own separate pages, not
+listed in the general export. User-supplied direct links for each,
+verified live one by one (title/price cross-checked against the
+catalog name) 2026-09-26 and added below. All eight show
+"Currently Unavailable" (pre-orders ended 31 Aug 2026) -- real price
+kept, in_stock=False, per the sold-out-listing rule (never clear a
+real price to None just because a listing is temporarily unavailable).
 
 Run once on Railway startup via Procfile. Safe to re-run -- idempotent.
 """
@@ -67,6 +73,17 @@ _PRICES = [
     ('HALO-022', Decimal('20.00'), 'https://www.manticgames.com/halo-flashpoint/force-organizer-tray-pack/', True),
     ('HALO-018', Decimal('15.00'), 'https://www.manticgames.com/halo-flashpoint/dice-booster/', True),
     ('HALO-012', Decimal('12.50'), 'https://www.manticgames.com/halo-flashpoint/token-set/', True),
+
+    # Webstore Exclusive bundle SKUs -- user-supplied links, verified live
+    # 2026-09-26. All "Currently Unavailable" (pre-orders ended 31 Aug 2026).
+    ('HALO-005', Decimal('102.00'), 'https://www.manticgames.com/halo-flashpoint/getting-started/brute-force-new-player-bundle/', False),
+    ('HALO-013', Decimal('149.52'), 'https://www.manticgames.com/halo-flashpoint/latest-releases/banished-faction-bundle/', False),
+    ('HALO-027', Decimal('182.63'), 'https://www.manticgames.com/halo-flashpoint/unsc/faction-bundle/', False),
+    ('HALO-029', Decimal('69.38'), 'https://www.manticgames.com/product/halo-flashpoint/halo-flashpoint-banished/jiralhanae-fireteam-new-player-bundle/', False),
+    ('HALO-032', Decimal('69.38'), 'https://www.manticgames.com/halo-flashpoint/unsc/odst-fireteam-new-player-bundle/', False),
+    ('HALO-034', Decimal('102.00'), 'https://www.manticgames.com/halo-flashpoint/getting-started/orbital-drop-new-player-bundle/', False),
+    ('HALO-038', Decimal('55.51'), 'https://www.manticgames.com/halo-flashpoint/banished/sangheili-fireteam-new-player-bundle/', False),
+    ('HALO-039', Decimal('55.51'), 'https://www.manticgames.com/halo-flashpoint/unsc/spartan-fireteam-new-player-bundle/', False),
 ]
 
 
