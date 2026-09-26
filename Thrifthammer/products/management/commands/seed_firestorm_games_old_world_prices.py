@@ -213,8 +213,9 @@ _PRICES = [
      'https://www.firestormgames.co.uk/tomb-kings-of-khemri:-liche-priests?aff=6a4ab07d1c6f9'),
     ('TKK-004', 'Tomb Kings Of Khemri: Royal Heralds', Decimal('28.60'),
      'https://www.firestormgames.co.uk/tomb-kings-of-khemri:-royal-heralds?aff=6a4ab07d1c6f9'),
-    ('TKK-001', 'Tomb Kings Of Khemri: Chariots', Decimal('27.25'),
-     'https://www.firestormgames.co.uk/tomb-kings-of-khemri:-chariots?aff=6a4ab07d1c6f9'),
+    # TKK-001 (Skeleton Chariots) removed 2026-09-25 -- no longer listed on
+    # Firestorm Games' site for this SKU. Do not re-add without re-confirming
+    # a live listing exists.
     ('TKK-005', 'Tomb Kings Of Khemri: Skeleton Horsemen', Decimal('21.25'),
      'https://www.firestormgames.co.uk/tomb-kings-of-khemri:-skeleton-horsemen?aff=6a4ab07d1c6f9'),
     ('TKK-002', 'Tomb Kings Of Khemri: Skeleton Warriors', Decimal('38.15'),
