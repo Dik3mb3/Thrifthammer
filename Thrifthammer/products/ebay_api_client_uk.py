@@ -737,6 +737,8 @@ class EbayBrowseAPIUK:
             # It is a plain-text excerpt from the seller's full description.
             short_description = item.get('shortDescription', '')
 
+            seller_username = item.get('seller', {}).get('username', '')
+
             return {
                 'title':             title,
                 'url':               url,
@@ -745,6 +747,7 @@ class EbayBrowseAPIUK:
                 'shipping':          shipping,
                 'total_cost':        total_cost,
                 'short_description': short_description,
+                'seller_username':   seller_username,
             }
 
         except (KeyError, InvalidOperation, TypeError):
@@ -759,6 +762,20 @@ class EbayBrowseAPIUK:
     # for the more conservative set used on shortDescription text, where
     # those same words appear innocently in vehicle kit descriptions
     # ("sponson arms", "vehicle body", "missiles on the back").
+
+    # Sellers blocked from matching ANY UK product in ANY category. Mirrors
+    # EbayBrowseAPI._GLOBAL_BLOCKED_SELLERS in ebay_api_client.py (the US
+    # file) -- kept as a separate set since this is a fully independent
+    # implementation, not a shared base class.
+    _GLOBAL_BLOCKED_SELLERS = {
+        # that3dprintguy998: confirmed 2026-09-26 -- 3 Warmachine: Crucible
+        # Guard listings (Core Expansion, Auxiliary Expansion, Battlegroup
+        # Box), all priced ~£10.66 against £70-145 real MSRPs, "MPN: Select"
+        # (no real manufacturer part number) -- 3D-printed bootleg/proxy
+        # copies, not genuine retail product.
+        'that3dprintguy998',
+    }
+
     _BITS_KEYWORDS = {
         # Seller classification terms
         'bit', 'bits', 'bitz', 'sprue', 'sprues', 'upgrade',
@@ -1100,6 +1117,15 @@ class EbayBrowseAPIUK:
                         _neg_kw, result['title'][:60],
                     )
                     return False
+
+        # ── Global blocked seller ───────────────────────────────────────────
+        _seller = result.get('seller_username', '').lower()
+        if _seller in EbayBrowseAPIUK._GLOBAL_BLOCKED_SELLERS:
+            logger.debug(
+                '[ebay-uk] Rejected (globally blocked seller "%s"): "%s"',
+                _seller, result['title'][:60],
+            )
+            return False
 
         # ── Per-product allowed title words ───────────────────────────────────
         # Some products legitimately appear in listings that include words
@@ -1490,6 +1516,11 @@ class EbayBrowseAPIUK:
                 elif re.search(r'\b' + re.escape(_neg_kw) + r'\b', title_lower):
                     reasons.append(f'negative keyword "{_neg_kw}" in title')
                     break
+
+        # Global blocked seller
+        _seller = result.get('seller_username', '').lower()
+        if _seller in EbayBrowseAPIUK._GLOBAL_BLOCKED_SELLERS:
+            reasons.append(f'globally blocked seller "{_seller}"')
 
         # Title bits filter
         title_words  = set(re.sub(r"[^\w\s]", ' ', title_lower).split())
