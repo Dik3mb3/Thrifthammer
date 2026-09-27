@@ -43,4 +43,12 @@ def bust_product_caches(sender, instance, **kwargs):
     # timeout=None keeps the counter alive indefinitely; without it the key can
     # expire and reset to 0, allowing the list view to hit orphaned gen=0 entries.
     cache.add('product_list_generation', 0, timeout=None)
-    cache.incr('product_list_generation')
+    try:
+        cache.incr('product_list_generation')
+    except ValueError:
+        # A concurrent cache clear can delete the key in the narrow window
+        # between add() and incr() above (DatabaseCache isn't atomic across
+        # the two calls). Any value works here as long as it differs from
+        # whatever generation was baked into already-cached list pages, so
+        # re-seed the counter instead of letting this save() crash.
+        cache.set('product_list_generation', 1, timeout=None)
