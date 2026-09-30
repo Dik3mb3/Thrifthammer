@@ -6,10 +6,31 @@ not create it, matching the pattern for every other category's NK seed
 command.
 
 Source: user-supplied "Starcraft Noble Knight.xlsx" (Title/Title_URL/Price
-columns, 16 rows). 14 of the 25 catalog SKUs matched (NK doesn't carry the
-remaining 11 -- Hydralisk, Goliath, the base Protoss Starter Set, the Zerg/
-Terran Starter Sets, or any of the Wave 2 pre-order items -- a genuine
-coverage gap, not a matching failure).
+columns, 16 rows), plus 3 more user-supplied URLs added afterward (Hydralisk,
+Goliath, Lost Temple Ramp). 17 of the 25 catalog SKUs matched. Still not
+carried at all: the base Protoss Starter Set, the Zerg/Terran Starter Sets,
+and every Wave 2 pre-order item except none -- a genuine coverage gap, not
+a matching failure.
+
+Every URL below carries Noble Knight's `?awid=1576` affiliate parameter
+(see add_nk_affiliate_tags.py) -- added directly here since that cleanup
+command is not in the Procfile and would not fix this command's own output
+on the next redeploy otherwise.
+
+SC-001 Hydralisk and SC-009 Goliath are both currently OUT OF STOCK on NK
+("Last Stocked" date shown, no price displayed at all) -- recorded with
+price=None, in_stock=False, not_available=False (real listing, no current
+price to capture), same convention as the real-but-unavailable NK rows
+found during the Southern Kriels rollout. SC-009's on-page DESCRIPTION text
+is actually Marauder's copy-pasted by mistake (NK's own data error) -- the
+title, URL, and MFG part # (ACHSCMG0015) all correctly identify it as
+Goliath, so treated as a genuine match per the same precedent as WMH-059's
+"Mulgreth" title typo elsewhere in this catalog.
+
+SC-024 (Lost Temple Ramp) uses the IDENTICAL NK listing already assigned to
+SC-016 (Lost Temple) -- same pattern already confirmed on Amazon, where both
+SKUs share ASIN B0HGZK1JSY. User-supplied both URLs independently and they
+match, so NK (like Amazon) appears to sell these as one combined listing.
 
 3 titles are abbreviated on NK's own listing pages relative to our product
 names (no "& Pylon" / "& Omega Worm" / "& Point Defense Drone" suffix) --
@@ -43,20 +64,23 @@ _NK_SLUG = 'noble-knight-games'
 
 # (gw_sku, usd_price, url, in_stock)
 _PRICES = [
-    ('SC-014', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451943/Protoss---Stalker-Expansion-Set', True),
-    ('SC-002', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451917/Zerg---Zergling-Expansion-Set', True),
-    ('SC-006', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451925/Terran---Marine-Expansion-Set', True),
-    ('SC-016', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451949/Terrain---Lost-Temple-Expansion-Set', True),
-    ('SC-015', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451944/Protoss---Artanis-Hero-Expansion-Set', True),
-    ('SC-005', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451923/Zerg---Kerrigan-Hero-Expansion-Set', True),
-    ('SC-010', Decimal('34.95'), 'https://www.nobleknight.com/P/2148451937/Terran---Jim-Raynor-Hero-Expansion-Set', True),
-    ('SC-004', Decimal('31.95'), 'https://www.nobleknight.com/P/2148451920/Zerg---Queen-Expansion-Set', True),
-    ('SC-013', Decimal('31.95'), 'https://www.nobleknight.com/P/2148451942/Protoss---Sentry-Expansion-Set', True),
-    ('SC-008', Decimal('25.95'), 'https://www.nobleknight.com/P/2148510325/Terran---Medic-Expansion-Set', True),
-    ('SC-003', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451918/Zerg---Roach-Expansion-Set', True),
-    ('SC-007', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451931/Terran---Marauder-Expansion-Set', True),
-    ('SC-012', Decimal('34.95'), 'https://www.nobleknight.com/P/2148451941/Protoss---Adept-Expansion-Set', True),
-    ('SC-011', Decimal('34.95'), 'https://www.nobleknight.com/P/2148451939/Protoss---Zealot-Expansion-Set', True),
+    ('SC-014', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451943/Protoss---Stalker-Expansion-Set?awid=1576', True),
+    ('SC-002', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451917/Zerg---Zergling-Expansion-Set?awid=1576', True),
+    ('SC-006', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451925/Terran---Marine-Expansion-Set?awid=1576', True),
+    ('SC-016', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451949/Terrain---Lost-Temple-Expansion-Set?awid=1576', True),
+    ('SC-015', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451944/Protoss---Artanis-Hero-Expansion-Set?awid=1576', True),
+    ('SC-005', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451923/Zerg---Kerrigan-Hero-Expansion-Set?awid=1576', True),
+    ('SC-010', Decimal('34.95'), 'https://www.nobleknight.com/P/2148451937/Terran---Jim-Raynor-Hero-Expansion-Set?awid=1576', True),
+    ('SC-004', Decimal('31.95'), 'https://www.nobleknight.com/P/2148451920/Zerg---Queen-Expansion-Set?awid=1576', True),
+    ('SC-013', Decimal('31.95'), 'https://www.nobleknight.com/P/2148451942/Protoss---Sentry-Expansion-Set?awid=1576', True),
+    ('SC-008', Decimal('25.95'), 'https://www.nobleknight.com/P/2148510325/Terran---Medic-Expansion-Set?awid=1576', True),
+    ('SC-003', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451918/Zerg---Roach-Expansion-Set?awid=1576', True),
+    ('SC-007', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451931/Terran---Marauder-Expansion-Set?awid=1576', True),
+    ('SC-012', Decimal('34.95'), 'https://www.nobleknight.com/P/2148451941/Protoss---Adept-Expansion-Set?awid=1576', True),
+    ('SC-011', Decimal('34.95'), 'https://www.nobleknight.com/P/2148451939/Protoss---Zealot-Expansion-Set?awid=1576', True),
+    ('SC-001', None, 'https://www.nobleknight.com/P/2148451915/Zerg---Hydralisk-Expansion-Set?awid=1576', False),
+    ('SC-009', None, 'https://www.nobleknight.com/P/2148451934/Terran---Goliath-Expansion-Set?awid=1576', False),
+    ('SC-024', Decimal('43.95'), 'https://www.nobleknight.com/P/2148451949/Terrain---Lost-Temple-Expansion-Set?awid=1576', True),
 ]
 
 
