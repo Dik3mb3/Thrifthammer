@@ -51,6 +51,9 @@ ASIN_OVERRIDES = {
     'WMH-101': 'B0GH7VG25D',  # The Graveborn Command Cadre (HIPS) — search returned The Final Hunt Command Cadre; user-supplied correct link
     # Warmachine — Southern Kriels
     'WMH-042': 'B0GX9P98QP',  # Southern Kriels Kithguard Battlegroup Box — search returned Brineblood Battlegroup Box
+    # StarCraft
+    'SC-024': 'B0HGZK1JSY',   # Lost Temple Ramp - Terrain Expansion Set — search returned same shared listing as SC-016 Lost Temple; user-supplied correct link
+    'SC-011': 'B0HBNRBMW6',   # Zealot — search returned a different product line (JoyToy action figure); user-supplied correct link
 }
 
 # SKUs to explicitly exclude from Amazon URL discovery.
@@ -143,6 +146,19 @@ SKIP_SKUS = {
     # Warmachine — Mercenaries
     'WMH-367',                      # Captain Barl "Demolisher" Dunax — matched Captain Raef Huxley (different character; brand-new SKU, no real listing yet)
     'WMH-031',                      # Mind Thief — matched "Thief!" (unrelated product, not even Warmachine)
+    # StarCraft
+    'SC-017',                       # Protoss Starter Set — matched the "Founders Edition" bundle (different, richer product); manual_url_override set, no correct ASIN found
+    'SC-012',                       # Adept — matched an unrelated book, "Adepts of the Five Elements"
+    'SC-021',                       # Immortal - Protoss - Expansion Set — matched the Protoss Starter Set (wrong item)
+    'SC-010',                       # Jim Raynor & Point Defense Drone — matched a Funko Pop figure, not the real kit
+    'SC-007',                       # Marauder — matched an unrelated Dark Horse Comics ship replica
+    'SC-006',                       # Marine — matched a different product line (JoyToy action figure), price far off MSRP
+    'SC-004',                       # Queen — matched a Funko Pop figure, not the real kit
+    'SC-025',                       # Rulebook — matched the same unrelated Dark Horse Comics ship replica as SC-007
+    'SC-022',                       # Siege Tank - Terran - Expansion Set — matched the base Lost Temple set (duplicate-ASIN pattern)
+    'SC-019',                       # Terran Starter Set — matched the Two-Player bundle (Terran+Zerg together), not the single set
+    'SC-023',                       # Zeratul - Protoss - Hero Expansion Set — matched a Youtooz vinyl figure of an unrelated Zerg creature, wrong character
+    'SC-018',                       # Zerg Starter Set — matched the same Two-Player bundle as SC-019
 }
 # ─────────────────────────────────────────────────────────────────────────────
 
