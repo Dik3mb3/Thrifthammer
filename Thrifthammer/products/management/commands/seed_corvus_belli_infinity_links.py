@@ -14,9 +14,12 @@ cells rendering as a clean "-" instead of a blank/garbled price, while the
 Buy button still links out correctly, since that button's visibility is
 driven by url being set, not by not_available.
 
-Source: same "Infinity Panoceania Pt. 1.xlsx" URLs already written to
-Product.gw_url by populate_infinity_panoceania_products.py -- reused
-directly here, not re-entered.
+Covers the WHOLE Infinity category (not just one faction) -- Product.gw_url
+is written by each faction's own populate_infinity_<faction>_products.py
+command (PanOceania, Yu Jing, ...), and this command just picks up every
+Infinity product that has one, regardless of faction. Re-run it after
+adding a new faction's products and it will seed that faction's links too,
+without needing its own copy of this command.
 
 Run once on Railway startup via Procfile. Safe to re-run -- idempotent.
 """
@@ -29,7 +32,7 @@ _CORVUS_BELLI_SLUG = 'corvus-belli-uk'
 
 
 class Command(BaseCommand):
-    help = 'Seed Corvus Belli official-listing links (no price yet) for Infinity: PanOceania. Idempotent.'
+    help = 'Seed Corvus Belli official-listing links (no price yet) for every Infinity faction. Idempotent.'
 
     def handle(self, *args, **options):
         retailer, created = Retailer.objects.get_or_create(
@@ -47,7 +50,7 @@ class Command(BaseCommand):
 
         seeded = 0
         skipped = 0
-        for product in Product.objects.filter(category__slug='infinity', faction__slug='panoceania'):
+        for product in Product.objects.filter(category__slug='infinity'):
             if not product.gw_url:
                 self.stderr.write(f'SKIP — {product.gw_sku} has no gw_url')
                 skipped += 1
