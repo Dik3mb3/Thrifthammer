@@ -14,7 +14,7 @@ import datetime
 from decimal import Decimal
 
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, get_connection
 from django.core.management.base import BaseCommand
 from django.db.models import DecimalField, F, Min, OuterRef, Q, Subquery
 from django.db.models.functions import Coalesce
@@ -121,6 +121,13 @@ class Command(BaseCommand):
         )
 
         # ── 4. Send (per-subscriber so each gets their own unsubscribe link) ─
+        # Reuse a single SMTP connection across the whole batch -- opening a
+        # fresh connection per subscriber (the old behavior) triggers Gmail's
+        # abuse detection after ~85 rapid reconnects, which then drops every
+        # subsequent connection with "Connection unexpectedly closed" and
+        # silently fails the rest of the run.
+        connection = get_connection()
+        connection.open()
         sent = errors = 0
         for sub in subscribers:
             try:
@@ -142,9 +149,17 @@ class Command(BaseCommand):
                     body=text_body,
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     to=[sub.email],
+                    connection=connection,
                 )
                 msg.attach_alternative(html_body, 'text/html')
-                msg.send(fail_silently=False)
+                try:
+                    msg.send(fail_silently=False)
+                except Exception:
+                    # Connection may have dropped -- reopen once and retry
+                    # this single message before giving up on it.
+                    connection.close()
+                    connection.open()
+                    msg.send(fail_silently=False)
                 sent += 1
                 self.stdout.write(self.style.SUCCESS(f'  [sent] {sub.email}'))
                 if hasattr(sub, 'record_send_success'):
@@ -154,6 +169,7 @@ class Command(BaseCommand):
                 self.stderr.write(f'  [error] {sub.email} — {exc}')
                 if hasattr(sub, 'record_send_failure'):
                     sub.record_send_failure(exc)
+        connection.close()
 
         self.stdout.write(
             f'\nDone -- sent: {sent} | errors: {errors}'
