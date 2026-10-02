@@ -19,7 +19,9 @@ Also updates batch_tag to 'phase-1' on all 6 products.
 Prices are left as None — scrapers will populate actual prices.
 Stock status defaults to not_available=False, in_stock=False until scrapers run.
 
-Safe to run repeatedly (idempotent via update_or_create).
+Safe to run repeatedly (idempotent via update_or_create). Price, in_stock and
+not_available are create-only: a re-run (every deploy) only refreshes url and
+listing_title, so it never resets a price or stock status a scraper has set.
 
 Usage:
     python manage.py seed_aeldari_corsair_links
@@ -208,6 +210,10 @@ def _seed_retailer(command, retailer_name, data, dry_run):
             product=product,
             retailer=retailer,
             defaults={
+                'url': url,
+                'listing_title': listing_title,
+            },
+            create_defaults={
                 'price': price,
                 'url': url,
                 'listing_title': listing_title,
