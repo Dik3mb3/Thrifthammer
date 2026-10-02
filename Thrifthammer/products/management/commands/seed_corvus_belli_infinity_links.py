@@ -21,6 +21,12 @@ Infinity product that has one, regardless of faction. Re-run it after
 adding a new faction's products and it will seed that faction's links too,
 without needing its own copy of this command.
 
+Price, currency, in_stock and not_available are create-only: re-running this
+command only refreshes the URL on an existing row. The per-faction
+seed_firestorm_games_infinity_<faction>_prices commands later fill in the GBP
+MSRP (Firestorm's RRP) on these rows, and a plain update here would reset it
+to None on every deploy.
+
 Run once on Railway startup via Procfile. Safe to re-run -- idempotent.
 """
 from django.core.management.base import BaseCommand
@@ -59,9 +65,11 @@ class Command(BaseCommand):
             CurrentPrice.objects.update_or_create(
                 product=product,
                 retailer=retailer,
-                defaults={
+                defaults={'url': product.gw_url},
+                create_defaults={
                     'url': product.gw_url,
                     'price': None,
+                    'currency': 'GBP',
                     'in_stock': False,
                     'not_available': True,
                 },
