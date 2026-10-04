@@ -20,10 +20,11 @@ Usage:
 """
 
 import datetime
+import time
 from decimal import Decimal
 
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, get_connection
 from django.core.management.base import BaseCommand
 from django.db.models import DecimalField, F, Min, OuterRef, Q, Subquery
 from django.db.models.functions import Coalesce
@@ -33,6 +34,10 @@ from django.utils import timezone
 from blog.models import Post
 from prices.models import CurrentPrice
 from products.models import NewsletterSignup, Product, WARHAMMER_CATEGORY_SLUGS
+
+# Pause between messages so a large batch is sent at a steady pace rather than
+# in one burst, which Gmail's abuse detection can treat as suspicious.
+_SEND_DELAY_SECONDS = 1.5
 
 
 class Command(BaseCommand):
@@ -124,6 +129,12 @@ class Command(BaseCommand):
         )
 
         # ── 4. Send ───────────────────────────────────────────────────────────
+        # Reuse a single SMTP connection across the whole batch -- opening a
+        # fresh connection per subscriber triggers Gmail's abuse detection
+        # after enough rapid reconnects, which then drops every later
+        # connection and silently fails the rest of the run.
+        connection = get_connection()
+        connection.open()
         sent = errors = 0
         for sub in subscribers:
             try:
@@ -145,9 +156,17 @@ class Command(BaseCommand):
                     body=text_body,
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     to=[sub.email],
+                    connection=connection,
                 )
                 msg.attach_alternative(html_body, 'text/html')
-                msg.send(fail_silently=False)
+                try:
+                    msg.send(fail_silently=False)
+                except Exception:
+                    # Connection may have dropped -- reopen once and retry
+                    # this single message before giving up on it.
+                    connection.close()
+                    connection.open()
+                    msg.send(fail_silently=False)
                 sent += 1
                 self.stdout.write(self.style.SUCCESS(f'  [sent] {sub.email}'))
                 if hasattr(sub, 'record_send_success'):
@@ -157,6 +176,8 @@ class Command(BaseCommand):
                 self.stderr.write(f'  [error] {sub.email} — {exc}')
                 if hasattr(sub, 'record_send_failure'):
                     sub.record_send_failure(exc)
+            time.sleep(_SEND_DELAY_SECONDS)
+        connection.close()
 
         self.stdout.write(f'\nDone -- sent: {sent} | errors: {errors}')
 
