@@ -28,14 +28,14 @@ from django.core.management.base import BaseCommand
 NK_PRICES = [
     # (gw_sku, listing_title, price, url, in_stock, not_available)
     # -- From the original NK sheet --
-    ('WMH-034', 'Storm Legion Core Expansion Set', 144.95, 'https://www.nobleknight.com/P/2148207454/Storm-Legion-Core-Expansion-Set?awid=1576', True, False),
-    ('WMH-071', 'Cygnar Hellslingers Command Cadre', 63.95, 'https://www.nobleknight.com/P/2148378997/Cygnar-Hellslingers-Command-Cadre?awid=1576', True, False),
-    ('WMH-074', 'Cygnar Gravediggers Command Starter Set', 72.95, 'https://www.nobleknight.com/P/2148429624/Cygnar-Gravediggers-Command-Starter-Set?awid=1576', True, False),
-    ('WMH-142', 'Storm Legion Auxiliary Expansion Set', 135.95, 'https://www.nobleknight.com/P/2148207457/Storm-Legion-Auxiliary-Expansion-Set?awid=1576', True, False),
+    ('WMH-034', 'Storm Legion Core Expansion Set', 144.95, 'https://www.nobleknight.com/P/2148207457/Storm-Legion-Core-Expansion-Set?awid=1576', True, False),
+    ('WMH-071', 'Cygnar Hellslingers Command Cadre', 63.95, 'https://www.nobleknight.com/P/2148315705/Cygnar-Hellslingers-Command-Cadre?awid=1576', True, False),
+    ('WMH-074', 'Cygnar Gravediggers Command Starter Set', 72.95, 'https://www.nobleknight.com/P/2148337824/Cygnar-Gravediggers-Command-Starter-Set?awid=1576', True, False),
+    ('WMH-142', 'Storm Legion Auxiliary Expansion Set', 135.95, 'https://www.nobleknight.com/P/2148221305/Storm-Legion-Auxiliary-Expansion-Set?awid=1576', True, False),
     ('WMH-143', 'Storm Legion Battlegroup Box Set', 67.95, 'https://www.nobleknight.com/P/2148207472/Storm-Legion-Battlegroup-Box-Set?awid=1576', True, False),
-    ('WMH-234', 'Cygnar Gravediggers Auxiliary Expansion', 135.95, 'https://www.nobleknight.com/P/2148429621/Cygnar-Gravediggers-Auxiliary-Expansion?awid=1576', True, False),
+    ('WMH-234', 'Cygnar Gravediggers Auxiliary Expansion', 135.95, 'https://www.nobleknight.com/P/2148302997/Cygnar-Gravediggers-Auxiliary-Expansion?awid=1576', True, False),
     ('WMH-236', 'Cygnar Gravediggers Battlegroup Box Set', 67.95, 'https://www.nobleknight.com/P/2148338598/Cygnar-Gravediggers-Battlegroup-Box-Set?awid=1576', True, False),
-    ('WMH-255', 'Cygnar Gravediggers Core Expansion', 144.95, 'https://www.nobleknight.com/P/2148429618/Cygnar-Gravediggers-Core-Expansion?awid=1576', True, False),
+    ('WMH-255', 'Cygnar Gravediggers Core Expansion', 144.95, 'https://www.nobleknight.com/P/2148298048/Cygnar-Gravediggers-Core-Expansion?awid=1576', True, False),
     # -- User-confirmed by direct URL 2026-08-13 --
     ('WMH-030', 'Gravediggers - Bandit', None, 'https://www.nobleknight.com/P/2148494224/Gravediggers---Bandit?awid=1576', False, False),
     ('WMH-035', 'Sharpshooter', 12.00, 'https://www.nobleknight.com/P/2148126924/Sharpshooter?awid=1576', True, False),

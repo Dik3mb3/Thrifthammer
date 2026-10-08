@@ -15,7 +15,9 @@ jobs:
   scrape:
     name: Miniature Market Scraper
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Walks every active product (~3,400), so a full pass takes well over an hour;
+    # 2h leaves headroom so a run is not cut off (same sizing as the eBay job).
+    timeout-minutes: 120
     defaults:
       run:
         working-directory: ./Thrifthammer

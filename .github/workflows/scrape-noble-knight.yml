@@ -15,7 +15,9 @@ jobs:
   scrape:
     name: Noble Knight Scraper
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # ~2,100 products at ~2s each is a ~70 min pass; 2h leaves headroom so a full
+    # run is not cut off (same sizing as the eBay job).
+    timeout-minutes: 120
     defaults:
       run:
         working-directory: ./Thrifthammer
