@@ -124,13 +124,8 @@ MM_LINKS = [
         'https://www.miniaturemarket.com/Warhammer-40K-Aeldari-Vyper-New-Arrival/GW-46-83-2026',
         False, False,
     ),
-    (
-        'combat-patrol-aeldari-corsairs',
-        'Warhammer 40K: Combat Patrol - Aeldari Corsairs',
-        None,
-        'https://www.miniaturemarket.com/Warhammer-40K-Combat-Patrol-Aeldari-Corsairs-New-Arrival/GW-73-463-2026',
-        False, False,
-    ),
+    # The Combat Patrol: Aeldari Corsairs has no Miniature Market listing (the
+    # pre-order page was removed; link blanked 2026-10-09), so it is not seeded.
 ]
 
 NK_LINKS = [

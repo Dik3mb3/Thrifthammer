@@ -227,7 +227,7 @@ PRODUCTS = [
         'BB-011', 55.50,
         'https://www.warhammer.com/en-US/shop/Blood-Bowl-Imperial-Nobility-Team-2021',
         'B0924V88VR',
-        'https://www.miniaturemarket.com/gw-202-13.html',
+        None,  # no Miniature Market listing (page removed, link blanked 2026-10-08)
         None,
     ),
     (
@@ -537,7 +537,7 @@ PRODUCTS = [
         'BB-056', 21.50,
         'https://www.warhammer.com/en-US/shop/Blood-Bowl-Elf-And-Dwarf-Biased-Referees-2021',
         'B0924SXFGZ',
-        'https://www.miniaturemarket.com/gw-202-16.html',
+        None,  # no Miniature Market listing (page removed, link blanked 2026-10-09)
         None,
     ),
     (
@@ -545,7 +545,7 @@ PRODUCTS = [
         'BB-057', 21.50,
         'https://www.warhammer.com/en-US/shop/Blood-Bowl-Varag-Ghoul-chewer-2021',
         'B0924THHHJ',
-        'https://www.miniaturemarket.com/gw-202-15.html',
+        None,  # no Miniature Market listing (page removed, link blanked 2026-10-09)
         None,
     ),
     (
@@ -805,7 +805,7 @@ PRODUCTS = [
         'BB-099', 21.50,
         'https://www.warhammer.com/en-US/shop/Blood-Bowl-Griff-Oberwald-2021',
         None,
-        'https://www.miniaturemarket.com/gw-202-14.html',
+        None,  # no Miniature Market listing (page removed, link blanked 2026-10-09)
         None,
     ),
     (

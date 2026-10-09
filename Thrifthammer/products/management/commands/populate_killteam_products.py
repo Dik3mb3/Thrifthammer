@@ -126,7 +126,7 @@ PRODUCTS = [
     ('KT-010', 'Kill Team: Imperial Navy Breachers', 'kill-team-imperial-navy-breachers', Decimal('69.00'),
      'https://www.warhammer.com/en-US/shop/kill-team-imperial-navy-breachers-2024',
      'B0DPMX5NG4',
-     'https://www.miniaturemarket.com/kill-team-imperial-navy-breachers-gw-103-07-2024.html',
+     '',  # no Miniature Market listing (page removed, link blanked 2026-10-09)
      'https://www.nobleknight.com/P/2148239639/Imperial-Navy-Breachers'),
 
     ('KT-011', 'Kill Team: Tempestus Aquilons', 'kill-team-tempestus-aquilons', Decimal('69.00'),
@@ -138,7 +138,7 @@ PRODUCTS = [
     ('KT-012', 'Kill Team: Kasrkin', 'kill-team-kasrkin', Decimal('69.00'),
      'https://www.warhammer.com/en-US/shop/kill-team-kasrkin-2024',
      'B0DKNXGVWL',
-     'https://www.miniaturemarket.com/kill-team-kasrkin-gw-103-18-2024.html',
+     '',  # no Miniature Market listing (page removed, link blanked 2026-10-09)
      'https://www.nobleknight.com/P/2148213787/Kasrkin'),
 
     ('KT-013', 'Killzone: Bheta-Decima', 'killzone-bheta-decima', Decimal('127.00'),
