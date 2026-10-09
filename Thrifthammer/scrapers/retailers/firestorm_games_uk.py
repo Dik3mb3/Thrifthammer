@@ -23,14 +23,22 @@ Stock detection:
 
 Usage:
     python manage.py run_scrapers firestorm-games
+    python manage.py run_scrapers firestorm-games --shard 3/7 --limit 500
 
 Notes:
   - Only processes CurrentPrice rows that already have a Firestorm URL.
   - Failure modes mirror Noble Knight to prevent over-blanking:
-      * Network error / non-200 / Cloudflare challenge → FETCH_ERROR sentinel;
-        existing price is PRESERVED (scrape failure != out of stock).
-      * Successful 200 response but no price found → price blanked and
+      * Network error / non-200 / Cloudflare challenge → the existing price is
+        PRESERVED (scrape failure != out of stock).
+      * Successful 200 response but no price found → the price is blanked and
         in_stock set to False (product genuinely delisted on Firestorm).
+  - A 404 is reported as a stale link and is not retried.  A blocked response
+    (403 / 429 / challenge page) is not retried either, and several in a row
+    stop the run so the site is not hammered while it is refusing us.
+  - Blanking is held back until the end of the run and only applied when the
+    number of blanks is believable (see scrapers/safeguards.py).
+  - Firestorm's Cloudflare turns away GitHub-hosted runners, so this scraper is
+    meant to be run by hand from a normal connection, in slices (--shard).
   - The stored URL keeps its ?aff= affiliate tag; that tag is stripped only
     from the outgoing scrape request so bot traffic doesn't pollute
     Firestorm's affiliate analytics (same reasoning as Noble Knight's
@@ -52,6 +60,7 @@ from django.utils import timezone
 from prices.models import CurrentPrice
 from products.models import Retailer
 from scrapers.models import ScrapeJob
+from scrapers.safeguards import RunGuard, finish_run, note_crash, select_slice
 
 logger = logging.getLogger(__name__)
 
@@ -62,8 +71,8 @@ JITTER_MAX = 1.0
 
 # Sentinel returned by _fetch_price when the page could not be retrieved
 # (network error, non-200 HTTP status, Cloudflare challenge, etc.). Distinct
-# from None ("page loaded but no price found") so the run loop can preserve
-# the existing price instead of erroneously blanking it.
+# from None ("page loaded but no price found") so callers preserve the
+# existing price instead of erroneously blanking it.
 _FETCH_ERROR = object()
 
 # Cloudflare challenge pages are typically very short.
@@ -75,6 +84,13 @@ _OUT_OF_STOCK_SIGNALS = (
     'notify me',
     'coming soon',
 )
+
+# Outcomes of one page fetch (see FirestormGamesUKScraper._fetch_page).
+_OK = 'ok'                # price and stock read from a product page
+_NO_PRICE = 'no_price'    # a real page that shows no price
+_NOT_FOUND = 'not_found'  # HTTP 404
+_BLOCKED = 'blocked'      # 403 / 429 / 503, a challenge page or a too-short page
+_ERROR = 'error'          # network failure or any other server error
 
 
 def _strip_affiliate_params(url):
@@ -122,12 +138,21 @@ class FirestormGamesUKScraper:
         self.delay = DEFAULT_DELAY
 
     # -------------------------------------------------------------------------
-    # Public entry point
+    # Public entry points
     # -------------------------------------------------------------------------
 
-    def run(self, batch_tag=None):
+    def select_entries(self, batch_tag=None, shard=None, limit=None):
+        """Return the rows a run with these options would visit (read only)."""
+        retailer = Retailer.objects.get(slug=self.retailer_slug)
+        return select_slice(self._base_entries(retailer, batch_tag), shard, limit)
+
+    def run(self, batch_tag=None, shard=None, limit=None):
         """
-        Refresh Firestorm Games prices for all products with a stored URL.
+        Refresh Firestorm Games prices for products with a stored URL.
+
+        ``shard`` is an ``(index, count)`` pair and ``limit`` a row cap; together
+        they select one slice of the catalog (see scrapers/safeguards.py).
+        With neither, every row is visited, as before.
 
         Returns the ScrapeJob record.
         """
@@ -143,7 +168,38 @@ class FirestormGamesUKScraper:
             started_at=timezone.now(),
         )
         errors = []
+        guard = RunGuard()
+        entries = select_slice(self._base_entries(retailer, batch_tag), shard, limit)
 
+        for entry in entries:
+            if guard.tripped:
+                break
+            if not entry.product.is_active:
+                continue
+            if FIRESTORM_DOMAIN not in entry.url:
+                logger.debug('[firestorm] Skipping non-Firestorm URL for %s: %s', entry.product.name, entry.url)
+                continue
+
+            job.products_found += 1
+            try:
+                self._refresh_entry(entry, job, guard, errors)
+            except Exception as exc:
+                errors.append(f'{entry.product.name} ({entry.product.gw_sku}): {exc}')
+                logger.exception('[firestorm] Error scraping %s', entry.product.name)
+                note_crash(guard)
+
+            time.sleep(self.delay + random.uniform(0, JITTER_MAX))
+
+        finish_run(job, guard, errors, 'firestorm')
+        return job
+
+    # -------------------------------------------------------------------------
+    # Run helpers
+    # -------------------------------------------------------------------------
+
+    @staticmethod
+    def _base_entries(retailer, batch_tag):
+        """All rows with a stored URL for this retailer, optionally one batch tag."""
         entries = (
             CurrentPrice.objects
             .filter(retailer=retailer)
@@ -153,75 +209,56 @@ class FirestormGamesUKScraper:
         )
         if batch_tag:
             entries = entries.filter(product__batch_tag=batch_tag)
+        return entries
 
-        for entry in entries:
-            product = entry.product
-            if not product.is_active:
-                continue
+    def _refresh_entry(self, entry, job, guard, errors):
+        """Fetch one row's page and apply (or hold back) the result."""
+        product = entry.product
+        was_priced = entry.price is not None
+        kind, price, in_stock = self._fetch_with_retries(_strip_affiliate_params(entry.url))
 
-            url = entry.url
-            if FIRESTORM_DOMAIN not in url:
-                logger.debug('[firestorm] Skipping non-Firestorm URL for %s: %s', product.name, url)
-                continue
+        if kind == _OK:
+            entry.price = price
+            entry.in_stock = in_stock
+            entry.not_available = False
+            entry.save(update_fields=['price', 'in_stock', 'not_available', 'last_seen'])
+            guard.record_ok(was_priced)
+            job.prices_updated += 1
+            logger.info(
+                '[firestorm] [updated] %s — £%.2f  %s',
+                product.name, price, 'in stock' if in_stock else 'OUT OF STOCK',
+            )
+        elif kind == _NO_PRICE:
+            guard.record_ok(was_priced)
+            logger.warning('[firestorm] [no price] %s — queued for blanking: %s', product.name, entry.url[:80])
+            if was_priced:
+                guard.defer_blank(entry, 'no price on the page')
+            else:
+                entry.save(update_fields=['last_seen'])
+        elif kind == _NOT_FOUND:
+            guard.record_ok()
+            errors.append(f'[stale-link] {product.name} ({product.gw_sku}): {entry.url}')
+        elif kind == _BLOCKED:
+            guard.record_failure(blocked=True)
+            logger.warning('[firestorm] [blocked] %s — price left unchanged: %s', product.name, entry.url[:80])
+        else:
+            guard.record_failure()
+            logger.warning('[firestorm] [fetch-failed] %s — price left unchanged: %s', product.name, entry.url[:80])
 
-            job.products_found += 1
-            fetch_url = _strip_affiliate_params(url)
+    def _fetch_with_retries(self, url):
+        """
+        Fetch a page, retrying network and server errors twice with a back-off.
 
-            try:
-                result = self._fetch_price(fetch_url)
-
-                # Retry on fetch errors (network/rate-limit) -- back off briefly.
-                if result is _FETCH_ERROR:
-                    time.sleep(self.delay + random.uniform(0.5, 1.0))
-                    result = self._fetch_price(fetch_url)
-
-                if result is _FETCH_ERROR:
-                    time.sleep(self.delay * 1.5 + random.uniform(0.5, 1.5))
-                    result = self._fetch_price(fetch_url)
-
-                if result is _FETCH_ERROR:
-                    # All retries hit network/Cloudflare failures. Preserve
-                    # existing price -- a scrape failure is NOT the same as
-                    # the product being out of stock.
-                    logger.warning(
-                        '[firestorm] [fetch-failed] %s — preserving existing price '
-                        '(network/bot-detection): %s',
-                        product.name, url[:80],
-                    )
-                elif result is None:
-                    # Page loaded successfully but no price found -- product
-                    # is genuinely unavailable/delisted on Firestorm.
-                    logger.warning(
-                        '[firestorm] [no price] %s — blanking price (confirmed unavailable): %s',
-                        product.name, url[:80],
-                    )
-                    entry.price = None
-                    entry.in_stock = False
-                    entry.save(update_fields=['price', 'in_stock'])
-                else:
-                    price, in_stock = result
-                    entry.price = price
-                    entry.in_stock = in_stock
-                    entry.not_available = False
-                    entry.save(update_fields=['price', 'in_stock', 'not_available'])
-                    logger.info(
-                        '[firestorm] [updated] %s — £%.2f  %s',
-                        product.name, price, 'in stock' if in_stock else 'OUT OF STOCK',
-                    )
-                    job.prices_updated += 1
-
-            except Exception as exc:
-                msg = f'{product.name} ({product.gw_sku}): {exc}'
-                errors.append(msg)
-                logger.exception('[firestorm] Error scraping %s', product.name)
-
-            time.sleep(self.delay + random.uniform(0, JITTER_MAX))
-
-        job.status = 'success'
-        job.errors = '\n'.join(errors)
-        job.finished_at = timezone.now()
-        job.save()
-        return job
+        A 404, a block and a "no price" answer are not retried.
+        """
+        kind, price, in_stock = self._fetch_page(url)
+        if kind == _ERROR:
+            time.sleep(self.delay + random.uniform(0.5, 1.0))
+            kind, price, in_stock = self._fetch_page(url)
+        if kind == _ERROR:
+            time.sleep(self.delay * 1.5 + random.uniform(0.5, 1.5))
+            kind, price, in_stock = self._fetch_page(url)
+        return kind, price, in_stock
 
     # -------------------------------------------------------------------------
     # Price extraction
@@ -241,32 +278,65 @@ class FirestormGamesUKScraper:
                                               or Cloudflare challenge);
                                               caller should preserve existing
                                               price rather than blanking it
+
+        Kept for callers outside the run loop; the run loop uses _fetch_page.
+        """
+        kind, price, in_stock = self._fetch_page(url)
+        if kind == _OK:
+            return price, in_stock
+        if kind == _NO_PRICE:
+            return None
+        return _FETCH_ERROR
+
+    def _fetch_page(self, url):
+        """
+        GET a Firestorm Games product page.
+
+        Returns ``(kind, price, in_stock)`` where ``kind`` is one of the
+        module-level outcomes (_OK, _NO_PRICE, _NOT_FOUND, _BLOCKED, _ERROR);
+        price and in_stock are only meaningful for _OK.
         """
         try:
             response = self.session.get(url, timeout=15)
         except Exception as exc:
             logger.warning('[firestorm] Request failed for %s: %s', url[:80], exc)
-            return _FETCH_ERROR
+            return _ERROR, None, False
+        kind = self._status_outcome(url, response)
+        if kind:
+            return kind, None, False
+        return self._read_product_page(url, response)
 
-        if response.status_code == 404:
+    @staticmethod
+    def _status_outcome(url, response):
+        """
+        Classify a response from its status and size alone.
+
+        Returns an outcome, or None when the page looks like a real product page
+        that still has to be read.
+        """
+        status = response.status_code
+        if status == 404:
             logger.warning('[firestorm] 404 for %s — URL may be stale', url[:80])
-            return _FETCH_ERROR
-
-        if response.status_code != 200:
-            logger.debug('[firestorm] HTTP %d for %s', response.status_code, url[:80])
-            return _FETCH_ERROR
-
+            return _NOT_FOUND
+        if status in (403, 429, 503):
+            logger.warning('[firestorm] HTTP %d for %s — looks like a block', status, url[:80])
+            return _BLOCKED
+        if status != 200:
+            logger.debug('[firestorm] HTTP %d for %s', status, url[:80])
+            return _ERROR
         # Guard against Cloudflare challenge pages that return HTTP 200 but
         # contain no product content. Real product pages are always much
         # larger than the minimum threshold.
         if len(response.content) < _MIN_PAGE_BYTES:
             logger.warning(
-                '[firestorm] Suspiciously short response (%d bytes) for %s — '
-                'likely bot-detection; treating as fetch error',
+                '[firestorm] Suspiciously short response (%d bytes) for %s — likely bot-detection',
                 len(response.content), url[:80],
             )
-            return _FETCH_ERROR
+            return _BLOCKED
+        return None
 
+    def _read_product_page(self, url, response):
+        """Read price and stock from a page already known to be a product page."""
         soup = BeautifulSoup(response.text, 'html.parser')
 
         title_lower = (soup.title.string or '').lower() if soup.title else ''
@@ -279,14 +349,12 @@ class FirestormGamesUKScraper:
         )
         if bot_signals:
             logger.warning('[firestorm] Bot-detection challenge detected for %s', url[:80])
-            return _FETCH_ERROR
+            return _BLOCKED, None, False
 
         price = self._extract_price(soup)
         if price is None:
-            return None
-
-        in_stock = self._extract_in_stock(soup, page_text_lower)
-        return price, in_stock
+            return _NO_PRICE, None, False
+        return _OK, price, self._extract_in_stock(soup, page_text_lower)
 
     @staticmethod
     def _extract_price(soup):

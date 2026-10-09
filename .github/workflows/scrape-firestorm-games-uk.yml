@@ -1,11 +1,13 @@
 name: Scrape Firestorm Games UK
 
 on:
-  schedule:
-    # Every Friday at 12:00 PM Eastern (16:00 UTC during EDT; adjust to
-    # 17:00 UTC in winter when EST/UTC-5 kicks in) — see send-friday-deals.yml
-    # for the same convention used elsewhere in this repo.
-    - cron: '0 16 * * 5'
+  # The weekly schedule is switched off on purpose. Firestorm's Cloudflare turns
+  # away GitHub-hosted runners: every scheduled run from 2026-08-29 to 2026-10-02
+  # failed every row and then sat until the timeout (about 1,190 blocked
+  # requests per run, zero prices updated). Run Firestorm by hand from a normal
+  # connection instead, in slices:
+  #     python manage.py run_scrapers firestorm-games --shard 3/7 --limit 500
+  # The old schedule was:  cron '0 16 * * 5'  (Fridays 16:00 UTC)
   workflow_dispatch:
     inputs:
       batch_tag:

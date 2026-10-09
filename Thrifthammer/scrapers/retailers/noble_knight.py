@@ -17,15 +17,23 @@ Stock detection:
 
 Usage:
     python manage.py run_scrapers noble-knight-games
+    python manage.py run_scrapers noble-knight-games --shard 3/7 --limit 500
 
 Notes:
   - Only processes products that already have an NK URL in CurrentPrice.
     Products without a URL are skipped (not marked not_available).
   - Failure modes are treated differently to prevent over-blanking:
-      * Network error / non-200 response / bot detection → FETCH_ERROR sentinel
-        returned; existing price is PRESERVED (scrape failure ≠ out of stock).
-      * Successful 200 response but no price found → price blanked and
+      * Network error / non-200 response / bot detection → the existing price
+        is PRESERVED (scrape failure ≠ out of stock).
+      * Successful 200 response but no price found → the price is blanked and
         in_stock set to False (product genuinely unavailable on NK).
+      * A /P/ product link that now lands on a different kind of page (NK sends
+        delisted products to its homepage, which also shows prices) is treated
+        as a dead link and never as a price.
+  - Blanking is held back until the end of the run and only applied when the
+    number of blanks is believable (see scrapers/safeguards.py), so a markup
+    change or an outage cannot zero out prices by accident.
+  - The run stops after several failed rows in a row (blocked / site down).
   - manual_url_override=True rows: URL is NOT changed; price IS updated.
   - Polite 1.5 s delay + 0–1 s jitter between requests.
 """
@@ -44,6 +52,7 @@ from django.utils import timezone
 from prices.models import CurrentPrice
 from products.models import Retailer
 from scrapers.models import ScrapeJob
+from scrapers.safeguards import RunGuard, finish_run, note_crash, select_slice
 
 logger = logging.getLogger(__name__)
 
@@ -70,12 +79,21 @@ JITTER_MAX = 0.3
 # (network error, non-200 HTTP status, bot-detection redirect, etc.).
 # Distinct from None ("page loaded but no price found") so the run loop can
 # preserve the existing price instead of erroneously blanking it.
+# Other code (for example fetch_corsair_prices) imports this, so it stays.
 _FETCH_ERROR = object()
 
 # Bot-detection pages are typically very short.  If the response body is
 # shorter than this threshold (bytes) we treat it as a blocked request rather
 # than a real product page.
 _MIN_PAGE_BYTES = 5_000
+
+# Outcomes of one page fetch (see NoblekKnightScraper._fetch_page).
+_OK = 'ok'                # price and stock read from a product page
+_NO_PRICE = 'no_price'    # a real product page that shows no price
+_NOT_FOUND = 'not_found'  # HTTP 404
+_BLOCKED = 'blocked'      # 403 / 429 / 503, a challenge page or a too-short page
+_ERROR = 'error'          # network failure or any other server error
+_DEAD_LINK = 'dead_link'  # a /P/ link that now lands off the product pages
 
 
 class NoblekKnightScraper:
@@ -109,12 +127,21 @@ class NoblekKnightScraper:
         self.delay = DEFAULT_DELAY
 
     # -------------------------------------------------------------------------
-    # Public entry point
+    # Public entry points
     # -------------------------------------------------------------------------
 
-    def run(self, batch_tag=None):
+    def select_entries(self, batch_tag=None, shard=None, limit=None):
+        """Return the rows a run with these options would visit (read only)."""
+        retailer = Retailer.objects.get(slug=self.retailer_slug)
+        return select_slice(self._base_entries(retailer, batch_tag), shard, limit)
+
+    def run(self, batch_tag=None, shard=None, limit=None):
         """
-        Scrape NK prices for all products with a stored NK URL.
+        Scrape NK prices for products with a stored NK URL.
+
+        ``shard`` is an ``(index, count)`` pair and ``limit`` a row cap; together
+        they select one slice of the catalog (see scrapers/safeguards.py).
+        With neither, every row is visited, as before.
 
         Returns the ScrapeJob record.
         """
@@ -130,7 +157,38 @@ class NoblekKnightScraper:
             started_at=timezone.now(),
         )
         errors = []
+        guard = RunGuard()
+        entries = select_slice(self._base_entries(retailer, batch_tag), shard, limit)
 
+        for entry in entries:
+            if guard.tripped:
+                break
+            if not entry.product.is_active:
+                continue
+            if NK_DOMAIN not in entry.url:
+                logger.debug('[nk] Skipping non-NK URL for %s: %s', entry.product.name, entry.url)
+                continue
+
+            job.products_found += 1
+            try:
+                self._refresh_entry(entry, job, guard, errors)
+            except Exception as exc:
+                errors.append(f'{entry.product.name} ({entry.product.gw_sku}): {exc}')
+                logger.exception('[nk] Error scraping %s', entry.product.name)
+                note_crash(guard)
+
+            time.sleep(self.delay + random.uniform(0, JITTER_MAX))
+
+        finish_run(job, guard, errors, 'nk')
+        return job
+
+    # -------------------------------------------------------------------------
+    # Run helpers
+    # -------------------------------------------------------------------------
+
+    @staticmethod
+    def _base_entries(retailer, batch_tag):
+        """All rows with a stored URL for this retailer, optionally one batch tag."""
         entries = (
             CurrentPrice.objects
             .filter(retailer=retailer)
@@ -140,80 +198,65 @@ class NoblekKnightScraper:
         )
         if batch_tag:
             entries = entries.filter(product__batch_tag=batch_tag)
+        return entries
 
-        for entry in entries:
-            product = entry.product
-            if not product.is_active:
-                continue
+    def _refresh_entry(self, entry, job, guard, errors):
+        """Fetch one row's page and apply (or hold back) the result."""
+        product = entry.product
+        was_priced = entry.price is not None
+        # Strip affiliate params so bot requests don't hit NK's affiliate
+        # tracking endpoint (the tag stays in the DB for user-facing links).
+        kind, price, in_stock = self._fetch_with_retries(_strip_affiliate_params(entry.url))
 
-            url = entry.url
-            if NK_DOMAIN not in url:
-                logger.debug('[nk] Skipping non-NK URL for %s: %s', product.name, url)
-                continue
+        if kind == _OK:
+            entry.price = price
+            entry.in_stock = in_stock
+            entry.not_available = False
+            entry.save(update_fields=['price', 'in_stock', 'not_available', 'last_seen'])
+            guard.record_ok(was_priced)
+            job.prices_updated += 1
+            logger.info(
+                '[nk] [updated] %s — $%.2f  %s',
+                product.name, price, 'in stock' if in_stock else 'OUT OF STOCK',
+            )
+        elif kind in (_NO_PRICE, _DEAD_LINK):
+            guard.record_ok(was_priced)
+            reason = 'no price on the page' if kind == _NO_PRICE else 'link now lands off the product pages'
+            if kind == _DEAD_LINK:
+                errors.append(f'[dead-link] {product.name} ({product.gw_sku}): {entry.url}')
+            logger.warning('[nk] [%s] %s — %s: %s', kind, product.name, reason, entry.url[:80])
+            if was_priced:
+                guard.defer_blank(entry, reason)
+            else:
+                entry.save(update_fields=['last_seen'])
+        elif kind == _NOT_FOUND:
+            guard.record_ok()
+            errors.append(f'[stale-link] {product.name} ({product.gw_sku}): {entry.url}')
+        elif kind == _BLOCKED:
+            guard.record_failure(blocked=True)
+            logger.warning('[nk] [blocked] %s — price left unchanged: %s', product.name, entry.url[:80])
+        else:
+            guard.record_failure()
+            logger.warning('[nk] [fetch-failed] %s — price left unchanged: %s', product.name, entry.url[:80])
 
-            job.products_found += 1
+    def _fetch_with_retries(self, url):
+        """
+        Fetch a page, retrying network and server errors twice with a back-off.
 
-            # Strip affiliate params so bot requests don't hit NK's
-            # affiliate tracking endpoint (the ?awid= tag stays in the DB
-            # for user-facing links but should not appear in scraper GETs).
-            fetch_url = _strip_affiliate_params(url)
-
-            try:
-                result = self._fetch_price(fetch_url)
-
-                # Retry on fetch errors (network/rate-limit) — back off briefly
-                # between attempts.
-                if result is _FETCH_ERROR:
-                    time.sleep(self.delay + random.uniform(0.5, 1.0))
-                    result = self._fetch_price(fetch_url)
-
-                if result is _FETCH_ERROR:
-                    time.sleep(self.delay * 1.5 + random.uniform(0.5, 1.5))
-                    result = self._fetch_price(fetch_url)
-
-                if result is _FETCH_ERROR:
-                    # All retries hit network/bot-detection failures.
-                    # Preserve existing price — a scrape failure is NOT the
-                    # same as the product being out of stock.
-                    logger.warning(
-                        '[nk] [fetch-failed] %s — preserving existing price '
-                        '(network/bot-detection): %s',
-                        product.name, url[:80],
-                    )
-                elif result is None:
-                    # Page loaded successfully but no price found — product is
-                    # genuinely unavailable on NK (sold out or delisted).
-                    logger.warning(
-                        '[nk] [no price] %s — blanking price (confirmed unavailable): %s',
-                        product.name, url[:80],
-                    )
-                    entry.price = None
-                    entry.in_stock = False
-                    entry.save(update_fields=['price', 'in_stock'])
-                else:
-                    price, in_stock = result
-                    entry.price = price
-                    entry.in_stock = in_stock
-                    entry.not_available = False
-                    entry.save(update_fields=['price', 'in_stock', 'not_available'])
-                    logger.info(
-                        '[nk] [updated] %s — $%.2f  %s',
-                        product.name, price, 'in stock' if in_stock else 'OUT OF STOCK',
-                    )
-                    job.prices_updated += 1
-
-            except Exception as exc:
-                msg = f'{product.name} ({product.gw_sku}): {exc}'
-                errors.append(msg)
-                logger.exception('[nk] Error scraping %s', product.name)
-
-            time.sleep(self.delay + random.uniform(0, JITTER_MAX))
-
-        job.status = 'success'
-        job.errors = '\n'.join(errors)
-        job.finished_at = timezone.now()
-        job.save()
-        return job
+        A 404, a block and a "no price" answer are not retried.  A dead-link
+        answer is confirmed with one more look after a pause before it counts.
+        """
+        kind, price, in_stock = self._fetch_page(url)
+        if kind == _ERROR:
+            time.sleep(self.delay + random.uniform(0.5, 1.0))
+            kind, price, in_stock = self._fetch_page(url)
+        if kind == _ERROR:
+            time.sleep(self.delay * 1.5 + random.uniform(0.5, 1.5))
+            kind, price, in_stock = self._fetch_page(url)
+        if kind == _DEAD_LINK:
+            time.sleep(self.delay + random.uniform(4.0, 6.0))
+            kind, price, in_stock = self._fetch_page(url)
+        return kind, price, in_stock
 
     # -------------------------------------------------------------------------
     # Price extraction
@@ -230,35 +273,70 @@ class NoblekKnightScraper:
                                               unavailable or delisted on NK
             _FETCH_ERROR                    — could not load the page at all
                                               (network error, non-200 status,
-                                              or bot-detection response);
-                                              caller should preserve existing
-                                              price rather than blanking it
+                                              bot-detection response or a link
+                                              that no longer reaches a product
+                                              page); caller should preserve
+                                              the existing price
+
+        Kept for callers outside the run loop; the run loop uses _fetch_page.
+        """
+        kind, price, in_stock = self._fetch_page(url)
+        if kind == _OK:
+            return price, in_stock
+        if kind == _NO_PRICE:
+            return None
+        return _FETCH_ERROR
+
+    def _fetch_page(self, url):
+        """
+        GET a Noble Knight product page.
+
+        Returns ``(kind, price, in_stock)`` where ``kind`` is one of the
+        module-level outcomes (_OK, _NO_PRICE, _NOT_FOUND, _BLOCKED, _ERROR,
+        _DEAD_LINK); price and in_stock are only meaningful for _OK.
         """
         try:
             response = self.session.get(url, timeout=15)
         except Exception as exc:
             logger.warning('[nk] Request failed for %s: %s', url[:80], exc)
-            return _FETCH_ERROR
+            return _ERROR, None, False
+        kind = self._status_outcome(url, response)
+        if kind:
+            return kind, None, False
+        return self._read_product_page(url, response)
 
-        if response.status_code == 404:
+    def _status_outcome(self, url, response):
+        """
+        Classify a response from its status, size and final address alone.
+
+        Returns an outcome, or None when the page looks like a real product page
+        that still has to be read.
+        """
+        status = response.status_code
+        if status == 404:
             logger.warning('[nk] 404 for %s — URL may be stale', url[:80])
-            return _FETCH_ERROR
-
-        if response.status_code != 200:
-            logger.debug('[nk] HTTP %d for %s', response.status_code, url[:80])
-            return _FETCH_ERROR
-
+            return _NOT_FOUND
+        if status in (403, 429, 503):
+            logger.warning('[nk] HTTP %d for %s — looks like a block', status, url[:80])
+            return _BLOCKED
+        if status != 200:
+            logger.debug('[nk] HTTP %d for %s', status, url[:80])
+            return _ERROR
         # Guard against bot-detection pages (e.g. Cloudflare CAPTCHA) that
         # return HTTP 200 but contain no product content.  Real product pages
         # are always much larger than the minimum threshold.
         if len(response.content) < _MIN_PAGE_BYTES:
             logger.warning(
-                '[nk] Suspiciously short response (%d bytes) for %s — '
-                'likely bot-detection; treating as fetch error',
+                '[nk] Suspiciously short response (%d bytes) for %s — likely bot-detection',
                 len(response.content), url[:80],
             )
-            return _FETCH_ERROR
+            return _BLOCKED
+        if self._landed_off_product_page(url, response):
+            return _DEAD_LINK
+        return None
 
+    def _read_product_page(self, url, response):
+        """Read price and stock from a page already known to be a product page."""
         soup = BeautifulSoup(response.text, 'html.parser')
 
         # Secondary bot-detection: check page title for Cloudflare challenge signals.
@@ -275,15 +353,29 @@ class NoblekKnightScraper:
         )
         if bot_signals:
             logger.warning('[nk] Bot-detection challenge detected for %s', url[:80])
-            return _FETCH_ERROR
+            return _BLOCKED, None, False
 
         price = self._extract_price(soup)
         if price is None:
             # Page loaded cleanly but no price present — confirmed unavailable.
-            return None
+            return _NO_PRICE, None, False
+        return _OK, price, self._extract_in_stock(soup)
 
-        in_stock = self._extract_in_stock(soup)
-        return price, in_stock
+    @staticmethod
+    def _landed_off_product_page(requested_url, response):
+        """
+        True when a /P/ product link was answered by a different kind of page.
+
+        Noble Knight sends delisted products to its homepage with a normal 200
+        response, and the homepage shows prices of its own.  Only the shape of
+        the final address is checked (it no longer starts with /P/); the product
+        number is not compared, so products that share one Noble Knight page are
+        not affected.
+        """
+        if not urlparse(requested_url).path.lower().startswith('/p/'):
+            return False
+        final_url = str(getattr(response, 'url', '') or requested_url)
+        return not urlparse(final_url).path.lower().startswith('/p/')
 
     @staticmethod
     def _extract_price(soup):

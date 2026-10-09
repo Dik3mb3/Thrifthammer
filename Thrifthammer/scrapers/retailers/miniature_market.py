@@ -57,6 +57,7 @@ from django.utils import timezone
 from prices.models import CurrentPrice
 from products.models import Product, Retailer
 from scrapers.models import ScrapeJob
+from scrapers.safeguards import RunGuard, finish_run, note_crash, select_slice
 
 logger = logging.getLogger(__name__)
 
@@ -83,6 +84,24 @@ SUGGEST_SKU_BONUS = 0.20
 
 # CSS selector for product cards in the suggest dropdown
 SUGGEST_CARD_SELECTOR = 'a.search-suggest-product-link'
+
+# The main product's own buy button on a product page.  Related-product tiles
+# lower on the page use other classes, so this selects only the main one.
+MAIN_BUY_BUTTON_SELECTOR = 'button.product-detail-btn'
+
+# Phrases that mark a product page as out of stock when found in its text.  Used
+# only when the main buy button is not live (see _has_live_buy_button).
+OUT_OF_STOCK_SIGNALS = (
+    'out of stock',
+    'notify me when available',
+    'notify me when this product',
+    'email me when available',
+    'currently unavailable',
+    'soldout',
+    'sold-out',
+    '"is_saleable":false',
+    '"stock_status":"out_of_stock"',
+)
 
 # Substring used to filter suggest results to GW products only.
 # MM uses two URL patterns for GW items:
@@ -124,8 +143,17 @@ class MiniatureMarketScraper:
     # Public entry point
     # -------------------------------------------------------------------------
 
-    def run(self, batch_tag=None):
-        """Execute a full scrape job and return the ScrapeJob record."""
+    def run(self, batch_tag=None, shard=None, limit=None):
+        """
+        Execute a scrape job and return the ScrapeJob record.
+
+        Without ``shard`` or ``limit`` this is the full search-based pass over
+        every active product, exactly as before.  With either, it is the
+        partial refresh (see _run_refresh): only rows that already have a
+        stored Miniature Market link, only their price and stock are updated.
+        """
+        if shard is not None or limit:
+            return self._run_refresh(batch_tag, shard, limit)
         try:
             retailer = Retailer.objects.get(slug=self.retailer_slug)
         except Retailer.DoesNotExist:
@@ -242,6 +270,120 @@ class MiniatureMarketScraper:
         return job
 
     # -------------------------------------------------------------------------
+    # Partial refresh (daily slice) -- stored links only, prices only
+    # -------------------------------------------------------------------------
+
+    def select_entries(self, batch_tag=None, shard=None, limit=None):
+        """Return the rows a partial refresh with these options would visit (read only)."""
+        retailer = Retailer.objects.get(slug=self.retailer_slug)
+        return select_slice(self._refresh_entries(retailer, batch_tag), shard, limit)
+
+    @staticmethod
+    def _refresh_entries(retailer, batch_tag):
+        """Rows that already hold a stored Miniature Market link."""
+        entries = (
+            CurrentPrice.objects
+            .filter(retailer=retailer)
+            .exclude(url='')
+            .exclude(url__isnull=True)
+            .select_related('product')
+        )
+        if batch_tag:
+            entries = entries.filter(product__batch_tag=batch_tag)
+        return entries
+
+    def _run_refresh(self, batch_tag, shard, limit):
+        """
+        Update price and stock for one slice of the rows that have a stored link.
+
+        This mode never searches, never changes a link, never blanks a price and
+        never marks a product not_available.  A page that cannot be read leaves
+        the row exactly as it was.  Several blocked or failed rows in a row stop
+        the run and mark the job failed, which turns the scheduled run red.
+        """
+        retailer = Retailer.objects.get(slug=self.retailer_slug)
+        job = ScrapeJob.objects.create(
+            retailer=retailer,
+            status='running',
+            started_at=timezone.now(),
+        )
+        errors = []
+        guard = RunGuard()
+        for entry in select_slice(self._refresh_entries(retailer, batch_tag), shard, limit):
+            if guard.tripped:
+                break
+            if not entry.product.is_active:
+                continue
+            job.products_found += 1
+            try:
+                self._refresh_one(entry, job, guard, errors)
+            except Exception as exc:
+                errors.append(f'{entry.product.name} ({entry.product.gw_sku}): {exc}')
+                logger.exception('[mm] Error refreshing %s', entry.product.name)
+                note_crash(guard)
+            time.sleep(self.delay)
+        finish_run(job, guard, errors, 'mm')
+        return job
+
+    def _refresh_one(self, entry, job, guard, errors):
+        """Fetch one stored link and update the row when the page gives a price."""
+        product = entry.product
+        kind, price, in_stock = self._fetch_for_refresh(entry.url)
+        if kind == 'ok':
+            entry.price = price
+            entry.in_stock = in_stock
+            entry.not_available = False
+            entry.save(update_fields=['price', 'in_stock', 'not_available', 'last_seen'])
+            guard.record_ok()
+            job.prices_updated += 1
+            logger.info('[mm] [updated] %s — $%.2f (%s)', product.name, price, 'in stock' if in_stock else 'OUT OF STOCK')
+        elif kind in ('not_found', 'no_price'):
+            guard.record_ok()
+            errors.append(f'[check-link] {product.name} ({product.gw_sku}): {entry.url}')
+            logger.warning('[mm] [%s] %s — row left unchanged: %s', kind, product.name, entry.url[:80])
+        elif kind == 'blocked':
+            guard.record_failure(blocked=True)
+            logger.warning('[mm] [blocked] %s — row left unchanged: %s', product.name, entry.url[:80])
+        else:
+            guard.record_failure()
+            logger.warning('[mm] [fetch-failed] %s — row left unchanged: %s', product.name, entry.url[:80])
+
+    def _fetch_for_refresh(self, url):
+        """
+        GET a stored Miniature Market product page.
+
+        Returns ``(kind, price, in_stock)`` where kind is 'ok', 'no_price',
+        'not_found' (404, or sent to the homepage), 'blocked' (403/429/503, a
+        challenge or a too-short page) or 'error'.
+        """
+        full_url = url if url.startswith('http') else f'https://www.miniaturemarket.com{url}'
+        try:
+            resp = self.session.get(full_url, timeout=15)
+        except Exception as exc:
+            logger.warning('[mm] Request failed for %s: %s', full_url[:80], exc)
+            return 'error', None, False
+        if resp.status_code == 404:
+            return 'not_found', None, False
+        if resp.status_code in (403, 429, 503):
+            return 'blocked', None, False
+        if resp.status_code != 200:
+            return 'error', None, False
+        if len(resp.content) < 5_000:
+            return 'blocked', None, False
+        final_path = urllib.parse.urlparse(str(getattr(resp, 'url', '') or full_url)).path
+        if final_path in ('', '/'):
+            return 'not_found', None, False
+        soup = BeautifulSoup(resp.text, 'html.parser')
+        title_lower = (soup.title.string or '').lower() if soup.title else ''
+        if 'just a moment' in title_lower or 'attention required' in title_lower or 'access denied' in title_lower:
+            return 'blocked', None, False
+        for el in soup.select('span.price'):
+            price = self._extract_price_from_text(el.get_text(strip=True))
+            if price:
+                return 'ok', price, self._check_stock_from_soup(soup)
+        return 'no_price', None, False
+
+    # -------------------------------------------------------------------------
     # Product finder
     # -------------------------------------------------------------------------
 
@@ -351,25 +493,35 @@ class MiniatureMarketScraper:
             logger.warning('[mm] URL fetch failed for %s: %s', full_url, exc)
             return None
 
+    @staticmethod
+    def _has_live_buy_button(soup):
+        """
+        True when the main product box has an enabled "Add to cart" button.
+
+        Only the main product's own button counts.  A product page also lists
+        related products further down, and some of those tiles say "Out of
+        stock"; that text must never turn an in-stock product into an
+        out-of-stock one.
+        """
+        button = soup.select_one(MAIN_BUY_BUTTON_SELECTOR)
+        return bool(
+            button is not None
+            and not button.has_attr('disabled')
+            and 'add to cart' in button.get_text(' ', strip=True).lower()
+        )
+
     def _check_stock_from_soup(self, soup):
         """
         Determine stock status from an already-parsed MM product page soup.
 
         Avoids a second HTTP request when we already have the page content.
+        A live main "Add to cart" button means in stock; otherwise the page
+        text is searched for out-of-stock phrases, as before.
         """
+        if self._has_live_buy_button(soup):
+            return True
         text_lower = soup.get_text().lower()
-        out_of_stock_signals = [
-            'out of stock',
-            'notify me when available',
-            'notify me when this product',
-            'email me when available',
-            'currently unavailable',
-            'soldout',
-            'sold-out',
-            '"is_saleable":false',
-            '"stock_status":"out_of_stock"',
-        ]
-        for signal in out_of_stock_signals:
+        for signal in OUT_OF_STOCK_SIGNALS:
             if signal in text_lower:
                 return False
         if 'add to cart' in text_lower or 'addtocart' in text_lower:
@@ -399,21 +551,14 @@ class MiniatureMarketScraper:
                 logger.debug('Stock check HTTP %d for %s — assuming in stock', resp.status_code, url)
                 return True
 
+            # A live main "Add to cart" button settles it (see _has_live_buy_button).
+            if self._has_live_buy_button(BeautifulSoup(resp.text, 'html.parser')):
+                return True
+
             text_lower = resp.text.lower()
 
             # Definitive out-of-stock signals
-            out_of_stock_signals = [
-                'out of stock',
-                'notify me when available',
-                'notify me when this product',
-                'email me when available',
-                'currently unavailable',
-                'soldout',
-                'sold-out',
-                '"is_saleable":false',
-                '"stock_status":"out_of_stock"',
-            ]
-            for signal in out_of_stock_signals:
+            for signal in OUT_OF_STOCK_SIGNALS:
                 if signal in text_lower:
                     logger.debug('Stock check: OOS signal "%s" found for %s', signal, url)
                     return False
