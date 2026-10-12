@@ -21,20 +21,25 @@ factions, so the WHOLE page was read) plus Firestorm's site search for the
 SKUs not on that page. Every match was made by reading, not by script, and
 the ambiguous ones were confirmed with the user (2026-10-02).
 
-24 of 37 Yu Jing SKUs matched. Not matched:
+23 of 37 Yu Jing SKUs matched. Not matched:
 - YUJ-001 Gui Feng Spec-Ops Bundle: skipped on the user's instruction (a
   bundle SKU with no listing of its own, same as PAN-001).
-- 12 SKUs Firestorm does not list anywhere on the site (page and search,
-  including alternate spellings): YUJ-021, 023, 025, 026, 028, 029, 031,
-  032, 034, 035, 036, 037.
+- 13 SKUs Firestorm does not list anywhere on the site (page and search,
+  including alternate spellings and product codes): YUJ-017, 021, 023, 025,
+  026, 028, 029, 031, 032, 034, 035, 036, 037.
 
 Notes on individual picks (all confirmed with the user):
 - YUJ-004 Sun Tze (Thunderbolt Light Shotgun) is the same kit as Firestorm's
-  "Sun Tze (Vulkan Shotgun)" listing (user, 2026-10-02).
+  "Sun Tze (Vulkan Shotgun)" listing (user, 2026-10-02). Re-verified
+  2026-10-12: Corvus Belli's own store page for it shows REF 281363-1230
+  (EUR 27.00), the Vulkan Shotgun listing's product code. Firestorm's other
+  "Sun Tze (Boarding Shotgun)" listing is the older kit, code 280316-0076.
 - YUJ-009: the Infinity-prefixed Booster Pack Alpha (RRP 30.35, in stock) is
   used, not the sold-out "Yu Jing Booster Pack Alpha OLD" (RRP 39.00).
-- YUJ-017 Invincible Army Expansion Pack is Firestorm's "Invincible Army
-  Action Pack" (same product, different name).
+- YUJ-017 Invincible Army Expansion Pack (code 281342-1085, RRP 36.70) is NOT
+  on Firestorm. It was first matched to Firestorm's separate "Invincible Army
+  Action Pack" (code 281341-1084, RRP 89.25); corrected 2026-10-12, so it has
+  no Firestorm row.
 - YUJ-022 is the Shaolin Warrior Monks box ("... Monks 2023"), not the two
   single-miniature Shaolin Warrior Monk listings.
 - YUJ-030 Libertos is the Light Shotgun listing (Firestorm's other Libertos
@@ -83,7 +88,6 @@ _PRICES = [
     ('YUJ-014', Decimal('84.25'), Decimal('75.83'), '/infinity---yu-jing-action-pack', True),
     ('YUJ-015', Decimal('39.69'), Decimal('35.72'), '/infinity---yu-jing---white-banner-expansion-pack-alpha', True),
     ('YUJ-016', Decimal('39.69'), Decimal('35.72'), '/yu-jing---yaoxie-remotes-lu-duanrui-shi', True),
-    ('YUJ-017', Decimal('89.25'), Decimal('80.33'), '/yu-jing---invincible-army-action-pack', True),
     ('YUJ-018', Decimal('17.85'), Decimal('16.07'), '/infinity---yu-jing---guilang-hacker', True),
     ('YUJ-019', Decimal('46.59'), Decimal('41.93'), '/infinity---zuyong-invincibles', True),
     ('YUJ-020', Decimal('73.35'), Decimal('66.00'), '/reinforcements:-yu-jing-pack-alpha', True),
