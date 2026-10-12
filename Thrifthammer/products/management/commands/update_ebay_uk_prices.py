@@ -35,6 +35,9 @@ Usage:
     # Filter by faction or category:
     python manage.py update_ebay_uk_prices --faction "Necrons"
     python manage.py update_ebay_uk_prices --category "Warhammer 40,000"
+
+    # One slice of the catalogue (slice 1 of 2, split by product id):
+    python manage.py update_ebay_uk_prices --shard 1/2
 """
 
 import shlex
@@ -53,6 +56,7 @@ from products.ebay_api_client_uk import (
     DAILY_CALL_SAFETY_LIMIT,
     DAILY_CALL_LIMIT,
 )
+from products.ebay_sharding import parse_shard_option, shard_products
 
 # EPN affiliate tracking parameters for eBay UK marketplace.
 # mkrid=710-53481-19255-0 is the UK-specific routing key.
@@ -257,6 +261,16 @@ class Command(BaseCommand):
             metavar='TAG',
             help='Filter to products with a specific batch_tag (e.g. "phase-2", "phase-3").',
         )
+        parser.add_argument(
+            '--shard',
+            type=str,
+            default=None,
+            metavar='K/N',
+            help='Process only slice K of N of the catalogue, split by product id '
+                 '(e.g. "1/2" = first half, "2/2" = second half). The slices are '
+                 'recomputed from the database on every run, so new products are '
+                 'picked up automatically. Leave unset to process everything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point — run the eBay UK price update."""
@@ -270,6 +284,7 @@ class Command(BaseCommand):
         sku_filter  = (options['sku'] or '').strip()
         skus_filter = [s.strip() for s in (options.get('skus') or '').split(',') if s.strip()]
         batch_tag   = (options.get('batch_tag') or '').strip()
+        shard       = parse_shard_option(options.get('shard'))
 
         # ── Configuration summary ────────────────────────────────────────────
         self.stdout.write('\neBay UK Browse API — Price Update (EBAY_GB / GBP)')
@@ -289,6 +304,8 @@ class Command(BaseCommand):
             self.stdout.write(f'  Category     : {category}')
         if batch_tag:
             self.stdout.write(f'  Batch tag    : {batch_tag}')
+        if shard:
+            self.stdout.write(f'  Shard        : {shard[0]}/{shard[1]}')
         if limit:
             self.stdout.write(f'  Limit        : {limit} products')
         if product_id:
@@ -403,6 +420,13 @@ class Command(BaseCommand):
         # scheduled cron run corrupts book products' price display.
         products = products.exclude(author__gt='')
 
+        # Catalogue slice (--shard K/N): runs after every other filter and
+        # before --limit slicing. The slices are recounted from the live
+        # database on every run, so new products need no code or workflow change.
+        shard_summary = ''
+        if shard:
+            products, shard_summary = shard_products(products, shard)
+
         if limit:
             products = products[:limit]
 
@@ -414,6 +438,8 @@ class Command(BaseCommand):
                 'update_ebay_book_prices for those.'
             ))
             return
+        if shard_summary:
+            self.stdout.write(shard_summary)
         self.stdout.write(f'Processing {total} products...\n')
 
         # ── Counters ─────────────────────────────────────────────────────────

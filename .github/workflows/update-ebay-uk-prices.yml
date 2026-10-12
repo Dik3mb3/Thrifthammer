@@ -2,16 +2,18 @@ name: Update eBay UK Prices
 
 on:
   schedule:
-    # All times UTC. Offset ~3hrs from the US scraper's 08/14/20/02 UTC cadence
-    # so the two scrapers' API usage doesn't spike in the same window (both
-    # share the same eBay per-day call budget).
-    # A single daily run couldn't get through the full UK catalog within the
-    # old 30-minute timeout, so tail-end SKUs (alphabetically late gw_sku)
-    # never refreshed — matching the US side's fix (4x/day, 90-minute budget).
-    - cron: '0 11 * * *'  # 11:00 UTC
-    - cron: '0 17 * * *'  # 17:00 UTC
-    - cron: '0 23 * * *'  # 23:00 UTC
-    - cron: '0 5 * * *'   # 05:00 UTC
+    # All times UTC. Same 2-slice split by product id as the US workflow (see
+    # the "Pick catalogue slice" step below): each slice runs every 6 hours, so
+    # every product is refreshed 4x/day but each run covers about half the
+    # products and finishes well inside the 135-minute timeout. A full pass used
+    # to run past the timeout and get cancelled, leaving the tail of the
+    # catalogue (alphabetically late gw_sku) un-refreshed.
+    # Offset 90 minutes after the US scraper so the two scrapers' API usage
+    # doesn't spike in the same window (both share the same eBay per-day call
+    # budget). Every cron line below MUST be mapped in the slice step;
+    # products/test_ebay_sharding.py checks that.
+    - cron: '40 1,7,13,19 * * *'   # slice 1/2
+    - cron: '40 4,10,16,22 * * *'  # slice 2/2
   workflow_dispatch:
     # Allow manual trigger from GitHub Actions tab
     inputs:
@@ -33,6 +35,10 @@ on:
         default: ''
       category:
         description: 'Category alias: Warhammer-40K, AoS, Old-World, Paint-Supplies, Kill-Team, or Horus-Heresy. (Other categories already have a clean 1:1 batch_tag above -- use that instead.) Leave blank for all.'
+        type: string
+        default: ''
+      shard:
+        description: 'Only one slice of the catalogue, as K/N split by product id (e.g. 1/2 = first half, 2/2 = second half). Leave blank for all.'
         type: string
         default: ''
 
@@ -59,6 +65,30 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Pick catalogue slice
+        id: slice
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+          INPUT_SHARD: ${{ github.event.inputs.shard }}
+        run: |
+          # Scheduled runs: each cron line covers one slice of the catalogue
+          # (K/N = slice K of N, split by product id inside the database, so new
+          # products are picked up automatically). Manual runs: blank =
+          # everything, or the shard input as typed.
+          SHARD=""
+          if [ "$EVENT_NAME" = "schedule" ]; then
+            case "$SCHEDULE" in
+              '40 1,7,13,19 * * *') SHARD="1/2" ;;
+              '40 4,10,16,22 * * *') SHARD="2/2" ;;
+              *) echo "No catalogue slice is mapped to schedule '$SCHEDULE'."; exit 1 ;;
+            esac
+          else
+            SHARD="$INPUT_SHARD"
+          fi
+          echo "Catalogue slice: ${SHARD:-all products}"
+          echo "shard=$SHARD" >> "$GITHUB_OUTPUT"
+
       - name: Run eBay UK price update
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -69,11 +99,15 @@ jobs:
           EBAY_APP_ID_PRODUCTION: ${{ secrets.EBAY_APP_ID_PRODUCTION }}
           EBAY_CERT_ID_PRODUCTION: ${{ secrets.EBAY_CERT_ID_PRODUCTION }}
           EBAY_UK_AFFILIATE_CAMPAIGN_ID: ${{ secrets.EBAY_UK_AFFILIATE_CAMPAIGN_ID }}
+          SHARD: ${{ steps.slice.outputs.shard }}
         run: |
           # Array (not a plain string) so values with spaces/commas -- e.g.
           # category names like "Warhammer 40,000" or "Paint & Supplies" --
           # survive as a single argument instead of being word-split.
           FLAGS=()
+          if [ -n "$SHARD" ]; then
+            FLAGS+=(--shard "$SHARD")
+          fi
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
             FLAGS+=(--dry-run)
           fi

@@ -2,11 +2,16 @@ name: Update eBay Prices
 
 on:
   schedule:
-    # All times EDT (UTC-4). Adjust +1hr in winter when EST (UTC-5) kicks in.
-    - cron: '0 8 * * *'   #  4:00 AM EDT
-    - cron: '0 14 * * *'  # 10:00 AM EDT
-    - cron: '0 20 * * *'  #  4:00 PM EDT
-    - cron: '0 2 * * *'   # 10:00 PM EDT
+    # All times UTC. The catalogue is split into 2 slices by product id (see the
+    # "Pick catalogue slice" step below). Each slice runs every 6 hours, so every
+    # product is still refreshed 4x/day, but each run covers about half the
+    # products and finishes well inside the 135-minute timeout. A full pass used
+    # to run past the timeout and get cancelled, leaving the tail of the
+    # catalogue (alphabetically late gw_sku) un-refreshed. The eBay UK workflow
+    # runs 90 minutes after these. Every cron line below MUST be mapped in the
+    # slice step; products/test_ebay_sharding.py checks that.
+    - cron: '10 0,6,12,18 * * *'   # slice 1/2 (also runs the books step)
+    - cron: '10 3,9,15,21 * * *'   # slice 2/2
   workflow_dispatch:
     # Allow manual trigger from GitHub Actions tab
     inputs:
@@ -28,6 +33,10 @@ on:
         default: ''
       category:
         description: 'Category alias: Warhammer-40K, AoS, Old-World, Paint-Supplies, Kill-Team, or Horus-Heresy. (Other categories already have a clean 1:1 batch_tag above -- use that instead.) Leave blank for all.'
+        type: string
+        default: ''
+      shard:
+        description: 'Only one slice of the catalogue, as K/N split by product id (e.g. 1/2 = first half, 2/2 = second half). Leave blank for all.'
         type: string
         default: ''
       book_dry_run:
@@ -74,6 +83,35 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Pick catalogue slice
+        id: slice
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+          INPUT_SHARD: ${{ github.event.inputs.shard }}
+        run: |
+          # Scheduled runs: each cron line covers one slice of the catalogue
+          # (K/N = slice K of N, split by product id inside the database, so new
+          # products are picked up automatically). Slice 1 also runs the books
+          # step. Manual runs: blank = everything, or the shard input as typed.
+          SHARD=""
+          RUN_BOOKS="true"
+          if [ "$EVENT_NAME" = "schedule" ]; then
+            case "$SCHEDULE" in
+              '10 0,6,12,18 * * *') SHARD="1/2" ;;
+              '10 3,9,15,21 * * *') SHARD="2/2" ;;
+              *) echo "No catalogue slice is mapped to schedule '$SCHEDULE'."; exit 1 ;;
+            esac
+            if [ "$SHARD" != "1/2" ]; then
+              RUN_BOOKS="false"
+            fi
+          else
+            SHARD="$INPUT_SHARD"
+          fi
+          echo "Catalogue slice: ${SHARD:-all products} (books step: $RUN_BOOKS)"
+          echo "shard=$SHARD" >> "$GITHUB_OUTPUT"
+          echo "run_books=$RUN_BOOKS" >> "$GITHUB_OUTPUT"
+
       - name: Run eBay price update
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -84,11 +122,15 @@ jobs:
           EBAY_APP_ID_PRODUCTION: ${{ secrets.EBAY_APP_ID_PRODUCTION }}
           EBAY_CERT_ID_PRODUCTION: ${{ secrets.EBAY_CERT_ID_PRODUCTION }}
           EBAY_AFFILIATE_CAMPAIGN_ID: ${{ secrets.EBAY_AFFILIATE_CAMPAIGN_ID }}
+          SHARD: ${{ steps.slice.outputs.shard }}
         run: |
           # Array (not a plain string) so values with spaces/commas -- e.g.
           # category names like "Warhammer 40,000" or "Paint & Supplies" --
           # survive as a single argument instead of being word-split.
           FLAGS=()
+          if [ -n "$SHARD" ]; then
+            FLAGS+=(--shard "$SHARD")
+          fi
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
             FLAGS+=(--dry-run)
           fi
@@ -121,6 +163,7 @@ jobs:
           python manage.py update_ebay_prices "${FLAGS[@]}"
 
       - name: Run eBay book price update
+        if: steps.slice.outputs.run_books == 'true'
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}

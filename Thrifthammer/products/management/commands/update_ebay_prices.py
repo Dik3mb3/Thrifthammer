@@ -35,6 +35,9 @@ Usage:
 
     # Custom delay between calls:
     python manage.py update_ebay_prices --delay 1.0
+
+    # One slice of the catalogue (slice 1 of 2, split by product id):
+    python manage.py update_ebay_prices --shard 1/2
 """
 
 import shlex
@@ -54,6 +57,7 @@ from products.ebay_api_client import (
     DAILY_CALL_SAFETY_LIMIT,
     DAILY_CALL_LIMIT,
 )
+from products.ebay_sharding import parse_shard_option, shard_products
 
 # EPN affiliate tracking parameters (US marketplace).
 # Appended to every eBay URL we save so clicks generate affiliate revenue.
@@ -275,6 +279,16 @@ class Command(BaseCommand):
             help='Filter to products with a specific batch_tag (e.g. "phase-2", "phase-3"). '
                  'Can be combined with --faction to target e.g. all phase-2 Ork products.',
         )
+        parser.add_argument(
+            '--shard',
+            type=str,
+            default=None,
+            metavar='K/N',
+            help='Process only slice K of N of the catalogue, split by product id '
+                 '(e.g. "1/2" = first half, "2/2" = second half). The slices are '
+                 'recomputed from the database on every run, so new products are '
+                 'picked up automatically. Leave unset to process everything.',
+        )
 
     def handle(self, *args, **options):
         """Entry point — run the eBay price update."""
@@ -290,6 +304,7 @@ class Command(BaseCommand):
         sku_filter  = (options['sku'] or '').strip()
         skus_filter = [s.strip() for s in (options.get('skus') or '').split(',') if s.strip()]
         batch_tag   = (options.get('batch_tag') or '').strip()
+        shard       = parse_shard_option(options.get('shard'))
 
         # ── --list-overrides: print audit table and exit (no API calls) ──────
         if list_overrides:
@@ -329,6 +344,8 @@ class Command(BaseCommand):
             self.stdout.write(f'  Category    : {category}')
         if batch_tag:
             self.stdout.write(f'  Batch tag   : {batch_tag}')
+        if shard:
+            self.stdout.write(f'  Shard       : {shard[0]}/{shard[1]}')
         if limit:
             self.stdout.write(f'  Limit       : {limit} products')
         if product_id:
@@ -449,6 +466,13 @@ class Command(BaseCommand):
         # production. product.author is blank for every non-book product.
         products = products.exclude(author__gt='')
 
+        # Catalogue slice (--shard K/N): runs after every other filter and
+        # before --limit slicing. The slices are recounted from the live
+        # database on every run, so new products need no code or workflow change.
+        shard_summary = ''
+        if shard:
+            products, shard_summary = shard_products(products, shard)
+
         if limit:
             products = products[:limit]
 
@@ -460,6 +484,8 @@ class Command(BaseCommand):
                 'update_ebay_book_prices for those.'
             ))
             return
+        if shard_summary:
+            self.stdout.write(shard_summary)
         self.stdout.write(f'Processing {total} products...\n')
 
         # ── Counters ─────────────────────────────────────────────────────────
