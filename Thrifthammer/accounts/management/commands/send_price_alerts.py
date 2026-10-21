@@ -266,7 +266,7 @@ class Command(BaseCommand):
             'now': now,
         }
 
-        subject = f'ThriftHammer Alert — {product.name} hit your target'
+        subject = f'ThriftHammer Alert: {product.name} hit your target'
         html_body = render_to_string('emails/price_alert.html', context)
 
         # Plain-text fallback
@@ -293,7 +293,7 @@ class Command(BaseCommand):
             '',
             'You will receive this alert weekly as long as the price stays at your target.',
             '',
-            '— ThriftHammer',
+            'ThriftHammer',
         ]
         text_body = '\n'.join(lines)
 

@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-# Canonical sitemap — non-www is the authoritative domain.
+# Canonical sitemap: non-www is the authoritative domain.
 # If www support is added later, append a second line:
 #   Sitemap: https://www.thrifthammer.com/sitemap.xml
 Sitemap: https://thrifthammer.com/sitemap.xml

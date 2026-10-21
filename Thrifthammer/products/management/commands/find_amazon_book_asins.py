@@ -407,7 +407,7 @@ class Command(BaseCommand):
             # Check for manual override first
             if override_key in ASIN_OVERRIDES:
                 asin = ASIN_OVERRIDES[override_key]
-                found.append((cand, asin, '(override — not searched)', None, 'OVERRIDE'))
+                found.append((cand, asin, '(override, not searched)', None, 'OVERRIDE'))
                 continue
 
             try:

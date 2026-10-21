@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>ThriftHammer — Admin Review: {{ digest_label }} Digest</title>
+  <title>ThriftHammer | Admin Review: {{ digest_label }} Digest</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Oswald:wght@600&family=Inter:wght@400;500;600;700&display=swap');
   </style>
@@ -46,7 +46,7 @@
           <tr>
             <td style="background-color:#9b2020;padding:8px 24px;text-align:center;">
               <span style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#e8e0d0;">
-                Admin Review Only — Not Sent to Subscribers
+                Admin Review Only: Not Sent to Subscribers
               </span>
             </td>
           </tr>
@@ -55,7 +55,7 @@
           <tr>
             <td style="background:linear-gradient(135deg,#1c2230 0%,#0d0f14 100%);padding:22px 32px;text-align:center;border-bottom:1px solid #2a2f3a;">
               <div style="font-family:'Oswald','Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#a09880;margin-bottom:8px;">
-                {{ digest_label }} Digest — Union of Every Subscriber's Deals
+                {{ digest_label }} Digest: Union of Every Subscriber's Deals
               </div>
               <div style="font-family:'Cinzel',Georgia,'Times New Roman',serif;font-size:20px;font-weight:700;color:#f0c060;letter-spacing:0.05em;">
                 {{ deals|length }} Unique Deal{{ deals|length|pluralize }} Across {{ subscriber_count }} Subscriber{{ subscriber_count|pluralize }}
@@ -114,7 +114,7 @@
           <tr>
             <td style="padding:18px 24px;text-align:center;border-top:1px solid #2a2f3a;">
               <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;color:#5c5648;line-height:1.8;">
-                Internal admin tooling — this is a preview of what the real {{ digest_label }} send would contain, built from live subscriber data.<br>
+                Internal admin tooling. This is a preview of what the real {{ digest_label }} send would contain, built from live subscriber data.<br>
                 This email was not sent to any subscriber. Trigger the real send separately once you've reviewed this list.<br>
                 &copy; {{ today|date:"Y" }} ThriftHammer
               </div>

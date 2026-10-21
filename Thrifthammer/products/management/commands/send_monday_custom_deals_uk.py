@@ -37,6 +37,7 @@ from django.utils import timezone
 
 from prices.models import CurrentPrice
 from products.models import NewsletterSignup, Product
+from products.newsletter_deals import pick_unique_deals
 
 CURRENCY_SYMBOL = '£'
 
@@ -132,7 +133,7 @@ class Command(BaseCommand):
                 category_names = ', '.join(c.name for c in category_list)
                 top_saving = int(deals[0]['pct_off']) if deals else 0
                 subject = (
-                    f"Your UK {category_names} Deals — Save Up to {top_saving}% Off"
+                    f"Your UK {category_names} Deals: Save Up to {top_saving}% Off"
                     f" ({today.strftime('%b')} {today.day})"
                 )
 
@@ -234,7 +235,9 @@ class Command(BaseCommand):
             """Calculate % discount vs the live GW UK reference price."""
             return float(p.gw_ref_price - p.min_price) / float(p.gw_ref_price) * 100
 
-        sorted_candidates = sorted(candidates, key=_pct, reverse=True)[:limit]
+        sorted_candidates = pick_unique_deals(
+            sorted(candidates, key=_pct, reverse=True), limit, uk=True,
+        )
 
         deals = []
         for product in sorted_candidates:

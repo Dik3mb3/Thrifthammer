@@ -5,14 +5,14 @@
 {% else %}<link rel="canonical" href="https://thrifthammer.com/army-calculator/">{% endif %}
 {% endblock %}
 
-{% block title %}{% if selected_faction %}{{ selected_faction.name }} Army Builder — ThriftHammer{% else %}Warhammer 40K Army Builder — ThriftHammer{% endif %}{% endblock %}
+{% block title %}{% if selected_faction %}{{ selected_faction.name }} Army Builder | ThriftHammer{% else %}Warhammer 40K Army Builder | ThriftHammer{% endif %}{% endblock %}
 
 {% block meta_description %}<meta name="description" content="{% if selected_faction %}Build a {{ selected_faction.name }} army list and see the real US retail cost. Compare unit prices across retailers and find the best deals on every kit.{% else %}Build your Warhammer 40K army list and calculate the real cost. Pick your faction, add units, and compare prices across US retailers instantly.{% endif %}">{% endblock %}
 
 {% block robots %}{% if not selected_faction %}<meta name="robots" content="index, follow">{% endif %}{% endblock %}
 
 {% block extra_head %}
-<meta property="og:title" content="{% if selected_faction %}{{ selected_faction.name }} Army Builder — ThriftHammer{% else %}40K Army Builder — ThriftHammer{% endif %}">
+<meta property="og:title" content="{% if selected_faction %}{{ selected_faction.name }} Army Builder | ThriftHammer{% else %}40K Army Builder | ThriftHammer{% endif %}">
 <meta property="og:description" content="{% if selected_faction %}Build a {{ selected_faction.name }} army list and see the real US retail cost across all tracked retailers.{% else %}Build your 40K army list and see the real cost. Compare prices across US retailers for every unit.{% endif %}">
 <meta property="og:type" content="website">
 {% endblock %}

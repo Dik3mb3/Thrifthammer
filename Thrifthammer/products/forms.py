@@ -27,7 +27,7 @@ class IssueReportForm(forms.Form):
         widget=forms.Textarea(attrs={
             'rows': 4,
             'class': 'form-control',
-            'placeholder': 'Please describe the issue — e.g. the correct price, '
+            'placeholder': 'Please describe the issue, e.g. the correct price, '
                            'the right link, or what is wrong with the current data.',
         }),
         max_length=1000,

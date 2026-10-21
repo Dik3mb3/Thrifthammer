@@ -25,4 +25,4 @@ class ScrapeJob(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.retailer.name} scrape — {self.status} ({self.created_at:%Y-%m-%d %H:%M})"
+        return f"{self.retailer.name} scrape: {self.status} ({self.created_at:%Y-%m-%d %H:%M})"

@@ -3,21 +3,25 @@
 
 {% block title %}{{ page_title }}{% endblock %}
 
-{% block meta_description %}<meta name="description" content="{% if product.description %}{{ product.description|striptags|truncatechars:155 }}{% else %}Compare {% if region == 'uk' %}UK {% endif %}prices on {{ product.name }}{% if product.faction %} ({{ product.faction.name }}){% elif product.category %} — {{ product.category.name }}{% endif %}. Find the cheapest deal from {% if region == 'uk' %}UK{% else %}US{% endif %} Warhammer retailers.{% if region == 'uk' and product.msrp_gbp %} MSRP £{{ product.msrp_gbp }}.{% elif region != 'uk' and product.msrp %} MSRP ${{ product.msrp }}.{% endif %} Prices updated daily.{% endif %}">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if product.description %}{{ product.description|striptags|truncatechars:155 }}{% else %}Compare {% if region == 'uk' %}UK {% endif %}prices on {{ product.name }}{% if product.faction %} ({{ product.faction.name }}){% elif product.category %} ({{ product.category.name }}){% endif %}. Find the cheapest deal from {% if region == 'uk' %}UK{% else %}US{% endif %} Warhammer retailers.{% if region == 'uk' and product.msrp_gbp %} MSRP £{{ product.msrp_gbp }}.{% elif region != 'uk' and product.msrp %} MSRP ${{ product.msrp }}.{% endif %} Prices updated daily.{% endif %}">{% endblock %}
 
 {% block extra_head %}
 {# ── Open Graph ── #}
-<meta property="og:title" content="{{ product.name }} — Best Price | ThriftHammer">
+<meta property="og:title" content="{{ product.name }}: Best Price | ThriftHammer">
 <meta property="og:description" content="Find the cheapest price on {{ product.name }} from US Warhammer retailers. Compare Games Workshop, Miniature Market, Noble Knight and more.">
 <meta property="og:type" content="product">
 <meta property="og:url" content="https://thrifthammer.com/products/{{ product.slug }}/">
 {% if product.image_url %}<meta property="og:image" content="{{ product.image_url }}">{% endif %}
 {# ── Twitter Card ── #}
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ product.name }} — Best Price | ThriftHammer">
+<meta name="twitter:title" content="{{ product.name }}: Best Price | ThriftHammer">
 <meta name="twitter:description" content="Find the cheapest price on {{ product.name }} from US Warhammer retailers.">
 {% if product.image_url %}<meta name="twitter:image" content="{{ product.image_url }}">{% endif %}
 {# ── Canonical ── #}
+{# ── hreflang: the US page and its UK twin point at each other (reciprocal), x-default = US ── #}
+<link rel="alternate" hreflang="en-us" href="https://thrifthammer.com/products/{{ product.slug }}/">
+<link rel="alternate" hreflang="en-gb" href="https://thrifthammer.com/uk/products/{{ product.slug }}/">
+<link rel="alternate" hreflang="x-default" href="https://thrifthammer.com/products/{{ product.slug }}/">
 {# ── JSON-LD Product structured data (helps Google show price in search results) ── #}
 {# Built in the view with json.dumps() — guarantees valid JSON for all product    #}
 {# names, including those with apostrophes (T'au, C'tan, etc.) which would break  #}
@@ -599,7 +603,7 @@ function shareThisPage() {
   var url = window.location.href;
   if (navigator.share) {
     navigator.share({
-      title: "{{ product.name|escapejs }} — Best Price | ThriftHammer",
+      title: "{{ product.name|escapejs }}: Best Price | ThriftHammer",
       text:  "Find the cheapest price on {{ product.name|escapejs }} from US Warhammer retailers.",
       url:   url
     }).catch(function(){});

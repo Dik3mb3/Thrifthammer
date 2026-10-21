@@ -24,6 +24,7 @@ from django.utils import timezone
 from blog.models import Post
 from prices.models import CurrentPrice
 from products.models import NewsletterSignup, Product
+from products.newsletter_deals import pick_unique_deals
 
 
 class Command(BaseCommand):
@@ -255,7 +256,9 @@ class Command(BaseCommand):
             """Calculate % discount vs the live GW reference price."""
             return float(p.gw_ref_price - p.min_price) / float(p.gw_ref_price) * 100
 
-        sorted_candidates = sorted(candidates, key=_pct, reverse=True)[:limit]
+        sorted_candidates = pick_unique_deals(
+            sorted(candidates, key=_pct, reverse=True), limit, uk=False,
+        )
 
         deals = []
         for product in sorted_candidates:

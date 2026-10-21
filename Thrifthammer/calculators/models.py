@@ -165,7 +165,7 @@ class WeaponProfile(models.Model):
         ordering = ['unit_type', 'weapon_type', 'order', 'name']
 
     def __str__(self):
-        return f'{self.unit_type.name} — {self.name}'
+        return f'{self.unit_type.name}: {self.name}'
 
     @property
     def keywords_list(self):
@@ -193,7 +193,7 @@ class UnitAbility(models.Model):
         verbose_name_plural = 'Unit abilities'
 
     def __str__(self):
-        return f'{self.unit_type.name} — {self.name}'
+        return f'{self.unit_type.name}: {self.name}'
 
 
 class SavedArmy(models.Model):

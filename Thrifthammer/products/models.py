@@ -423,10 +423,14 @@ class Product(models.Model):
         # excluded so GBP prices (stored as raw numbers) never win a USD
         # cheapest-price comparison for US users.
         from prices.models import CurrentPrice  # avoid circular import at module level
+        # Rows with no price (no listing, blanked, MAP-hidden) can never be the
+        # cheapest; without this exclusion one of them could win and crash callers
+        # that do arithmetic on .price (product detail page returned HTTP 500).
         result = (
             CurrentPrice.objects
             .filter(product=self, in_stock=True)
             .exclude(retailer__is_uk=True)
+            .exclude(price__isnull=True)
             .select_related('retailer')
             .order_by('price')
             .first()
@@ -434,6 +438,7 @@ class Product(models.Model):
             CurrentPrice.objects
             .filter(product=self)
             .exclude(retailer__is_uk=True)
+            .exclude(price__isnull=True)
             .select_related('retailer')
             .order_by('price')
             .first()
@@ -473,7 +478,7 @@ class Product(models.Model):
         if not self.msrp:
             return None
         cheapest = self.get_cheapest_price()
-        if not cheapest:
+        if not cheapest or cheapest.price is None:
             return None
 
         amount = self.msrp - cheapest.price
@@ -674,4 +679,4 @@ class IssueReport(models.Model):
         verbose_name_plural = 'Issue Reports'
 
     def __str__(self):
-        return f'{self.issue_type} — {self.product.name} ({self.created_at:%Y-%m-%d})'
+        return f'{self.issue_type}: {self.product.name} ({self.created_at:%Y-%m-%d})'

@@ -30,7 +30,7 @@ class CurrentPriceAdmin(admin.ModelAdmin):
     def formatted_price(self, obj):
         """Highlight the price in the theme teal colour for quick scanning."""
         if obj.price is None:
-            return '—'
+            return '-'
         return format_html('<strong style="color:#03dac6">${}</strong>', obj.price)
 
     @admin.display(description='Discount')
@@ -41,7 +41,7 @@ class CurrentPriceAdmin(admin.ModelAdmin):
             return format_html(
                 '<span style="color:#a5d6a7">{}% off</span>', pct,
             )
-        return '—'
+        return '-'
 
 
 @admin.register(PriceHistory)

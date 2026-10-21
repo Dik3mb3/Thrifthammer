@@ -967,11 +967,11 @@ def product_detail(request, slug):
         _base_title = f"{_name}{_SUFFIX}"
         if len(_base_title) < _MIN:
             if product.faction:
-                _candidate = f"{_name} — {product.faction.name}{_SUFFIX}"
+                _candidate = f"{_name}: {product.faction.name}{_SUFFIX}"
                 if len(_candidate) <= _MAX:
                     _base_title = _candidate
             if len(_base_title) < _MIN:
-                _candidate = f"{_name} — Warhammer{_SUFFIX}"
+                _candidate = f"{_name}: Warhammer{_SUFFIX}"
                 if len(_candidate) <= _MAX:
                     _base_title = _candidate
         page_title = _base_title

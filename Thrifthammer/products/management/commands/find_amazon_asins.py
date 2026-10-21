@@ -298,7 +298,7 @@ class Command(BaseCommand):
             # Check for manual override first
             if product.gw_sku in ASIN_OVERRIDES:
                 asin = ASIN_OVERRIDES[product.gw_sku]
-                found.append((product, asin, '(override — not searched)', None, 'OVERRIDE'))
+                found.append((product, asin, '(override, not searched)', None, 'OVERRIDE'))
                 continue
 
             search_term = product.ebay_search_name or product.name

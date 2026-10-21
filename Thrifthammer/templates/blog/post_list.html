@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %}{% if tag_in_path and active_tag %}{{ active_tag.name }} Warhammer Articles | ThriftHammer{% else %}Warhammer Blog — Tips, Guides &amp; Savings | ThriftHammer{% endif %}{% endblock %}
+{% block title %}{% if tag_in_path and active_tag %}{{ active_tag.name }} Warhammer Articles | ThriftHammer{% else %}Warhammer Blog: Tips, Guides &amp; Savings | ThriftHammer{% endif %}{% endblock %}
 
-{% block meta_description %}<meta name="description" content="{% if tag_in_path and active_tag %}Browse all Warhammer {{ active_tag.name }} articles on ThriftHammer — guides, top 10 lists, and savings tips.{% else %}Guides, Top 10 lists, and savings tips to help you build more and spend less on Warhammer 40,000. New posts every week from ThriftHammer.{% endif %}">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if tag_in_path and active_tag %}Browse all Warhammer {{ active_tag.name }} articles on ThriftHammer: guides, top 10 lists, and savings tips.{% else %}Guides, Top 10 lists, and savings tips to help you build more and spend less on Warhammer 40,000. New posts every week from ThriftHammer.{% endif %}">{% endblock %}
 
 {# Canonical falls through to base.html: https://thrifthammer.com{{ request.path }}  #}
 {# request.path = /blog/ or /blog/tag/<slug>/ — query params (page=) excluded.      #}
@@ -15,7 +15,7 @@
   {% if tag_in_path and active_tag %}
   <h1>{{ active_tag.name }} Articles</h1>
   {% else %}
-  <h1 class="sr-only">Warhammer Blog — Tips, Guides &amp; Savings</h1>
+  <h1 class="sr-only">Warhammer Blog: Tips, Guides &amp; Savings</h1>
   {% endif %}
 
   {% if hero_post or latest_posts or stream_posts %}

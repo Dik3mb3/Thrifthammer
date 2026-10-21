@@ -141,7 +141,7 @@ class ProductAdmin(admin.ModelAdmin):
         )
 
         if not best:
-            return '—'
+            return '-'
         if best.in_stock:
             return format_html('<strong>{}</strong> @ {}', f'${best.price}', best.retailer.name)
         return format_html(

@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ faction.display_name|default:faction.name }} — Price Comparison | ThriftHammer{% endblock %}
+{% block title %}{{ faction.display_name|default:faction.name }}: Price Comparison | ThriftHammer{% endblock %}
 
 {% block meta_description %}
-<meta name="description" content="Compare prices on every {{ faction.display_name|default:faction.name }} kit across US retailers. Find the cheapest deal on boxes, units, and Combat Patrols — updated daily.">
+<meta name="description" content="Compare prices on every {{ faction.display_name|default:faction.name }} kit across US retailers. Find the cheapest deal on boxes, units, and Combat Patrols, updated daily.">
 {% endblock %}
 
 {% block extra_head %}
@@ -12,7 +12,7 @@
 
 {# ── Open Graph ── #}
 <meta property="og:type"        content="website">
-<meta property="og:title"       content="{{ faction.display_name|default:faction.name }} — Best Prices &amp; Deals | ThriftHammer">
+<meta property="og:title"       content="{{ faction.display_name|default:faction.name }}: Best Prices &amp; Deals | ThriftHammer">
 <meta property="og:description" content="Compare prices on every {{ faction.display_name|default:faction.name }} kit across US Warhammer retailers. Updated daily.">
 <meta property="og:url"         content="https://thrifthammer.com/factions/{{ faction.slug }}/">
 <meta property="og:image"       content="https://thrifthammer.com/static/images/bg-grimdark.jpg">
@@ -20,7 +20,7 @@
 
 {# ── Twitter Card ── #}
 <meta name="twitter:card"        content="summary_large_image">
-<meta name="twitter:title"       content="{{ faction.display_name|default:faction.name }} — Best Prices | ThriftHammer">
+<meta name="twitter:title"       content="{{ faction.display_name|default:faction.name }}: Best Prices | ThriftHammer">
 <meta name="twitter:description" content="Compare prices on every {{ faction.display_name|default:faction.name }} kit across US Warhammer retailers.">
 <meta name="twitter:image"       content="https://thrifthammer.com/static/images/bg-grimdark.jpg">
 
@@ -54,7 +54,7 @@
     },
     {
       "@type": "WebPage",
-      "name": "{{ faction.display_name|default:faction.name }} — Best Prices & Deals | ThriftHammer",
+      "name": "{{ faction.display_name|default:faction.name }}: Best Prices & Deals | ThriftHammer",
       "description": "Compare prices on every {{ faction.display_name|default:faction.name }} kit across US Warhammer retailers. Updated daily.",
       "url": "https://thrifthammer.com/factions/{{ faction.slug }}/",
       "isPartOf": {

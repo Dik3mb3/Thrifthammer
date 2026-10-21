@@ -26,6 +26,7 @@ from django.utils import timezone
 
 from prices.models import CurrentPrice
 from products.models import NewsletterSignup, Product
+from products.newsletter_deals import pick_unique_deals
 
 
 class Command(BaseCommand):
@@ -119,7 +120,7 @@ class Command(BaseCommand):
                 faction_names = ', '.join(f.name for f in faction_list)
                 top_saving = int(deals[0]['pct_off']) if deals else 0
                 subject = (
-                    f"Your {faction_names} Deals — Save Up to {top_saving}% Off"
+                    f"Your {faction_names} Deals: Save Up to {top_saving}% Off"
                     f" ({today.strftime('%b')} {today.day})"
                 )
 
@@ -225,7 +226,9 @@ class Command(BaseCommand):
             """Calculate % discount vs the live GW reference price."""
             return float(p.gw_ref_price - p.min_price) / float(p.gw_ref_price) * 100
 
-        sorted_candidates = sorted(candidates, key=_pct, reverse=True)[:limit]
+        sorted_candidates = pick_unique_deals(
+            sorted(candidates, key=_pct, reverse=True), limit, uk=False,
+        )
 
         deals = []
         for product in sorted_candidates:

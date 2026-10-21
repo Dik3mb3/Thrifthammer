@@ -31,6 +31,7 @@ _TEST_STORAGES = {
 from prices.models import CurrentPrice
 from products.ebay_api_client import EbayBrowseAPI
 from products.models import Category, Faction, Product, Retailer
+from products.newsletter_deals import pick_unique_deals
 
 
 class CategoryModelTest(TestCase):
@@ -125,6 +126,33 @@ class ProductModelTest(TestCase):
         self.product.msrp = None
         self.product.save()
         self.assertIsNone(self.product.get_savings_vs_retail())
+
+    def test_null_price_row_never_cheapest(self):
+        """A row with no price is ignored; the cheapest priced row still wins."""
+        shop = Retailer.objects.create(
+            name='No Listing Shop', slug='no-listing-shop', website='https://example.com',
+        )
+        CurrentPrice.objects.create(
+            product=self.product, retailer=shop, price=None, in_stock=True, url='',
+        )
+        cache.clear()
+        best = self.product.get_cheapest_price()
+        self.assertEqual(best.price, decimal.Decimal('33.50'))
+
+    def test_only_null_price_rows_do_not_crash_savings(self):
+        """A product whose only rows have no price has no cheapest price or savings (was HTTP 500)."""
+        shop = Retailer.objects.create(
+            name='No Listing Shop', slug='no-listing-shop', website='https://example.com',
+        )
+        product = Product.objects.create(
+            name='Unpriced Paint', slug='unpriced-paint', msrp=decimal.Decimal('5.00'),
+        )
+        CurrentPrice.objects.create(
+            product=product, retailer=shop, price=None, in_stock=True, url='',
+        )
+        cache.clear()
+        self.assertIsNone(product.get_cheapest_price())
+        self.assertIsNone(product.get_savings_vs_retail())
 
     def test_slug_auto_generated(self):
         """Slug is auto-generated from name when not set."""
@@ -285,6 +313,20 @@ class ProductDetailViewTest(TestCase):
         related = response.context['related_products']
         slugs = [p.slug for p in related]
         self.assertNotIn(self.product.slug, slugs)
+
+    def test_hreflang_on_us_and_uk_pages(self):
+        """Both regional pages carry the same reciprocal hreflang set (en-us, en-gb, x-default)."""
+        us = 'https://thrifthammer.com/products/space-marine-intercessors/'
+        uk = 'https://thrifthammer.com/uk/products/space-marine-intercessors/'
+        expected = [
+            f'<link rel="alternate" hreflang="en-us" href="{us}">',
+            f'<link rel="alternate" hreflang="en-gb" href="{uk}">',
+            f'<link rel="alternate" hreflang="x-default" href="{us}">',
+        ]
+        for name in ('products:detail', 'products_uk:detail'):
+            page = self.client.get(reverse(name, kwargs={'slug': self.product.slug})).content.decode()
+            for tag in expected:
+                self.assertEqual(page.count(tag), 1, (name, tag))
 
 
 @override_settings(STORAGES=_TEST_STORAGES)
@@ -691,3 +733,45 @@ class EbayCalculatedFallbackTest(unittest.TestCase):
 
         result = self.api.find_best_match_for_product(self.product)
         self.assertIsNotNone(result)
+
+
+class NewsletterUniqueDealsTest(TestCase):
+    """Digest deal lists never show two products that share one retailer listing."""
+
+    def _product(self, slug, url, price='49.99', retailer=None, in_stock=True):
+        """Create a product whose only price row points at `url`."""
+        product = Product.objects.create(name=slug, slug=slug, msrp=decimal.Decimal('84.00'))
+        CurrentPrice.objects.create(
+            product=product, retailer=retailer, price=decimal.Decimal(price),
+            in_stock=in_stock, url=url,
+        )
+        product.min_price = decimal.Decimal(price)
+        return product
+
+    def setUp(self):
+        """Create a US and a UK retailer."""
+        self.us = Retailer.objects.create(name='eBay', slug='ebay', website='https://www.ebay.com')
+        self.uk = Retailer.objects.create(
+            name='eBay UK', slug='ebay-uk', website='https://www.ebay.co.uk', is_uk=True,
+        )
+
+    def test_same_listing_is_shown_once_and_the_list_is_refilled(self):
+        """Two products on one listing count once; the next product takes the freed slot."""
+        a = self._product('tempestors', 'https://www.ebay.com/itm/1?_skw=a&hash=x', retailer=self.us)
+        b = self._product('lord-celestant', 'https://www.ebay.com/itm/1?_skw=b&hash=y', retailer=self.us)
+        c = self._product('other-kit', 'https://www.ebay.com/itm/2', retailer=self.us)
+        self.assertEqual(pick_unique_deals([a, b, c], 2), [a, c])
+
+    def test_different_listings_all_kept(self):
+        """Products on different listings are untouched and respect the limit."""
+        a = self._product('kit-a', 'https://www.ebay.com/itm/1', retailer=self.us)
+        b = self._product('kit-b', 'https://www.ebay.com/itm/2', retailer=self.us)
+        c = self._product('kit-c', 'https://www.ebay.com/itm/3', retailer=self.us)
+        self.assertEqual(pick_unique_deals([a, b, c], 2), [a, b])
+
+    def test_uk_flag_uses_uk_listings(self):
+        """With uk=True only UK price rows decide whether two products clash."""
+        a = self._product('uk-a', 'https://www.ebay.co.uk/itm/9', retailer=self.uk)
+        b = self._product('uk-b', 'https://www.ebay.co.uk/itm/9?x=1', retailer=self.uk)
+        self.assertEqual(pick_unique_deals([a, b], 5, uk=True), [a])
+        self.assertEqual(pick_unique_deals([a, b], 5, uk=False), [a, b])
