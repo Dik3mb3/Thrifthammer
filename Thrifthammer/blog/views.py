@@ -8,7 +8,9 @@ Provides:
 
 import json
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -61,6 +63,10 @@ class PostListView(ListView):
         tag_slug = self._get_tag_slug()
         if tag_slug:
             qs = qs.filter(tags__slug=tag_slug)
+            if not qs.exists():
+                # Unknown tag, or a tag with no published posts: a real 404 instead
+                # of an empty page that search engines would index.
+                raise Http404('No published posts with this tag.')
 
         return qs
 
@@ -94,8 +100,10 @@ class PostDetailView(DetailView):
     """
     Full blog post detail page with comments and SEO meta tags.
 
-    Only published posts with a past published_at date are accessible.
-    Drafts return 404 to avoid accidental preview leaks.
+    Only published posts with a past published_at date are accessible to
+    visitors. Drafts and scheduled posts return 404 to avoid accidental
+    preview leaks; staff users (and anyone, while DEBUG is on locally) can
+    open them to proofread before publishing.
 
     GET:  renders the post with existing comments and an empty CommentForm.
     POST: saves a new comment (login required); redirects back to #comments
@@ -109,11 +117,14 @@ class PostDetailView(DetailView):
     slug_url_kwarg = 'slug'
 
     def get_queryset(self):
-        """Only allow access to published posts."""
-        return Post.objects.filter(
+        """Published posts for visitors; staff (and any visitor under DEBUG) can also preview drafts."""
+        qs = Post.objects.prefetch_related('tags')
+        if self.request.user.is_staff or settings.DEBUG:
+            return qs
+        return qs.filter(
             status=Post.STATUS_PUBLISHED,
             published_at__lte=timezone.now(),
-        ).prefetch_related('tags')
+        )
 
     def get_context_data(self, **kwargs):
         """Add recent posts, related posts, comments, and comment form to context."""
