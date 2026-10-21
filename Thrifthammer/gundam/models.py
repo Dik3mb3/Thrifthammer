@@ -142,6 +142,17 @@ class Product(models.Model):
             'never hardcode per-product exceptions in the matching command itself.'
         ),
     )
+    ebay_search_name = models.CharField(
+        max_length=200, blank=True, default='',
+        help_text=(
+            "Plainer phrase for this kit's eBay search. It is sent to eBay as the search query, "
+            "and its words (not the product name's words) are what a listing title must contain. "
+            "Leave blank to use the default (kit number, or the full product name). "
+            'Example: "Mega Size Model Unicorn Gundam Destroy Mode" for a product named '
+            '"Mega Size 1/48 RX-0 Unicorn Gundam (Destroy Mode)". '
+            "Words that other variants share still need negative keywords."
+        ),
+    )
 
     description = models.TextField(blank=True)
     image_url = models.URLField(blank=True)

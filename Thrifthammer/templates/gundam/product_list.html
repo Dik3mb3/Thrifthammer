@@ -9,12 +9,12 @@
 
 {% block robots %}{% if query or page_obj.number > 1 or not products %}<meta name="robots" content="noindex, follow">{% endif %}{% endblock %}
 
-{% block title %}{% if selected_series_obj %}{{ selected_series_obj.name }}{% if selected_grade_label %} {{ selected_grade_label }}{% endif %} Kits — Best Prices | ThriftHammer{% elif query %}Search: {{ query }} | ThriftHammer{% else %}Browse Gundam &amp; Gunpla Kits | ThriftHammer{% endif %}{% endblock %}
+{% block title %}{% if selected_series_obj %}{{ selected_series_obj.name }}{% if selected_grade_label %} {{ selected_grade_label }}{% endif %} Kits: Best Prices | ThriftHammer{% elif query %}Search: {{ query }} | ThriftHammer{% else %}Browse Gundam &amp; Gunpla Kits | ThriftHammer{% endif %}{% endblock %}
 
 {% block meta_description %}<meta name="description" content="{% if selected_series_obj %}Compare prices on {{ selected_series_obj.name }} Gunpla kits{% if selected_grade_label %} ({{ selected_grade_label }}){% endif %} across retailers. Find the best deal before you buy.{% elif query %}ThriftHammer Gundam search results for "{{ query }}". Compare prices and find the best deal.{% else %}Browse Gundam and Gunpla model kits by series and grade. Compare prices across retailers.{% endif %}">{% endblock %}
 
 {% block extra_head %}
-<meta property="og:title" content="Browse Gundam &amp; Gunpla Kits — ThriftHammer">
+<meta property="og:title" content="Browse Gundam &amp; Gunpla Kits | ThriftHammer">
 <meta property="og:description" content="Find the best price on every Gunpla kit. Filter by series and grade, compare retailers.">
 <meta property="og:type" content="website">
 {% endblock %}
@@ -23,7 +23,7 @@
 <div class="page-content">
 
   <div style="margin-bottom:var(--sp-5);">
-    <h1 class="section-title">{% if selected_series_obj %}{{ selected_series_obj.name }}{% if selected_grade_label %} — {{ selected_grade_label }}{% endif %}{% else %}Browse Gundam &amp; Gunpla Kits{% endif %}</h1>
+    <h1 class="section-title">{% if selected_series_obj %}{{ selected_series_obj.name }}{% if selected_grade_label %}: {{ selected_grade_label }}{% endif %}{% else %}Browse Gundam &amp; Gunpla Kits{% endif %}</h1>
     {% if selected_series_obj %}<h2 class="sr-only">{{ selected_series_obj.name }} Kits</h2>{% elif query %}<h2 class="sr-only">Search Results for "{{ query }}"</h2>{% else %}<h2 class="sr-only">All Gundam Kits</h2>{% endif %}
     <div class="gold-rule"></div>
   </div>

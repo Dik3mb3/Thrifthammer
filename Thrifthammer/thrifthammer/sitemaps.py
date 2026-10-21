@@ -22,6 +22,7 @@ from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
 from blog.models import Post, Tag
+from gundam.models import Product as GundamProduct
 from products.models import Faction, Product
 
 
@@ -31,6 +32,7 @@ from products.models import Faction, Product
 _STATIC_PAGE_CONFIG = {
     'home':                           {'priority': 1.0, 'changefreq': 'daily'},
     'products:list':                  {'priority': 0.9, 'changefreq': 'daily'},
+    'gundam:list':                    {'priority': 0.8, 'changefreq': 'weekly'},
     # ── Army Calculator — generic + per-faction pages ─────────────────────────
     'calculators:space_marines':      {'priority': 0.9, 'changefreq': 'weekly'},
     'calculators:ultramarines':       {'priority': 0.9, 'changefreq': 'weekly'},
@@ -144,6 +146,28 @@ class ProductSitemapUK(Sitemap):
     def lastmod(self, obj):
         """Use the product's most recent update timestamp."""
         return getattr(obj, 'updated_at', None) or getattr(obj, 'created_at', None)
+
+
+class GundamProductSitemap(Sitemap):
+    """
+    Sitemap entry for every active Gundam/Gunpla kit (/gundam/<slug>/).
+
+    Weekly rather than daily: Gundam prices are not refreshed continuously yet.
+    """
+
+    priority = 0.7
+    changefreq = 'weekly'
+
+    def items(self):
+        """Return all active Gundam products ordered by name."""
+        return GundamProduct.objects.filter(is_active=True).order_by('name')
+
+    def location(self, obj):
+        return f'/gundam/{obj.slug}/'
+
+    def lastmod(self, obj):
+        """Use the product's most recent update timestamp."""
+        return obj.updated_at
 
 
 class FactionSitemap(Sitemap):

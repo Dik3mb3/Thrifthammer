@@ -13,6 +13,7 @@ from thrifthammer.sitemaps import (
     BlogPostSitemap,
     BlogTagSitemap,
     FactionSitemap,
+    GundamProductSitemap,
     ProductSitemap,
     ProductSitemapUK,
     StaticViewSitemap,
@@ -25,6 +26,7 @@ SITEMAPS = {
     'blog': BlogPostSitemap,
     'blog_tags': BlogTagSitemap,
     'factions': FactionSitemap,
+    'gundam': GundamProductSitemap,
 }
 
 urlpatterns = [

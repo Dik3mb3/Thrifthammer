@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}{{ product.name }} — Best Price | ThriftHammer{% endblock %}
+{% block title %}{{ product.name }}: Best Price | ThriftHammer{% endblock %}
 
-{% block meta_description %}<meta name="description" content="{% if product.description %}{{ product.description|striptags|truncatechars:155 }}{% else %}Compare prices on {{ product.name }}{% if product.series %} ({{ product.series.name }}){% endif %}{% if product.get_grade_display %} — {{ product.get_grade_display }} Gunpla{% endif %}.{% if product.msrp %} MSRP ${{ product.msrp }}.{% endif %}{% endif %}">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if product.description %}{{ product.description|striptags|truncatechars:155 }}{% else %}Compare prices on {{ product.name }}{% if product.series %} ({{ product.series.name }}){% endif %}{% if product.get_grade_display %}, {{ product.get_grade_display }} Gunpla{% endif %}.{% if product.msrp %} MSRP ${{ product.msrp }}.{% endif %}{% endif %}">{% endblock %}
 
 {% block extra_head %}
-<meta property="og:title" content="{{ product.name }} — Best Price | ThriftHammer">
+<meta property="og:title" content="{{ product.name }}: Best Price | ThriftHammer">
 <meta property="og:description" content="Find the best price on {{ product.name }}, compared across retailers.">
 <meta property="og:type" content="product">
 <meta property="og:url" content="https://thrifthammer.com/gundam/{{ product.slug }}/">

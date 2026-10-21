@@ -59,6 +59,10 @@ class ProductAdmin(admin.ModelAdmin):
         ('Pricing', {
             'fields': ('msrp', 'cheapest_current_price'),
         }),
+        ('eBay matching', {
+            'fields': ('ebay_search_name', 'ebay_negative_keywords'),
+            'classes': ('collapse',),
+        }),
         ('Batch tracking', {
             'fields': ('batch_tag',),
             'classes': ('collapse',),
@@ -97,7 +101,7 @@ class ProductAdmin(admin.ModelAdmin):
         )
 
         if not best:
-            return '—'
+            return '-'
         if best.in_stock:
             return format_html('<strong>{}</strong> @ {}', f'${best.price}', best.retailer.name)
         return format_html(
