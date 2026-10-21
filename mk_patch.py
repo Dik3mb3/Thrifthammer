@@ -1,2 +1,0 @@
-# generator
-import base64
