@@ -504,6 +504,10 @@ def _priced_winner(client, ranked):
 # included, and economy shipping from Japan can take weeks, so a small saving is not worth it.
 _WORLDWIDE_MARGIN = Decimal('0.75')
 
+# Listings from sellers in these countries are never linked, even when they are the cheapest
+# (the user's call, 2026-10-21). Codes are the ones eBay returns in itemLocation.country.
+_AVOIDED_SELLER_COUNTRIES = frozenset({'LK', 'CN'})
+
 
 def _best_in_pool(client, items, terms, product):
     """Return the priced winner of one search pool (Best Match #1 or a cheaper valid listing), or None."""
@@ -518,9 +522,12 @@ def _pooled_winner(client, product, terms, us_items, worldwide_items):
     The best US listing wins unless the best worldwide listing is at least 25% cheaper
     delivered. With no valid US listing the worldwide one is used. The worldwide search also
     returns US-located listings the US search did not; those only need the usual 10% gap.
+    Worldwide listings from an avoided seller country are dropped before anything is compared.
     The returned listing carries 'pool' ('us' or 'worldwide') and, when a worldwide listing
     won over a US one, 'us_best_total'.
     """
+    worldwide_items = [item for item in worldwide_items
+                       if item.get('ships_from') not in _AVOIDED_SELLER_COUNTRIES]
     us_win = _best_in_pool(client, us_items, terms, product)
     world_win = _best_in_pool(client, worldwide_items, terms, product)
     if world_win is None:

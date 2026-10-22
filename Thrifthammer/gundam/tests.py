@@ -438,6 +438,26 @@ class CheapestListingTest(TestCase):
         row, _ = self._run([_listing('111', '100.00')], [_listing('222', '85.00', 'US')])
         self.assertIn('/itm/222', row.url)
 
+    def test_cheaper_sri_lanka_listing_never_wins(self):
+        """A 40% cheaper listing from a Sri Lanka seller is skipped and the US listing stays."""
+        row, _ = self._run([_listing('111', '100.00')], [_listing('222', '60.00', 'LK')])
+        self.assertIn('/itm/111', row.url)
+
+    def test_cheaper_china_listing_never_wins(self):
+        """A 40% cheaper listing from a China seller is skipped and the US listing stays."""
+        row, _ = self._run([_listing('111', '100.00')], [_listing('222', '60.00', 'CN')])
+        self.assertIn('/itm/111', row.url)
+
+    def test_avoided_country_is_skipped_when_no_us_listing_passes(self):
+        """With no US listing, the next worldwide listing is used instead of the avoided seller's."""
+        row, _ = self._run([], [_listing('222', '60.00', 'CN'), _listing('333', '95.00', 'JP')])
+        self.assertIn('/itm/333', row.url)
+
+    def test_other_countries_are_still_allowed(self):
+        """Only the avoided countries are filtered: a 40% cheaper Hong Kong listing still wins."""
+        row, _ = self._run([_listing('111', '100.00')], [_listing('222', '60.00', 'HK')])
+        self.assertIn('/itm/222', row.url)
+
     def test_abroad_pool_also_takes_the_cheapest(self):
         """With no US listing, the abroad pool follows the same cheapest rule."""
         row, _ = self._run([], [_listing('222', '100.00', 'JP'), _listing('333', '60.00', 'JP')])
