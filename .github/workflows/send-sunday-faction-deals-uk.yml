@@ -35,7 +35,7 @@ jobs:
   send-email:
     name: Sunday Personalised UK Faction Deal Digest
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: ./Thrifthammer

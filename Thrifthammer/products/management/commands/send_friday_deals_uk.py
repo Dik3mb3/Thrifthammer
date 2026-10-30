@@ -22,7 +22,6 @@ Usage:
 """
 
 import datetime
-import time
 from decimal import Decimal
 
 from django.conf import settings
@@ -37,10 +36,6 @@ from blog.models import Post
 from prices.models import CurrentPrice
 from products.models import NewsletterSignup, Product, WARHAMMER_CATEGORY_SLUGS
 from products.newsletter_deals import pick_unique_deals
-
-# Pause between messages so a large batch is sent at a steady pace rather than
-# in one burst, which Gmail's abuse detection can treat as suspicious.
-_SEND_DELAY_SECONDS = 1.5
 
 CURRENCY_SYMBOL = '£'
 
@@ -182,7 +177,6 @@ class Command(BaseCommand):
                 self.stderr.write(f'  [error] {sub.email} — {exc}')
                 if hasattr(sub, 'record_send_failure'):
                     sub.record_send_failure(exc)
-            time.sleep(_SEND_DELAY_SECONDS)
         connection.close()
 
         self.stdout.write(f'\nDone -- sent: {sent} | errors: {errors}')

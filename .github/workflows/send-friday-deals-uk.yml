@@ -35,7 +35,7 @@ jobs:
   send-email:
     name: Friday UK Rest of Warhammer Digest Email
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: ./Thrifthammer

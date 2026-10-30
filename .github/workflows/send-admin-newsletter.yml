@@ -21,7 +21,7 @@ jobs:
   send-email:
     name: Admin Newsletter Broadcast
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: ./Thrifthammer
