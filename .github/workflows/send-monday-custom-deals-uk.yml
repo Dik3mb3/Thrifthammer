@@ -1,17 +1,16 @@
-name: Send Monday Custom Game System Deal Digest (UK)
+name: Send Thursday Custom Game System Deal Digest (UK)
 
 on:
   schedule:
-    # Same day/time as the US Monday custom digest (Monday 9:00 AM Eastern,
-    # 13:00 UTC during EDT; adjust to 14:00 UTC in winter) -- one routine,
-    # one sitting to approve both previews.
+    # Same day/time as the US custom digest (Thursday 9:00 AM EST, 14:00
+    # UTC, daylight saving ignored) -- one routine, one sitting to review both.
     #
-    # IMPORTANT: a scheduled run is a PREVIEW ONLY. It sends to
-    # NEWSLETTER_PREVIEW_EMAIL, never to real subscribers, regardless of
-    # what the recipient input below says -- see the run step. Review the
-    # preview, then trigger a real send yourself: Actions tab -> this
-    # workflow -> "Run workflow" -> leave recipient blank -> Run workflow.
-    - cron: '0 13 * * 1'
+    # IMPORTANT: a scheduled run is an ADMIN REVIEW ONLY. It runs
+    # review_monday_custom_deals_uk, which emails the admin one list of
+    # every unique deal across all UK subscribers and can never email anyone
+    # else. Review it, then trigger the real send yourself: Actions tab ->
+    # this workflow -> "Run workflow" -> leave recipient blank -> Run workflow.
+    - cron: '0 14 * * 4'
   workflow_dispatch:
     # Allow manual trigger from the GitHub Actions tab (great for testing,
     # and this is also how you approve and send the real digest after
@@ -33,7 +32,7 @@ on:
 
 jobs:
   send-email:
-    name: Monday Customized Game System Deal Digest (UK)
+    name: Thursday Customized Game System Deal Digest (UK)
     runs-on: ubuntu-latest
     timeout-minutes: 25
     defaults:
@@ -54,7 +53,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Send Monday UK custom digest
+      - name: Send Thursday UK custom digest
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
@@ -68,8 +67,14 @@ jobs:
           EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
           EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
           DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
-          NEWSLETTER_PREVIEW_EMAIL: ${{ secrets.NEWSLETTER_PREVIEW_EMAIL }}
         run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            # Scheduled runs only email the admin review -- never real
+            # subscribers. Approve by running this workflow manually with
+            # recipient blank.
+            python manage.py review_monday_custom_deals_uk
+            exit 0
+          fi
           FLAGS=""
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
             FLAGS="$FLAGS --dry-run"
@@ -77,11 +82,7 @@ jobs:
           if [ -n "${{ github.event.inputs.limit }}" ]; then
             FLAGS="$FLAGS --limit ${{ github.event.inputs.limit }}"
           fi
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            # Scheduled runs are a preview only -- never auto-send to real
-            # subscribers. Approve by re-running manually with recipient blank.
-            FLAGS="$FLAGS --recipient $NEWSLETTER_PREVIEW_EMAIL"
-          elif [ -n "${{ github.event.inputs.recipient }}" ]; then
+          if [ -n "${{ github.event.inputs.recipient }}" ]; then
             FLAGS="$FLAGS --recipient ${{ github.event.inputs.recipient }}"
           fi
           python manage.py send_monday_custom_deals_uk $FLAGS

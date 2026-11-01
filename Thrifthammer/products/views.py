@@ -1291,7 +1291,7 @@ def _send_newsletter_confirmation(signup):
         'this subscription automatically. Then visit Account Settings to choose exactly\n'
         'which newsletters you receive:\n'
         '- A Sunday digest for your specific faction(s)\n'
-        '- A Monday digest customized to other miniature gaming systems you are interested in\n'
+        '- A Thursday digest customized to other miniature gaming systems you are interested in\n'
         'https://thrifthammer.com/accounts/register/\n\n'
         'STAY CONNECTED:\n'
         'Join r/DealHammer on Reddit for another way to catch the best deals as they drop.\n'

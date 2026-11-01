@@ -551,7 +551,7 @@ class NewsletterSignup(models.Model):
         help_text=(
             'Which region this subscriber gets ALL of their digests in -- '
             'one field controls currency/retailer scope for every digest '
-            'below (Wednesday/Friday/Sunday/Monday), not a per-digest choice. '
+            'below (Wednesday/Friday/Sunday/Thursday), not a per-digest choice. '
             'US sends use USD prices from US retailers; UK sends use GBP '
             'prices from UK retailers (games-workshop-uk, ebay-uk, etc). '
             'Set explicitly at signup, not inferred silently from browsing.'
@@ -581,7 +581,7 @@ class NewsletterSignup(models.Model):
     monday_custom = models.BooleanField(
         default=False,
         help_text=(
-            'Receive the Monday Customized Game System deal digest. '
+            'Receive the Thursday Customized Game System deal digest. '
             'Off by default -- subscriber must opt in manually and select '
             'at least one category below.'
         ),
@@ -590,7 +590,7 @@ class NewsletterSignup(models.Model):
         'Category',
         blank=True,
         related_name='newsletter_subscribers',
-        help_text='Categories to include in the Monday Customized Game System email.',
+        help_text='Categories to include in the Thursday Customized Game System email.',
     )
     user = models.OneToOneField(
         'auth.User',

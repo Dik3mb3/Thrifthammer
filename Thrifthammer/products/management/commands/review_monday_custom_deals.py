@@ -132,14 +132,14 @@ class Command(BaseCommand):
             )
 
         subject = (
-            f"[ADMIN REVIEW] Monday Custom Digest -- {len(deals_list)} Unique Deals "
+            f"[ADMIN REVIEW] Thursday Custom Digest -- {len(deals_list)} Unique Deals "
             f"Across {len(subscribers)} Subscriber(s) ({today.strftime('%b')} {today.day})"
         )
         context = {
             'deals': deals_list,
             'today': today,
             'subscriber_count': len(subscribers),
-            'digest_label': 'Monday Custom',
+            'digest_label': 'Thursday Custom',
         }
         html_body = render_to_string('emails/review_personalized_digest.html', context)
         text_body = self._build_text_body(deals_list, today, len(subscribers))
@@ -160,7 +160,7 @@ class Command(BaseCommand):
     def _build_text_body(self, deals, today, subscriber_count):
         """Build a clean plain-text fallback email body."""
         lines = [
-            'THRIFTHAMMER -- ADMIN REVIEW: MONDAY CUSTOM DIGEST',
+            'THRIFTHAMMER -- ADMIN REVIEW: THURSDAY CUSTOM DIGEST',
             '(Not sent to subscribers -- admin review only)',
             f'{today.strftime("%B")} {today.day}, {today.year}',
             f'{len(deals)} unique deal(s) across {subscriber_count} confirmed subscriber(s)',

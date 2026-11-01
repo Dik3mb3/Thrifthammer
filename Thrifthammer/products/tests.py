@@ -8,14 +8,19 @@ Covers models, views, and URL routing. Focuses on:
 - View response codes and context
 """
 
+import datetime
 import decimal
 import unittest
+from io import StringIO
 from types import SimpleNamespace
 from unittest.mock import patch
 
 from django.contrib.auth.models import User
+from django.core import mail
 from django.core.cache import cache
+from django.core.management import call_command
 from django.db import connection, reset_queries
+from django.template.loader import render_to_string
 from django.test import Client, TestCase, override_settings
 from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
@@ -30,7 +35,8 @@ _TEST_STORAGES = {
 
 from prices.models import CurrentPrice
 from products.ebay_api_client import EbayBrowseAPI
-from products.models import Category, Faction, Product, Retailer
+from products.management.commands.review_sunday_faction_deals import _ADMIN_EMAIL
+from products.models import Category, Faction, NewsletterSignup, Product, Retailer
 from products.newsletter_deals import pick_unique_deals
 
 
@@ -775,3 +781,136 @@ class NewsletterUniqueDealsTest(TestCase):
         b = self._product('uk-b', 'https://www.ebay.co.uk/itm/9?x=1', retailer=self.uk)
         self.assertEqual(pick_unique_deals([a, b], 5, uk=True), [a])
         self.assertEqual(pick_unique_deals([a, b], 5, uk=False), [a, b])
+
+
+class UKReviewCommandsTest(TestCase):
+    """The UK admin review commands email only the admin, in pounds, about UK subscribers."""
+
+    def _subscriber(self, email, region):
+        """Create a confirmed subscriber who chose the test faction and category."""
+        sub = NewsletterSignup.objects.create(
+            email=email, region=region, is_confirmed=True,
+            sunday_faction=True, monday_custom=True,
+        )
+        sub.factions.add(self.faction)
+        sub.custom_categories.add(self.category)
+        return sub
+
+    def setUp(self):
+        """Create one UK deal (GBP 30 against a GBP 50 GW UK price) and two subscribers."""
+        self.category = Category.objects.create(name='Age of Sigmar', slug='age-of-sigmar')
+        self.faction = Faction.objects.create(
+            name='Stormcast Eternals', slug='stormcast-eternals', category=self.category,
+        )
+        gw_uk = Retailer.objects.create(
+            name='Games Workshop UK', slug='games-workshop-uk',
+            website='https://www.warhammer.com/en-GB', is_uk=True,
+        )
+        ebay_uk = Retailer.objects.create(
+            name='eBay UK', slug='ebay-uk', website='https://www.ebay.co.uk', is_uk=True,
+        )
+        product = Product.objects.create(
+            name='Test Praetors', slug='test-praetors', msrp=decimal.Decimal('60.00'),
+            msrp_gbp=decimal.Decimal('50.00'), category=self.category, faction=self.faction,
+        )
+        for retailer, price, url in (
+            (gw_uk, '50.00', 'https://www.warhammer.com/en-GB/test-praetors'),
+            (ebay_uk, '30.00', 'https://www.ebay.co.uk/itm/1'),
+        ):
+            CurrentPrice.objects.create(
+                product=product, retailer=retailer, price=decimal.Decimal(price),
+                in_stock=True, url=url,
+            )
+        self.uk_sub = self._subscriber('uk-sub@example.com', NewsletterSignup.REGION_UK)
+        self.us_sub = self._subscriber('us-sub@example.com', NewsletterSignup.REGION_US)
+        mail.outbox.clear()
+
+    def _run(self, command):
+        """Run a management command and return the single email it sent."""
+        mail.outbox.clear()
+        call_command(command, stdout=StringIO())
+        self.assertEqual(len(mail.outbox), 1)
+        return mail.outbox[0]
+
+    def test_sunday_review_goes_only_to_the_admin_in_pounds(self):
+        """One email, to the admin address only, with GBP prices in both bodies."""
+        message = self._run('review_sunday_faction_deals_uk')
+        self.assertEqual(message.to, [_ADMIN_EMAIL])
+        self.assertIn('UK Sunday Faction', message.subject)
+        self.assertIn('Test Praetors', message.body)
+        self.assertIn('£30.00', message.body)
+        self.assertIn('£30.00', message.alternatives[0][0])
+        self.assertNotIn('$', message.body)
+
+    def test_custom_review_goes_only_to_the_admin_and_is_labelled_thursday(self):
+        """The custom game system review is admin-only, in pounds, and says Thursday."""
+        message = self._run('review_monday_custom_deals_uk')
+        self.assertEqual(message.to, [_ADMIN_EMAIL])
+        self.assertIn('UK Thursday Custom', message.subject)
+        self.assertNotIn('Monday', message.subject + message.body)
+        self.assertIn('£30.00', message.body)
+
+    def test_review_counts_only_uk_subscribers(self):
+        """The US subscriber is not part of the UK review's audience."""
+        for command in ('review_sunday_faction_deals_uk', 'review_monday_custom_deals_uk'):
+            with self.subTest(command=command):
+                body = self._run(command).body
+                self.assertIn('across 1 confirmed UK subscriber(s)', body)
+                self.assertIn('shown to 1 subscriber(s)', body)
+
+    def test_review_audience_matches_the_real_send(self):
+        """The real UK send reaches exactly the subscribers the review counted."""
+        for command in ('send_sunday_faction_deals_uk', 'send_monday_custom_deals_uk'):
+            with self.subTest(command=command):
+                mail.outbox.clear()
+                call_command(command, stdout=StringIO())
+                self.assertEqual([m.to for m in mail.outbox], [['uk-sub@example.com']])
+
+    def test_review_commands_have_no_recipient_option(self):
+        """Nothing can point a review at an address other than the admin."""
+        for command in ('review_sunday_faction_deals_uk', 'review_monday_custom_deals_uk'):
+            with self.subTest(command=command), self.assertRaises(TypeError):
+                call_command(command, recipient='someone@example.com', stdout=StringIO())
+
+    def test_shared_template_prints_dollars_unless_given_a_currency(self):
+        """The US review emails keep their $ prices; the UK ones switch to pounds."""
+        context = {
+            'deals': [{
+                'name': 'Kit', 'url': 'https://thrifthammer.com/products/kit/',
+                'price': 10, 'msrp': 20, 'pct_off': 50, 'group_label': 'Faction',
+                'subscriber_count': 1,
+            }],
+            'subscriber_count': 1, 'digest_label': 'Sunday Faction',
+            'today': datetime.date(2026, 11, 1),
+        }
+        us_html = render_to_string('emails/review_personalized_digest.html', context)
+        self.assertIn('$10.00', us_html)
+        self.assertIn('$20.00 MSRP', us_html)
+        uk_html = render_to_string(
+            'emails/review_personalized_digest.html', {**context, 'currency_symbol': '£'},
+        )
+        self.assertIn('£10.00', uk_html)
+        self.assertIn('£20.00 MSRP', uk_html)
+        self.assertNotIn('$10.00', uk_html)
+
+
+@override_settings(STORAGES=_TEST_STORAGES)
+class NewsletterThursdayWordingTest(TestCase):
+    """The custom game system digest is described as a Thursday email, never Monday."""
+
+    def test_profile_page_says_thursday(self):
+        """The account settings page names Thursday for the custom digest."""
+        user = User.objects.create_user('thursday-user', 'thursday@example.com', 'unused-test-password')
+        NewsletterSignup.objects.create(email='thursday@example.com', is_confirmed=True)
+        self.client.force_login(user)
+        response = self.client.get(reverse('accounts:profile'))
+        self.assertContains(response, 'Thursday: Customized Game System deals')
+        self.assertContains(response, 'sent Thursday morning')
+        self.assertNotContains(response, 'Monday')
+
+    def test_signup_help_text_says_thursday(self):
+        """The region and custom digest help text list Thursday, not Monday."""
+        for name in ('region', 'monday_custom', 'custom_categories'):
+            self.assertNotIn('Monday', NewsletterSignup._meta.get_field(name).help_text)
+        self.assertIn('Thursday', NewsletterSignup._meta.get_field('monday_custom').help_text)
+        self.assertIn('Thursday', NewsletterSignup._meta.get_field('region').help_text)

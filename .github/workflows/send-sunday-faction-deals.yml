@@ -2,15 +2,15 @@ name: Send Sunday Faction Deal Digest
 
 on:
   schedule:
-    # Every Sunday at 9:00 AM Eastern (13:00 UTC during EDT; adjust to
-    # 14:00 UTC in winter when EST/UTC-5 kicks in)
+    # Every Sunday at 9:00 AM EST (14:00 UTC). Fixed UTC time all year;
+    # daylight saving time is intentionally ignored.
     #
-    # IMPORTANT: a scheduled run is a PREVIEW ONLY. It sends to
-    # NEWSLETTER_PREVIEW_EMAIL, never to real subscribers, regardless of
-    # what the recipient input below says -- see the run step. Review the
-    # preview, then trigger a real send yourself: Actions tab -> this
+    # IMPORTANT: a scheduled run is an ADMIN REVIEW ONLY. It runs
+    # review_sunday_faction_deals, which emails the admin one list of every
+    # unique deal across all subscribers and can never email anyone else.
+    # Review it, then trigger the real send yourself: Actions tab -> this
     # workflow -> "Run workflow" -> leave recipient blank -> Run workflow.
-    - cron: '0 13 * * 0'
+    - cron: '0 14 * * 0'
   workflow_dispatch:
     # Allow manual trigger from the GitHub Actions tab (great for testing,
     # and this is also how you approve and send the real digest after
@@ -67,8 +67,14 @@ jobs:
           EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
           EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
           DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
-          NEWSLETTER_PREVIEW_EMAIL: ${{ secrets.NEWSLETTER_PREVIEW_EMAIL }}
         run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            # Scheduled runs only email the admin review -- never real
+            # subscribers. Approve by running this workflow manually with
+            # recipient blank.
+            python manage.py review_sunday_faction_deals
+            exit 0
+          fi
           FLAGS=""
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
             FLAGS="$FLAGS --dry-run"
@@ -76,11 +82,7 @@ jobs:
           if [ -n "${{ github.event.inputs.limit }}" ]; then
             FLAGS="$FLAGS --limit ${{ github.event.inputs.limit }}"
           fi
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            # Scheduled runs are a preview only -- never auto-send to real
-            # subscribers. Approve by re-running manually with recipient blank.
-            FLAGS="$FLAGS --recipient $NEWSLETTER_PREVIEW_EMAIL"
-          elif [ -n "${{ github.event.inputs.recipient }}" ]; then
+          if [ -n "${{ github.event.inputs.recipient }}" ]; then
             FLAGS="$FLAGS --recipient ${{ github.event.inputs.recipient }}"
           fi
           python manage.py send_sunday_faction_deals $FLAGS
