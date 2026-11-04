@@ -296,6 +296,54 @@ class SiblingScaleExclusionTest(TestCase):
         self.assertTrue(_matches('Bandai 1/60 XXXG-01W Wing Gundam', terms['required'], terms['excluded']))
 
 
+class NumberedSetPhraseTest(TestCase):
+    """A number written right after "Set" or "Pack" in a phrase is required in the title."""
+
+    def setUp(self):
+        """Create two numbered Gundam Assemble products and one phrase with a scale."""
+        series = Series.objects.create(name='Gundam Assemble Test')
+        self.ex02 = Product.objects.create(
+            name='Gundam Assemble Expansion Pack 02 (EX02)', slug='ex02-t', series=series,
+            ebay_search_name='Gundam Assemble Expansion Pack 02')
+        self.ex03 = Product.objects.create(
+            name='Gundam Assemble Expansion Pack 03 (EX03)', slug='ex03-t', series=series,
+            ebay_search_name='Gundam Assemble Expansion Pack 03')
+        self.scaled = Product.objects.create(
+            name='1/100 Test Gundam', slug='scaled-t', series=series,
+            ebay_search_name='1 100 Test Gundam Ver 2.0')
+
+    def _terms(self, product):
+        """Return the term set for one product."""
+        from .management.commands.find_gundam_ebay_prices import _build_term_sets
+        return _build_term_sets([product])[product.pk]
+
+    def test_number_after_pack_is_required(self):
+        """The phrase's number joins the required words."""
+        self.assertIn('03', self._terms(self.ex03)['required'])
+        self.assertIn('02', self._terms(self.ex02)['required'])
+
+    def test_title_without_the_number_is_rejected(self):
+        """A sibling's listing, written with or without its code, does not match."""
+        from .management.commands.find_gundam_ebay_prices import _matches
+        terms = self._terms(self.ex03)
+        self.assertFalse(_matches('Gundam Assemble: Expansion Pack 02 [EX02] PRESALE', terms['required'], terms['excluded']))
+        self.assertFalse(_matches('Gundam Assemble 02 Expansion Pack - Bandai Mini Figures', terms['required'], terms['excluded']))
+
+    def test_titles_with_or_without_the_code_match(self):
+        """Both the coded and the code-less title of the kit match."""
+        from .management.commands.find_gundam_ebay_prices import _matches
+        terms = self._terms(self.ex03)
+        self.assertTrue(_matches('Gundam Assemble 03 Expansion Pack - Bandai Mini Figures (PRE-ORDER)', terms['required'], terms['excluded']))
+        self.assertTrue(_matches('GUNDAM ASSEMBLE EXPANSION PACK 03 [EX03] Plastic Model Kit', terms['required'], terms['excluded']))
+
+    def test_other_phrases_keep_dropping_short_numbers(self):
+        """Scale and version numbers are not made required (they only count after Set or Pack)."""
+        required = self._terms(self.scaled)['required']
+        self.assertNotIn('1', required)
+        self.assertNotIn('100', required)
+        self.assertNotIn('2', required)
+
+
 def _listing(item_id='111', price='90.00', country='US', title='NXEDGE STYLE Xi Gundam Action Figure'):
     """Build a parsed eBay listing dict like EbayBrowseAPI._parse_item returns."""
     from decimal import Decimal

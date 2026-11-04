@@ -265,6 +265,13 @@ def _parse_negative_keywords(raw):
     return words, item_ids
 
 
+# A numbered product in a phrase ("Starter Set 01", "Expansion Pack 03"). The number is the
+# product's identity, but _clean_words drops short numbers, so it is added back by hand. Only a
+# number right after "set" or "pack" counts: scales ("1 100"), versions ("Ver 2.0") and
+# "Unicorn Gundam 02" style phrases are left alone.
+_NUMBERED_SET_RE = re.compile(r'\b(?:set|pack)\s+(\d{1,3})\b', re.IGNORECASE)
+
+
 def _phrase_words(product):
     """
     Return the words an eBay title must contain when the product has a plainer
@@ -277,6 +284,7 @@ def _phrase_words(product):
     if not product.ebay_search_name:
         return set()
     words = _clean_words(product.ebay_search_name)
+    words |= set(_NUMBERED_SET_RE.findall(product.ebay_search_name))
     kit_num = _kit_number(product.name)
     if kit_num and kit_num.startswith('BB'):
         # The BB number is the kit's identity and short digits are dropped from
