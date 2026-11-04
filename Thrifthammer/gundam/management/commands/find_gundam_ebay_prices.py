@@ -286,6 +286,15 @@ def _phrase_words(product):
     return words
 
 
+# Scale fractions after separator stripping ("1/100" -> "1100"). A sibling's scale only
+# separates releases for a kit that names a scale itself ("HG 1/100" vs "HG 1/144"); a kit
+# named "MG ..." must not reject its own "MG 1/100" listings because an HG 1/100 sibling exists.
+_SCALE_TOKENS = frozenset({'1100', '1144', '1550'})
+# Any scale written in a product name ("1/60", "1/48", "1/100"); the 3-digit ones are dropped
+# from the kit's word set, so the name itself is checked, not the tokens.
+_OWN_SCALE_RE = re.compile(r'\b1\s*/\s*\d{2,4}\b')
+
+
 def _build_term_sets(products):
     """
     Group products by kit number and compute each product's required
@@ -332,9 +341,12 @@ def _build_term_sets(products):
                 if op.pk != p.pk:
                     others_extra |= (word_sets[op.pk] - common)
             neg_words, neg_ids = _parse_negative_keywords(p.ebay_negative_keywords)
+            sibling_words = others_extra - extra
+            if not _OWN_SCALE_RE.search(p.name):
+                sibling_words -= _SCALE_TOKENS
             result[p.pk] = {
                 'required':         _phrase_words(p) or (extra | base_required),
-                'excluded':         others_extra - extra | neg_words,
+                'excluded':         sibling_words | neg_words,
                 'blocked_item_ids': neg_ids,
                 'query':            p.ebay_search_name or kn,
             }

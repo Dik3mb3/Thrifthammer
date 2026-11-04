@@ -256,6 +256,46 @@ class BaselineExclusionTest(TestCase):
         self.assertIn('decal', terms['excluded'])
 
 
+class SiblingScaleExclusionTest(TestCase):
+    """A sibling's "1/100" must not make an unscaled "MG" kit reject its own 1/100 listings."""
+
+    def setUp(self):
+        """Create an HG 1/100, an HG 1/144 and an MG kit that share one kit number."""
+        series = Series.objects.create(name='Mobile Suit Gundam Wing Test')
+        self.hg100 = Product.objects.create(name='HG 1/100 XXXG-01W Wing Gundam', slug='hg100-t', series=series)
+        self.hg144 = Product.objects.create(name='HG 1/144 XXXG-01W Wing Gundam', slug='hg144-t', series=series)
+        self.mg = Product.objects.create(name='MG XXXG-01W Wing Gundam', slug='mg-t', series=series)
+
+    def _terms(self):
+        """Return the term sets for the three siblings."""
+        from .management.commands.find_gundam_ebay_prices import _build_term_sets
+        return _build_term_sets([self.hg100, self.hg144, self.mg])
+
+    def test_unscaled_kit_accepts_a_1_100_listing(self):
+        """The MG kit matches 'MG 1/100' titles."""
+        from .management.commands.find_gundam_ebay_prices import _matches
+        terms = self._terms()[self.mg.pk]
+        self.assertTrue(_matches('Bandai MG 1/100 XXXG-01W Wing Gundam Model Kit', terms['required'], terms['excluded']))
+
+    def test_scaled_kits_still_exclude_each_others_scale(self):
+        """HG 1/100 and HG 1/144 kits keep rejecting the other scale."""
+        from .management.commands.find_gundam_ebay_prices import _matches
+        terms = self._terms()
+        self.assertFalse(_matches('Bandai HG 1/144 XXXG-01W Wing Gundam', terms[self.hg100.pk]['required'], terms[self.hg100.pk]['excluded']))
+        self.assertFalse(_matches('Bandai HG 1/100 XXXG-01W Wing Gundam', terms[self.hg144.pk]['required'], terms[self.hg144.pk]['excluded']))
+        self.assertTrue(_matches('Bandai HG 1/100 XXXG-01W Wing Gundam', terms[self.hg100.pk]['required'], terms[self.hg100.pk]['excluded']))
+
+    def test_kit_with_an_odd_scale_keeps_excluding_sibling_scales(self):
+        """A "1/60" kit (its 3-digit scale is not a word) still rejects 1/100 and 1/144 listings."""
+        from .management.commands.find_gundam_ebay_prices import _build_term_sets, _matches
+        classic = Product.objects.create(
+            name='1/60 XXXG-01W Wing Gundam', slug='classic60-t', series=self.hg100.series)
+        terms = _build_term_sets([self.hg100, self.hg144, self.mg, classic])[classic.pk]
+        self.assertFalse(_matches('Bandai HG 1/144 XXXG-01W Wing Gundam', terms['required'], terms['excluded']))
+        self.assertFalse(_matches('Bandai HG 1/100 XXXG-01W Wing Gundam', terms['required'], terms['excluded']))
+        self.assertTrue(_matches('Bandai 1/60 XXXG-01W Wing Gundam', terms['required'], terms['excluded']))
+
+
 def _listing(item_id='111', price='90.00', country='US', title='NXEDGE STYLE Xi Gundam Action Figure'):
     """Build a parsed eBay listing dict like EbayBrowseAPI._parse_item returns."""
     from decimal import Decimal
