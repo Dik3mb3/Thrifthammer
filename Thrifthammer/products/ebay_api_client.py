@@ -1037,6 +1037,14 @@ class EbayBrowseAPI:
         'ads4370',
     }
 
+    # Categories whose genuine sealed retail listings carry a "#N" in the
+    # title: A Song of Ice and Fire sellers write "Stark Attachments #1" for
+    # the product the publisher calls "Stark Attachments 1". Everywhere else a
+    # space-hash-word in a title still marks an individual model extracted
+    # from a kit (the "#A / #B / #C" check in _is_valid_result), so that rule
+    # stays on for every other category.
+    _HASH_TITLE_CATEGORIES = frozenset({'asoiaf'})
+
     # Keywords that indicate a listing is a spare part/bit, not a full kit.
     # eBay is flooded with individual components — we must exclude them.
     #
@@ -1511,7 +1519,10 @@ class EbayBrowseAPI:
         # names use letter suffixes only in product codes (e.g. "XV8"), and
         # those appear inside a word token without a preceding space.
         # A space-hash-word pattern is therefore an unambiguous extraction signal.
-        if re.search(r'\s#\w', result['title']):
+        # Categories in _HASH_TITLE_CATEGORIES (A Song of Ice and Fire) are
+        # exempt: their genuine sealed boxes are routinely titled "#1".
+        if (re.search(r'\s#\w', result['title'])
+                and _category_slug not in EbayBrowseAPI._HASH_TITLE_CATEGORIES):
             logger.debug(
                 '[ebay] Rejected (individual model variant, "#X" in title): "%s"',
                 result['title'][:60],
@@ -1824,7 +1835,8 @@ class EbayBrowseAPI:
             reasons.append('" & " (bundle) in title')
 
         # Individual model variant (#A / #B / #C pattern)
-        if re.search(r'\s#\w', result['title']):
+        if (re.search(r'\s#\w', result['title'])
+                and _category_slug not in EbayBrowseAPI._HASH_TITLE_CATEGORIES):
             reasons.append('individual model variant ("#X" suffix in title)')
 
         # Blocked title phrases (incomplete kit markers + wrong product category)

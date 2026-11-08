@@ -35,6 +35,7 @@ _TEST_STORAGES = {
 
 from prices.models import CurrentPrice
 from products.ebay_api_client import EbayBrowseAPI
+from products.ebay_api_client_uk import EbayBrowseAPIUK
 from products.management.commands.review_sunday_faction_deals import _ADMIN_EMAIL
 from products.models import Category, Faction, NewsletterSignup, Product, Retailer
 from products.newsletter_deals import pick_unique_deals
@@ -739,6 +740,78 @@ class EbayCalculatedFallbackTest(unittest.TestCase):
 
         result = self.api.find_best_match_for_product(self.product)
         self.assertIsNotNone(result)
+
+
+class EbayHashTitleCategoryTest(unittest.TestCase):
+    """
+    The " #N" individual-model rule (US and UK eBay clients) is switched off
+    for the A Song of Ice and Fire category only: its genuine sealed boxes are
+    routinely titled "Stark Attachments #1". Every other category keeps the
+    rule, where a space-hash-word marks a single model pulled from a kit.
+
+    Plain unittest.TestCase with stand-in objects: the validators only read
+    the product through getattr(), so no database or eBay call is needed.
+    """
+
+    TITLE = 'Ice Fire Stark Attachments #1 Sealed'
+    HASH_REASON = 'individual model variant'
+
+    @staticmethod
+    def _product(category_slug):
+        """A product whose own number (1) is an allowed title word, in the given category."""
+        return SimpleNamespace(
+            name='SIF: Stark Attachments 1',
+            msrp=decimal.Decimal('44.99'),
+            msrp_gbp=decimal.Decimal('35.00'),
+            ebay_search_name='Ice Fire Stark Attachments',
+            ebay_search_name_uk='',
+            ebay_negative_keywords='',
+            ebay_allowed_title_words='& 1',
+            ebay_allow_3d=False,
+            ebay_allow_no_box=False,
+            category=SimpleNamespace(slug=category_slug) if category_slug else None,
+        )
+
+    def _item(self, url):
+        """A listing dict with the hash-titled sealed box at a plausible price."""
+        return {
+            'title': self.TITLE, 'url': url, 'item_id': 'v1|9|0',
+            'price': decimal.Decimal('30.00'), 'shipping': decimal.Decimal('0.00'),
+            'total_cost': decimal.Decimal('30.00'), 'short_description': '',
+            'seller_username': 'seller9',
+        }
+
+    def _reasons_text(self, client, item, product):
+        """Join the client's rejection reasons into one searchable string."""
+        return '; '.join(client._get_rejection_reasons(item, product))
+
+    def test_us_asoiaf_hash_title_is_valid(self):
+        """A "#1" title is accepted for the asoiaf category."""
+        item = self._item('https://www.ebay.com/itm/9')
+        self.assertTrue(EbayBrowseAPI._is_valid_result(item, self._product('asoiaf')))
+        self.assertNotIn(self.HASH_REASON, self._reasons_text(EbayBrowseAPI, item, self._product('asoiaf')))
+
+    def test_us_other_categories_still_reject_hash_title(self):
+        """The same title is still rejected for Warhammer 40,000 and for no category at all."""
+        item = self._item('https://www.ebay.com/itm/9')
+        for slug in ('warhammer-40000', 'warmachine', None):
+            product = self._product(slug)
+            self.assertFalse(EbayBrowseAPI._is_valid_result(item, product), slug)
+            self.assertIn(self.HASH_REASON, self._reasons_text(EbayBrowseAPI, item, product), slug)
+
+    def test_uk_asoiaf_hash_title_is_valid(self):
+        """The UK client mirrors the US exemption for asoiaf."""
+        item = self._item('https://www.ebay.co.uk/itm/9')
+        self.assertTrue(EbayBrowseAPIUK._is_valid_result(item, self._product('asoiaf')))
+        self.assertNotIn(self.HASH_REASON, self._reasons_text(EbayBrowseAPIUK, item, self._product('asoiaf')))
+
+    def test_uk_other_categories_still_reject_hash_title(self):
+        """The UK client still rejects the "#1" title everywhere else."""
+        item = self._item('https://www.ebay.co.uk/itm/9')
+        for slug in ('warhammer-40000', 'warmachine', None):
+            product = self._product(slug)
+            self.assertFalse(EbayBrowseAPIUK._is_valid_result(item, product), slug)
+            self.assertIn(self.HASH_REASON, self._reasons_text(EbayBrowseAPIUK, item, product), slug)
 
 
 class NewsletterUniqueDealsTest(TestCase):

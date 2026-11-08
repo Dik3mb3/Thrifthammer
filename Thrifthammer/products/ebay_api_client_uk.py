@@ -776,6 +776,12 @@ class EbayBrowseAPIUK:
         'that3dprintguy998',
     }
 
+    # Mirrors EbayBrowseAPI._HASH_TITLE_CATEGORIES in ebay_api_client.py (the US
+    # file): categories whose genuine sealed boxes carry a "#N" in the title
+    # (A Song of Ice and Fire "Stark Attachments #1"). The "#X" individual-model
+    # check below stays on for every other category.
+    _HASH_TITLE_CATEGORIES = frozenset({'asoiaf'})
+
     _BITS_KEYWORDS = {
         # Seller classification terms
         'bit', 'bits', 'bitz', 'sprue', 'sprues', 'upgrade',
@@ -1242,7 +1248,10 @@ class EbayBrowseAPIUK:
         # names use letter suffixes only in product codes (e.g. "XV8"), and
         # those appear inside a word token without a preceding space.
         # A space-hash-word pattern is therefore an unambiguous extraction signal.
-        if re.search(r'\s#\w', result['title']):
+        # Categories in _HASH_TITLE_CATEGORIES (A Song of Ice and Fire) are exempt.
+        _category_slug = getattr(getattr(product, 'category', None), 'slug', None)
+        if (re.search(r'\s#\w', result['title'])
+                and _category_slug not in EbayBrowseAPIUK._HASH_TITLE_CATEGORIES):
             logger.debug(
                 '[ebay-uk] Rejected (individual model variant, "#X" in title): "%s"',
                 result['title'][:60],
@@ -1556,7 +1565,9 @@ class EbayBrowseAPIUK:
             reasons.append('" & " (bundle) in title')
 
         # Individual model variant (#A / #B / #C pattern)
-        if re.search(r'\s#\w', result['title']):
+        _category_slug = getattr(getattr(product, 'category', None), 'slug', None)
+        if (re.search(r'\s#\w', result['title'])
+                and _category_slug not in EbayBrowseAPIUK._HASH_TITLE_CATEGORIES):
             reasons.append('individual model variant ("#X" suffix in title)')
 
         # Blocked title phrases (incomplete kit markers + wrong product category)

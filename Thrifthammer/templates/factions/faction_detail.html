@@ -13,7 +13,7 @@
 {# ── Open Graph ── #}
 <meta property="og:type"        content="website">
 <meta property="og:title"       content="{{ faction.display_name|default:faction.name }}: Best Prices &amp; Deals | ThriftHammer">
-<meta property="og:description" content="Compare prices on every {{ faction.display_name|default:faction.name }} kit across US Warhammer retailers. Updated daily.">
+<meta property="og:description" content="Compare prices on every {{ faction.display_name|default:faction.name }} kit across US {% if faction.category.slug == 'warhammer-40000' %}Warhammer {% endif %}retailers. Updated daily.">
 <meta property="og:url"         content="https://thrifthammer.com/factions/{{ faction.slug }}/">
 <meta property="og:image"       content="https://thrifthammer.com/static/images/bg-grimdark.jpg">
 <meta property="og:site_name"   content="ThriftHammer">
@@ -21,7 +21,7 @@
 {# ── Twitter Card ── #}
 <meta name="twitter:card"        content="summary_large_image">
 <meta name="twitter:title"       content="{{ faction.display_name|default:faction.name }}: Best Prices | ThriftHammer">
-<meta name="twitter:description" content="Compare prices on every {{ faction.display_name|default:faction.name }} kit across US Warhammer retailers.">
+<meta name="twitter:description" content="Compare prices on every {{ faction.display_name|default:faction.name }} kit across US {% if faction.category.slug == 'warhammer-40000' %}Warhammer {% endif %}retailers.">
 <meta name="twitter:image"       content="https://thrifthammer.com/static/images/bg-grimdark.jpg">
 
 {# ── JSON-LD: Breadcrumb + WebPage ── #}
@@ -55,7 +55,7 @@
     {
       "@type": "WebPage",
       "name": "{{ faction.display_name|default:faction.name }}: Best Prices & Deals | ThriftHammer",
-      "description": "Compare prices on every {{ faction.display_name|default:faction.name }} kit across US Warhammer retailers. Updated daily.",
+      "description": "Compare prices on every {{ faction.display_name|default:faction.name }} kit across US {% if faction.category.slug == 'warhammer-40000' %}Warhammer {% endif %}retailers. Updated daily.",
       "url": "https://thrifthammer.com/factions/{{ faction.slug }}/",
       "isPartOf": {
         "@type": "WebSite",
@@ -86,7 +86,7 @@
     <div class="faction-hero-img-wrap">
       <img
         src="{{ faction.hero_image_url }}"
-        alt="{{ faction.display_name|default:faction.name }}, Warhammer 40,000"
+        alt="{{ faction.display_name|default:faction.name }}, {{ faction.category.name|default:'Warhammer 40,000' }}"
         class="faction-hero-img"
         loading="eager"
       >
@@ -97,7 +97,7 @@
     {% endif %}
 
     <div class="faction-hero-content">
-      <p class="faction-hero-eyebrow">Warhammer 40,000</p>
+      <p class="faction-hero-eyebrow">{{ faction.category.name|default:'Warhammer 40,000' }}</p>
       <h1 class="faction-hero-title">{{ faction.display_name|default:faction.name }}</h1>
       {% if faction.hero_tagline %}
       <p class="faction-hero-tagline">{{ faction.hero_tagline }}</p>
