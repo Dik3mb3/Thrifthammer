@@ -221,6 +221,12 @@ _BB_KIT_TOKEN_RE = re.compile(r'bb\d{2,4}')
 _BB_LISTING_TOKEN_RE = re.compile(r'bb\d{3}')
 
 
+# Some sellers write a scale with a colon ("1:144", "1:100") where our phrases and most titles write
+# "1/144". The colon would split it into "1" and "144" (both dropped as short numbers), so it is
+# rewritten to the slash form before tokenizing and then reads as the same "1144" token.
+_COLON_SCALE_RE = re.compile(r'\b1\s*:\s*(\d{2,4})\b')
+
+
 def _title_words(title):
     """
     Tokenize an eBay listing title into a set of lowercase words.
@@ -228,10 +234,15 @@ def _title_words(title):
     Besides plain words, a BB Senshi number written in any common style is
     added as one "bb###" token (plus "bb" itself when only the glued form was
     present), so it compares equal to the token built from our product name.
-    A "#NNN" catalog number is added as one "hash###" token.
+    A "#NNN" catalog number is added as one "hash###" token. A scale written
+    "1:144" reads as "1/144", and "Trans Am" (two words) also gives the
+    "transam" token that "Trans-Am" gives.
     """
+    title = _COLON_SCALE_RE.sub(r'1/\1', title)
     text = _strip_seps(_collapse_dotted_acronyms(title)).lower()
     words = set(re.findall(r'[a-z0-9]+', text)) | _hash_tokens(title)
+    if {'trans', 'am'} <= words:
+        words.add('transam')
     for match in _BB_NUMBER_RE.finditer(text):
         words.add('bb' + match.group(1))
     if any(_BB_KIT_TOKEN_RE.fullmatch(word) for word in words):
@@ -272,6 +283,14 @@ def _parse_negative_keywords(raw):
 _NUMBERED_SET_RE = re.compile(r'\b(?:set|pack)\s+(\d{1,3})\b', re.IGNORECASE)
 
 
+# A single letter that ends a phrase, optionally followed by a scale ("Gundam AGE Zedas R 1/144"),
+# is what tells the variant from its plain kit ("Zedas" vs "Zedas R"). _clean_words drops every
+# single-character token, so it is added back by hand. Only a letter after another word counts, so
+# a leading "S Gundam" or a mid-phrase "G Gundam" is left alone, and it is only matched when the
+# title writes it as its own word ("Zedas R"; "Zedas-R" is one glued token and does not match).
+_TRAILING_LETTER_RE = re.compile(r'\b[A-Za-z0-9]+\s+([A-Za-z])(?:\s+1\s*/\s*\d{2,4})?\s*$')
+
+
 def _phrase_words(product):
     """
     Return the words an eBay title must contain when the product has a plainer
@@ -285,6 +304,9 @@ def _phrase_words(product):
         return set()
     words = _clean_words(product.ebay_search_name)
     words |= set(_NUMBERED_SET_RE.findall(product.ebay_search_name))
+    trailing = _TRAILING_LETTER_RE.search(product.ebay_search_name)
+    if trailing and trailing.group(1).lower() not in _STOPWORDS:
+        words.add(trailing.group(1).lower())
     kit_num = _kit_number(product.name)
     if kit_num and kit_num.startswith('BB'):
         # The BB number is the kit's identity and short digits are dropped from

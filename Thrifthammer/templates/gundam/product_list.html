@@ -111,7 +111,7 @@
           </a>
           {% for s in series_list %}
           <a href="?{% if query %}q={{ query }}&{% endif %}series={{ s.slug }}{% if selected_grade %}&grade={{ selected_grade }}{% endif %}"
-             class="sidebar-link{% if selected_series == s.slug %} active{% endif %}">
+             class="sidebar-link sidebar-link--wrap{% if selected_series == s.slug %} active{% endif %}">
             {{ s.name }}
           </a>
           {% endfor %}

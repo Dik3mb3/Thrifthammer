@@ -451,7 +451,9 @@ h3, h4, h5 {
 /* Navbar search */
 .navbar-search {
   flex: 1 1 220px;
-  min-width: 160px;
+  /* 128px (was 160px) gives back the width the "(Beta)" nav tag added, so the nav
+     does not start overflowing at a wider screen than it did before the tag. */
+  min-width: 128px;
   max-width: 400px;
   position: relative;
 }
@@ -508,6 +510,13 @@ h3, h4, h5 {
   color: var(--text-primary);
   background: var(--bg-elevated);
   text-decoration: none;
+}
+/* "(Beta)" tag after a nav label for a section that is still being built out */
+.navbar-links .nav-beta {
+  color: var(--accent-gold);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  vertical-align: 0.05em;
 }
 /* CTA button in nav */
 .navbar-links .nav-cta {
@@ -1612,6 +1621,12 @@ input, select, textarea { font-family: 'Inter', sans-serif; font-size: 0.875rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+/* Long filter labels (e.g. Gundam series names) wrap onto a second line instead of being clipped */
+.sidebar-link--wrap {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.3;
 }
 .sidebar-link:hover {
   background: var(--bg-elevated);

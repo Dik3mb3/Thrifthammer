@@ -30,7 +30,7 @@ class GundamDiscoverabilityTest(TestCase):
     def test_main_nav_links_to_gundam(self):
         """Every page's main navigation links to the Gundam section."""
         html = self.client.get('/gundam/').content.decode()
-        self.assertIn('<a href="/gundam/">Gundam</a>', html)
+        self.assertIn('<a href="/gundam/">Gundam <span class="nav-beta">(Beta)</span></a>', html)
 
 
 class EbaySearchNameTest(TestCase):
@@ -342,6 +342,102 @@ class NumberedSetPhraseTest(TestCase):
         self.assertNotIn('1', required)
         self.assertNotIn('100', required)
         self.assertNotIn('2', required)
+
+
+class TrailingLetterPhraseTest(TestCase):
+    """A single letter ending a phrase ("Zedas R") separates a variant from its plain kit."""
+
+    def setUp(self):
+        """Create a plain kit, its lettered variant and phrases with letters elsewhere."""
+        series = Series.objects.create(name='Trailing Letter Test')
+        self.plain = Product.objects.create(
+            name='HGAG Zedas', slug='zedas-t', series=series, ebay_search_name='Gundam AGE Zedas 1/144')
+        self.variant = Product.objects.create(
+            name='HGAG Zedas R', slug='zedas-r-t', series=series, ebay_search_name='Gundam AGE Zedas R 1/144')
+        self.bare = Product.objects.create(
+            name='HG Astray Blue Frame Second L', slug='second-l-t', series=series,
+            ebay_search_name='HG Astray Blue Frame Second L')
+        self.middle = Product.objects.create(
+            name='BB Senshi 242 G Gundam', slug='g-gundam-t', series=series, ebay_search_name='BB Senshi 242 G Gundam')
+        self.leading = Product.objects.create(
+            name='EX Model S Gundam Attacker', slug='s-gundam-t', series=series, ebay_search_name='S Gundam Attacker')
+
+    def _terms(self, product):
+        """Return the term set for one product."""
+        from .management.commands.find_gundam_ebay_prices import _build_term_sets
+        return _build_term_sets([product])[product.pk]
+
+    def test_letter_before_a_scale_is_required(self):
+        """The R of "Zedas R 1/144" joins the required words; the plain kit does not need it."""
+        self.assertIn('r', self._terms(self.variant)['required'])
+        self.assertNotIn('r', self._terms(self.plain)['required'])
+
+    def test_variant_listing_matches_and_plain_listing_does_not(self):
+        """Only a title that writes "R" as its own word matches the lettered variant."""
+        from .management.commands.find_gundam_ebay_prices import _matches
+        terms = self._terms(self.variant)
+        self.assertTrue(_matches('1/144 HG Zedas R "Gundam AGE"', terms['required'], terms['excluded']))
+        self.assertTrue(_matches('1/144 HG XVV-XCR Zedas R "Mobile Suit Gundam AGE" Series No. 12', terms['required'], terms['excluded']))
+        self.assertFalse(_matches('HG 1/144 Zedas (Mobile Suit Gundam AGE)', terms['required'], terms['excluded']))
+        self.assertFalse(_matches('Bandai 1/144 Scale Gundam Age Zedas #006 Advanced Grade Model Kit', terms['required'], terms['excluded']))
+
+    def test_letter_at_the_very_end_is_required(self):
+        """A phrase ending in a letter ("Second L") needs it in the title."""
+        terms = self._terms(self.bare)
+        self.assertIn('l', terms['required'])
+
+    def test_letters_at_the_start_or_middle_are_left_alone(self):
+        """"S Gundam Attacker" and "BB Senshi 242 G Gundam" keep dropping their single letter."""
+        self.assertNotIn('s', self._terms(self.leading)['required'])
+        self.assertNotIn('g', self._terms(self.middle)['required'])
+
+
+class TitleNormalizationTest(TestCase):
+    """Seller spellings "1:144" and "Trans Am" read the same as "1/144" and "Trans-Am"."""
+
+    def setUp(self):
+        """Create a scaled kit and a Trans-Am kit."""
+        series = Series.objects.create(name='Title Normalization Test')
+        self.scaled = Product.objects.create(
+            name='HG00 Gaddess', slug='gaddess-t', series=series, ebay_search_name='Gundam 00 Gaddess 1/144')
+        self.trans_am = Product.objects.create(
+            name='HG00 Susanowo Trans-Am Mode', slug='susanowo-ta-t', series=series,
+            ebay_search_name='Gundam 00 Susanowo Trans-Am 1/144')
+
+    def _terms(self, product):
+        """Return the term set for one product."""
+        from .management.commands.find_gundam_ebay_prices import _build_term_sets
+        return _build_term_sets([product])[product.pk]
+
+    def test_colon_scale_reads_as_slash_scale(self):
+        """A title written "1:144" has the same scale token as "1/144"."""
+        from .management.commands.find_gundam_ebay_prices import _title_words
+        self.assertIn('1144', _title_words('GUNDAM Gaddess 1:144 00 HG BANDAI Plastic Model Kit'))
+        self.assertIn('1144', _title_words('GUNDAM Gaddess 1 : 144 HG'))
+        self.assertIn('1100', _title_words('GUNDAM 0 Raiser GNR-010 BANDAI 00 1:100 Model Kit'))
+
+    def test_colon_scale_listing_matches_the_phrase(self):
+        """The colon-scale listing passes the required-word check of a 1/144 phrase."""
+        from .management.commands.find_gundam_ebay_prices import _matches
+        terms = self._terms(self.scaled)
+        self.assertTrue(_matches('GUNDAM Gaddess 1:144 00 HG BANDAI Plastic Model Kit', terms['required'], terms['excluded']))
+        self.assertTrue(_matches('GUNDAM Gaddess 1/144 00 HG BANDAI Plastic Model Kit', terms['required'], terms['excluded']))
+
+    def test_other_colons_are_left_alone(self):
+        """Only a scale ("1:" then 2 to 4 digits) is rewritten; times and ratios elsewhere are not."""
+        from .management.commands.find_gundam_ebay_prices import _title_words
+        self.assertNotIn('1144', _title_words('Pickup 2:144 Gundam'))
+        self.assertNotIn('1144', _title_words('Ends 11:144 Gundam'))
+
+    def test_spaced_trans_am_gives_the_glued_token(self):
+        """"Trans Am" and "Trans-Am" both reach the "transam" token; neither word alone does."""
+        from .management.commands.find_gundam_ebay_prices import _title_words, _matches
+        self.assertIn('transam', _title_words('Gundam Susanowo Trans Am Mode 1/144'))
+        self.assertIn('transam', _title_words('Gundam Susanowo Trans-Am Mode 1/144'))
+        self.assertNotIn('transam', _title_words('Gundam Susanowo Am Mode 1/144'))
+        terms = self._terms(self.trans_am)
+        self.assertTrue(_matches('HG 1/144 Susanowo Trans Am Mode Gundam 00', terms['required'], terms['excluded']))
+        self.assertFalse(_matches('HG 1/144 Susanowo Gundam 00', terms['required'], terms['excluded']))
 
 
 def _listing(item_id='111', price='90.00', country='US', title='NXEDGE STYLE Xi Gundam Action Figure'):
