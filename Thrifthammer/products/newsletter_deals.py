@@ -169,31 +169,26 @@ def build_text_sections(tabs, currency_symbol='$'):
         lines += [tab['label'].upper(), '']
         for i, d in enumerate(tab['deals'], 1):
             lines.append(f'{i:>2}. {d["name"]}')
-            lines.append(f'    {_text_price_line(d, tab["key"], currency_symbol)}')
+            lines.append(f'    {_text_price_line(d, currency_symbol)}')
             lines.append(f'    {d["url"]}')
             lines.append('')
     lines += [DEAL_FOOTNOTE, '']
     return lines
 
 
-def _text_price_line(deal, key, currency_symbol):
-    """Return the one-line price summary used in the plain-text email."""
+def _text_price_line(deal, currency_symbol):
+    """
+    Return the one-line price summary used in the plain-text email.
+
+    Every tab shows both the percentage and the whole-unit amount saved, e.g.
+    "save 33% / save $52 off $155.00 MSRP". The amount is rounded half up like
+    the HTML badge (floatformat:0). A deal at or above MSRP shows only its price.
+    """
     price = f'{currency_symbol}{deal["price"]:.2f}'
     if deal['pct_off'] <= 0:
         return f'{price} at {deal["retailer"]}'
-    if key == 'saved':
-        # Whole amount, rounded half up like the HTML badge (floatformat:0).
-        return (
-            f'{price}  (save {currency_symbol}{int(deal["savings"] + 0.5)} off '
-            f'{currency_symbol}{deal["msrp"]:.2f} MSRP at {deal["retailer"]})'
-        )
-    if key == 'curated':
-        return (
-            f'{price}  (save {deal["pct_off"]:.0f}% / save {currency_symbol}{int(deal["savings"] + 0.5)} off '
-            f'{currency_symbol}{deal["msrp"]:.2f} MSRP at {deal["retailer"]})'
-        )
     return (
-        f'{price}  (save {deal["pct_off"]:.0f}% off '
+        f'{price}  (save {deal["pct_off"]:.0f}% / save {currency_symbol}{int(deal["savings"] + 0.5)} off '
         f'{currency_symbol}{deal["msrp"]:.2f} MSRP at {deal["retailer"]})'
     )
 

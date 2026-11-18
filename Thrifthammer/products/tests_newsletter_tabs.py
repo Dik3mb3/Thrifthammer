@@ -265,7 +265,7 @@ class RenderedEmailTest(DealTabsTestBase):
         self.assertLess(discount_at, saved_at)
         self.assertIn(DEAL_FOOTNOTE, html)
         self.assertIn('Most $ Saved', html)
-        self.assertRegex(html, r'SAVE \$75\s*</div>')
+        self.assertRegex(html, r'SAVE 25% / SAVE \$75\s*</div>')
         self.assertNotIn('SAVE $75.00', html)
         self.assertNotIn('SAVE $75 (', html)
         # The first radio is pre-checked and the tab CSS ships in its own style block.
@@ -292,8 +292,8 @@ class RenderedEmailTest(DealTabsTestBase):
         self.assertNotIn('SAVE', first_row)
         self.assertNotIn('MSRP', first_row)
 
-    def test_curated_badge_shows_percent_and_whole_dollars(self):
-        """A curated pick below MSRP reads "SAVE 50% / SAVE $50"; Best Discount stays percent-only."""
+    def test_every_tab_badge_shows_percent_and_whole_dollars(self):
+        """Curated, Best Discount and Most Saved all read "SAVE 50% / SAVE $50" for a half-price pick."""
         tabs, discount = self._tabs()
         html = render_to_string('emails/weekly_deals.html', self._context(tabs, discount))
         curated_block = html[
@@ -302,11 +302,26 @@ class RenderedEmailTest(DealTabsTestBase):
         discount_block = html[
             html.index('<div class="deal-panel deal-panel-discount"'):html.index('<div class="deal-panel deal-panel-saved"')
         ]
-        self.assertRegex(curated_block, r'SAVE 50% / SAVE \$50\s*</div>')
-        self.assertRegex(discount_block, r'SAVE 50%\s*</div>')
-        self.assertNotIn(' / SAVE', discount_block)
+        saved_block = html[html.index('<div class="deal-panel deal-panel-saved"'):]
+        for block in (curated_block, discount_block, saved_block):
+            self.assertRegex(block, r'SAVE 50% / SAVE \$50\s*</div>')
+        # No tab shows the percentage alone or the dollars alone any more.
+        self.assertNotRegex(html, r'SAVE \d+%\s*</div>')
+        self.assertNotRegex(html, r'(?<!/ )SAVE \$\d+\s*</div>')
         text = ' | '.join(build_text_sections(tabs, '$'))
         self.assertIn('save 50% / save $50 off $100.00 MSRP', text)
+
+    def test_badge_rounds_the_dollar_amount_half_up(self):
+        """A 13.51 saving reads SAVE $14 and a 13.49 saving reads SAVE $13, in HTML and text alike."""
+        up = {'name': 'Up', 'url': 'u', 'price': 31.49, 'msrp': 45.0, 'pct_off': 30.0, 'savings': 13.51,
+              'retailer': 'eBay', 'image_url': ''}
+        down = dict(up, name='Down', savings=13.49)
+        html = render_to_string('emails/_deal_rows.html', {'deals': [up, down], 'tab_key': 'discount'})
+        self.assertRegex(html, r'SAVE 30% / SAVE \$14\s*</div>')
+        self.assertRegex(html, r'SAVE 30% / SAVE \$13\s*</div>')
+        text = '\n'.join(build_text_sections([{'key': 'discount', 'label': 'Best Discount', 'deals': [up, down]}]))
+        self.assertIn('save 30% / save $14 off $45.00 MSRP', text)
+        self.assertIn('save 30% / save $13 off $45.00 MSRP', text)
 
     def test_single_tab_draws_no_tab_bar(self):
         """With only one list the email is the plain list again (plus the footnote)."""
@@ -342,8 +357,10 @@ class RenderedEmailTest(DealTabsTestBase):
         html = render_to_string('emails/friday_deals.html', context)
         self.assertIn('Most £ Saved', html)
         self.assertIn('£180.00', html)
-        self.assertRegex(html, r'SAVE £60\s*</div>')
+        self.assertRegex(html, r'SAVE 25% / SAVE £60\s*</div>')
         self.assertNotIn('£60.00 (', html)
+        text = '\n'.join(build_text_sections(tabs, '£'))
+        self.assertIn('save 25% / save £60 off £240.00 MSRP', text)
 
     def test_text_body_has_every_section_and_the_footnote(self):
         """The plain-text email lists each tab with a heading and ends with the footnote."""
@@ -351,10 +368,10 @@ class RenderedEmailTest(DealTabsTestBase):
         text = '\n'.join(build_text_sections(tabs, '$'))
         for heading in ('CURATED PICKS', 'BEST DISCOUNT', 'MOST $ SAVED'):
             self.assertIn(heading, text)
-        self.assertIn('save $75 off $300.00 MSRP', text)
-        # The Most Saved section shows dollars only; Best Discount keeps its percentages.
-        self.assertNotIn('%', text.split('MOST $ SAVED')[1])
-        self.assertIn('save 25% off $300.00', text.split('MOST $ SAVED')[0])
+        # Best Discount and Most Saved both carry the percentage and the whole-dollar amount.
+        self.assertIn('save 25% / save $75 off $300.00 MSRP', text.split('MOST $ SAVED')[0])
+        self.assertIn('save 25% / save $75 off $300.00 MSRP', text.split('MOST $ SAVED')[1])
+        self.assertNotIn('save 25% off', text)
         self.assertTrue(text.rstrip().endswith(DEAL_FOOTNOTE))
 
 

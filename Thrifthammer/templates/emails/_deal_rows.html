@@ -1,8 +1,10 @@
 {% comment %}
   One block of deal cards, used by the Wednesday and Friday digests.
 
-  Context: deals (list of deal dicts), tab_key ('curated', 'discount' or 'saved'),
-  currency_symbol (defaults to $).
+  Context: deals (list of deal dicts), tab_key ('curated', 'discount' or 'saved';
+  every tab shows the same badge now), currency_symbol (defaults to $).
+  The savings badge reads "SAVE 33% / SAVE $52" on every tab: the percentage off
+  and the whole-unit amount saved (rounded half up).
 
   Layout (same at every screen width, no media queries needed): a narrow rank
   column, then one content cell holding the name across its full width, and
@@ -31,7 +33,7 @@
                           {% if deal.pct_off > 0 %}
                           <div style="margin-top:6px;">
                             <div style="display:inline-block;background-color:#2d7a4f;color:#e8e0d0;font-size:11px;font-weight:700;padding:2px 7px;border-radius:3px;">
-                              {% if tab_key == 'saved' %}SAVE {{ currency_symbol|default:"$" }}{{ deal.savings|floatformat:0 }}{% elif tab_key == 'curated' %}SAVE {{ deal.pct_off|floatformat:0 }}% / SAVE {{ currency_symbol|default:"$" }}{{ deal.savings|floatformat:0 }}{% else %}SAVE {{ deal.pct_off|floatformat:0 }}%{% endif %}
+                              SAVE {{ deal.pct_off|floatformat:0 }}% / SAVE {{ currency_symbol|default:"$" }}{{ deal.savings|floatformat:0 }}
                             </div>
                           </div>
                           {% endif %}
