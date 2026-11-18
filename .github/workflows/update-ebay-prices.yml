@@ -10,6 +10,14 @@ on:
     # catalogue (alphabetically late gw_sku) un-refreshed. The eBay UK workflow
     # runs 90 minutes after these. Every cron line below MUST be mapped in the
     # slice step; products/test_ebay_sharding.py checks that.
+    #
+    # GitHub's scheduler is best effort: for this repository it starts only 2 to 5 of
+    # these 8 slots a day and 1 to 3 hours late, while a run started by workflow_dispatch
+    # begins within seconds. So the cron lines are now only a WATCHDOG: every run starts
+    # the next slice itself 3 hours after it began (the `relay` job, logic in
+    # .github/scripts/ebay_relay.py), and a scheduled run that finds another run already
+    # active stands down (the `gate` job). If the chain ever breaks, the next cron
+    # that GitHub does fire restarts it.
     - cron: '10 0,6,12,18 * * *'   # slice 1/2 (also runs the books step)
     - cron: '10 3,9,15,21 * * *'   # slice 2/2
   workflow_dispatch:
@@ -59,12 +67,62 @@ on:
         description: '[Books step] Max format rows to process (leave blank for all)'
         type: string
         default: ''
+      relay:
+        description: 'Keep the 3-hourly relay going: after this run, start the other slice 3 hours after this one began. Needs shard 1/2 or 2/2 and no filters.'
+        type: boolean
+        default: false
+      relay_gap_minutes:
+        description: '[Relay] Minutes between two slice starts (blank = 180). Only lowered when testing.'
+        type: string
+        default: ''
+      relay_hops:
+        description: '[Relay] Stop after this many more hand-overs (blank = unlimited). Only used when testing.'
+        type: string
+        default: ''
+
+# actions: write lets the relay job start the next run with the built-in token.
+permissions:
+  contents: read
+  actions: write
 
 jobs:
+  gate:
+    name: Relay gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      go: ${{ steps.decide.outputs.go }}
+      relay: ${{ steps.decide.outputs.relay }}
+    steps:
+      - name: Checkout the relay script
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+
+      - name: Decide whether this run goes ahead
+        id: decide
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+          INPUT_SHARD: ${{ github.event.inputs.shard }}
+          INPUT_RELAY: ${{ github.event.inputs.relay }}
+          INPUT_SKUS: ${{ github.event.inputs.skus }}
+          INPUT_BATCH_TAG: ${{ github.event.inputs.batch_tag }}
+          INPUT_CATEGORY: ${{ github.event.inputs.category }}
+        run: python3 .github/scripts/ebay_relay.py gate
+
   update-prices:
     name: eBay Price Update
+    needs: gate
+    if: needs.gate.outputs.go == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 135
+    # A slice takes 40 to 126 minutes today and the catalogue keeps growing. The cap stays
+    # below the 180-minute relay spacing so a slow run can never push the chain off schedule
+    # (it was 135, which left only 9 minutes of headroom).
+    timeout-minutes: 165
     defaults:
       run:
         working-directory: ./Thrifthammer
@@ -107,6 +165,11 @@ jobs:
             fi
           else
             SHARD="$INPUT_SHARD"
+            # A hand-started or relayed slice 2/2 must not repeat the books update
+            # that slice 1/2 already does.
+            if [ "$SHARD" = "2/2" ]; then
+              RUN_BOOKS="false"
+            fi
           fi
           echo "Catalogue slice: ${SHARD:-all products} (books step: $RUN_BOOKS)"
           echo "shard=$SHARD" >> "$GITHUB_OUTPUT"
@@ -201,3 +264,36 @@ jobs:
           DJANGO_DEBUG: 'False'
           RAILWAY_ENVIRONMENT: production
         run: python manage.py clear_cache
+
+  relay:
+    name: Start the next slice
+    needs: [gate, update-prices]
+    # Runs after the update whether it succeeded or failed (a failed slice must not stop
+    # the chain), but not when the run was cancelled (cancelling is the stop button).
+    if: ${{ !cancelled() && needs.gate.outputs.go == 'true' && needs.gate.outputs.relay == 'true' }}
+    runs-on: ubuntu-latest
+    # Waits for the 3-hour mark (the update itself takes 40 to 126 minutes), then
+    # starts the next slice. Idle waiting is free on a public repository.
+    timeout-minutes: 200
+    steps:
+      - name: Checkout the relay script
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+
+      - name: Wait for the next slot, then start the other slice
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          REF_NAME: ${{ github.ref_name }}
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+          INPUT_SHARD: ${{ github.event.inputs.shard }}
+          INPUT_DRY_RUN: ${{ github.event.inputs.dry_run }}
+          INPUT_LIMIT: ${{ github.event.inputs.limit }}
+          INPUT_BOOK_DRY_RUN: ${{ github.event.inputs.book_dry_run }}
+          INPUT_BOOK_LIMIT: ${{ github.event.inputs.book_limit }}
+          INPUT_GAP: ${{ github.event.inputs.relay_gap_minutes }}
+          INPUT_HOPS: ${{ github.event.inputs.relay_hops }}
+        run: python3 .github/scripts/ebay_relay.py relay

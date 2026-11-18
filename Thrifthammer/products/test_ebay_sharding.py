@@ -471,3 +471,11 @@ class SliceStepScriptTests(SimpleTestCase):
                 self.assertEqual(outputs['run_books'], 'true' if index == 1 else 'false')
         _, outputs, _ = self._run_script(filename, 'workflow_dispatch')
         self.assertEqual(outputs['run_books'], 'true')
+
+    def test_us_manual_slice_two_skips_books(self):
+        """A hand-started or relayed slice 2/2 must not repeat slice 1/2's books update."""
+        filename = 'update-ebay-prices.yml'
+        for shard, expected in (('2/2', 'false'), ('1/2', 'true'), ('', 'true')):
+            with self.subTest(shard=shard):
+                _, outputs, _ = self._run_script(filename, 'workflow_dispatch', input_shard=shard)
+                self.assertEqual(outputs['run_books'], expected)
