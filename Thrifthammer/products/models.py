@@ -656,6 +656,61 @@ class NewsletterSignup(models.Model):
         self.save(update_fields=['consecutive_send_failures', 'last_send_error', 'last_send_failed_at'])
 
 
+class CuratedDealList(models.Model):
+    """
+    The hand-picked "Curated Picks" tab for one weekly digest and region.
+
+    There is one list per (digest, region): Wednesday and Friday, US and UK.
+    Each week the admin replaces the products in the list; prices are looked
+    up live when the email is built, so only the picks are stored here.
+    ``updated_at`` is bumped whenever the list or its items are saved in the
+    admin, and a list not touched for more than 6 days is treated as stale
+    and left out of the email, so last week's picks are never re-sent.
+    """
+
+    DIGEST_WEDNESDAY = 'wednesday'
+    DIGEST_FRIDAY = 'friday'
+    DIGEST_CHOICES = [
+        (DIGEST_WEDNESDAY, 'Wednesday (40K)'),
+        (DIGEST_FRIDAY, 'Friday (AoS & more)'),
+    ]
+
+    digest = models.CharField(max_length=10, choices=DIGEST_CHOICES)
+    region = models.CharField(max_length=2, choices=NewsletterSignup.REGION_CHOICES)
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        help_text='Last time this list was edited. A list not edited for more than 6 days is skipped.',
+    )
+
+    class Meta:
+        ordering = ['digest', 'region']
+        constraints = [
+            models.UniqueConstraint(fields=['digest', 'region'], name='unique_curated_list_per_digest_region'),
+        ]
+        verbose_name = 'Curated deal list'
+        verbose_name_plural = 'Curated deal lists'
+
+    def __str__(self):
+        return f'{self.get_digest_display()} - {self.get_region_display()}'
+
+
+class CuratedDealItem(models.Model):
+    """One product in a CuratedDealList, shown at ``position`` (1 = first)."""
+
+    deal_list = models.ForeignKey(CuratedDealList, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='curated_deal_items')
+    position = models.PositiveSmallIntegerField(default=1, help_text='1 is shown first.')
+
+    class Meta:
+        ordering = ['position', 'pk']
+        constraints = [
+            models.UniqueConstraint(fields=['deal_list', 'product'], name='unique_product_per_curated_list'),
+        ]
+
+    def __str__(self):
+        return f'{self.deal_list}: #{self.position} {self.product}'
+
+
 class IssueReport(models.Model):
     """A data-quality report submitted by a visitor on a product page."""
 

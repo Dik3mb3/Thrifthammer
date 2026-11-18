@@ -33,7 +33,10 @@ from django.utils import timezone
 from blog.models import Post
 from prices.models import CurrentPrice
 from products.models import NewsletterSignup, Product, WARHAMMER_CATEGORY_SLUGS
-from products.newsletter_deals import pick_unique_deals
+from products.newsletter_deals import (
+    DEAL_FOOTNOTE, build_deal, build_deal_tabs, build_text_sections,
+    get_curated_deals, order_candidates, pick_unique_deals, tab_log_lines,
+)
 
 
 class Command(BaseCommand):
@@ -82,6 +85,15 @@ class Command(BaseCommand):
                 f'${d["price"]:.2f}  '
                 f'(save {d["pct_off"]:.0f}% off ${d["msrp"]:.2f})'
             )
+
+        # ── 1b. The Curated Picks and Most Saved tabs ──────
+        saved_deals = self._get_top_deals(limit, by='saved')
+        curated_deals, curated_status = get_curated_deals(
+            self, 'friday', uk=False, with_category=True,
+        )
+        for line in tab_log_lines(curated_status, curated_deals, saved_deals, '$'):
+            self.stdout.write(line)
+        tabs = build_deal_tabs(curated_deals, deals, saved_deals, '$')
 
         # ── 2. Gather subscribers ─────────────────────────────────────────────
         if recipient_override:
@@ -141,11 +153,13 @@ class Command(BaseCommand):
                     'browse_url': 'https://thrifthammer.com/products/?region=us',
                     'register_url': 'https://thrifthammer.com/accounts/register/',
                     'top_pct': top_saving,
+                    'tabs': tabs,
+                    'deal_footnote': DEAL_FOOTNOTE,
                     'latest_post': latest_post,
                     'unsubscribe_url': sub.get_unsubscribe_url(),
                 }
                 html_body = render_to_string('emails/friday_deals.html', context)
-                text_body = self._build_text_body(deals, today, sub.get_unsubscribe_url(), latest_post)
+                text_body = self._build_text_body(tabs, today, sub.get_unsubscribe_url(), latest_post)
 
                 msg = EmailMultiAlternatives(
                     subject=subject,
@@ -184,7 +198,49 @@ class Command(BaseCommand):
 
     # ── Helpers ──────────────────────────────────────────────────────────────
 
-    def _get_top_deals(self, limit):
+    def _annotated_products(self, require_ref=True):
+        """
+        Return active products annotated with gw_ref_price, the live US MSRP.
+
+        The reference price is the live Games Workshop price, falling back to the
+        static product.msrp snapshot. With require_ref=False products with no
+        reference price are kept (a curated pick can be shown without a discount).
+        """
+        gw_ref_price_sq = Subquery(
+            CurrentPrice.objects
+            .filter(
+                product=OuterRef('pk'),
+                retailer__slug='games-workshop',
+                not_available=False,
+                price__isnull=False,
+            )
+            .order_by('price')
+            .values('price')[:1]
+        )
+        qs = Product.objects.filter(is_active=True).annotate(
+            gw_ref_price=Coalesce(
+                gw_ref_price_sq, F('msrp'),
+                output_field=DecimalField(max_digits=10, decimal_places=2),
+            )
+        )
+        if require_ref:
+            qs = qs.filter(gw_ref_price__isnull=False)
+        return qs
+
+    @staticmethod
+    def _with_cheapest_price(qs):
+        """Annotate min_price, the cheapest in-stock US price, and keep only priced products."""
+        return qs.annotate(
+            min_price=Min(
+                'current_prices__price',
+                filter=Q(
+                    current_prices__in_stock=True,
+                    current_prices__not_available=False,
+                ) & Q(current_prices__retailer__is_uk=False),
+            )
+        ).filter(min_price__isnull=False, min_price__gt=0)
+
+    def _get_top_deals(self, limit, by='pct'):
         """
         Return up to `limit` dicts for the best "Rest of Warhammer" deals.
 
@@ -199,90 +255,24 @@ class Command(BaseCommand):
         only when no live GW price is tracked at all -- same live-price
         pattern used for the "More Products" widget on product_detail, so
         this digest can't drift stale again after a GW price change.
+
+        by='pct' (default) ranks by biggest % discount; by='saved' ranks by the
+        biggest amount saved and keeps only products at least 20% below MSRP
+        (the "Most Saved" tab). Both pick from the same >= 5% off candidates.
         """
-        # Exclude UK retailers so GBP prices never appear as cheap USD deals.
-        # Must use the retailer.is_uk flag, not a hardcoded slug list -- a
-        # stale slug list here previously let firestorm-games (a UK retailer
-        # whose slug has no "-uk" suffix) and games-workshop-uk GBP prices
-        # get picked as the "cheapest USD price" and displayed with a $
-        # sign, producing nonsense prices in the sent newsletter.
-        gw_ref_price_sq = Subquery(
-            CurrentPrice.objects
-            .filter(
-                product=OuterRef('pk'),
-                retailer__slug='games-workshop',
-                not_available=False,
-                price__isnull=False,
-            )
-            .order_by('price')
-            .values('price')[:1]
+        qs = self._annotated_products().filter(
+            category__slug__in=WARHAMMER_CATEGORY_SLUGS - {'warhammer-40000', 'books-and-novels'}
         )
         candidates = (
-            Product.objects
-            .filter(is_active=True)
-            .annotate(
-                gw_ref_price=Coalesce(
-                    gw_ref_price_sq, F('msrp'),
-                    output_field=DecimalField(max_digits=10, decimal_places=2),
-                )
-            )
-            .filter(gw_ref_price__isnull=False)
-            .filter(category__slug__in=WARHAMMER_CATEGORY_SLUGS - {'warhammer-40000', 'books-and-novels'})
-            .annotate(
-                min_price=Min(
-                    'current_prices__price',
-                    filter=Q(
-                        current_prices__in_stock=True,
-                        current_prices__not_available=False,
-                    ) & Q(current_prices__retailer__is_uk=False),
-                )
-            )
-            .filter(min_price__isnull=False, min_price__gt=0)
+            self._with_cheapest_price(qs)
+            # Only show products cheaper than MSRP by at least 5%
             .filter(min_price__lt=F('gw_ref_price') * Decimal('0.95'))
             .select_related('category', 'faction')
         )
+        picked = pick_unique_deals(order_candidates(candidates, by), limit, uk=False)
+        return [build_deal(product, uk=False, with_category=True) for product in picked]
 
-        def _pct(p):
-            """Calculate % discount vs the live GW reference price."""
-            return float(p.gw_ref_price - p.min_price) / float(p.gw_ref_price) * 100
-
-        sorted_candidates = pick_unique_deals(
-            sorted(candidates, key=_pct, reverse=True), limit, uk=False,
-        )
-
-        deals = []
-        for product in sorted_candidates:
-            pct_off = _pct(product)
-            best_cp = (
-                CurrentPrice.objects
-                .filter(
-                    product=product,
-                    in_stock=True,
-                    not_available=False,
-                    price=product.min_price,
-                )
-                .exclude(retailer__is_uk=True)
-                .select_related('retailer')
-                .first()
-            )
-            retailer_name = best_cp.retailer.name if best_cp and best_cp.retailer else 'a retailer'
-
-            deals.append({
-                'name': product.name,
-                'slug': product.slug,
-                'url': f'https://thrifthammer.com/products/{product.slug}/?region=us',
-                'price': float(product.min_price),
-                'msrp': float(product.gw_ref_price),
-                'pct_off': pct_off,
-                'savings': float(product.gw_ref_price - product.min_price),
-                'retailer': retailer_name,
-                'image_url': product.image_url or '',
-                'category': product.category.name if product.category else '',
-            })
-
-        return deals
-
-    def _build_text_body(self, deals, today, unsubscribe_url, latest_post=None):
+    def _build_text_body(self, tabs, today, unsubscribe_url, latest_post=None):
         """Build a clean plain-text fallback email body."""
         lines = [
             'THRIFTHAMMER -- FRIDAY AoS & MORE DEAL DIGEST',
@@ -292,13 +282,7 @@ class Command(BaseCommand):
             "This week's top Age of Sigmar, Horus Heresy & more discounts:",
             '',
         ]
-        for i, d in enumerate(deals, 1):
-            lines.append(f'{i:>2}. {d["name"]}')
-            lines.append(
-                f'    ${d["price"]:.2f}  (save {d["pct_off"]:.0f}% off ${d["msrp"]:.2f} MSRP at {d["retailer"]})'
-            )
-            lines.append(f'    {d["url"]}')
-            lines.append('')
+        lines += build_text_sections(tabs, '$')
 
         lines += [
             '-' * 60,

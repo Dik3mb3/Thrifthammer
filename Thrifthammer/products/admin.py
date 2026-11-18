@@ -10,7 +10,10 @@ from django.db.models import Prefetch
 from django.utils.html import format_html
 
 from prices.models import CurrentPrice
-from .models import Category, Faction, IssueReport, NewsletterSignup, Product, Retailer
+from .models import (
+    Category, CuratedDealItem, CuratedDealList, Faction, IssueReport,
+    NewsletterSignup, Product, Retailer,
+)
 
 
 @admin.register(Category)
@@ -160,6 +163,42 @@ class NewsletterSignupAdmin(admin.ModelAdmin):
     search_fields = ('email',)
     readonly_fields = ('created_at', 'last_send_error', 'last_send_failed_at', 'consecutive_send_failures')
     ordering = ('-created_at',)
+
+
+class CuratedDealItemInline(admin.TabularInline):
+    """Up to 10 hand-picked products, shown in position order."""
+
+    model = CuratedDealItem
+    extra = 10
+    max_num = 10
+    fields = ('position', 'product')
+    autocomplete_fields = ('product',)
+
+
+@admin.register(CuratedDealList)
+class CuratedDealListAdmin(admin.ModelAdmin):
+    """
+    The weekly "Curated Picks" tab for the Wednesday and Friday emails.
+
+    One list per digest and region. Replace the products each week; saving
+    the list (or any of its items) refreshes ``updated_at``, which is what
+    keeps the list "fresh" for the email commands.
+    """
+
+    list_display = ('__str__', 'item_count', 'updated_at')
+    list_filter = ('digest', 'region')
+    readonly_fields = ('updated_at',)
+    inlines = [CuratedDealItemInline]
+
+    @admin.display(description='Products')
+    def item_count(self, obj):
+        """Number of products currently in the list."""
+        return obj.items.count()
+
+    def save_related(self, request, form, formsets, change):
+        """Touch the list after its inline items are saved so edits to items alone count as fresh."""
+        super().save_related(request, form, formsets, change)
+        form.instance.save()
 
 
 @admin.register(IssueReport)

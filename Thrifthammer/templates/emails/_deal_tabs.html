@@ -1,0 +1,38 @@
+{% comment %}
+  The deal lists of the Wednesday and Friday digests, as three tabs.
+
+  Context: tabs (list of {key, label, deals} in display order), deal_footnote,
+  currency_symbol. Without tabs (the one-off apology email still renders
+  friday_deals.html with only `deals`) the old single list is shown.
+
+  How the tabs behave:
+  - Every email app shows ALL lists, one under another, each with its own
+    heading. That is the default and needs nothing the app might strip.
+  - Apple Mail and iPhone Mail also keep the hidden radio inputs below and
+    support :checked, so the tab bar appears and the labels switch lists (see
+    _deal_tabs_css.html). Gmail and Outlook drop the inputs or the selector,
+    so the tab bar stays hidden and the stacked lists remain.
+  - With one list only, no tabs are drawn at all.
+{% endcomment %}{% if tabs %}{% if tabs|length > 1 %}{% with count=tabs|length %}
+              {% for tab in tabs %}<input type="radio" name="deal-tabs" id="deal-tab-{{ tab.key }}" class="deal-tab-radio"{% if forloop.first %} checked="checked"{% endif %} style="display:none;mso-hide:all;position:absolute;left:-9999px;">{% endfor %}
+              <div class="deal-tabbar" style="display:none;mso-hide:all;margin-bottom:14px;">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate;border-spacing:4px 0;">
+                  <tr>
+                    {% for tab in tabs %}<td align="center" width="{% widthratio 100 count 1 %}%" style="padding:0;">
+                      <label for="deal-tab-{{ tab.key }}" class="deal-tab-label deal-tab-label-{{ tab.key }}" style="display:block;cursor:pointer;background-color:#1c2230;color:#a09880;font-family:'Cinzel',Georgia,'Times New Roman',serif;font-size:13px;font-weight:700;letter-spacing:0.05em;padding:11px 4px;border-radius:4px;border:1px solid #2a2f3a;">{{ tab.label }}</label>
+                    </td>{% endfor %}
+                  </tr>
+                </table>
+              </div>
+              {% for tab in tabs %}
+              <div class="deal-panel deal-panel-{{ tab.key }}">
+                <div class="deal-panel-heading" style="margin:{% if forloop.first %}0{% else %}26px{% endif %} 0 10px;">
+                  <div style="font-family:'Cinzel',Georgia,'Times New Roman',serif;font-size:16px;font-weight:700;letter-spacing:0.05em;color:#f0c060;">{{ tab.label }}</div>
+                  <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;color:#a09880;margin-top:2px;">{% if tab.key == 'curated' %}Hand-picked by ThriftHammer this week{% elif tab.key == 'saved' %}Biggest savings in {% if currency_symbol == "£" %}pounds{% else %}dollars{% endif %}, 20% or more off MSRP{% else %}Biggest percentage off MSRP{% endif %}</div>
+                </div>
+                {% include "emails/_deal_rows.html" with deals=tab.deals tab_key=tab.key %}
+              </div>
+              {% endfor %}{% endwith %}{% else %}{% with tab=tabs.0 %}{% include "emails/_deal_rows.html" with deals=tab.deals tab_key=tab.key %}{% endwith %}{% endif %}{% else %}{% include "emails/_deal_rows.html" with deals=deals tab_key="discount" %}{% endif %}
+              {% if deal_footnote %}
+              <div style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:11px;line-height:1.5;color:#a09880;text-align:center;margin-top:16px;">{{ deal_footnote }}</div>
+              {% endif %}

@@ -1,0 +1,18 @@
+{% comment %}
+  Progressive-enhancement CSS for the deal tabs (see _deal_tabs.html). Kept in
+  its own <style> block so an email app that rejects it only loses the tab
+  switching, never any of the content. Each rule only matches when a tab radio
+  exists AND is checked, so apps without that support never hide anything.
+{% endcomment %}  <style>
+    input.deal-tab-radio:checked ~ .deal-tabbar { display: block !important; }
+    input.deal-tab-radio:checked ~ .deal-panel .deal-panel-heading { display: none !important; }
+    #deal-tab-curated:checked ~ .deal-panel-discount,
+    #deal-tab-curated:checked ~ .deal-panel-saved,
+    #deal-tab-discount:checked ~ .deal-panel-curated,
+    #deal-tab-discount:checked ~ .deal-panel-saved,
+    #deal-tab-saved:checked ~ .deal-panel-curated,
+    #deal-tab-saved:checked ~ .deal-panel-discount { display: none !important; }
+    #deal-tab-curated:checked ~ .deal-tabbar .deal-tab-label-curated,
+    #deal-tab-discount:checked ~ .deal-tabbar .deal-tab-label-discount,
+    #deal-tab-saved:checked ~ .deal-tabbar .deal-tab-label-saved { background-color: #c8922a !important; color: #0d0f14 !important; border-color: #c8922a !important; }
+  </style>
