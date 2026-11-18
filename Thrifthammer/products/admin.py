@@ -180,12 +180,13 @@ class CuratedDealListAdmin(admin.ModelAdmin):
     """
     The weekly "Curated Picks" tab for the Wednesday and Friday emails.
 
-    One list per digest and region. Replace the products each week; saving
-    the list (or any of its items) refreshes ``updated_at``, which is what
-    keeps the list "fresh" for the email commands.
+    One list per digest and region. Replace the products each week and give
+    the week a title (it becomes the tab name in the email); saving the list
+    (or any of its items) refreshes ``updated_at``, which is what keeps the
+    list "fresh" for the email commands.
     """
 
-    list_display = ('__str__', 'item_count', 'updated_at')
+    list_display = ('__str__', 'title', 'item_count', 'updated_at')
     list_filter = ('digest', 'region')
     readonly_fields = ('updated_at',)
     inlines = [CuratedDealItemInline]

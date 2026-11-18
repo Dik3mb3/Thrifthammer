@@ -37,7 +37,7 @@ from prices.models import CurrentPrice
 from products.models import NewsletterSignup, Product, WARHAMMER_CATEGORY_SLUGS
 from products.newsletter_deals import (
     DEAL_FOOTNOTE, build_deal, build_deal_tabs, build_text_sections,
-    get_curated_deals, order_candidates, pick_unique_deals, tab_log_lines,
+    get_curated_deals, get_curated_label, order_candidates, pick_unique_deals, tab_log_lines,
 )
 
 CURRENCY_SYMBOL = '£'
@@ -95,9 +95,10 @@ class Command(BaseCommand):
         curated_deals, curated_status = get_curated_deals(
             self, 'friday', uk=True, with_category=True,
         )
-        for line in tab_log_lines(curated_status, curated_deals, saved_deals, CURRENCY_SYMBOL):
+        curated_label = get_curated_label('friday', uk=True)
+        for line in tab_log_lines(curated_status, curated_deals, saved_deals, CURRENCY_SYMBOL, curated_label):
             self.stdout.write(line)
-        tabs = build_deal_tabs(curated_deals, deals, saved_deals, CURRENCY_SYMBOL)
+        tabs = build_deal_tabs(curated_deals, deals, saved_deals, CURRENCY_SYMBOL, curated_label)
 
         # ── 2. Gather subscribers ─────────────────────────────────────────────
         if recipient_override:

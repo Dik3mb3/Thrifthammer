@@ -22,8 +22,8 @@ from products.management.commands.send_weekly_deals import Command as WednesdayU
 from products.management.commands.send_weekly_deals_uk import Command as WednesdayUK
 from products.models import Category, CuratedDealItem, CuratedDealList, Product, Retailer
 from products.newsletter_deals import (
-    DEAL_FOOTNOTE, SAVED_TAB_MIN_PCT, build_deal_tabs, build_text_sections,
-    get_curated_deals, get_curated_entries,
+    CURATED_TAB_LABEL, DEAL_FOOTNOTE, SAVED_TAB_MIN_PCT, build_deal_tabs, build_text_sections,
+    get_curated_deals, get_curated_entries, get_curated_label,
 )
 
 D = decimal.Decimal
@@ -62,9 +62,9 @@ class DealTabsTestBase(TestCase):
             )
             self.products[name] = product
 
-    def make_list(self, digest, region, names):
-        """Create a curated list holding the named products in order."""
-        deal_list = CuratedDealList.objects.create(digest=digest, region=region)
+    def make_list(self, digest, region, names, title=''):
+        """Create a curated list (optionally titled) holding the named products in order."""
+        deal_list = CuratedDealList.objects.create(digest=digest, region=region, title=title)
         for position, name in enumerate(names, 1):
             CuratedDealItem.objects.create(
                 deal_list=deal_list, product=self.products[name], position=position,
@@ -164,6 +164,32 @@ class CuratedListTest(DealTabsTestBase):
         self.assertIn('empty', status)
 
 
+class CuratedTitleTest(DealTabsTestBase):
+    """The weekly name of the Curated tab ("Elves & Orcs", then "Horde Armies"...)."""
+
+    def test_label_defaults_to_curated_picks(self):
+        """No list, or a list with no title, keeps the standard tab name."""
+        self.assertEqual(get_curated_label('wednesday', uk=False), CURATED_TAB_LABEL)
+        self.make_list('wednesday', 'us', ['Alpha'])
+        self.assertEqual(get_curated_label('wednesday', uk=False), 'Curated Picks')
+
+    def test_each_digest_and_region_has_its_own_title(self):
+        """Wednesday US, Wednesday UK and Friday US are named independently; spaces are trimmed."""
+        self.make_list('wednesday', 'us', ['Alpha'], title='  Elves & Orcs ')
+        self.make_list('wednesday', 'uk', ['Alpha'], title='Horde Armies')
+        self.make_list('friday', 'us', ['Alpha'])
+        self.assertEqual(get_curated_label('wednesday', uk=False), 'Elves & Orcs')
+        self.assertEqual(get_curated_label('wednesday', uk=True), 'Horde Armies')
+        self.assertEqual(get_curated_label('friday', uk=False), 'Curated Picks')
+        self.assertEqual(get_curated_label('friday', uk=True), 'Curated Picks')
+
+    def test_title_is_optional_and_limited_in_length(self):
+        """The field may stay blank and is capped so it fits the tab on a phone."""
+        field = CuratedDealList._meta.get_field('title')
+        self.assertTrue(field.blank)
+        self.assertEqual(field.max_length, 24)
+
+
 class TabAssemblyTest(DealTabsTestBase):
     """Tabs appear in the order Curated, Best Discount, Most Saved and empty ones are dropped."""
 
@@ -174,8 +200,16 @@ class TabAssemblyTest(DealTabsTestBase):
         self.assertEqual([t['key'] for t in tabs], ['discount', 'saved'])
         tabs = build_deal_tabs([a], [a], [b])
         self.assertEqual([t['key'] for t in tabs], ['curated', 'discount', 'saved'])
+        self.assertEqual(tabs[0]['label'], 'Curated Picks')
         self.assertEqual(tabs[2]['label'], 'Most $ Saved')
         self.assertEqual(build_deal_tabs([a], [a], [b], '£')[2]['label'], 'Most £ Saved')
+
+    def test_curated_tab_takes_the_weekly_title(self):
+        """The title replaces only the Curated tab's name; the other two keep theirs."""
+        a, b = {'name': 'a'}, {'name': 'b'}
+        tabs = build_deal_tabs([a], [a], [b], '$', 'Elves & Orcs')
+        self.assertEqual([t['label'] for t in tabs], ['Elves & Orcs', 'Best Discount', 'Most $ Saved'])
+        self.assertEqual(tabs[0]['key'], 'curated')
 
 
 class RenderedEmailTest(DealTabsTestBase):
@@ -198,6 +232,19 @@ class RenderedEmailTest(DealTabsTestBase):
         saved = command._get_top_deals(10, category_name='Warhammer 40,000', by='saved')
         curated, _ = get_curated_deals(command, 'wednesday', uk=False)
         return build_deal_tabs(curated, discount, saved), discount
+
+    def test_weekly_title_is_the_tab_and_heading_in_html_and_text(self):
+        """"Elves & Orcs" shows on the tab, the stacked heading and the text body, HTML-escaped."""
+        tabs, discount = self._tabs()
+        tabs[0]['label'] = 'Elves & Orcs'
+        html = render_to_string('emails/weekly_deals.html', self._context(tabs, discount))
+        self.assertEqual(html.count('Elves &amp; Orcs'), 2)
+        self.assertNotIn('Elves & Orcs', html)
+        self.assertNotIn('Curated Picks', html)
+        self.assertIn('id="deal-tab-curated"', html)
+        text = '\n'.join(build_text_sections(tabs, '$'))
+        self.assertIn('ELVES & ORCS', text)
+        self.assertNotIn('CURATED PICKS', text)
 
     def test_footnote_wording(self):
         """The footnote says "or the listing selling out" (not "and")."""
@@ -341,6 +388,51 @@ class WednesdayCommandTest(DealTabsTestBase):
         self.assertIn('no curated list set up', out.getvalue())
 
 
+class TitledCommandsTest(DealTabsTestBase):
+    """All four real commands print the weekly title on the Curated tab and in their log."""
+
+    def test_every_command_uses_its_own_lists_title(self):
+        """Wednesday and Friday, US and UK: each email carries that list's title."""
+        aos = Category.objects.create(name='Age of Sigmar', slug='age-of-sigmar')
+        Product.objects.update(category=aos)  # Friday digests cover the non-40K Warhammer lines
+        cases = [
+            ('send_friday_deals', 'friday', 'us', 'Fri US Week'),
+            ('send_friday_deals_uk', 'friday', 'uk', 'Fri UK Week'),
+        ]
+        for command, digest, region, title in cases:
+            self.make_list(digest, region, ['Alpha'], title=title)
+            mail.outbox.clear()
+            out = StringIO()
+            call_command(command, recipient='preview@example.com', stdout=out)
+            html = mail.outbox[0].alternatives[0][0]
+            self.assertIn(title, html, command)
+            self.assertNotIn('Curated Picks', html, command)
+            self.assertIn(title.upper(), mail.outbox[0].body, command)
+            self.assertIn(f'Tab title this week: "{title}"', out.getvalue(), command)
+
+    def test_wednesday_commands_use_the_wednesday_lists_titles(self):
+        """The Wednesday emails use their own region's title, not the Friday one."""
+        self.make_list('friday', 'us', ['Bravo'], title='Friday Only')
+        self.make_list('wednesday', 'us', ['Alpha'], title='Elves & Orcs')
+        self.make_list('wednesday', 'uk', ['Alpha'], title='Horde Armies')
+        for command, expected in (('send_weekly_deals', 'Elves &amp; Orcs'), ('send_weekly_deals_uk', 'Horde Armies')):
+            mail.outbox.clear()
+            call_command(command, recipient='preview@example.com', stdout=StringIO())
+            html = mail.outbox[0].alternatives[0][0]
+            self.assertIn(expected, html, command)
+            self.assertNotIn('Friday Only', html, command)
+            self.assertNotIn('Curated Picks', html, command)
+
+    def test_untitled_list_keeps_curated_picks(self):
+        """A list with no title behaves as before and logs no title line."""
+        self.make_list('wednesday', 'us', ['Alpha'])
+        mail.outbox.clear()
+        out = StringIO()
+        call_command('send_weekly_deals', recipient='preview@example.com', stdout=out)
+        self.assertIn('Curated Picks', mail.outbox[0].alternatives[0][0])
+        self.assertNotIn('Tab title this week', out.getvalue())
+
+
 class CuratedAdminTest(DealTabsTestBase):
     """The admin can open and edit the lists."""
 
@@ -369,10 +461,32 @@ class CuratedAdminTest(DealTabsTestBase):
             'items-TOTAL_FORMS': '1', 'items-INITIAL_FORMS': '0',
             'items-MIN_NUM_FORMS': '0', 'items-MAX_NUM_FORMS': '10',
             'items-0-position': '1', 'items-0-product': str(self.products['Alpha'].pk),
-            'digest': 'friday', 'region': 'us',
+            'digest': 'friday', 'region': 'us', 'title': 'Horde Armies',
         }
         response = self.client.post(f'/admin/products/curateddeallist/{deal_list.pk}/change/', data)
         self.assertEqual(response.status_code, 302)
         deal_list.refresh_from_db()
         self.assertGreater(deal_list.updated_at, timezone.now() - datetime.timedelta(minutes=1))
         self.assertEqual(deal_list.items.count(), 1)
+        self.assertEqual(deal_list.title, 'Horde Armies')
+
+    def test_title_field_is_on_the_change_page_and_in_the_list(self):
+        """The weekly name can be typed on the list's page and shows in the lists overview."""
+        deal_list = CuratedDealList.objects.create(digest='wednesday', region='us', title='Elves & Orcs')
+        response = self.client.get(f'/admin/products/curateddeallist/{deal_list.pk}/change/')
+        self.assertContains(response, 'name="title"')
+        response = self.client.get('/admin/products/curateddeallist/')
+        self.assertContains(response, 'Elves &amp; Orcs')
+
+    def test_a_title_longer_than_the_limit_is_rejected(self):
+        """A name too long for the phone tab bar is refused with a form error, not saved."""
+        deal_list = CuratedDealList.objects.create(digest='friday', region='us')
+        data = {
+            'items-TOTAL_FORMS': '0', 'items-INITIAL_FORMS': '0',
+            'items-MIN_NUM_FORMS': '0', 'items-MAX_NUM_FORMS': '10',
+            'digest': 'friday', 'region': 'us', 'title': 'x' * 25,
+        }
+        response = self.client.post(f'/admin/products/curateddeallist/{deal_list.pk}/change/', data)
+        self.assertEqual(response.status_code, 200)
+        deal_list.refresh_from_db()
+        self.assertEqual(deal_list.title, '')

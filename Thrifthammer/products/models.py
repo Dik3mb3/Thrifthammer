@@ -677,6 +677,15 @@ class CuratedDealList(models.Model):
 
     digest = models.CharField(max_length=10, choices=DIGEST_CHOICES)
     region = models.CharField(max_length=2, choices=NewsletterSignup.REGION_CHOICES)
+    title = models.CharField(
+        max_length=24,
+        blank=True,
+        default='',
+        help_text=(
+            'Optional name for this week\'s picks, shown as the tab title in the email '
+            '(for example "Elves & Orcs"). Leave blank to show "Curated Picks".'
+        ),
+    )
     updated_at = models.DateTimeField(
         auto_now=True,
         help_text='Last time this list was edited. A list not edited for more than 6 days is skipped.',

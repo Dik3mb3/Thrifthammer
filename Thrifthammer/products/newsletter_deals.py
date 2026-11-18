@@ -23,6 +23,9 @@ SAVED_TAB_MIN_PCT = 20
 # email, so last week's picks are never sent a second time.
 CURATED_STALE_AFTER_DAYS = 6
 
+# Title of the Curated tab when the list has no name of its own.
+CURATED_TAB_LABEL = 'Curated Picks'
+
 # Shown under the deal tabs in the Wednesday and Friday emails (HTML and text).
 DEAL_FOOTNOTE = (
     'The prices you see may not be available when you view due to changing '
@@ -124,15 +127,32 @@ def get_curated_entries(digest, region, now=None):
     return product_ids, f'{len(product_ids)} curated pick(s)'
 
 
-def build_deal_tabs(curated, discount, saved, currency_symbol='$'):
+def get_curated_label(digest, uk):
+    """
+    Return the title of the Curated tab for one digest and region.
+
+    It is the name typed on the curated list in the admin (for example "Elves &
+    Orcs"), or "Curated Picks" when the list has none.
+    """
+    from products.models import CuratedDealList  # local import, same reason as get_curated_entries
+
+    title = (
+        CuratedDealList.objects.filter(digest=digest, region='uk' if uk else 'us')
+        .values_list('title', flat=True).first()
+    )
+    return (title or '').strip() or CURATED_TAB_LABEL
+
+
+def build_deal_tabs(curated, discount, saved, currency_symbol='$', curated_label=None):
     """
     Return the non-empty tabs in display order: Curated, Best Discount, Most Saved.
 
     Each tab is a dict with key, label and deals. A tab with no deals is left
-    out entirely, so an empty curated list never shows an empty tab.
+    out entirely, so an empty curated list never shows an empty tab. The
+    Curated tab is titled ``curated_label`` (default "Curated Picks").
     """
     candidates = (
-        ('curated', 'Curated Picks', curated),
+        ('curated', curated_label or CURATED_TAB_LABEL, curated),
         ('discount', 'Best Discount', discount),
         ('saved', f'Most {currency_symbol} Saved', saved),
     )
@@ -235,9 +255,11 @@ def get_curated_deals(source, digest, uk, with_category=False):
     return deals, status
 
 
-def tab_log_lines(curated_status, curated, saved, currency_symbol='$'):
+def tab_log_lines(curated_status, curated, saved, currency_symbol='$', curated_label=None):
     """Return the log lines that show the Curated and Most Saved tabs next to the main deal list."""
     lines = ['', f'Curated Picks tab: {curated_status}']
+    if curated_label and curated_label != CURATED_TAB_LABEL:
+        lines.append(f'  Tab title this week: "{curated_label}"')
     lines += [_log_line(i, d, currency_symbol) for i, d in enumerate(curated, 1)]
     lines += ['', f'Most {currency_symbol} Saved tab ({SAVED_TAB_MIN_PCT}%+ off): {len(saved)} deal(s)']
     lines += [_log_line(i, d, currency_symbol) for i, d in enumerate(saved, 1)]
