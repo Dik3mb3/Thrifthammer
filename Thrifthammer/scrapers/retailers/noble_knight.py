@@ -388,10 +388,11 @@ class NoblekKnightScraper:
         # Find the innermost .price span that contains a dollar amount
         for el in soup.select('span.price'):
             text = el.get_text(strip=True)
-            # Sale listings read "Was old price: $138.95 New Price $117.95":
-            # the CURRENT price is the amount after "New Price", not the
-            # first dollar amount (which is the old price).
-            m = re.search(r'New Price\s*\$\s*(\d{1,4}\.\d{2})', text, re.IGNORECASE)
+            # Sale listings read "Was old price: $138.95 New Price $117.95" or
+            # "Was old price: $46.95 Sale Price $42.26": the CURRENT price is
+            # the amount after "New Price" / "Sale Price", not the first
+            # dollar amount (which is the old price).
+            m = re.search(r'(?:New|Sale) Price\s*\$\s*(\d{1,4}\.\d{2})', text, re.IGNORECASE)
             if m is None:
                 m = re.search(r'\$\s*(\d{1,4}\.\d{2})', text)
             if m:

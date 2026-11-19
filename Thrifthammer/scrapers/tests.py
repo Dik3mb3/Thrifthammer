@@ -229,6 +229,20 @@ class NobleKnightFetchTests(SimpleTestCase):
         page = nk_page(price='Was old price: $138.95 New Price $117.95')
         self.assertEqual(self.fetch(FakeResponse(text=page, url=NK_URL))[1], Decimal('117.95'))
 
+    def test_sale_listing_uses_the_sale_price(self):
+        """Noble Knight's site-wide sale pages read "Was old price: $46.95 Sale Price $42.26"."""
+        page = nk_page(price='Was old price: $46.95 Sale Price $42.26')
+        kind, price, in_stock = self.fetch(FakeResponse(text=page, url=NK_URL))
+        self.assertEqual((kind, price, in_stock), ('ok', Decimal('42.26'), True))
+
+    def test_sale_price_wording_is_case_insensitive_and_new_price_still_wins_when_alone(self):
+        """The label match ignores case; a plain price and the old New Price format are unchanged."""
+        lower = nk_page(price='Was old price: $11.95 sale price $10.76')
+        self.assertEqual(self.fetch(FakeResponse(text=lower, url=NK_URL))[1], Decimal('10.76'))
+        self.assertEqual(self.fetch(FakeResponse(text=nk_page(), url=NK_URL))[1], Decimal('31.95'))
+        old = nk_page(price='Was old price: $138.95 New Price $117.95')
+        self.assertEqual(self.fetch(FakeResponse(text=old, url=NK_URL))[1], Decimal('117.95'))
+
     def test_sold_out_page_has_no_price(self):
         self.assertEqual(self.fetch(FakeResponse(text=nk_page(price='Sold out', cart=False), url=NK_URL))[0], 'no_price')
 
