@@ -313,17 +313,17 @@
               {# ref_price = GW live price (or msrp fallback) — same reference as detail page #}
               {% if product.min_discount_pct and product.min_discount_pct > 0 %}
               <div class="product-card-savings-row">
-                <span class="product-card-msrp">MSRP ${{ product.ref_price|default:product.msrp }}{% if product.faction.slug == 'vallejo' %}*{% endif %}</span>
+                <span class="product-card-msrp">MSRP ${{ product.ref_price|default:product.msrp }}{% if show_vallejo_msrp_note and product.faction.slug == 'vallejo' %}*{% endif %}</span>
                 <span class="product-card-discount-pct">▼ {{ product.min_discount_pct|floatformat:"0" }}% off</span>
               </div>
               {% elif product.ref_price or product.msrp %}
               <div class="product-card-savings-row">
-                <span class="product-card-msrp">MSRP ${{ product.ref_price|default:product.msrp }}{% if product.faction.slug == 'vallejo' %}*{% endif %}</span>
+                <span class="product-card-msrp">MSRP ${{ product.ref_price|default:product.msrp }}{% if show_vallejo_msrp_note and product.faction.slug == 'vallejo' %}*{% endif %}</span>
               </div>
               {% endif %}
               {% elif product.msrp %}
               <div class="product-card-price-label">MSRP</div>
-              <div style="font-size:1rem;font-weight:600;color:var(--text-secondary);">${{ product.msrp }}{% if product.faction.slug == 'vallejo' %}*{% endif %}</div>
+              <div style="font-size:1rem;font-weight:600;color:var(--text-secondary);">${{ product.msrp }}{% if show_vallejo_msrp_note and product.faction.slug == 'vallejo' %}*{% endif %}</div>
               {% elif product.book_min_price %}
               <div class="product-card-price-label">Best {{ selected_book_format_label }} Price</div>
               <div class="product-card-price">${{ product.book_min_price|floatformat:"2" }}</div>

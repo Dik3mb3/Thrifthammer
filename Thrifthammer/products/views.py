@@ -633,9 +633,11 @@ def product_list(request):
     # before the queryset was built.
     selected_faction_obj = next((f for f in factions if f.slug == faction_slug), None)
 
-    # Vallejo MSRPs are estimates (originally in Euros): flag any page that
-    # shows one so the template can print the footnote under the grid.
-    show_vallejo_msrp_note = any(
+    # Vallejo MSRPs are estimates (originally in Euros). The footnote and the
+    # asterisks after each figure belong to the Vallejo brand page only, never
+    # to a mixed list (all brands, search results) that merely contains a
+    # Vallejo set.
+    show_vallejo_msrp_note = faction_slug == 'vallejo' and any(
         p.msrp and p.faction and p.faction.slug == 'vallejo'
         for p in product_list_evaluated
     )

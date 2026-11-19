@@ -73,6 +73,14 @@ class VallejoMsrpNoteTest(TestCase):
         self.assertEqual(_text(response).count(NOTE), 1)
         self.assertIn('MSRP $39.99*', _text(response))
 
+    def test_mixed_lists_have_no_note_and_no_asterisk(self):
+        """Lists of several brands that contain a Vallejo set show neither the note nor an asterisk."""
+        for params in ({'category': 'paint-supplies'}, {}):
+            response = self.client.get('/products/', params)
+            self.assertEqual(response.status_code, 200, params)
+            self.assertNotIn(NOTE, _text(response), params)
+            self.assertNotIn('$39.99*', _text(response), params)
+
     def test_other_list_pages_have_no_note(self):
         """A list page with no Vallejo product has no footnote."""
         response = self.client.get('/products/', {'category': 'warhammer-40000'})
