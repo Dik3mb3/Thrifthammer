@@ -633,6 +633,13 @@ def product_list(request):
     # before the queryset was built.
     selected_faction_obj = next((f for f in factions if f.slug == faction_slug), None)
 
+    # Vallejo MSRPs are estimates (originally in Euros): flag any page that
+    # shows one so the template can print the footnote under the grid.
+    show_vallejo_msrp_note = any(
+        p.msrp and p.faction and p.faction.slug == 'vallejo'
+        for p in product_list_evaluated
+    )
+
     ctx = {
         'page_obj':               page_obj,
         'products':               product_list_evaluated,
@@ -660,6 +667,7 @@ def product_list(request):
             ('newest',     'Newest Arrivals'),
         ],
         'total_count': paginator.count,
+        'show_vallejo_msrp_note': show_vallejo_msrp_note,
     }
 
     # Cache for 15 minutes — prices update via scrapers, not in real time
