@@ -156,10 +156,19 @@ CATEGORY_TARGETS = [
         'Horus Heresy',
         None,
     ),
+    # The old '/en-US/Warhammer-40-000/Boxed-Games' page is gone (404). GW now files
+    # its board games under "Other Games"; these two pages feed the Warhammer
+    # Board Games sub-category of Miniature Board Games.
     (
-        'Warhammer 40,000 Boxed Games',
-        '/en-US/Warhammer-40-000/Boxed-Games',
-        'Boxed Games',
+        'Warhammer Quest',
+        '/en-US/shop/other-games/warhammer-quest',
+        'Warhammer Board Games',
+        None,
+    ),
+    (
+        'Warhammer Underworlds',
+        '/en-US/shop/other-games/warhammer-underworlds',
+        'Warhammer Board Games',
         None,
     ),
 ]
@@ -182,7 +191,8 @@ CATEGORY_SLUG_MAP = {
     'aos-starters':    13,
     'paints':          14,
     'horus-heresy':    15,
-    'boxed-games':     16,
+    'warhammer-quest':       16,
+    'warhammer-underworlds': 17,
 }
 
 

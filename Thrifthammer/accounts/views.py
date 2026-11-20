@@ -311,9 +311,10 @@ def update_newsletter_prefs(request):
     # than saving an empty selection (which would just make the digest skip
     # them every week). Only applies on the off->on transition; an explicit
     # later save with zero categories (turning everything off) is respected
-    # as-is. Discount Box Splits / Paint & Supplies / Boxed Games are left
-    # out of the default too -- not really "game systems" -- but remain
-    # manually selectable.
+    # as-is. Discount Box Splits / Paint & Supplies / Miniature Board Games
+    # (and its Warhammer Board Games sub-category) are left out of the
+    # default too -- not really "game systems" -- but remain manually
+    # selectable.
     if signup.monday_custom and not was_monday_custom and not category_ids:
         category_ids = list(
             Category.objects

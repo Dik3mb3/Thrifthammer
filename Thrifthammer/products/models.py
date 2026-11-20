@@ -520,7 +520,8 @@ WARHAMMER_CATEGORY_SLUGS = frozenset({
 # excluded from the Monday Customized Game System digest's default
 # selection -- still manually selectable, just not pre-checked.
 NON_GAME_SYSTEM_CATEGORY_SLUGS = frozenset({
-    'discount-box-splits', 'paint-supplies', 'boxed-games',
+    'discount-box-splits', 'paint-supplies', 'miniature-board-games',
+    'warhammer-board-games',
 })
 
 
