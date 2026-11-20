@@ -642,6 +642,15 @@ def product_list(request):
         for p in product_list_evaluated
     )
 
+    # Out-of-print products show an Average Market Price in place of an MSRP. The
+    # asterisk and footnote appear only on a page filtered to a category (never on
+    # a mixed list of everything or on a search), and only when a card on the page
+    # actually shows one.
+    show_market_price_note = bool(category_slug) and any(
+        p.uses_market_price and p.market_price and not p.msrp and p.min_price
+        for p in product_list_evaluated
+    )
+
     ctx = {
         'page_obj':               page_obj,
         'products':               product_list_evaluated,
@@ -670,6 +679,7 @@ def product_list(request):
         ],
         'total_count': paginator.count,
         'show_vallejo_msrp_note': show_vallejo_msrp_note,
+        'show_market_price_note': show_market_price_note,
     }
 
     # Cache for 15 minutes — prices update via scrapers, not in real time

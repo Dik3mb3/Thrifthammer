@@ -253,6 +253,22 @@ class Product(models.Model):
         max_digits=10, decimal_places=2, null=True, blank=True,
         help_text='GW UK retail price in GBP. Populated by the GW UK MSRP scraper.',
     )
+    market_price = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True,
+        help_text=(
+            'Average Market Price: the median of the prices tracked at US retailers, '
+            'for out-of-print products that have no MSRP. Written by the '
+            'refresh_market_prices command, not by hand.'
+        ),
+    )
+    uses_market_price = models.BooleanField(
+        default=False,
+        help_text=(
+            'Tick for out-of-print products with no MSRP. Pages then show the Average '
+            'Market Price in place of an MSRP, and refresh_market_prices keeps it '
+            'up to date. Leave unticked for anything with a real MSRP.'
+        ),
+    )
     gw_search_name = models.CharField(
         max_length=300, blank=True, default='',
         help_text=(

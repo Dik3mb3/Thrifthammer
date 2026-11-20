@@ -320,6 +320,10 @@
               <div class="product-card-savings-row">
                 <span class="product-card-msrp">MSRP ${{ product.ref_price|default:product.msrp }}{% if show_vallejo_msrp_note and product.faction.slug == 'vallejo' %}*{% endif %}</span>
               </div>
+              {% elif show_market_price_note and product.uses_market_price and product.market_price %}
+              <div class="product-card-savings-row">
+                <span style="font-size:0.78rem;color:var(--text-muted);">Avg Market Price ${{ product.market_price }}*</span>
+              </div>
               {% endif %}
               {% elif product.msrp %}
               <div class="product-card-price-label">MSRP</div>
@@ -358,6 +362,7 @@
 
       {# Vallejo MSRPs are estimates (prices originally in Euros), so say so under the grid #}
       {% if show_vallejo_msrp_note %}{% include 'products/_vallejo_msrp_note.html' %}{% endif %}
+      {% if show_market_price_note %}{% include 'products/_market_price_note.html' %}{% endif %}
 
       {# Pagination #}
       {% if paginator.num_pages > 1 %}

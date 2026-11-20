@@ -133,6 +133,8 @@
         </div>
         {% if gw_ref_price %}
         <p style="font-size:0.8rem;color:var(--text-muted);">MSRP: {% if region == 'uk' %}£{% else %}${% endif %}{{ gw_ref_price }}{% if product.faction.slug == 'vallejo' %}*{% endif %}</p>
+        {% elif product.uses_market_price and product.market_price and not product.msrp and region != 'uk' %}
+        <p style="font-size:0.8rem;color:var(--text-muted);">Avg Market Price: ${{ product.market_price }}*</p>
         {% endif %}
       </div>
       {% endwith %}
@@ -159,8 +161,15 @@
         <div class="best-price-amount">{% if region == 'uk' and product.msrp_gbp %}£{{ product.msrp_gbp }}{% else %}${{ product.msrp }}{% endif %}{% if product.faction.slug == 'vallejo' %}*{% endif %}</div>
         <p style="font-size:0.82rem;color:var(--text-muted);margin-top:var(--sp-2);">No retailer prices tracked yet.</p>
       </div>
+      {% elif product.uses_market_price and product.market_price and region != 'uk' %}
+      <div class="best-price-card">
+        <div class="best-price-label">Avg Market Price</div>
+        <div class="best-price-amount">${{ product.market_price }}*</div>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-top:var(--sp-2);">No retailer has it in stock right now.</p>
+      </div>
       {% endif %}
       {% if product.faction.slug == 'vallejo' and product.msrp %}{% include 'products/_vallejo_msrp_note.html' %}{% endif %}
+      {% if product.uses_market_price and product.market_price and not product.msrp and region != 'uk' %}{% include 'products/_market_price_note.html' %}{% endif %}
 
       {# Actions #}
       <div class="product-actions">
