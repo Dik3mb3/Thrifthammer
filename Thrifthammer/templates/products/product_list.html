@@ -175,17 +175,19 @@
       {% endif %}
 
       {# Factions — only shown when a category is selected (hierarchical filter) #}
-      {% if selected_category %}
+      {% if selected_category == 'army-painter' and not factions %}
+      {# The Army Painter is a single flat list of sets and bundles: no box until it has brands to filter by #}
+      {% elif selected_category %}
       <div class="sidebar-section">
         <button class="sidebar-toggle open" data-target="facs-body" aria-expanded="true">
-          {% if selected_category == 'paint-supplies' %}Brands{% elif is_books_category %}Book Series{% else %}Factions{% endif %}
+          {% if selected_category == 'paint-supplies' or selected_category == 'army-painter' %}Brands{% elif is_books_category %}Book Series{% else %}Factions{% endif %}
           <span class="toggle-icon" aria-hidden="true">▾</span>
         </button>
         <div class="sidebar-body" id="facs-body">
           {% if factions %}
           <a href="?{% if query %}q={{ query }}&{% endif %}category={{ selected_category }}{% if sort and sort != 'name' %}&sort={{ sort }}{% endif %}"
              class="sidebar-link{% if not selected_faction %} active{% endif %}">
-            {% if selected_category == 'paint-supplies' %}All Brands{% elif is_books_category %}All Series{% else %}All Factions{% endif %}
+            {% if selected_category == 'paint-supplies' or selected_category == 'army-painter' %}All Brands{% elif is_books_category %}All Series{% else %}All Factions{% endif %}
           </a>
           {% for f in factions %}
           <a href="?{% if query %}q={{ query }}&{% endif %}category={{ selected_category }}&faction={{ f.slug }}{% if sort and sort != 'name' %}&sort={{ sort }}{% endif %}"
