@@ -312,7 +312,7 @@ def update_newsletter_prefs(request):
     # them every week). Only applies on the off->on transition; an explicit
     # later save with zero categories (turning everything off) is respected
     # as-is. Discount Box Splits / Paint & Supplies / Miniature Board Games
-    # (and its Warhammer Board Games sub-category) are left out of the
+    # (Warhammer Board Games is a universe inside it) are left out of the
     # default too -- not really "game systems" -- but remain manually
     # selectable.
     if signup.monday_custom and not was_monday_custom and not category_ids:

@@ -158,18 +158,18 @@ CATEGORY_TARGETS = [
     ),
     # The old '/en-US/Warhammer-40-000/Boxed-Games' page is gone (404). GW now files
     # its board games under "Other Games"; these two pages feed the Warhammer
-    # Board Games sub-category of Miniature Board Games.
+    # Board Games universe (a faction) of the Miniature Board Games category.
     (
         'Warhammer Quest',
         '/en-US/shop/other-games/warhammer-quest',
+        'Miniature Board Games',
         'Warhammer Board Games',
-        None,
     ),
     (
         'Warhammer Underworlds',
         '/en-US/shop/other-games/warhammer-underworlds',
+        'Miniature Board Games',
         'Warhammer Board Games',
-        None,
     ),
 ]
 

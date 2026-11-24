@@ -16,7 +16,7 @@ from django.test import SimpleTestCase
 from products.management.commands.import_gw_catalog import CATEGORY_SLUG_MAP, CATEGORY_TARGETS
 from products.models import NON_GAME_SYSTEM_CATEGORY_SLUGS, WARHAMMER_CATEGORY_SLUGS
 
-BOARD_GAME_SLUGS = {'miniature-board-games', 'warhammer-board-games'}
+BOARD_GAME_SLUGS = {'miniature-board-games'}
 
 
 class BoardGameNewsletterScopeTest(SimpleTestCase):
@@ -27,9 +27,10 @@ class BoardGameNewsletterScopeTest(SimpleTestCase):
         self.assertFalse(BOARD_GAME_SLUGS & WARHAMMER_CATEGORY_SLUGS)
 
     def test_left_out_of_the_default_custom_digest_selection(self):
-        """Both slugs are excluded from the default pick, and the retired slug is gone."""
+        """The category is excluded from the default pick, and the retired slugs are gone."""
         self.assertTrue(BOARD_GAME_SLUGS <= NON_GAME_SYSTEM_CATEGORY_SLUGS)
         self.assertNotIn('boxed-games', NON_GAME_SYSTEM_CATEGORY_SLUGS)
+        self.assertNotIn('warhammer-board-games', NON_GAME_SYSTEM_CATEGORY_SLUGS)
 
 
 class GwImporterBoardGameTargetsTest(SimpleTestCase):
@@ -41,11 +42,11 @@ class GwImporterBoardGameTargetsTest(SimpleTestCase):
             self.assertLess(index, len(CATEGORY_TARGETS), slug)
 
     def test_board_game_entries_use_the_new_category_name(self):
-        """The two GW "Other Games" pages feed Warhammer Board Games, and nothing still says Boxed Games."""
+        """The two GW "Other Games" pages feed the Warhammer Board Games universe of Miniature Board Games."""
         for slug in ('warhammer-quest', 'warhammer-underworlds'):
             label, path, category_name, faction = CATEGORY_TARGETS[CATEGORY_SLUG_MAP[slug]]
-            self.assertEqual(category_name, 'Warhammer Board Games')
+            self.assertEqual(category_name, 'Miniature Board Games')
+            self.assertEqual(faction, 'Warhammer Board Games')
             self.assertTrue(path.startswith('/en-US/shop/other-games/'))
-            self.assertIsNone(faction)
         self.assertNotIn('boxed-games', CATEGORY_SLUG_MAP)
         self.assertNotIn('Boxed Games', [target[2] for target in CATEGORY_TARGETS])

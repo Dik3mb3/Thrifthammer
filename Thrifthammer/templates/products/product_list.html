@@ -180,14 +180,14 @@
       {% elif selected_category %}
       <div class="sidebar-section">
         <button class="sidebar-toggle open" data-target="facs-body" aria-expanded="true">
-          {% if selected_category == 'paint-supplies' or selected_category == 'army-painter' %}Brands{% elif is_books_category %}Book Series{% else %}Factions{% endif %}
+          {% if selected_category == 'paint-supplies' or selected_category == 'army-painter' %}Brands{% elif is_books_category %}Book Series{% elif selected_category == 'miniature-board-games' %}Universe{% else %}Factions{% endif %}
           <span class="toggle-icon" aria-hidden="true">▾</span>
         </button>
         <div class="sidebar-body" id="facs-body">
           {% if factions %}
           <a href="?{% if query %}q={{ query }}&{% endif %}category={{ selected_category }}{% if sort and sort != 'name' %}&sort={{ sort }}{% endif %}"
              class="sidebar-link{% if not selected_faction %} active{% endif %}">
-            {% if selected_category == 'paint-supplies' or selected_category == 'army-painter' %}All Brands{% elif is_books_category %}All Series{% else %}All Factions{% endif %}
+            {% if selected_category == 'paint-supplies' or selected_category == 'army-painter' %}All Brands{% elif is_books_category %}All Series{% elif selected_category == 'miniature-board-games' %}All Universes{% else %}All Factions{% endif %}
           </a>
           {% for f in factions %}
           <a href="?{% if query %}q={{ query }}&{% endif %}category={{ selected_category }}&faction={{ f.slug }}{% if sort and sort != 'name' %}&sort={{ sort }}{% endif %}"
@@ -315,10 +315,15 @@
               {# ref_price = GW live price (or msrp fallback) — same reference as detail page #}
               {% if product.min_discount_pct and product.min_discount_pct > 0 %}
               <div class="product-card-savings-row">
+                {% if product.uses_market_price and not product.msrp %}
+                {# Out of print: the discount is against the Average Market Price (label only on category pages, with its footnote) #}
+                {% if show_market_price_note %}<span style="font-size:0.78rem;color:var(--text-muted);">Avg Market Price ${{ product.market_price }}*</span>{% endif %}
+                {% else %}
                 <span class="product-card-msrp">MSRP ${{ product.ref_price|default:product.msrp }}{% if show_vallejo_msrp_note and product.faction.slug == 'vallejo' %}*{% endif %}</span>
+                {% endif %}
                 <span class="product-card-discount-pct">▼ {{ product.min_discount_pct|floatformat:"0" }}% off</span>
               </div>
-              {% elif product.ref_price or product.msrp %}
+              {% elif product.msrp or product.ref_price and not product.uses_market_price %}
               <div class="product-card-savings-row">
                 <span class="product-card-msrp">MSRP ${{ product.ref_price|default:product.msrp }}{% if show_vallejo_msrp_note and product.faction.slug == 'vallejo' %}*{% endif %}</span>
               </div>

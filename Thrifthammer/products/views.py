@@ -292,6 +292,15 @@ def product_list(request):
     sort          = request.GET.get('sort', default_sort).strip()
     page_number   = request.GET.get('page', '1').strip()
 
+    # Warhammer Board Games used to be its own category; it is now the "Warhammer
+    # Board Games" universe (a faction) of Miniature Board Games. Old links
+    # permanently redirect to the new filter, keeping every other parameter.
+    if category_slug == 'warhammer-board-games':
+        params = request.GET.copy()
+        params['category'] = 'miniature-board-games'
+        params['faction'] = 'warhammer-board-games'
+        return redirect(f'{request.path}?{params.urlencode()}', permanent=True)
+
     # Whitelist sort to prevent ORM injection. 'relevance' only makes sense
     # alongside a query (it orders by similarity to it), so fall back
     # otherwise rather than hitting the missing-annotation error path.
@@ -516,8 +525,20 @@ def product_list(request):
             # (msrp_gbp for UK) — same logic as `gw_ref_price` in
             # product_detail view. Region-scoped fallback field so this
             # never falls back to the USD msrp on a UK card.
+            #
+            # Out-of-print products have no MSRP: their discount is measured
+            # against the Average Market Price instead (US only, the average
+            # is calculated from US retailers).
             ref_price=Case(
                 When(gw_ref_price__isnull=False, then=F('gw_ref_price')),
+                *(
+                    []
+                    if region == 'uk'
+                    else [When(
+                        Q(uses_market_price=True, market_price__gt=0) & (Q(msrp__isnull=True) | Q(msrp=0)),
+                        then=F('market_price'),
+                    )]
+                ),
                 default=F('msrp_gbp') if region == 'uk' else F('msrp'),
                 output_field=DecimalField(),
             )
@@ -916,6 +937,14 @@ def product_detail(request, slug):
             gw_ref_price = gw_cp.price if gw_cp else product.msrp
             savings = product.get_savings_vs_retail()
 
+        # Out-of-print products have no MSRP: their discount is measured against
+        # the Average Market Price instead (US only). discount_ref is the number
+        # every discount badge on the page compares against.
+        amp_ref_price = None
+        if region != 'uk' and not gw_ref_price and product.uses_market_price and product.market_price:
+            amp_ref_price = product.market_price
+        discount_ref = gw_ref_price or amp_ref_price
+
         # Pre-filter for JSON-LD schema — only offers with a real price and
         # not marked unavailable.  Using a separate list means forloop.last
         # in the template is always accurate (no skipped-entry comma bugs).
@@ -1053,6 +1082,8 @@ def product_detail(request, slug):
             'related_products': related_products,
             'savings':          savings,
             'gw_ref_price':     gw_ref_price,
+            'amp_ref_price':    amp_ref_price,
+            'discount_ref':     discount_ref,
             'json_ld':          json_ld,
             'page_title':       page_title,
             'unit_types':       unit_types,

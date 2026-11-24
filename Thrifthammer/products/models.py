@@ -521,7 +521,6 @@ WARHAMMER_CATEGORY_SLUGS = frozenset({
 # selection -- still manually selectable, just not pre-checked.
 NON_GAME_SYSTEM_CATEGORY_SLUGS = frozenset({
     'discount-box-splits', 'paint-supplies', 'miniature-board-games',
-    'warhammer-board-games',
 })
 
 

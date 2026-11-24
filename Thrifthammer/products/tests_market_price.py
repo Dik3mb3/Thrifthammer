@@ -58,7 +58,7 @@ class RefreshMarketPricesTest(TestCase):
         self.amazon = Retailer.objects.create(name='Amazon', slug='amazon', website='https://amazon.com')
         self.nk = Retailer.objects.create(name='Noble Knight', slug='noble-knight-games', website='https://nobleknight.com')
         self.uk = Retailer.objects.create(name='eBay UK', slug='ebay-uk', website='https://ebay.co.uk', is_uk=True)
-        category = Category.objects.create(name='Warhammer Board Games', slug='warhammer-board-games')
+        category = Category.objects.create(name='Warhammer Board Games', slug='amp-test-games')
         self.product = Product.objects.create(
             name='Old Game', slug='old-game', gw_sku='WBG-001', category=category,
             is_active=True, uses_market_price=True,
@@ -190,7 +190,7 @@ class MarketPricePagesTest(TestCase):
     def setUp(self):
         """Create an out-of-print product (Avg Market Price) and one with an MSRP, both with a US price."""
         self.retailer = Retailer.objects.create(name='eBay', slug='ebay', website='https://ebay.com')
-        self.category = Category.objects.create(name='Warhammer Board Games', slug='warhammer-board-games')
+        self.category = Category.objects.create(name='Warhammer Board Games', slug='amp-test-games')
         self.oop = Product.objects.create(
             name='Old Game', slug='old-game', gw_sku='WBG-001', category=self.category,
             is_active=True, uses_market_price=True, market_price=D('55.00'),
@@ -220,7 +220,7 @@ class MarketPricePagesTest(TestCase):
 
     def test_category_page_marks_only_the_average_market_price_card_and_prints_the_note_once(self):
         """On a category page: the out-of-print card carries the label, the MSRP card keeps its MSRP."""
-        text = _text(self.client.get('/products/', {'category': 'warhammer-board-games'}))
+        text = _text(self.client.get('/products/', {'category': 'amp-test-games'}))
         self.assertIn('Avg Market Price $55.00*', text)
         self.assertIn('MSRP $50', text)
         self.assertEqual(text.count(NOTE), 1)
@@ -231,8 +231,46 @@ class MarketPricePagesTest(TestCase):
         self.assertNotIn('Avg Market Price', text)
         self.assertNotIn(NOTE, text)
 
+    def test_detail_page_shows_the_discount_against_the_average_market_price(self):
+        """48.00 against a 55.00 average is 13% off, in the best-price badge and the retailer row, worded vs avg market price."""
+        html = self.client.get('/products/old-game/').content.decode()
+        text = _text(self.client.get('/products/old-game/'))
+        self.assertIn('−13% vs avg market price', text)
+        self.assertNotIn('vs MSRP', text)
+        self.assertIn('badge badge-green">−13%', html)
+
+    def test_a_price_above_the_average_shows_no_discount(self):
+        """A price at or above the average shows no discount badge, like a normal product above its MSRP."""
+        CurrentPrice.objects.filter(product=self.oop).update(price=D('60.00'))
+        text = _text(self.client.get('/products/old-game/'))
+        self.assertNotIn('vs avg market price', text)
+        self.assertIn('Avg Market Price: $55.00*', text)
+
+    def test_list_compares_the_out_of_print_card_with_its_average_market_price(self):
+        """The list's discount reference for the out-of-print card is its Average Market Price (the MSRP card keeps its MSRP).
+
+        The percentage itself is calculated by PostgreSQL in production; the in-memory SQLite test database truncates the
+        division to 0, so the reference price is what is asserted here, plus the label on a category page.
+        """
+        response = self.client.get('/products/', {'category': 'amp-test-games'})
+        by_slug = {p.slug: p for p in response.context['products']}
+        self.assertEqual(by_slug['old-game'].ref_price, D('55.00'))
+        self.assertEqual(by_slug['new-game'].ref_price, D('50.00'))
+        text = _text(response)
+        self.assertIn('Avg Market Price $55.00*', text)
+        self.assertIn('MSRP $50', text)
+
+    def test_mixed_list_uses_the_average_market_price_as_reference_but_shows_no_label(self):
+        """The all-products list keeps the label and footnote off while the card still has its discount reference."""
+        response = self.client.get('/products/')
+        by_slug = {p.slug: p for p in response.context['products']}
+        self.assertEqual(by_slug['old-game'].ref_price, D('55.00'))
+        text = _text(response)
+        self.assertNotIn('Avg Market Price', text)
+        self.assertNotIn(NOTE, text)
+
     def test_a_ticked_product_without_a_market_price_shows_nothing(self):
         """No calculated price yet means no label and no footnote."""
         Product.objects.filter(pk=self.oop.pk).update(market_price=None)
         self.assertNotIn('Avg Market Price', _text(self.client.get('/products/old-game/')))
-        self.assertNotIn(NOTE, _text(self.client.get('/products/', {'category': 'warhammer-board-games'})))
+        self.assertNotIn(NOTE, _text(self.client.get('/products/', {'category': 'amp-test-games'})))
