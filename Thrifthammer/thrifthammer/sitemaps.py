@@ -193,6 +193,11 @@ class FactionSitemap(Sitemap):
         return obj.updated_at
 
 
+# Posts that are kept up to date after they are published (new deals are added over time).
+# Only these report their last real edit as lastmod; every other post keeps its publication date.
+LIVE_UPDATED_POST_SLUGS = {'warhammer-black-friday-deals'}
+
+
 class BlogPostSitemap(Sitemap):
     """Sitemap entry for every published blog post."""
 
@@ -207,7 +212,15 @@ class BlogPostSitemap(Sitemap):
         return obj.get_absolute_url()
 
     def lastmod(self, obj):
-        """Use the post's publication date as the last-modified signal."""
+        """
+        Use the publication date as the last-modified signal, as before.
+
+        Posts listed in LIVE_UPDATED_POST_SLUGS report their last real edit instead (updated_at moves
+        each time a new deal is added; live prices are filled in at render time and never touch it),
+        so Google recrawls them when they change.
+        """
+        if obj.slug in LIVE_UPDATED_POST_SLUGS:
+            return obj.updated_at or obj.published_at
         return obj.published_at
 
 

@@ -63,6 +63,10 @@
           <span>By <strong class="blog-byline-author">{{ post.author|default:"ThriftHammer" }}</strong></span>
           <span class="blog-byline-sep" aria-hidden="true">·</span>
           <time datetime="{{ post.published_at|date:'Y-m-d' }}">{{ post.published_at|date:"j F Y" }}</time>
+          {% if post.slug == 'warhammer-black-friday-deals' and post.updated_at.date != post.published_at.date %}
+          <span class="blog-byline-sep" aria-hidden="true">·</span>
+          <span>Updated <time datetime="{{ post.updated_at|date:'Y-m-d' }}">{{ post.updated_at|date:"j F Y" }}</time></span>
+          {% endif %}
           <span class="blog-byline-sep" aria-hidden="true">·</span>
           <span>{{ post.reading_time }} min read</span>
           <button
@@ -91,7 +95,7 @@
 
       {# Article body #}
       <div class="blog-article-body prose">
-        {{ post.body|sanitize_html }}
+        {{ post.body|sanitize_html|live_prices }}
       </div>
 
       {# ── Inline newsletter signup ── #}
@@ -533,6 +537,43 @@
         setActive(idx);
       }, 80);
     });
+  });
+}());
+</script>
+{% endif %}
+{% if 'th-gallery' in post.body %}
+<script>
+/* Swipe galleries: touch devices swipe, mouse users get previous/next arrows that hide at the ends. */
+(function () {
+  var smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  Array.prototype.forEach.call(document.querySelectorAll('.prose .th-gallery'), function (gallery) {
+    var wrap = document.createElement('div');
+    wrap.className = 'th-gallery-wrap';
+    gallery.parentNode.insertBefore(wrap, gallery);
+    wrap.appendChild(gallery);
+
+    function makeButton(cls, label, glyph, direction) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'th-gallery-btn ' + cls;
+      b.setAttribute('aria-label', label);
+      b.textContent = glyph;
+      b.addEventListener('click', function () {
+        gallery.scrollBy({ left: direction * gallery.clientWidth * 0.8, behavior: smooth ? 'smooth' : 'auto' });
+      });
+      wrap.appendChild(b);
+      return b;
+    }
+    var prev = makeButton('th-gallery-prev', 'Previous images', '‹', -1);
+    var next = makeButton('th-gallery-next', 'Next images', '›', 1);
+
+    function refresh() {
+      prev.hidden = gallery.scrollLeft < 8;
+      next.hidden = gallery.scrollLeft + gallery.clientWidth >= gallery.scrollWidth - 8;
+    }
+    gallery.addEventListener('scroll', refresh, { passive: true });
+    window.addEventListener('resize', refresh);
+    refresh();
   });
 }());
 </script>

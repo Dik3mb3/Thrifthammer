@@ -3414,6 +3414,65 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 }
 .prose tbody tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
 
+/* ── Blog deal thumbnails: <span data-th-thumb="product-slug"> becomes a small product picture ── */
+.prose .th-thumb-img {
+  display: block;
+  width: 56px;
+  height: 56px;
+  margin: 0;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #fff;
+}
+/* Game pictures (Steam headers) are landscape, so they get a wide frame instead of a square one */
+.prose .th-thumb-wide { width: 112px; height: 52px; object-fit: cover; }
+/* A line that starts with a thumbnail: picture on the left, the title wraps beside it, never underneath. */
+.prose p:has(> picture > .th-thumb-img),
+.prose p:has(> .th-thumb-img) {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.prose p > picture, .prose p > .th-thumb-img { flex: 0 0 auto; }
+
+/* ── Blog swipe gallery: <div class="th-gallery"> of slide <div>s, each holding one <img> ── */
+.prose .th-gallery-wrap { position: relative; margin: var(--sp-6) 0; }
+.prose .th-gallery {
+  display: flex;
+  gap: var(--sp-3);
+  margin: var(--sp-6) 0;
+  padding-bottom: var(--sp-2);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+.prose .th-gallery-wrap .th-gallery { margin: 0; }
+.prose .th-gallery:focus-visible { outline: 2px solid var(--accent-gold); outline-offset: 2px; }
+.prose .th-gallery > div { flex: 0 0 min(78%, 320px); scroll-snap-align: start; }
+.prose .th-gallery img { display: block; width: 100%; height: auto; margin: 0; }
+.th-gallery-btn {
+  position: absolute;
+  top: calc(50% - var(--sp-2));
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+}
+.th-gallery-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold-lt); }
+.th-gallery-btn[hidden] { display: none; }
+.th-gallery-prev { left: var(--sp-2); }
+.th-gallery-next { right: var(--sp-2); }
+@media (hover: none) { .th-gallery-btn { display: none; } }
+
 /* ── Related posts ── */
 .blog-related {
   margin-top: var(--sp-12);
@@ -5686,3 +5745,153 @@ details[open] .watchlist-alert-summary::before { content: '▾ '; }
 
   /* Abilities already single-col flex — no override needed */
 }
+
+/* ── Black Friday deals page (.bf-*): mobile first, built from the blog prose ── */
+.prose [id^="bf-"] { scroll-margin-top: 5rem; }
+.prose .bf-card h4, .prose h4.bf-brand {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin: 0;
+}
+.prose .bf-disclosure { font-size: 0.8rem; line-height: 1.5; color: var(--text-secondary); margin-bottom: var(--sp-4); }
+
+/* Percent-off badge (filled live from the best price) */
+.bf-badge {
+  flex: 0 0 auto;
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: var(--accent-green);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* Product deal card: picture and name on top, one row per retailer underneath */
+.prose .bf-card {
+  margin: var(--sp-4) 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded-lg);
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+.prose .bf-card-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+}
+.prose .bf-card-head picture, .prose .bf-card-head > .th-thumb-img { flex: 0 0 auto; }
+.prose .bf-card-title { flex: 1 1 auto; min-width: 0; }
+
+/* Deal rows (inside a card, or on their own for store and single product deals) */
+.prose ul.bf-rows, .prose ul.bf-list { list-style: none; margin: 0; padding: 0; }
+.prose ul.bf-list {
+  margin: var(--sp-4) 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--rounded-lg);
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+.prose .bf-rows > li, .prose .bf-list > li {
+  position: relative;
+  margin: 0;
+  padding: 0.7rem var(--sp-4);
+  border-top: 1px solid var(--divider);
+  line-height: 1.55;
+}
+.prose .bf-rows > li:first-child, .prose .bf-list > li:first-child { border-top: 0; }
+/* the whole row is the tap target, not only the retailer name */
+.prose .bf-rows > li a::after, .prose .bf-list > li a::after { content: ''; position: absolute; inset: 0; }
+.prose .bf-list > li:has(> ul) > a::after { content: none; }
+.prose .bf-rows > li.bf-best { background: rgba(200, 146, 42, 0.12); font-weight: 600; }
+.prose .bf-rows > li.bf-best a { color: var(--accent-gold-lt); }
+/* Table of contents: a boxed vertical list, numbered, every row a full-width tap target */
+.prose .bf-toc-box {
+  margin: var(--sp-6) 0;
+  border: 1px solid var(--border-mid);
+  border-left: 4px solid var(--accent-gold);
+  border-radius: var(--rounded-lg);
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+.prose .bf-toc-title {
+  margin: 0;
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+  color: var(--accent-gold-lt);
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.prose ol.bf-toc { list-style: none; counter-reset: toc; margin: 0; padding: 0; }
+.prose ol.bf-toc li { counter-increment: toc; margin: 0; border-top: 1px solid var(--divider); }
+.prose ol.bf-toc li:first-child { border-top: 0; }
+.prose ol.bf-toc a {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 48px;
+  padding: 0.6rem var(--sp-4);
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.35;
+  text-decoration: none;
+}
+.prose ol.bf-toc a::before {
+  content: counter(toc, decimal-leading-zero);
+  min-width: 1.7rem;
+  color: var(--accent-gold);
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.9rem;
+}
+.prose ol.bf-toc a::after { content: '›'; margin-left: auto; color: var(--accent-gold); font-size: 1.5rem; line-height: 1; }
+.prose ol.bf-toc a:hover { background: var(--bg-elevated); color: var(--accent-gold-lt); }
+.prose .bf-price { color: #fff; font-weight: 700; }
+html[data-theme="light"] .prose .bf-price { color: #000; }
+.prose .bf-msrp { color: var(--text-secondary); }
+.prose .bf-save-pct { color: var(--accent-green-lt); font-weight: 700; }
+.prose .bf-save-amt { color: var(--accent-blue-lt); font-weight: 700; }
+/* links inside deal rows are plain gold names: no underline, so they never fight the price next to them */
+.prose .bf-rows a, .prose .bf-list a { text-decoration: none; font-weight: 600; }
+.prose .bf-rows a:hover, .prose .bf-list a:hover { text-decoration: underline; }
+.prose .bf-deadline {
+  display: inline-block;
+  padding: 0 0.5rem;
+  border: 1px solid var(--accent-red-lt);
+  border-radius: 999px;
+  color: var(--accent-red-lt);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.prose .bf-list > li.bf-item-thumb { display: flex; align-items: center; gap: var(--sp-3); }
+.prose .bf-item-thumb .bf-text { flex: 1 1 auto; min-width: 0; }
+.prose .bf-item-thumb picture, .prose .bf-item-thumb > .th-thumb-img { flex: 0 0 auto; }
+.prose ul.bf-sub { list-style: disc; margin: 0.4rem 0 0 1.2rem; padding: 0; }
+.prose ul.bf-sub li { margin: 0; padding: 0.1rem 0; }
+.prose h3.bf-brand, .prose h4.bf-brand {
+  margin: var(--sp-6) 0 var(--sp-2);
+  color: var(--accent-gold-lt);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.prose .bf-callout {
+  margin: var(--sp-6) 0;
+  padding: var(--sp-4);
+  border-left: 4px solid var(--accent-gold);
+  border-radius: var(--rounded-lg);
+  background: var(--bg-secondary);
+}
+.prose .bf-callout h3 { margin-top: 0; }
+.prose .bf-callout p:last-child { margin-bottom: 0; }
