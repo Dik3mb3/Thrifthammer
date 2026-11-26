@@ -195,7 +195,7 @@ class FactionSitemap(Sitemap):
 
 # Posts that are kept up to date after they are published (new deals are added over time).
 # Only these report their last real edit as lastmod; every other post keeps its publication date.
-LIVE_UPDATED_POST_SLUGS = {'warhammer-black-friday-deals'}
+LIVE_UPDATED_POST_SLUGS = {'warhammer-black-friday-deals', 'miniature-wargaming-black-friday-deals'}
 
 
 class BlogPostSitemap(Sitemap):

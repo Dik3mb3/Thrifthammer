@@ -143,6 +143,16 @@ class BlogSitemapLastmodTest(TestCase):
         self.assertNotIn(f'{edited:%Y-%m-%d}', self._lastmod(xml, 'ordinary-post'))
         self.assertNotIn('hidden-draft', xml)
 
+    def test_miniature_wargaming_black_friday_post_follows_updated_at(self):
+        """The sister Black Friday post is also kept up to date, so its lastmod follows its last edit."""
+        published = timezone.now() - datetime.timedelta(days=30)
+        edited = timezone.now() - datetime.timedelta(days=2)
+        post = _make_post('miniature-wargaming-black-friday-deals', published_at=published)
+        Post.objects.filter(pk=post.pk).update(updated_at=edited)
+
+        xml = self.client.get('/sitemap.xml').content.decode()
+        self.assertIn(f'<lastmod>{edited:%Y-%m-%d}</lastmod>', self._lastmod(xml, 'miniature-wargaming-black-friday-deals'))
+
 
 class LiveBestPriceTest(TestCase):
     """A <span data-th-best="slug"> in a post shows the product's current cheapest price and follows the scrapers."""
